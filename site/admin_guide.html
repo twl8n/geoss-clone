@@ -1,0 +1,741 @@
+<html>
+<head>
+  <title>GEOSS Administrator Guide</title>
+</head>
+
+<body bgcolor="#FFFFFF" marginheight="0" marginwidth="0" topmargin="0"
+  leftmargin="0" link="#006633" vlink="#666633">
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <!-- Answers to the aforementioned questions -->
+  <tr valign="top"> 
+    <td width="10" bgcolor="#7c0000" valign="bottom"><img src="graphics/white.gif" width="10" height="10"></td>
+    <td width="10" valign="bottom"><img src="graphics/white.gif" width="10" height="10"></td>
+    <td width="580">
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td width="39%"><a href="./index.cgi"><img src="graphics/geoss_logo.jpg" width="216" height="96" border="0" alt="GEOSS Gene Expression Open Source System"></a></td>
+          <td valign="top" width="61%"><font face="Verdana, Arial, Helvetica, sans-serif" size="+1">GEOSS 
+            Administrator Guide</font></td>
+        </tr>
+      </table>
+      <p>
+        <a href="./index.cgi"> </a>
+        <a href="install_guide.html">Install Guide</a>&nbsp; 
+        <a href="admin_guide.html">Admin Guide</a>&nbsp;
+        <a href="user_guide.html">User Guide</a>&nbsp; 
+        <!--   <a href="curator_guide.html">Curator Guide</a>&nbsp;-->
+        <a href="org_curator_guide.html">Org Curator Guide</a>&nbsp;
+        <a href="developer_guide.html">Developer Guide</a></p>
+      <hr noshade>
+      <p>This documentation describes how to administer the GEOSS system. </p>
+      <hr noshade>
+      <p><strong>Administrator Guide Table of Contents</strong>: </p>
+      <ul>
+        <li> 
+          <p><a name="__TOC1.0"></a><a href="#__BODY1.0">1.0</a>&nbsp;Administrator 
+            Home: The Administrator's Configuration Tool 
+        </li>
+        <ul>
+          <li> 
+            <p><a name="__TOC1.1"></a><a href="#__BODY1.1">1.1 GEOSS Installation 
+              Information</a> 
+          </li>
+          <li> 
+            <p><a name="__TOC1.2"></a><a href="#__BODY1.2">1.2 Configure GEOSS</a> 
+          </li>
+          <li> 
+            <p><a name="__TOC1.3"></a><a href="#__BODY1.3">1.3 Add a user</a> 
+          </li>
+          <li> 
+            <p><a name="__TOC1.4"></a><a href="#__BODY1.4">1.4 Remove a user</a> 
+          </li>
+          <li> 
+            <p><a name="__TOC1.5"></a><a href="#__BODY1.5">1.5 Disable a user</a> 
+          </li>
+          <li> 
+            <p><a name="__TOC1.6"></a><a href="#__BODY1.6">1.6 Enable a user</a> 
+          </li>
+          <li> 
+            <p><a name="__TOC1.7"></a><a href="#__BODY1.7">1.7 Change user password</a> 
+          </li>
+          <!--<li><p><a name="__TOC1.7"><a href="#__BODY1.7">1.7 Add a layout</a></li>-->
+          <!--<li><p><a name="__TOC1.8"><a href="#__BODY1.8">1.8 Remove a layout</a></li>-->
+          <!--<li><p><a name="__TOC1.9"><a href="#__BODY1.9">1.9 Add an analysis</a></li>-->
+          <!--<li><p><a name="__TOC1.10"><a href="#__BODY1.10">1.10 Remove an analysis</a></li>-->
+          <!--<li><p><a name="__TOC1.11"><a href="#__BODY1.11">1.11 Approve MIAME data publication</a></li>-->
+        </ul>
+        <li> 
+          <p><a name="__TOC2.0"></a><a href="#__BODY2.0">2.0</a>&nbsp;Administrator 
+            Command Line Tools 
+        </li>
+        <ul>
+          <li> 
+            <p><a name="__TOC2.1"></a><a href="#__BODY2.1">2.1 geoss_initialize</a> 
+          </li>
+          <li> 
+            <p><a name="__TOC2.2"></a><a href="#__BODY2.2">2.2 geoss_adduser</a> 
+          </li>
+          <li> 
+            <p><a name="__TOC2.3"></a><a href="#__BODY2.3">2.3 geoss_loadaffylayout</a> 
+          </li>
+          <li> 
+            <p><a name="__TOC2.4"></a><a href="#__BODY2.4">2.4 geoss_add_analysis</a> 
+          </li>
+          <li> 
+            <p><a name="__TOC2.5"></a><a href="#__BODY2.5">2.5 geoss_rm_analysis</a> 
+          </li>
+        </ul>
+        <li> 
+          <p><a name="__TOC3.0"></a><a href="#__BODY3.0">3.0</a>&nbsp;FAQ 
+        </li>
+        <ul>
+          <li> 
+            <p><a name="__TOC3.1"></a><a href="#__BODY3.1">3.1 Administrator Account</a> 
+          </li>
+          <ul>
+            <li> 
+              <p><a name="__TOC3.1.1"></a><a href="#__BODY3.1.1">3.1.1 What is 
+                "Administrator Home"?</a> 
+            </li>
+            <li> 
+              <p><a name="__TOC3.1.2"></a><a href="#__BODY3.1.2">3.1.2 How do 
+                I log in as administrator?</a> 
+            </li>
+            <li> 
+              <p><a name="__TOC3.1.3"></a><a href="#__BODY3.1.3">3.1.3 How do 
+                I change the administrator password?</a> 
+            </li>
+          </ul>
+          <li> 
+            <p><a name="__TOC3.2"></a><a href="#__BODY3.2">3.2 User Administration</a> 
+          </li>
+          <ul>
+            <li> 
+              <p><a name="__TOC3.2.1"></a><a href="#__BODY3.2.1">3.2.1 What kinds 
+                of users are there?</a> 
+            </li>
+            <li> 
+              <p><a name="__TOC3.2.2"></a><a href="#__BODY3.2.2">3.2.2 How do 
+                I add a user?</a> 
+            </li>
+            <li> 
+              <p><a name="__TOC3.2.3"></a><a href="#__BODY3.2.3">3.2.3 How do 
+                I remove a user?</a> 
+            </li>
+            <li> 
+              <p><a name="__TOC3.2.4"></a><a href="#__BODY3.2.4">3.2.4 Why can't 
+                I remove a user?</a> 
+            </li>
+            <li> 
+              <p><a name="__TOC3.2.5"></a><a href="#__BODY3.2.5">3.2.5 How do 
+                I disable a user?</a> 
+            </li>
+            <li> 
+              <p><a name="__TOC3.2.6"></a><a href="#__BODY3.2.6">3.2.6 How do 
+                I enable a user?</a> 
+            </li>
+            <li> 
+              <p><a name="__TOC3.2.7"></a><a href="#__BODY3.2.7">3.2.7 How do 
+                I change a user's password?</a> 
+            </li>
+          </ul>
+          <li> 
+            <p><a name="__TOC3.3"></a><a href="#__BODY3.3">3.3 Layout Management</a> 
+          </li>
+          <ul>
+            <li> 
+              <p><a name="__TOC3.3.1"></a><a href="#__BODY3.3.1">3.3.1 What is 
+                a layout?</a> 
+            </li>
+            <li> 
+              <p><a name="__TOC3.3.2"></a><a href="#__BODY3.3.2">3.3.2 Where do 
+                I get layouts?</a> 
+            </li>
+            <li> 
+              <p><a name="__TOC3.3.3"></a><a href="#__BODY3.3.3">3.3.3 How do 
+                I load a layout?</a> 
+            </li>
+            <li> 
+              <p><a name="__TOC3.3.4"></a><a href="#__BODY3.3.4">3.3.4 How do 
+                I unload a layout?</a> 
+            </li>
+            <li> 
+              <p><a name="__TOC3.3.5"></a><a href="#__BODY3.3.5">3.3.5 Why can't 
+                I unload a layout? </a> 
+            </li>
+          </ul>
+          <li> 
+            <p><a name="__TOC3.4"></a><a href="#__BODY3.4">3.4 Analysis Management</a> 
+          </li>
+          <ul>
+            <li> 
+              <p><a name="__TOC3.4.1"></a><a href="#__BODY3.4.1">3.4.1 What is 
+                an analysis?</a> 
+            </li>
+            <li> 
+              <p><a name="__TOC3.4.2"></a><a href="#__BODY3.4.2">3.4.2 Where do 
+                I get analyses?</a> 
+            </li>
+            <li> 
+              <p><a name="__TOC3.4.3"></a><a href="#__BODY3.4.3">3.4.3 How can 
+                I load an analysis?</a> 
+            </li>
+            <li> 
+              <p><a name="__TOC3.4.4"></a><a href="#__BODY3.4.4">3.4.4 How can 
+                I unload an analysis?</a> 
+            </li>
+          </ul>
+          <li> 
+            <p><a name="__TOC3.5"></a><a href="#__BODY3.4.4"></a><a href="#__BODY3.5">3.5 
+              Public Data Management </a> 
+          </li>
+          <ul>
+            <li> 
+              <p><a name="__TOC3.5.1"></a><a href="#__BODY3.5"></a><a href="#__BODY3.5.1">3.5.1 
+                What is public data?</a> 
+            </li>
+            <li> 
+              <p><a name="__TOC3.5.2"></a><a href="#__BODY3.5.1"></a><a href="#__BODY3.5.2">3.5.2 
+                What is the administrator's role in making data public?</a> 
+            </li>
+            <li> 
+              <p><a name="__TOC3.5.3"></a><a href="#__BODY3.5.2"></a><a href="#__BODY3.5.3">3.5.3 
+                How do I make data public?</a> 
+            </li>
+            <li> 
+              <p><a name="__TOC3.5.4"></a><a href="#__BODY3.5.3"></a><a href="#__BODY3.5.4">3.5.4 
+                How do I remove public data?</a> 
+            </li>
+          </ul>
+        </ul>
+      </ul>
+      <a href="#__BODY3.5.4"> 
+      <hr noshade>
+      </a><b><font size="+1">Administrator's Guide: Contents </font> 
+      <p><a name="__BODY1.0">1.0</a>&nbsp;Administrator Home: The Administrator's 
+        Configuration Tool</p>
+      </b> Graphical administration tools are available for GEOSS and can be accessed 
+      via the "Admin Home" page. When an administrator logs in, they are immediately 
+      taken to Admin Home. The majoirty of administrative tasks can be accomplished 
+      from this location, but there are also command line scripts for most tasks 
+      to facilitate scripting of administration tasks.<br>
+      <a href="#__TOC1.0">Back to TOC</a> 
+      <ul>
+        <li> 
+          <p><a name="__BODY1.1"></a><b>1.1 GEOSS Installation Information</b></p>
+        </li>
+        The installation information link provides details about the GEOSS installation 
+        on your system. This page is strictly informative in nature and may be 
+        used to diagnose installation difficulties. It reports the build parameters 
+        of the system, the installed versions of required software, whether the 
+        permissions on essential directories are correct, the currently loaded 
+        layouts, and the currently loaded analyses. <br>
+        <a href="#__TOC1.1">Back to TOC</a> 
+        <li> 
+          <p><b><a name="__BODY1.2">1.2 Configure GEOSS</a></b></p>
+        </li>
+        The "Configure GEOSS" page may be used to set the runtime configuration 
+        variables for your GEOSS implementation. This should be done directly 
+        after an installation. You may occasionally wish to update parameters, 
+        but they should only require seldom changes (if ever) after installation. 
+        A brief description of each parameter follows:<br>
+        <ul>
+          <p> 
+          <li><i>WWW Host</i>:&nbsp;&nbsp;This is the FQDN of the server that 
+            GEOSS is installed on.</li>
+          <p></p>
+          <p> 
+          <li><i>Additional Path Information</i>:&nbsp;&nbsp;
+            If you did not set your DocumentRoot to /var/www/html/geoss/site, you will need to enter additional path information.  That path information should contain the path from HTML_DIR to the site directory.  For instance, if your DocumentRoot is /var/www/html, you would set your additional path information to /geoss/site.</li>
+          <p></p>
+          <p> 
+          <li><i>Organization Name</i>:&nbsp;&nbsp;This is the name of the organization 
+            installing the GEOSS system. This value is used for display purposes 
+            only.</li>
+          <p></p>
+          <p> 
+          <li><i>Curator Email</i>:&nbsp;&nbsp;This is the email address for the 
+            curator who should receive GEOSS mail, such as requests for order 
+            creation.</li>
+          <p></p>
+          <p> 
+          <li><i>Public Data Admin Email</i>:&nbsp;&nbsp; This is the email address 
+            of the user who will receive requests to publish data. Users can request 
+            that their data be published, but for security reasons, the request 
+            needs to be reviewed. The Public Data Admin receives those requests, 
+            reviews them, then confirms that data should be published. </li>
+          <p></p>
+          <p> 
+          <li><i>Administrator Email</i>:&nbsp;&nbsp; This is the email address 
+            of the administrator who installs and maintains GEOSS. GEOSS provides 
+            this address for those who have questions about the installation. 
+          </li>
+          <p></p>
+          <p> 
+          <li><i>Alternate Curator Email</i>:&nbsp;&nbsp; This contains the email 
+            addresses of additional users who need to review order requests. </li>
+          <p></p>
+          <p> 
+          <li><i>Chip Data Path</i>:&nbsp;&nbsp; This specifies the location of 
+            chip data files. When the curator attempts to load data, the system 
+            will look for the data files in this location. The user running the 
+            web server needs to have read permission on this directory. </li>
+          <p></p>
+          <p> 
+          <li><i>General Inactivity Logout</i>:&nbsp;&nbsp; This specifies the 
+            number of inactive minutes before a general (non-curator) user is 
+            automatically logged out. </li>
+          <p></p>
+          <p> 
+          <li><i>Curator Inactivity Logout</i>:&nbsp;&nbsp; This specifies the 
+            number of inactive minutes before a curator user is automatically 
+            logged out.</li>
+          <p></p>
+          <p> 
+          <li><i>Administrator Inactivity Logout</i>:&nbsp;&nbsp; This specifies 
+            the number of inactive minutes before an administrator user is automatically 
+            logged out.</li>
+          <p></p>
+          <p> 
+          <li><i>Add curators to all groups by default</i>:&nbsp;&nbsp; If selected, 
+            this will cause new curators to be added to all groups when the curator 
+            user is added. Additionally, when new groups are added, existing curators 
+            will automatically be added to the group.<br>
+            This feature is not fully implemented and will be completed in the 
+            next release.<br>
+          </li>
+          <p></p>
+          <p> 
+          <li><i>Bug Report Url</i>:&nbsp;&nbsp; This URL specifies a link that 
+            users can use to report bugs. It defaults to the GEOSS development 
+            team's installment of bugzilla and shouldn't be changed unless you 
+            wish to track bugs separately on your installation.</li>
+          <p></p>
+          <p> 
+          <li><i>Header/Footer Link Text</i>:&nbsp;&nbsp; Each installation has 
+            the ability to add a custom link to the navigational controls. This 
+            is the text that will be displayed for that link. </li>
+          <p></p>
+          <p> 
+          <li><i>Header/Footer Link Url</i>:&nbsp;&nbsp; Each installation has 
+            the ability to add a custom link to the navigational controls. This 
+            is the url of the link. </li>
+          <p></p>
+          <p> 
+          <li><i>Custom Home Page Description</i>:&nbsp;&nbsp; Each installation has 
+            the ability to add a custom home page description.  This description will appear on the site home page prior to the generic GEOSS description. </li>
+          <p></p>
+          <p> 
+          <li><i>Custom News Item #1 & #2</i>:&nbsp;&nbsp; Each installation
+            can configure custom "news items" that can be used to inform users of periodic events such as training sessions or GEOSS related publications or activities. </li>
+          <p></p>
+          <a href="#__TOC1.2">Back to TOC</a> 
+        </ul>
+        <li><b> 
+          <p><a name="__BODY1.3">1.3 Add a user</a> 
+          </b></li>
+        This page allows the administrator to add a user. Information on manadatory 
+        fields is provided here:<br>
+        <ul>
+          <li><i>Login Name:</i>&nbsp;&nbsp;This is the user's login name. They 
+            will use it to log in to GEOSS.</li>
+          <li><i>Initial Login Password:</i>&nbsp;&nbsp;This is the user's password. 
+            They will use it to log in to GEOSS initially. Users should be encouraged 
+            to change their password after their initial login. Passwords can 
+            contain any non-whitespace characters and must be longer than 6 characters.</li>
+          <li><i>Confirm Initial Login Password:</i>&nbsp;&nbsp;This must be the 
+            same as the Initial Login Password.</li>
+          <li><i>User Type:</i>&nbsp;&nbsp;This field indicates the type of user. 
+            For a description of the different types of users, see <a href="#__BODY3.2.1">What 
+            kind of users are there?</a><br>
+          <li><i>PI Login:</i>&nbsp;&nbsp;This is login name of the Principal 
+            Investigator (PI) associated with the new user. All users must have 
+            a PI. A user may be their own PI. Typically, an experiment would be 
+            owned by the PI, but the associated user might be the one to enter 
+            configuration information into GEOSS. Typically administrators and 
+            curators are their own PI.</li>
+        </ul>
+        <br>
+        <p>All other add user fields are optional, although it is highly recommended 
+          that the user's email address be entered. The user will be emailed by 
+          the system when significant events occur, such as their account being 
+          created, their order request being fulfilled, or their analysis completing.</p>
+        <p>Most of the other fields are self-explanatory, with the exception of 
+          "Cancer Center Member". This field impacts the Curator's Billing Report. 
+          Cancer center members receive a discount when purchasing chips and the 
+          report will reflect the discount if this field has been correctly configured.</p>
+        <a href="#__TOC1.3">Back to TOC</a> 
+        <li><b> 
+          <p><a name="__BODY1.4">1.4 Remove a user</a> 
+          </b></li>
+        Typically there should be no need to remove a user. Most users who no 
+        longer have access to the system will be disabled. However, if you have 
+        added a user with an incorrect login name, you may deleted and re-enter 
+        the user. This will need to be done before the user uses the account, 
+        as users who own data, or who are PIs for other users, can not be deleted. 
+        <br>
+        <a href="#__TOC1.4">Back to TOC</a> 
+        <li><b> 
+          <p><a name="__BODY1.5">1.5 Disable a user</a> 
+          </b></li>
+        If a user should no longer have log in privileges to the system, but 
+        owns data, they need to be disabled. Once they are disabled, they will 
+        no longer be able to login. If they are currently logged on when they 
+        are disabled, they will be able to continue to use the system until they 
+        logout or their session expires.<br>
+        <a href="#__TOC1.5">Back to TOC</a> 
+        <li><b> 
+          <p><a name="__BODY1.6">1.6 Enable a user</a> 
+          </b></li>
+        In the unlikely event that you need access to a disabled user's account, 
+        you can re-enable the account. You will need to set the type of the user. 
+        For a description of the different types of users, see <a href="#__BODY3.2.1">What 
+        kind of users are there?</a> <a href="#__TOC1.6">Back to TOC</a> 
+        <li><b> 
+          <p><a name="__BODY1.7">1.7 Change user password</a> 
+          </b></li>
+        The administrator can change the password of any user. Simply select the 
+        target user and set the new password. The password can contain any non-whitespace 
+        characters and must be 6 or more characters in length.<br>
+        <a href="#__TOC1.7">Back to TOC</a> 
+      </ul>
+      <p> 
+      <li><b><a name="__BODY2.0">2.0</a>&nbsp;Administrator Command Line Tools</b></li>
+      Most administration activities can be performed via "Admin Home" links, 
+      however many can also be performed on the command line. The default installation 
+      should put commands in /usr/bin and thus they should be found in your path. 
+      However, if you have installed in a custom directory, you can determine 
+      your bin path by checking your "GEOSS Installation Information" link in 
+      Admin Home.<br>
+      <a href="#__TOC2.0">Back to TOC</a> 
+      <ul>
+        <li><b> 
+          <p><a name="__BODY2.1">2.1 geoss_initialize</a> 
+          </b></li>
+        This script is intended to be run after a make install is performed. If 
+        you install using the GEOSS rpm, this script is run automatically. If 
+        you install manually, you can use this script after you do a "make install". 
+        This script initializes the database tables, adds the administrator user, 
+        adds layouts and adds analyses. There is no equivalent of this command 
+        available from Admin Home, as you won't be able to get to Admin Home until 
+        after this command has been run. For usage information on the script, 
+        run "perldoc geoss_initialize".<br>
+        <a href="#__TOC2.1">Back to TOC</a> 
+        <li><b> 
+          <p><a name="__BODY2.2">2.2 geoss_adduser</a> 
+          </b></li>
+        This script allows a user to be added from the command line. The individual 
+        running the script needs to be able to provide the database password. 
+        For usage information, type "geoss_adduser --help".<br>
+        <a href="#__TOC2.2">Back to TOC</a> 
+        <li><b> 
+          <p><a name="__BODY2.3">2.3 geoss_loadaffylayout</a> 
+          </b></li>
+        This script can be used to load an Affymetrix chip layout. For usage information, 
+        type "geoss_loadaffylayout --help".<br>
+        <a href="#__TOC2.3">Back to TOC</a> 
+        <li><b> 
+          <p><a name="__BODY2.4">2.4 geoss_add_analysis</a> 
+          </b></li>
+        This script can be used to add an analysis to the system. It will extract 
+        information from the cfg file for the analysis and appropriately populate 
+        database tables. Prior to running this script, the analysis directory 
+        and files need to be in $WEB_DIR/site/webtools/analysis. For usage information 
+        on the script, run "perldoc geoss_add_analysis".<br>
+        <a href="#__TOC2.4">Back to TOC</a> 
+        <li><b> 
+          <p><a name="__BODY2.5">2.5 geoss_rm_analysis</a> 
+          </b></li>
+        This script can be used to remove an analysis from the system. Typically 
+        analyses should not be removed. In order for researchers to reproduce 
+        their analysis results, they need to be able to run the same version of 
+        an analysis on their data. However, if you are adding your own analyses, 
+        you may need to remove them to make changes while testing them. Also, 
+        you may choose to remove an analysis that no one is using that you do 
+        not want on your system. For usage information on the script, run "perldoc 
+        geoss_rm_analysis".<br>
+        <a href="#__TOC2.5">Back to TOC</a> 
+      </ul>
+      <p> 
+      <li><b><a name="__BODY3.0">3.0</a>&nbsp;FAQ</b></li>
+      This section contains Frequently Asked Questions relating to GEOSS administration. 
+      <br>
+      <a href="#__TOC3.0">Back to TOC</a> 
+      <ul>
+        <li><b> 
+          <p><a name="__BODY3.1">3.1 Administrator Account</a> 
+          </b></li>
+        <br>
+        <a href="#__TOC3.1">Back to TOC</a> 
+        <ul>
+          <li><b> 
+            <p><a name="__BODY3.1.1">3.1.1 What is "Admin Home"?</a> 
+            </b></li>
+          This page contains links to all activities that administrators perform. 
+          While regular users will use "Member Home" as the basis page for most 
+          of their work, administrators will use "Admin Home". Users who are not 
+          administrators do not have access to activities performed by administrators, 
+          and will not get a link to "Admin Home" in their navigation bar.<br>
+          <a href="#__TOC3.1.1">Back to TOC</a> 
+          <li><b> 
+            <p><a name="__BODY3.1.2">3.1.2 How do I log in as administrator?</a> 
+            </b></li>
+          Logging in as an administrator is the same as logging in as a regular 
+          user. Provide your login and password in the login section of the site 
+          home page.<br>
+          <a href="#__TOC3.1.2">Back to TOC</a> 
+          <li><b> 
+            <p><a name="__BODY3.1.3">3.1.3 How do I change the administrator password?</a> 
+            </b></li>
+          Administrator's can change their password in two ways. They can log 
+          on and change their password via the <a href="#__BODY1.6"> Change user 
+          password</a> link from "Admin Home", or through the "Change my password" 
+          link from "Member Home". <br>
+          <a href="#__TOC3.1.3">Back to TOC</a> 
+        </ul>
+        <p> 
+        <li><b><a name="__BODY3.2">3.2 User Administration</a></b></li>
+        <a href="#__TOC3.2">Back to TOC</a> 
+        <ul>
+          <li><b> 
+            <p><a name="__BODY3.2.1">3.2.1 What kinds of users are there?</a> 
+            </b></li>
+          There are currently four supported user types: administrator, curator, 
+          public, and experiment_set_provider. 
+          <ul>
+ <li><i>Public User:</i><br>
+ Public Users can use GEOSS to analyze data using analysis trees.  Data can be uploaded or extracted from publicly available data sets.  Data files, including analysis results can be shared with other users.  Accounts are free, but users must provide a valid email address.  Once you request an account, your login information will be mailed to the specified email address.</li>
+ <li><i>Member Users:</i><br>
+Member Users can use GEOSS to define studies and place orders with the array center.  Once an order is processed, the data is loaded into GEOSS.  From there, member users can download or analyze their data.  Results may be shared with other users.  Additionally, all chip data and analyses results will be backed up and secured.  In order to get a member user account, your identity must be verified.  You will need to fill out detailed contact information so a GEOSS administrator can contact you.</li>
+ <li><i>Array Center Staff Users:</i><br>
+Array Center Staff Users are responsible for fulfilling GEOSS orders.  They perform gene chip experiments and load resulting data.  These accounts are only available to staff.</li>
+ <li><i>Administrator:</i><br>
+Administrators can configure GEOSS and perform all operations necessary to maintain a GEOSS installation.  This includes managing users, layouts, analyses, and MIAME data.  These accounts are only available to GEOSS staff.</li>
+</ul><br>
+          <a href="#__TOC3.2.1">Back to TOC</a> 
+          <li><b> 
+            <p><a name="__BODY3.2.2">3.2.2 How do I add a user?</a> 
+            </b></li>
+          Administrators can add users via the <a href="#__BODY1.3">Add a user</a> 
+          link in "Admin Home".<br>
+          <br>
+          Alternatively, administrators may add users using the geoss_adduser 
+          command from the command line interface. This command is particularly 
+          useful if you need to write scripts that add users.<br>
+          <a href="#__TOC3.2.2">Back to TOC</a> 
+          <li><b> 
+            <p><a name="__BODY3.2.3">3.2.3 How do I remove a user?</a> 
+            </b></li>
+          Administrators can remove users via the <a href="#__BODY1.4">Remove 
+          a user</a> link in "Admin Home". <br>
+          <a href="#__TOC3.2.3">Back to TOC</a> 
+          <li><b> 
+            <p><a name="__BODY3.2.4">3.2.4 Why can't I remove a user?</a> 
+            </b></li>
+          If the user owns any data, you will not be able to remove them. If this 
+          is the case, their login won't even show up in the drop down list for 
+          users that you are allowed to remove. <br>
+          <a href="#__TOC3.2.4">Back to TOC</a> 
+          <li><b> 
+            <p><a name="__BODY3.2.5">3.2.5 How do I disable a user?</a> 
+            </b></li>
+          Users can be disabled via the <a href="#__BODY1.5">Disable User</a> 
+          link from "Admin Home". <br>
+          <a href="#__TOC3.2.5">Back to TOC</a> 
+          <li><b> 
+            <p><a name="__BODY3.2.6">3.2.6 How do I enable a user?</a> 
+            </b></li>
+          Users can be enabled via the <a href="#__BODY1.6">Enable User</a> link 
+          from "Admin Home". <br>
+          <a href="#__TOC3.2.6">Back to TOC</a> 
+          <li><b> 
+            <p><a name="__BODY3.2.7">3.2.7 How do I change a user's password?</a> 
+            </b></li>
+          User's passwords can be changed via the <a href="#__BODY1.7">Change 
+          user password</a> link from "Admin Home".<br>
+          <a href="#__TOC3.2.7">Back to TOC</a> 
+        </ul>
+        <p> 
+        <li><b><a name="__BODY3.3">3.3 Layout Management</a></b></li>
+        <a href="#__TOC3.3">Back to TOC</a> 
+        <ul>
+          <li> 
+            <p><b><a name="__BODY3.3.1">3.3.1 What is a layout?</a><br>
+              <br>
+              </b>A layout is information pertaining to an Affymetrix GeneChip 
+              probe array. The layout information describes which probes belong 
+              to probe sets on the array. Currently GEOSS only supports layouts 
+              for the Affymetrix technology. However, work is under way to incorporate 
+              cDNA data and its associated layouts. 
+          </li>
+          <br>
+          <a href="#__TOC3.3.1">Back to TOC</a> 
+          <li> 
+            <p><b><a name="__BODY3.3.2">3.3.2 Where do I get layouts?</a><br>
+              <br>
+              </b>Several of the Affymetrix layouts have been bundled with the 
+              GEOSS product. The text files will be located in the /var/lib//geoss/layout 
+              in a default installation. To confirm the location on your installation, 
+              administrators can check the Build Parameters under &quot;GEOSS 
+              Installation Information&quot; in Admin Home. directory. <br>
+              <br>
+              If the layout you need is not located in this directory you will 
+              need to go to the Affymetrix website to <a href="http://www.affymetrix.com/support/technical/byproduct.affx?cat=arrays">download 
+              the layout.</a><br>
+              <br>
+              Click on the hyperlink for the array of interest and scroll down 
+              to the section &quot;NetAffx Annotation Files.&quot; Choose the 
+              .CSV file. <br>
+              <br>
+              This file will contain more columns than are needed for our system. 
+              Eliminate all columns with the exception of GeneChip Array, Probe 
+              Set ID, Representative Public ID, Sequence Type, and Target Description. 
+              Columns should be in this order.<br>
+              Save file as a text file making sure that the first row is actual 
+              data. To do so remove column headings from the text file. 
+          </li>
+          <br>
+          <a href="#__TOC3.3.2">Back to TOC</a> 
+          <li> 
+            <p><b><a name="__BODY3.3.3">3.3.3 How do I load a layout?</a><br>
+              <br>
+              </b>Layouts should be in text format for loading. Currently you 
+              must run the geoss_loadaffylayout.pl script from the command line. 
+              See script details for command line syntax.<br>
+              An admin tool is being developed for this purpose and will be included 
+              in the next version of GEOSS.<br>
+          </li>
+          <a href="#__TOC3.3.3">Back to TOC</a> 
+          <li> 
+            <p><b><a name="__BODY3.3.4">3.3.4 How do I unload a layout?</a><br>
+              <br>
+              </b>Affymetrix layouts are loaded into three tables in the following 
+              order: arraylayout, al_spots, and usersequence feature. The only 
+              way to remove a layout is to do so manually. You must identify all 
+              the fields first and then delete in reverse order or the foreign 
+              key constraints will not allow the deletion. The arraylayout table 
+              will have only one record, however, the al_spots and usersequence 
+              feature tables will have many. Identify the records by associating 
+              the foreign key relationships and then begin your delete. As always 
+              it is a good idea to have a backup (pg_dump) done just in case.<br>
+              NOTE: Removing layouts should not typically be required. 
+          </li>
+          <br>
+          <a href="#__TOC3.3.4">Back to TOC</a> 
+          <li> 
+            <p><b><a name="__BODY3.3.5">3.3.5 Why can't I unload a layout? </a><br>
+              <br>
+              </b>Most likely you are attempting to remove a layout from the arraylayout 
+              table before deleting the associated records in the usersequencefeature 
+              and al_spots tables. You must do the deletes in the reverse order 
+              from which the tables are populated (see 3.3.4). The foreign key 
+              constraints will keep you from leaving orphan records in any child 
+              tables.<br>
+              <br>
+              Another possibility is that you are attempting to delete a layout 
+              that has already been associated with some data (arraymeasurement 
+              table). Check the foreign key relationship between the arraymeasurement 
+              table and the arraylayout table, al_fk and al_pk respectively.. 
+              <br>
+              <a href="#__TOC3.3.5">Back to TOC</a> 
+          </li>
+        </ul>
+        <p> 
+        <li><b><a name="__BODY3.4">3.4 Analysis Management</a></b></li>
+        <a href="#__TOC3.4">Back to TOC</a> 
+        <ul>
+          <li><b> 
+            <p><a name="__BODY3.4.1">3.4.1 What is an analysis?</a> 
+            </b></li>
+          An analysis is a function performed on input data that produces output 
+          data. Typical analyses perform statistical calculations and format data. 
+          Analysis modules can be written in many languages, as long as they can 
+          be successfully run from the command line. Current analyses are written 
+          in Perl and R. If the output from one analysis can be used as input 
+          to another analysis, they can be chained together in a tree.<br>
+          <a href="#__TOC3.4.1">Back to TOC</a> 
+          <li><b> 
+            <p><a name="__BODY3.4.2">3.4.2 Where do I get analyses?</a> 
+            </b></li>
+          Analyses are developed by GEOSS developers. As new analyses are created, 
+          they will be included in system updates. It is possible to write your 
+          own analyses, but you will need to have GEOSS source installed to do 
+          this. If you have an analysis you would like to have included in GEOSS, 
+          please contact the GEOSS developers.<br>
+          <a href="#__TOC3.4.2">Back to TOC</a> 
+          <li><b> 
+            <p><a name="__BODY3.4.3">3.4.3 How can I load an analysis?</a> 
+            </b></li>
+          Currently available analyses are loaded by the installation scripts, 
+          so you shouldn't need to load new analyses unless you write your own. 
+          Analyses are loaded via the <a href="#__BODY2.4">geoss_add_analysis</a> 
+          command.<br>
+          <a href="#__TOC3.4.3">Back to TOC</a> 
+          <li><b> 
+            <p><a name="__BODY3.4.4"></a>3.4.4 How can I unload an analysis? 
+            </b></li>
+          Analyses that are not currently in use can be removed using the <a href="#__BODY2.5">geoss_rm_analysis</a> 
+          command.<br>
+          <a href="#__TOC3.4.4">Back to TOC</a> 
+        </ul>
+        <li><b> 
+          <p><a name="__BODY3.5"></a>3.5 Public Data Management 
+          </b></li>
+        <br>
+        <a href="#__TOC3.5">Back to TOC</a> 
+        <ul>
+          <li><b> 
+            <p><a name="__BODY3.5.1"></a>3.5.1 What is public data? 
+            </b></li>
+          Once a researcher has published their experiment results, they may wish 
+          to make the data available to the public. To do this, they enter relevant 
+          MIAME information about the experiment and then request that it is published. 
+          It is then available to all web users by clicking on the "View Public 
+          Data" link from the site home page. <br>
+          <a href="#__TOC3.5.1">Back to TOC</a> 
+          <li><b> 
+            <p><a name="__BODY3.5.2"></a>3.5.2 What is the administrator's role 
+              in making data public? 
+            </b></li>
+          Data is not instantly available when a user submits it for publication. 
+          An administrator needs to verify that the information should be published. 
+          This is because it may not be the principal investigator (the owner 
+          of the data) who chooses to publish it. In that case, the PI is emailed 
+          by GEOSS, informing them that their data is about to be published. If 
+          they do not wish it to be published, they can contact the administrator 
+          who can prevent the publication of the data. <br>
+          <a href="#__TOC3.5.2">Back to TOC</a> 
+          <li><b> 
+            <p><a name="__BODY3.5.3"></a>3.5.3 How do I make data public? 
+            </b></li>
+          Currently the public data admin receives an email describing the steps 
+          to make data public. We hope to have a link to do make data public available 
+          in Admin Home in the next release.<br>
+          <a href="#__TOC3.5.3">Back to TOC</a> 
+          <li><b> 
+            <p><a name="__BODY3.5.4"></a>3.5.4 How do I remove public data? 
+            </b></li>
+          If data is published that you wish to remove from the site, it can be 
+          removed by removing the appropriate files from the public data directory. 
+          To determine the public data directory, check the "GEOSS Install Information" 
+          link from "Admin Home". Public data is in USER_DATA_DIR/public_data. 
+          You will need to find the directory named after the PI of the data you 
+          wish to remove. If the PI has only published one set of data, you may 
+          remove the entire directory. If the PI has published more than one set 
+          of data, you will need to remove the appropriate files from inside the 
+          directory. The set of files should include an indexrec file, an zip 
+          files of all, cel, chp, and exp data. The filenames will include the 
+          miame name of the data.<br>
+          <br>
+          Again, we hope to create a link from "Admin Home" to do this if future 
+          development time permits.<br>
+          <a href="#__TOC3.5.4">Back to TOC</a> 
+        </ul>
+      </ul>
+    </td>
+  </tr>
+</table>
+<br>
+</body>
+</html>
+

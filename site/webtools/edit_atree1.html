@@ -1,0 +1,47 @@
+<form action="edit_atree2.cgi" method=POST enctype="multipart/form-data">
+<input type="hidden" name="tree_pk" value="{tree_pk}">
+<input type="hidden" name="root" value="{root}">
+<table width="760" border=0 cellpadding=5 cellspacing=0>
+  <tr valign="top">
+
+  <td align=top ><div align="Left"><b>Tree name:</b></div></td>
+  <td align=top ><input type="text" name="tree_name" value="{tree_name}"></td>
+  <td align=top ><input type="submit" name="Update" 
+                        value="Update Node Properties"></td>
+  <td>{view_results}</td>
+  </tr>
+  <tr>
+  {action}
+  <td>&nbsp;</td><td>{view_input}</td>
+  </tr>
+  </table>
+  <table width="760" border="0" cellpadding="0" cellspacing="4">
+    <tr>
+    <td valign="top" width="50%">
+    {atree} <br>
+    {add_node_html}
+    </td>
+    <td bgcolor="#00CC99" width="1%"></td>
+    <td valign="top" width="49%">Node Properties<br>{properties}</td>
+    </tr>
+  </table>
+  <br>
+  <br>
+<br>
+<table width="600">
+    <tr><td><a href="./choose_tree.cgi">Back to 'Choose Tree'</a></td></tr>
+<tr><td>
+<br>
+<b>Instructions:</b>
+<br>
+Click the pencil to select a node.  Once selected, the node will be gold colored. 
+<br><br>
+To modify a node's properties, select the node and modify the properties on the right hand side.  Changes can be saved by pressing 'Update', or running the tree, or selecting a different node.<br><br>
+To add a node, select the parent node, then choose the type of analysis from the drop down menu at the bottom of the page. Click Add Node.
+<br>
+<br>
+To delete a node, select the node, then click the trash can. 
+<br><br>
+To run the tree, click 'Run Analysis'.  All nodes from the selected node down will be run.
+</form>
+</td></tr></table>

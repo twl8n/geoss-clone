@@ -1,0 +1,1359 @@
+-- primary key sequence used as pk for all secured tables.
+create sequence "pk_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1 cache 1;
+
+REVOKE ALL on "pk_seq" from PUBLIC;
+GRANT ALL on "pk_seq" to "%%GEOSS_SU_USER%%";
+
+CREATE SEQUENCE "am_spots_mas5_ams_mas5_pk_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "am_spots_mas5_ams_mas5_pk_seq" from PUBLIC;
+GRANT ALL on "am_spots_mas5_ams_mas5_pk_seq" to "%%GEOSS_SU_USER%%";
+
+CREATE SEQUENCE "am_spots_mas4_ams_mas4_pk_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+GRANT ALL on "am_spots_mas4_ams_mas4_pk_seq" to "%%GEOSS_SU_USER%%";
+
+CREATE SEQUENCE "am_spots_dchip_ams_dchip_pk_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "am_spots_dchip_ams_dchip_pk_seq" from PUBLIC;
+GRANT ALL on "am_spots_dchip_ams_dchip_pk_seq" to "%%GEOSS_SU_USER%%";
+
+CREATE SEQUENCE "housekeeping_control_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "housekeeping_control_seq" from PUBLIC;
+GRANT ALL on "housekeeping_control_seq" to "%%GEOSS_SU_USER%%";
+
+CREATE SEQUENCE "guc_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "guc_seq" from PUBLIC;
+GRANT ALL on "guc_seq" to "%%GEOSS_SU_USER%%";
+
+CREATE SEQUENCE "order_seq" start 1 increment 1 maxvalue 2147483647 minvalue 0 cache 1 ;
+
+REVOKE ALL on "order_seq" from PUBLIC;
+GRANT ALL on "order_seq" to "%%GEOSS_SU_USER%%";
+
+CREATE SEQUENCE "usersequencefeature_usf_pk_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "usersequencefeature_usf_pk_seq" from PUBLIC;
+GRANT ALL on "usersequencefeature_usf_pk_seq" to "%%GEOSS_SU_USER%%";
+
+CREATE SEQUENCE "al_spots_als_pk_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "al_spots_als_pk_seq" from PUBLIC;
+GRANT ALL on "al_spots_als_pk_seq" to "%%GEOSS_SU_USER%%";
+
+CREATE SEQUENCE "miame_type_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "miame_type_seq" from PUBLIC;
+GRANT ALL on "miame_type_seq" to "%%GEOSS_SU_USER%%";
+
+
+CREATE SEQUENCE "display_type_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "display_type_seq" from PUBLIC;
+GRANT ALL on "display_type_seq" to "%%GEOSS_SU_USER%%";
+
+
+CREATE SEQUENCE "session_session_pk_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "session_session_pk_seq" from PUBLIC;
+GRANT ALL on "session_session_pk_seq" to "%%GEOSS_SU_USER%%";
+
+
+CREATE SEQUENCE "key_value_kv_pk_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "key_value_kv_pk_seq" from PUBLIC;
+GRANT ALL on "key_value_kv_pk_seq" to "%%GEOSS_SU_USER%%";
+
+CREATE SEQUENCE "configuration_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "configuration_seq" from PUBLIC;
+GRANT ALL on "configuration_seq" to "%%GEOSS_SU_USER%%";
+
+CREATE SEQUENCE "organization_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "organization_seq" from PUBLIC;
+GRANT ALL on "organization_seq" to "%%GEOSS_SU_USER%%";
+--
+
+
+
+CREATE TABLE "contact" (
+        "con_pk" integer DEFAULT nextval('guc_seq'::text) NOT NULL,
+        "type" character varying(128) NOT NULL,
+        "organization" character varying(128),
+        "contact_fname" character varying(128),
+        "contact_lname" character varying(128),
+        "contact_phone" character varying(128),
+        "contact_email" character varying(128),
+        "department" character varying(128),
+        "building" character varying(128),
+        "room_number" character varying(128),
+        "cancer_center_member" boolean,
+        "org_phone" character varying(128),
+        "org_email" character varying(128),
+        "org_mail_address" character varying(128),
+        "org_toll_free_phone" character varying(128),
+        "org_fax" character varying(128),
+        "url" character varying(128),
+        "last_updated" timestamp with time zone NOT NULL,
+        "credentials" text,
+	 Constraint contact_pkey primary key(con_pk)
+) without OIDs;
+
+REVOKE ALL on "contact" from PUBLIC;
+GRANT ALL on "contact" to "%%GEOSS_SU_USER%%";
+
+---
+CREATE TABLE "arraylayout" (
+        "al_pk" integer DEFAULT nextval('pk_seq'::text) NOT NULL,
+        "con_fk" integer NOT NULL,
+        "name" character varying(128) NOT NULL,
+        "technology_type" character varying(128) NOT NULL,
+        "identifier_code" character varying(128),
+        "medium" character varying(128),
+        "coating" character varying(128),
+        "default_spot_conc" double precision,
+        "default_spot_conc_units" character varying(128),
+        "default_spot_conc_error" character varying(128),
+        "chip_cost" character varying(128),
+	 Constraint arraylayout_pkey primary key(al_pk),
+	 Constraint arraylayout_con_fk foreign key(con_fk) references contact(con_pk) 
+) without OIDs;
+
+REVOKE ALL on "arraylayout" from PUBLIC;
+GRANT ALL on "arraylayout" to "%%GEOSS_SU_USER%%";
+
+--
+
+CREATE TABLE "arraylayout_sa" (
+        "al_sa_pk" integer DEFAULT nextval('pk_seq'::text) NOT NULL,
+        "con_fk" integer,
+        "al_sa_name" character varying(128),
+        "al_sa_type"  character varying(128),
+        "date_printed" timestamp with time zone,
+        "total_no_spots" integer,
+        "slide_used" character varying(128),
+        "pin" character varying(128),
+        "no_pins" integer,
+        "plate_format" integer,
+        "replicates_per_slide" integer,
+        "spot_spacing" integer,
+        "margin_left" integer,
+        "margin_right" integer,
+        "margin_bottom" integer,
+        "margin_top" integer,
+        "spotting_buffer" character varying(128),
+        "spotting_volume" integer,
+        "humidity" integer,
+        "temperature" integer,
+        "al_sa_notes" character varying(128),
+        "software_primer_design" character varying(128),
+        "parameters_primer_design" character varying(128),
+        "shotgun_vector" integer,
+        "termocycler_used" character varying(128),
+        "termocycler_program" character varying(128),
+        "reaction_mix" character varying(128),
+	 Constraint arraylayout_sa_pkey primary key(al_sa_pk),
+	 Constraint arraylayout_sa_con_fk foreign key(con_fk) references contact(con_pk)  
+) without OIDs;
+
+REVOKE ALL on "arraylayout_sa" from PUBLIC;
+GRANT ALL on "arraylayout_sa" to "%%GEOSS_SU_USER%%";
+
+--
+
+create table "quality_control" (
+       "qc_pk" integer DEFAULT nextval('pk_seq'::text) NOT NULL,
+       "background" double precision,
+       "noise" double precision,
+       "scale_factor" double precision,
+       "percent_present" double precision,
+       "biob_3_detection" character varying(3),
+       "biob_5_detection" character varying(3),
+       "total_rna_profile" character varying(128),
+       "crna_profile" character varying(128),
+       "lot_number" integer,
+	Constraint quality_control_pkey primary key(qc_pk)
+) without OIDs;
+
+REVOKE ALL on "quality_control" from PUBLIC;
+GRANT ALL on "quality_control" to "%%GEOSS_SU_USER%%";
+
+--
+create table "order_info" (
+       "oi_pk" integer DEFAULT nextval('pk_seq'::text) NOT NULL,
+       "order_number" character varying(128) UNIQUE,
+       "chips_ordered" boolean,
+       "locked" boolean,
+       "signed_analysis_report" boolean,
+       "meeting_scheduled" boolean,
+       "created_by" integer,
+       "isolations" integer,
+       "date_report_completed" date,
+       "have_chips" boolean,	 
+       "date_samples_received" date,
+       "date_last_revised" timestamp with time zone,
+       "is_approved" boolean,
+       "approval_comments" text,
+       "org_fk" integer,
+       "approval_date" date,
+       "default_smp_name" character varying(128),
+       "default_lab_book" character varying(128),
+       "default_lab_book_owner" integer,
+       "default_ams" integer,
+       "default_smp_origin" text,
+       "default_smp_manipulation" text,
+       "default_al_fk" integer,
+       "default_sty_fk" integer,
+	Constraint order_info_pkey primary key(oi_pk)
+) without OIDs;
+
+REVOKE ALL on "order_info" from PUBLIC;
+GRANT ALL on "order_info" to "%%GEOSS_SU_USER%%";
+
+--Table: file_info
+--This table holds information pertaining to all files in the respository.
+create table "file_info" (
+       "fi_pk" integer DEFAULT nextval('pk_seq'::text) NOT NULL,
+       "node_fk" integer,
+       "file_name" text,
+       "use_as_input" boolean,
+       "fi_comments" text,
+       "fi_checksum" character varying(128),
+       "conds" character varying(128),
+       "cond_labels" text,
+       "ft_fk" integer,
+       "last_modified" integer,
+       "al_fk" integer,
+	Constraint file_info_pkey primary key(fi_pk),
+        Constraint file_info_al_fk foreign key(al_fk) references arraylayout(al_pk)
+) without OIDs;
+
+REVOKE ALL on "file_info" from PUBLIC;
+GRANT ALL on "file_info" to "%%GEOSS_SU_USER%%";
+
+
+--Table: Tree
+--This table stores analysis trees - groups of analysis nodes that are run in sequence.
+
+CREATE TABLE "tree" (
+        "tree_pk" integer DEFAULT nextval('pk_seq'::text) NOT NULL,
+        "tree_name" character varying(128),
+	"fi_input_fk" integer,
+	"fi_log_fk" integer,
+	 Constraint tree_pkey primary key(tree_pk),
+	 Constraint tree_fi_input_fk foreign key(fi_input_fk) references file_info(fi_pk),
+	 Constraint tree_fi_log_fk foreign key(fi_log_fk) references file_info(fi_pk)
+) without OIDs;
+
+REVOKE ALL on "tree" from PUBLIC;
+GRANT ALL on "tree" to "%%GEOSS_SU_USER%%";
+
+
+
+--
+create table "study" (
+       "sty_pk" integer DEFAULT nextval('pk_seq'::text) NOT NULL,
+       "study_name" character varying(128) NOT NULL,
+       "start_date" timestamp,
+       "study_url" text,
+       "sty_comments" text,
+       "created_by" integer,
+       "tree_fk" integer,
+       "study_abstract" text,
+       "default_exp_cond_name" character varying(128),
+       "default_spc_fk" integer,
+       "default_sample_type" character varying(128),
+       "default_type_details" character varying(128),
+       "default_bio_reps" integer DEFAULT 1 NOT NULL,
+       "default_chip_reps" integer DEFAULT 1 NOT NULL,
+       "default_smp_name" character varying(128),
+       "default_lab_book" character varying(128),
+       "default_lab_book_owner" integer,
+       "default_smp_origin" text,
+       "default_smp_manipulation" text,
+       "default_al_fk" integer,
+        Constraint study_pkey primary key(sty_pk),
+        Constraint study_tree_fk foreign key(tree_fk) references tree(tree_pk)
+) without OIDs;
+
+REVOKE ALL on "study" from PUBLIC;
+GRANT ALL on "study" to "%%GEOSS_SU_USER%%";
+
+--
+CREATE TABLE "species" (
+        "spc_pk" integer DEFAULT nextval('pk_seq'::text) NOT NULL,
+        "primary_scientific_name" character varying(128) NOT NULL,
+        "is_sequenced_genome" boolean NOT NULL,
+        "is_circular_genome" boolean NOT NULL,
+        "cell_structure" character varying(128),
+        "general_classification" character varying(128),
+        "scientific_aliases" text,
+        "common_names" character varying(128),
+        "genome_size" integer,
+        "num_chromosomes" character varying(3),
+        "ncbi_taxonomy_acc" text,
+        "relevant_urls" text,
+        "spc_ft_comments" text,
+        Constraint species_pkey primary key(spc_pk)
+) without OIDs;
+
+REVOKE ALL on "species" from PUBLIC;
+GRANT ALL on "species" to "%%GEOSS_SU_USER%%";
+
+--
+CREATE TABLE "exp_condition" (
+        "ec_pk" integer DEFAULT nextval('pk_seq'::text) NOT NULL,
+        "name" character varying(128) NOT NULL,
+        "abbrev_name" character varying(128),
+        "quantity" character varying(128),
+        "unit" character varying(128),
+        "time_series" boolean,
+        "time_point" character varying(128),
+        "sty_fk" integer,
+        "spc_fk" integer,
+        "sample_type" character varying(128),
+        "description" text,
+        "sample_treatment" text,
+        "analysis_description" text,
+        "treatment_type" text,
+        "quantity_series_type" text,
+        "notes" text,
+        "seed_supplier_cat_num" character varying(128),
+        "cultivar_name" character varying(128),
+        "variety" character varying(128),
+        "strain" character varying(128),
+        "cell_line" character varying(128),
+        "genotype" character varying(128),
+        "phenotype" character varying(128),
+        "sex_mating_type" character varying(128),
+        "age" integer,
+        "age_units" character(1),
+        "dev_stage_time" timestamp with time zone,
+        "dev_stage_units" character(1),
+        "dev_stage_name" character varying(128),
+        "organ_type" character varying(128),
+        "tissue_type" character varying(128),
+        "atcc_cell_type" character varying(128),
+        "primary_cell_type" character varying(128),
+        "organism_intactness" character varying(128),
+        "genetic_status" character varying(128),
+        "genetic_status_comment" text,
+        "growth_cond" text,
+        "pathology_descr" text,
+        "common_acc_num" character varying(128),
+        "abrc_acc_num" character varying(128),
+        "nottingham_acc_num" character varying(128),
+        "cit_fk" integer,
+        "local_accession" character varying(128),
+	 Constraint exp_condition_pkey primary key(ec_pk),
+         Constraint exp_condition_sty_fk foreign key(sty_fk) references study(sty_pk), 
+	 Constraint exp_condition_spc_fk foreign key(spc_fk) references species(spc_pk)
+) without OIDs;
+
+REVOKE ALL on "exp_condition" from PUBLIC;
+GRANT ALL on "exp_condition" to "%%GEOSS_SU_USER%%";
+
+
+--
+CREATE TABLE "sample" (
+        "smp_pk" integer DEFAULT nextval('pk_seq'::text) NOT NULL,
+        "ec_fk" integer,
+        "con_fk" integer,
+        "oi_fk" integer,
+        "lab_book" character varying(128),
+        "lab_book_owner" integer,
+        "timestamp" timestamp,
+        "smp_name" character varying(128),
+        "smp_manipulation" text,
+        "smp_origin" text, 
+	 Constraint sample_pkey primary key(smp_pk),
+         Constraint sample_ec_fk foreign key(ec_fk) references exp_condition(ec_pk), 
+	 Constraint sample_con_fk foreign key(con_fk) references contact(con_pk),
+         Constraint sample_oi_fk foreign key(oi_fk) references order_info(oi_pk) 
+) without OIDs;
+
+REVOKE ALL on "sample" from PUBLIC;
+GRANT ALL on "sample" to "%%GEOSS_SU_USER%%";
+
+--
+CREATE TABLE "arraymeasurement" (
+        "am_pk" integer DEFAULT nextval('pk_seq'::text) NOT NULL,
+        "hybridization_name" character varying(128),
+        "type" character varying(128),
+        "description" text,
+        "al_fk" integer,
+        "release_date" timestamp with time zone,
+        "submission_date" timestamp with time zone,
+        "equation" text,
+        "am_comments" text,
+        "equation_type" character varying(128),
+        "smp_fk" integer,
+        "qc_fk" integer,
+        "spot_measurement_units" character varying(128),
+        "instance_code" character varying(128),
+        "image_anal_sw_fk" integer,
+        "image_anal_sw_params" character varying(128),
+        "spotter_sw_fk" integer,
+        "spotter_sw_params" character varying(128),
+        "sptr_fk" integer,
+        "spotter_hw_params" character varying(128),
+        "scan_sw_fk" integer,
+        "scan_sw_params" character varying(128),
+        "scn_fk" integer,
+        "scan_hw_params" character varying(128),
+        "hyb_stringency" double precision,
+        "experiment_date" timestamp with time zone,
+        "file_name" text, 
+        "column_name" character varying(128),
+        "channel_name" character varying(128),
+        "provider_con_fk" integer,
+        "is_loaded" boolean,
+        "al_sa_fk" integer,
+ 	"date_loaded" date,
+	 Constraint arraymeasurement_pkey primary key(am_pk),
+	 Constraint arraymeasurement_al_fk foreign key(al_fk) references arraylayout(al_pk),  
+	 Constraint arraymeasurement_smp_fk foreign key(smp_fk) references sample(smp_pk),  
+	 Constraint arraymeasurement_qc_fk foreign key(qc_fk) references quality_control(qc_pk),  
+	 Constraint arraymeasurement_al_sa_fk foreign key(al_sa_fk) references arraylayout_sa(al_sa_pk)  
+) without OIDs;
+
+REVOKE ALL on "arraymeasurement" from PUBLIC;
+GRANT ALL on "arraymeasurement" to "%%GEOSS_SU_USER%%";
+
+--
+
+CREATE TABLE "usersequencefeature" (
+	"usf_pk" integer DEFAULT nextval('usersequencefeature_usf_pk_seq'::text) NOT NULL,
+	"spc_fk" integer NOT NULL,
+	"usf_name" character varying(128) NOT NULL,
+	"usf_type" character varying(128) NOT NULL,
+	"other_name" character varying(128),
+	"other_type" character varying(128),
+	"smp_fk" integer,
+	"clone_name" character varying(128),
+	"con_fk" integer,
+	"chromosome" character varying(128),
+	"start_position" integer,
+	"end_position" integer,
+	"sequence" text,
+	"short_description" text,
+	"flags" integer,
+	 Constraint usersequencefeature_pkey primary key(usf_pk),
+	 Constraint usersequencefeature_spc_fk foreign key(spc_fk) references species(spc_pk),
+	 Constraint usersequencefeature_smp_fk foreign key(smp_fk) references sample(smp_pk),
+	 Constraint usersequencefeature_con_fk foreign key(con_fk) references contact(con_pk)
+) without OIDs;
+
+REVOKE ALL on "usersequencefeature" from PUBLIC;
+GRANT ALL on "usersequencefeature" to "%%GEOSS_SU_USER%%";
+
+--
+
+CREATE TABLE "al_spots" (
+        "als_pk" integer DEFAULT nextval('"al_spots_als_pk_seq"'::text) NOT NULL,
+        "al_fk" integer,
+        "spot_type" character varying(128) NOT NULL,
+        "spot_identifier" character varying(128),
+        "spot_description" character varying(128),
+        "usf_fk" integer,
+        "sub_sequence_start" integer,
+        "sub_sequence_end" integer,
+        "spot_concentration" double precision,
+        "x_image_location" character varying(128),
+        "y_image_location" character varying(128),
+        "grid_image_location" character varying(128),
+         Constraint al_spots_pkey Primary Key ("als_pk"),
+	 Constraint al_spots_al_fk foreign key(al_fk) references arraylayout(al_pk)  
+) without OIDs;
+
+REVOKE ALL on "al_spots" from PUBLIC;
+GRANT ALL on "al_spots" to "%%GEOSS_SU_USER%%";
+
+--
+CREATE TABLE "am_spots_mas5" (
+	"ams_mas5_pk" integer DEFAULT nextval('am_spots_mas5_ams_mas5_pk_seq'::text) NOT NULL,
+	"am_fk" integer NOT NULL,
+        "als_fk" integer,
+	"detection" double precision,
+	"detectionp" double precision,
+	"signal" double precision,
+	"statpairs" double precision,
+	"statpairsused" double precision,
+	 Constraint am_spots_mas5_pkey primary key(ams_mas5_pk),
+	 Constraint am_spots_mas5_am_fk foreign key(am_fk) references arraymeasurement(am_pk),  
+	 Constraint am_spots_mas5_als_fk foreign key(als_fk) references al_spots(als_pk)  
+) without OIDs;
+
+REVOKE ALL on "am_spots_mas5" from PUBLIC;
+GRANT ALL on "am_spots_mas5" to "%%GEOSS_SU_USER%%";
+
+--
+CREATE TABLE "am_spots_mas4" (
+        "ams_mas4_pk" integer DEFAULT nextval('am_spots_mas4_ams_mas4_pk_seq'::text) NOT NULL,
+        "am_fk" integer NOT NULL,
+        "als_fk" integer,
+        "positive" double precision,
+        "negative" double precision,
+        "pairsused" double precision,
+        "pairsinavg" double precision,
+        "positivefraction" double precision,
+	"logavg" double precision,
+	"avgdiff" double precision,
+	"abscall" double precision,
+	 Constraint am_spots_mas4_pkey primary key(ams_mas4_pk),
+	 Constraint am_spots_mas4_am_fk foreign key(am_fk) references arraymeasurement(am_pk),  
+	 Constraint am_spots_mas4_als_fk foreign key(als_fk) references al_spots(als_pk)  
+) without OIDs;
+
+REVOKE ALL on "am_spots_mas4" from PUBLIC;
+GRANT ALL on "am_spots_mas4" to "%%GEOSS_SU_USER%%";
+
+--
+CREATE TABLE "am_spots_dchip" (
+        "ams_dchip_pk" integer DEFAULT nextval('am_spots_dchip_ams_dchip_pk_seq'::text) NOT NULL,
+        "am_fk" integer NOT NULL,
+        "als_fk" integer,
+        "signal" double precision,
+	 Constraint am_spots_dchip_pkey primary key(ams_dchip_pk),
+	 Constraint am_spots_dchip_am_fk foreign key(am_fk) references arraymeasurement(am_pk),  
+	 Constraint am_spots_dchip_als_fk foreign key(als_fk) references al_spots(als_pk)  
+) without OIDs;
+
+REVOKE ALL on "am_spots_dchip" from PUBLIC;
+GRANT ALL on "am_spots_dchip" to "%%GEOSS_SU_USER%%";
+--
+
+CREATE TABLE "usersec" (
+        "us_pk" integer not null, -- same as con_fk -- get via select nextval('guc_seq') from guc_seg;
+        "con_fk" integer NOT NULL,
+        "login" character varying(128) NOT NULL,
+        "password" character varying(128) NOT NULL,
+	"last_login" timestamp, 
+         Constraint usersec_pkey primary key(us_pk),
+         Constraint usersec_con_fk foreign key(con_fk) references contact(con_pk)
+) without OIDs;
+
+REVOKE ALL on "usersec" from PUBLIC;
+GRANT ALL on "usersec" to "%%GEOSS_SU_USER%%";
+
+
+-- Groups may exist without a contact, and a user might be owner for several groups
+-- Normally, gs_pk is same as con_pk. When a new group is created independent of a contact,
+-- the programmer has to do an extra query to bump the guc_seq.
+
+CREATE TABLE "groupsec" (
+        "gs_pk" integer not null, -- get via select nextval('guc_seq') from guc_seg;
+        "gs_owner" integer not null,
+        "gs_name" character varying(128) NOT NULL,
+         Constraint groupsec_pkey primary key(gs_pk)
+) without OIDs;
+
+REVOKE ALL on "groupsec" from PUBLIC;
+GRANT ALL on "groupsec" to "%%GEOSS_SU_USER%%";
+
+--
+CREATE TABLE "grouplink" (
+	"us_fk" integer NOT NULL,
+	"gs_fk" integer NOT NULL,
+	 Constraint grouplink_us_fk foreign key(us_fk) references usersec(us_pk),
+	 Constraint grouplink_gs_fk foreign key(gs_fk) references groupsec(gs_pk)
+) without OIDs;
+
+REVOKE ALL on "grouplink" from PUBLIC;
+GRANT ALL on "grouplink" to "%%GEOSS_SU_USER%%";
+
+-- Contacts in the future may exist without users, so use two keys
+-- Use the con_fk as both keys, and eliminate the usersec_us_pk_seq.
+ 
+--
+CREATE TABLE "pi_sec" (
+        "us_fk" integer not null,
+        "pi_key" integer NOT NULL,
+	 Constraint pi_sec_us_fk foreign key(us_fk) references usersec(us_pk)
+) without OIDs;
+
+
+REVOKE ALL on "pi_sec" from PUBLIC;
+GRANT ALL on "pi_sec" to "%%GEOSS_SU_USER%%";
+
+--
+
+CREATE TABLE "dic_contacttype" (
+	"term_string" character varying(48),
+	"description" text
+) without OIDs;
+
+REVOKE ALL on "dic_contacttype" from PUBLIC;
+GRANT ALL on "dic_contacttype" to "%%GEOSS_SU_USER%%";
+
+--
+create table "session" (
+       "session_pk" integer DEFAULT nextval('session_session_pk_seq'::text) NOT NULL,
+       "session_id" character varying(128) UNIQUE,
+       "us_fk" integer,       
+       "expiration" integer,
+	Constraint session_pkey primary key(session_pk)
+) without OIDs;
+
+REVOKE ALL on "session" from PUBLIC;
+GRANT ALL on "session" to "%%GEOSS_SU_USER%%";
+
+--
+CREATE TABLE "key_value" (
+	"kv_pk" integer DEFAULT nextval('key_value_kv_pk_seq'::text) NOT NULL,
+	"session_fk" integer,
+	"key" varchar(128),
+	"value" text,
+	"type" character varying(128),
+	 Constraint key_value_pkey primary key(kv_pk),
+	 Constraint key_value_session_fk foreign key(session_fk) references session(session_pk)
+) without OIDs;
+
+REVOKE ALL on "key_value" from PUBLIC;
+GRANT ALL on "key_value" to "%%GEOSS_SU_USER%%";
+
+--
+
+CREATE TABLE "configuration" (
+        "config_pk" integer DEFAULT nextval('configuration_seq'::text) NOT NULL,
+        "wwwhost" character varying(128),
+        "orgname" character varying(128),
+        "curator_email" character varying(128),
+        "pub_data_email" character varying(128),
+        "admin_email" character varying(128),
+        "alt_curator_email" character varying(128),
+        "chip_data_path" character varying(128),
+        "inact_logout_general" integer DEFAULT 15,
+        "inact_logout_administrator" integer DEFAULT 15,
+        "inact_logout_curator" integer DEFAULT 60,
+        "add_curator_to_groups" boolean,
+        -- "show_all_users" boolean,
+        "bug_report_url" character varying(250) DEFAULT 'http://biostat.virginia.edu/bugzilla',
+        "linktext1" character varying(32),
+        "linkurl1" character varying(250),
+        "allow_public_users" boolean DEFAULT false,
+	      "allow_member_users" boolean DEFAULT true,
+	      "companion_geoss" text,
+	      "days_to_confirm" integer DEFAULT 1, 
+        "additional_path" character varying(128),
+	      "custom_desc1" text,
+	      "custom_desc2" text,
+	      "custom_news1" text,
+	      "custom_news2" text,
+        "array_center" boolean DEFAULT true,
+        "analysis" boolean DEFAULT true,
+        "data_publishing" boolean DEFAULT true,
+        "user_data_load" boolean DEFAULT false,
+        "ord_num_format" varchar(128) DEFAULT 'year_seq'
+) without OIDs;
+
+
+REVOKE ALL on "configuration" from PUBLIC;
+GRANT ALL on "configuration" to "%%GEOSS_SU_USER%%";
+
+
+-- gs_fk=groupsec.gs_pk
+-- ref_fk = securedtable.pk
+
+create table "groupref" (
+       "us_fk" integer not null,
+       "gs_fk" integer not null,
+       "ref_fk" integer,
+       "permissions" integer,
+       "old_permissions" integer,
+	Constraint groupref_pkey primary key(ref_fk),
+	Constraint groupref_us_fk foreign key(us_fk) references usersec(us_pk),
+	Constraint groupref_gs_fk foreign key(gs_fk) references groupsec(gs_pk)
+) without OIDs;
+
+REVOKE ALL on "groupref" from PUBLIC;
+GRANT ALL on "groupref" to "%%GEOSS_SU_USER%%";
+
+
+create table "housekeeping_control" (
+	"hc_pk" integer DEFAULT nextval('housekeeping_control_seq'::text) NOT NULL,
+	"qc_fk" integer,
+	"control_name" character varying(128),
+	"control_value" double precision,
+	 Constraint housekeeping_control_pkey primary key(hc_pk),
+	 Constraint housekeeping_control_qc_fk foreign key(qc_fk) references quality_control(qc_pk)  
+) without OIDs;
+
+REVOKE ALL on "housekeeping_control" from PUBLIC;
+GRANT ALL on "housekeeping_control" to "%%GEOSS_SU_USER%%";
+
+create table "billing" (
+       "oi_fk" integer NOT NULL,
+       "chips_billed" boolean,
+       "rna_isolation_billed" boolean,
+       "analysis_billed" boolean,
+       "billing_code" character varying(128),
+       "billing_notes" text,
+       "isolation_bill_date" date,
+       "preps_bill_date" date,
+       "chips_bill_date" date,
+	Constraint billing_oi_fk foreign key(oi_fk) references order_info(oi_pk)
+) without OIDs;
+
+REVOKE ALL on "billing" from PUBLIC;
+GRANT ALL on "billing" to "%%GEOSS_SU_USER%%";
+
+
+create table "sampletype" (
+       "sample_type" character varying(128)
+) without OIDs;
+
+REVOKE ALL on "sampletype" from PUBLIC;
+GRANT ALL on "sampletype" to "%%GEOSS_SU_USER%%";
+
+
+--ANALYSIS TABLES - added by Jodi November 2002
+--added PK and FK constraints September 2003
+CREATE SEQUENCE "analysis_an_pk_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "analysis_an_pk_seq" from PUBLIC;
+GRANT ALL on "analysis_an_pk_seq" to "%%GEOSS_SU_USER%%";
+
+
+CREATE SEQUENCE "filetypes_ft_pk_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "filetypes_ft_pk_seq" from PUBLIC;
+GRANT ALL on "filetypes_ft_pk_seq" to "%%GEOSS_SU_USER%%";
+
+
+CREATE SEQUENCE "user_parameter_names_upn_pk_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "user_parameter_names_upn_pk_seq" from PUBLIC;
+GRANT ALL on "user_parameter_names_upn_pk_seq" to "%%GEOSS_SU_USER%%";
+
+
+CREATE SEQUENCE "sys_parameter_names_spn_pk_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "sys_parameter_names_spn_pk_seq" from PUBLIC;
+GRANT ALL on "sys_parameter_names_spn_pk_seq" to "%%GEOSS_SU_USER%%";
+
+
+CREATE SEQUENCE "user_parameter_values_upv_pk" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "user_parameter_values_upv_pk" from PUBLIC;
+GRANT ALL on "user_parameter_values_upv_pk" to "%%GEOSS_SU_USER%%";
+
+
+CREATE SEQUENCE "sys_parameter_values_spv_pk" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "sys_parameter_values_spv_pk" from PUBLIC;
+GRANT ALL on "sys_parameter_values_spv_pk" to "%%GEOSS_SU_USER%%";
+
+
+CREATE SEQUENCE "extension_ext_pk_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "extension_ext_pk_seq" from PUBLIC;
+GRANT ALL on "extension_ext_pk_seq" to "%%GEOSS_SU_USER%%";
+
+
+--Table: analysis
+--This table stores the information on the different kinds of analyses that can be run by the system. It is populated when researchers upload an analysis.
+
+CREATE TABLE "analysis" (
+        "an_pk" integer DEFAULT nextval('analysis_an_pk_seq'::text) NOT NULL,
+	"an_name" character varying(128),
+        "cmdstr" text,
+	"version" character varying(128),
+	"current" boolean,
+	"an_type" character varying(128),
+	 Constraint analysis_pkey primary key(an_pk)
+) without OIDs;
+
+REVOKE ALL on "analysis" from PUBLIC;
+GRANT ALL on "analysis" to "%%GEOSS_SU_USER%%";
+
+--Table: user_parameter_names
+--This table was created as a solution to having analysis.userparameternames as an array data type.
+
+CREATE TABLE "user_parameter_names" (
+	"upn_pk" integer DEFAULT nextval('user_parameter_names_upn_pk_seq'::text) NOT NULL,
+	"an_fk" integer,
+	"up_name" character varying(128),
+	"up_display_name" character varying(128),
+	"up_type" character varying(128),
+	"up_default" character varying(128),
+	"up_optional" integer,
+	 Constraint user_parameter_names_pkey primary key(upn_pk),
+	 Constraint user_parameter_names_an_fk foreign key(an_fk) references analysis(an_pk)
+) without OIDs;
+
+
+REVOKE ALL on "user_parameter_names" from PUBLIC;
+GRANT ALL on "user_parameter_names" to "%%GEOSS_SU_USER%%";
+
+
+--Table: sys_parameter_names
+--This table was created as a solution to having analysis.sysparameternames as an array data type.
+
+CREATE TABLE "sys_parameter_names" (
+	"spn_pk" integer DEFAULT nextval('sys_parameter_names_spn_pk_seq'::text) NOT NULL,
+	"an_fk" integer,
+	"sp_name" character varying(128),
+	"sp_default" character varying(128),
+	"sp_optional" integer,
+	 Constraint sys_parameter_names_pkey primary key(spn_pk),
+	 Constraint sys_parameter_names_an_fk foreign key(an_fk) references analysis(an_pk)
+) without OIDs;
+ 
+
+REVOKE ALL on "sys_parameter_names" from PUBLIC;
+GRANT ALL on "sys_parameter_names" to "%%GEOSS_SU_USER%%";
+
+--Linking Table: disease_study_link
+--This linking table was created due to a many to one relationship between the disease and study tables
+
+
+--Table: disease
+--This table stores all distinct disease that a study may be researching
+
+CREATE TABLE "disease" (
+        "dis_pk" integer DEFAULT nextval('filetypes_ft_pk_seq'::text) NOT NULL,
+        "dis_name" character varying(256),
+	 Constraint dis_pkey primary key(dis_pk)
+) without OIDs;
+
+REVOKE ALL on "disease" from PUBLIC;
+GRANT ALL on "disease" to "%%GEOSS_SU_USER%%";
+
+--
+CREATE TABLE "disease_study_link" (
+        "dis_fk" integer,
+        "sty_fk" integer,
+        Constraint disease_study_link_dis_fk foreign key(dis_fk) references disease(dis_pk),
+        Constraint disease_study_link_sty_fk foreign key(sty_fk)
+        references study(sty_pk) on delete cascade
+) without OIDs;
+
+REVOKE ALL on "disease_study_link" from PUBLIC;
+GRANT ALL on "disease_study_link" to "%%GEOSS_SU_USER%%";
+
+
+--Linking Table: analysis_filetypes_link
+--This linking table was created due to a many to many relationship between the input files of the analysis table and the filetypes table.
+
+
+--Table: filetypes
+--This table stores all distinct file types for which we would like to type check. Analysis can specify acceptable file types for input and output files.
+
+CREATE TABLE "filetypes" (
+        "ft_pk" integer DEFAULT nextval('filetypes_ft_pk_seq'::text) NOT NULL,
+        "ft_name" character varying(128),
+        "arg_name" character varying(20),
+	"ft_comments" text,
+	 Constraint filestypes_pkey primary key(ft_pk)
+) without OIDs;
+
+REVOKE ALL on "filetypes" from PUBLIC;
+GRANT ALL on "filetypes" to "%%GEOSS_SU_USER%%";
+
+--
+CREATE TABLE "analysis_filetypes_link" (
+        "an_fk" integer,
+        "ft_fk" integer,
+        "input" boolean,
+        Constraint analysis_filetypes_link_an_fk foreign key(an_fk) references analysis(an_pk),
+        Constraint analysis_filetypes_link_ft_fk foreign key(ft_fk) references filetypes(ft_pk)
+) without OIDs;
+
+REVOKE ALL on "analysis_filetypes_link" from PUBLIC;
+GRANT ALL on "analysis_filetypes_link" to "%%GEOSS_SU_USER%%";
+
+
+--Table: extension
+--This table was created to hold the extensions associated with the various file types. We need a separate table since files will have multiple extensions.
+
+CREATE TABLE "extension" (
+	"ext_pk" integer DEFAULT nextval('extension_ext_pk_seq'::text) NOT NULL,
+	"ft_fk" integer,
+	"extension" character varying(128),
+	 Constraint extension_pkey primary key(ext_pk),
+	 Constraint extension_ft_fk foreign key(ft_fk) references filetypes(ft_pk)
+) without OIDs;
+
+REVOKE ALL on "extension" from PUBLIC;
+GRANT ALL on "extension" to "%%GEOSS_SU_USER%%";
+
+--Table: organization
+--This table will hold specific information about different organizations that may submit samples to the array center.
+CREATE TABLE "organization" (
+	"org_pk" integer DEFAULT nextval('organization_seq'::text) NOT NULL,
+	"org_name" text,
+	"org_description" text,
+	"org_phone" character varying(128),
+	"org_url" text,
+	"logo_fi_fk" integer,
+	"icon_fi_fk" integer,
+	"display_logo" boolean,
+	"chip_discount" numeric, 
+	"needs_approval" boolean,
+         Constraint organization_pkey primary key(org_pk),
+         Constraint organization_logo_fi_fk foreign key(logo_fi_fk) references file_info(fi_pk),
+         Constraint organization_icon_fi_fk foreign key(icon_fi_fk) references file_info(fi_pk)
+) without OIDs;
+
+REVOKE ALL on "organization" from PUBLIC;
+GRANT ALL on "organization" to "%%GEOSS_SU_USER%%";
+ 
+
+CREATE TABLE "org_usersec_link" (
+	"org_fk" integer,
+	"us_fk" integer,
+	"curator" boolean,
+         Constraint org_usersec_link_org_fk foreign key(org_fk) references organization(org_pk),
+         Constraint org_usersec_link_us_fk foreign key(us_fk) references usersec(us_pk) on delete cascade
+) without OIDs;
+
+REVOKE ALL on "org_usersec_link" from PUBLIC;
+GRANT ALL on "org_usersec_link" to "%%GEOSS_SU_USER%%";
+
+
+--CREATE UNIQUE INDEX "ams_mas5_pkey" on "am_spots_mas5" using btree ( "ams_mas5_pk" "int4_ops" );
+
+CREATE  INDEX "ams_mas5_am_fk_ind" on "am_spots_mas5" using btree ( "am_fk" "int4_ops" );
+
+CREATE  INDEX "ams_mas5_als_fk_ind" on "am_spots_mas5" using btree ( "als_fk" "int4_ops" );
+
+
+--CREATE UNIQUE INDEX "ams_mas4_pkey" on "am_spots_mas4" using btree ( "ams_mas4_pk" "int4_ops" );
+
+CREATE  INDEX "ams_mas4_am_fk_ind" on "am_spots_mas4" using btree ( "am_fk" "int4_ops" );
+
+CREATE  INDEX "ams_mas4_als_fk_ind" on "am_spots_mas4" using btree ( "als_fk" "int4_ops" );
+
+
+--CREATE UNIQUE INDEX "ams_dchip_pkey" on "am_spots_dchip" using btree ( "ams_dchip_pk" "int4_ops" );
+
+CREATE  INDEX "ams_dchip_am_fk_ind" on "am_spots_dchip" using btree ( "am_fk" "int4_ops" );
+
+CREATE  INDEX "ams_dchip_als_fk_ind" on "am_spots_dchip" using btree ( "als_fk" "int4_ops" );
+
+
+--CREATE UNIQUE INDEX "file_info_pkey" on "file_info" using btree ("fi_pk" "int4_ops");
+
+
+CREATE  INDEX "gl_us_fk_ind" on "grouplink" using btree ( "us_fk" "int4_ops" );
+
+
+CREATE  INDEX "gl_gs_fk_ind" on "grouplink" using btree ( "gs_fk" "int4_ops" );
+
+
+--CREATE UNIQUE INDEX "groupsec_pkey" on "groupsec" using btree ( "gs_pk" "int4_ops" );
+
+
+CREATE UNIQUE INDEX "groupsec_gs_name_key" on "groupsec" using btree ( "gs_name" "varchar_ops" );
+
+
+CREATE  INDEX "smp_con_fk_ind" on "sample" using btree ( "con_fk" "int4_ops" );
+
+
+--CREATE UNIQUE INDEX "sample_pkey" on "sample" using btree ( "smp_pk" "int4_ops" );
+
+
+CREATE INDEX "sample_smp_name_ind" on "sample" using btree ( "smp_name" );
+
+
+CREATE UNIQUE INDEX "usersec_login_key" on "usersec" using btree ( "login" "varchar_ops" );
+
+
+CREATE  INDEX "us_con_fk_ind" on "usersec" using btree ( "con_fk" "int4_ops" );
+
+
+--CREATE UNIQUE INDEX "usersec_pkey" on "usersec" using btree ( "us_pk" "int4_ops" );
+
+
+--CREATE UNIQUE INDEX "contact_pkey" on "contact" using btree ( "con_pk" "int4_ops" );
+
+
+--CREATE UNIQUE INDEX "arraymeasurement_pkey" on "arraymeasurement" using btree ( "am_pk" "int4_ops" );
+
+
+CREATE UNIQUE INDEX "arraylayout_name_key" on "arraylayout" using btree ( "name" "varchar_ops", "con_fk" "int4_ops" );
+
+
+--CREATE UNIQUE INDEX "arraylayout_pkey" on "arraylayout" using btree ( "al_pk" "int4_ops" );
+
+
+CREATE  INDEX "al_con_fk_ind" on "arraylayout" using btree ( "con_fk" "int4_ops" );
+
+
+CREATE UNIQUE INDEX "al_spots_spot_identifier_key" on "al_spots" using btree ( "spot_identifier" "varchar_ops", "al_fk" "int4_ops" );
+
+CREATE UNIQUE INDEX "al_spots_x_image_location_key" on "al_spots" using btree ( "x_image_location" "varchar_ops", "y_image_location" "varchar_ops", "grid_image_location" "varchar_ops", "al_fk" "int4_ops" );
+
+CREATE INDEX al_spots_al_fk_ind on "al_spots" using btree ("al_fk");
+
+--CREATE UNIQUE INDEX "order_info_pkey" on "order_info" using btree ("oi_pk");
+
+CREATE UNIQUE INDEX "order_info_order_number_ind" on "order_info" using btree ("order_number");
+
+--CREATE UNIQUE INDEX "exp_condition_pkey" on "exp_condition" using btree ("ec_pk");
+
+CREATE INDEX "exp_condition_sty_fk_ind" on "exp_condition" using btree ("sty_fk");
+
+--CREATE UNIQUE INDEX "study_pkey" on "study" using btree ("sty_pk");
+
+CREATE UNIQUE INDEX "billing_oi_fk_ind" on "billing" using btree ("oi_fk");
+
+CREATE UNIQUE INDEX "groupref_ref_fk_ind" on "groupref" using btree ("ref_fk");
+
+CREATE INDEX "groupref_us_fk_ind" on "groupref" using btree ("us_fk");
+
+CREATE INDEX "groupref_gs_fk_ind" on "groupref" using btree ("gs_fk");
+
+CREATE INDEX "arraymeasurement_al_fk_ind" on "arraymeasurement" using btree ("al_fk");
+
+CREATE INDEX "arraymeasurement_al_sa_fk_ind" on "arraymeasurement" using btree ("al_sa_fk");
+
+CREATE INDEX "arraymeasurement_smp_fk_ind" on "arraymeasurement" using btree ("smp_fk");
+
+CREATE INDEX "arraymeasurement_hybridization_name_ind" on "arraymeasurement" using btree ("hybridization_name");
+
+CREATE INDEX "sample_ec_fk_ind" on "sample" using btree ("ec_fk");
+
+CREATE INDEX "sample_oi_fk_ind" on "sample" using btree ("oi_fk");
+
+CREATE UNIQUE INDEX "organization_org_name_ind" on "organization" using btree ("org_name");
+
+--Table: extraction
+--This table stores column headers and condition labels for exported data.
+--Machine readable (aka GeneX readable) data needs the extraction info
+--for column names and condLabels arguments to R.
+--Human readabla exported data does not use this table, but instead
+--puts this info into the data file as header rows.
+
+--CREATE TABLE "extraction" (
+--	"fi_data_fk" integer,
+--	"conds" character varying(128),
+--	"cond_labels" text,
+--	 Constraint extraction_fi_data_fk foreign key(fi_data_fk) references file_info(fi_pk)
+--) without OIDs;
+
+--REVOKE ALL on "extraction" from PUBLIC;
+--GRANT ALL on "extraction" to "%%GEOSS_SU_USER%%";
+
+--Table: node
+--Nodes are actual instances of analyses that should be run. They contain all information necessary to run the analysis.
+
+CREATE TABLE "node" (
+	"node_pk" integer DEFAULT nextval('pk_seq'::text) NOT NULL,
+	"tree_fk" integer,
+	"an_fk" integer,
+	"parent_key" integer,
+	 Constraint node_pkey primary key(node_pk),
+	 Constraint node_tree_fk foreign key(tree_fk) references tree(tree_pk),
+	 Constraint node_an_fk foreign key(an_fk) references analysis(an_pk)
+) without OIDs;
+
+REVOKE ALL on "node" from PUBLIC;
+GRANT ALL on "node" to "%%GEOSS_SU_USER%%";
+
+--Table: user_paramter_values
+--This table was created to eliminate the need for an array data type for the node.userparametervalues field.
+
+CREATE TABLE "user_parameter_values" (
+	"upv_pk" integer DEFAULT nextval('user_parameter_values_upv_pk'::text) NOT NULL,
+	"node_fk" integer,
+	"upn_fk" integer,
+	"up_value" text,
+	 Constraint user_parameter_values_pkey primary key(upv_pk),
+	 Constraint user_parameter_values_node_fk foreign key(node_fk) references node(node_pk),
+	 Constraint user_parameter_values_upn_fk foreign key(upn_fk) references user_parameter_names(upn_pk)
+) without OIDs;
+
+  
+REVOKE ALL on "user_parameter_values" from PUBLIC;
+GRANT ALL on "user_parameter_values" to "%%GEOSS_SU_USER%%";
+
+--Table: sys_parameter_values
+--This table was created to eliminate the need for an array data type for the node.sysparametervalues field.
+
+
+CREATE TABLE "sys_parameter_values" (
+	"spv_pk" integer DEFAULT nextval('sys_parameter_values_spv_pk'::text) NOT NULL,
+	"node_fk" integer,
+	"spn_fk" integer,
+	"sp_value" text,
+	 Constraint sys_parameter_values_pkey primary key(spv_pk),
+	 Constraint sys_parameter_values_node_fk foreign key(node_fk) references node(node_pk),
+	 Constraint sys_parameter_values_spn_fk foreign key(spn_fk) references sys_parameter_names(spn_pk)
+) without OIDs;
+
+  
+REVOKE ALL on "sys_parameter_values" from PUBLIC;
+GRANT ALL on "sys_parameter_values" to "%%GEOSS_SU_USER%%";
+--
+
+--add MIAME table for public data
+--September 2003
+
+--
+CREATE TABLE "miame_type" (
+        "miame_type_pk" integer DEFAULT nextval('miame_type_seq'::text) NOT NULL,
+        "miame_type_name" character varying(128),
+	 Constraint miame_type_pkey primary key(miame_type_pk)
+) without OIDs;
+
+
+REVOKE ALL on "miame_type" from PUBLIC;
+GRANT ALL on "miame_type" to "%%GEOSS_SU_USER%%";
+
+--
+CREATE TABLE "display_type" (
+        "display_type_pk" integer DEFAULT nextval('display_type_seq'::text) NOT NULL,
+        "display_type_name" character varying(128),
+	 Constraint display_type_pkey primary key(display_type_pk)
+) without OIDs;
+
+REVOKE ALL on "display_type" from PUBLIC;
+GRANT ALL on "display_type" to "%%GEOSS_SU_USER%%";
+
+--
+CREATE TABLE "miame" (
+	"miame_pk" integer DEFAULT nextval('pk_seq'::text) NOT NULL, 
+	"sty_fk" integer,
+	"miame_name" character varying(250) UNIQUE,
+	"miame_description" text,
+	"miame_type_fk" integer,
+	"display_type_fk" integer, 
+	"publish_date" date,
+	"start_compile_date" date,
+	"ed_type" text,
+	"ed_design" text,
+	"ed_factors" text,
+	"ed_num_hybrids" integer,
+	"ed_reference" text,
+	"ed_qc_steps" text,
+	"ed_urls" text,
+	"smp_origin" text,
+	"smp_manipulation" text,
+	"smp_labeling" text,
+	"smp_spikes" text,
+	"hybrid_procedures" text,
+	"hw_sw_info" text,
+	"sw_type" text, 
+	"sw_measurements_prod" text,
+	"sw_measurements_used" text,
+	"hw_sw_params" text,
+	"sw_data_manipulation" text,
+	"ad_design" text,
+	"ad_spot" text,
+	"ad_specs" text,
+	"ad_location_id" text,
+	"ad_reporter_type" text, 
+	"ad_manufacturer" text,
+	"ad_reporter_source" text,
+	"ad_reporter_prep" text,
+	"ad_spotting_protocols" text,
+	"ad_prehybrid_treatment" text,
+	"ana_fi_fk" integer,
+	 Constraint miame_pkey primary key(miame_pk),
+	 Constraint miame_sty_fk foreign key(sty_fk) references study(sty_pk),
+	 Constraint miame_miame_type_fk foreign key(miame_type_fk) references miame_type(miame_type_pk),
+	 Constraint miame_display_type_fk foreign key(display_type_fk) references display_type(display_type_pk),
+	 Constraint miame_ana_fi_fk foreign key(ana_fi_fk) references file_info(fi_pk)
+)without OIDs; 		
+	
+REVOKE ALL on "miame" from PUBLIC;
+GRANT ALL on "miame" to "%%GEOSS_SU_USER%%";
+
+
+--CREATE UNIQUE INDEX "node_pkey" on "node" using btree ("node_pk");
+
+--CREATE UNIQUE INDEX "user_parameter_values_pkey" on "user_parameter_values" using btree ("upv_pk");
+
+--CREATE UNIQUE INDEX "sys_parameter_values_pkey" on "sys_parameter_values" using btree ("spv_pk");
+
+--CREATE UNIQUE INDEX "user_parameter_names_pkey" on "user_parameter_names" using btree ("upn_pk");
+
+--CREATE UNIQUE INDEX "sys_parameter_names_pkey" on "sys_parameter_names" using btree ("spn_pk");
+
+--CREATE UNIQUE INDEX "analysis_pkey" on "analysis" using btree ("an_pk");
+
+--CREATE UNIQUE INDEX "filetypes_pkey" on "filetypes" using btree ("ft_pk");
+
+--CREATE UNIQUE INDEX "extension_pkey" on "extension" using btree ("ext_pk");
+
+CREATE INDEX "user_parameter_names_an_fk_ind" on "user_parameter_names" using btree ("an_fk");
+
+CREATE INDEX "sys_parameter_names_an_fk_ind" on "sys_parameter_names" using btree ("an_fk");
+
+CREATE INDEX "node_parent_key_ind" on "node" using btree ("parent_key");
+
+CREATE INDEX "node_an_fk_ind" on "node" using btree ("an_fk");
+
+CREATE INDEX "spv_node_fk_ind" on "sys_parameter_values" using btree ("node_fk");
+
+CREATE INDEX "upv_node_fk_ind" on "user_parameter_values" using btree ("node_fk");
+
+CREATE INDEX "tree_fi_input_fk_ind" on "tree" using btree ("fi_input_fk");
+
+CREATE INDEX "al_spots_usf_fk_ind" on "al_spots" using btree ("usf_fk");
+
+CREATE INDEX "usersequencefeatur_usf_name_ind" on "usersequencefeature" using btree ("usf_name");
+
+--CREATE UNIQUE INDEX "al_spots_usf_pkey" on "usersequencefeature" using btree ("usf_pk");
+
+--Analysis preparation tables added by Jodi July 2004
+
+CREATE TABLE "an_set" (
+	"an_set_pk" integer DEFAULT nextval('pk_seq'::text) NOT NULL,
+	"an_set_name" character varying(128),
+	"an_set_desc" text,
+	"an_set_created" timestamp,
+	 Constraint an_set_pkey primary key(an_set_pk)
+) without OIDs;
+
+REVOKE ALL on "an_set" from PUBLIC;
+GRANT ALL on "an_set" to "%%GEOSS_SU_USER%%";
+
+
+CREATE TABLE "an_cond" (
+	"an_cond_pk" integer DEFAULT nextval('pk_seq'::text) NOT NULL,
+	"an_cond_name" character varying(128),
+	"an_cond_desc" text,
+	"an_cond_created" timestamp,
+	 Constraint an_cond_pkey primary key(an_cond_pk)
+) without OIDs;
+	
+REVOKE ALL on "an_cond" from PUBLIC;
+GRANT ALL on "an_cond" to "%%GEOSS_SU_USER%%";
+
+CREATE TABLE "an_set_cond_link" (
+	"an_set_fk" integer,
+	"an_cond_fk" integer,
+         Constraint an_set_cond_link_an_set_fk foreign key(an_set_fk) references an_set(an_set_pk) ON DELETE CASCADE,
+         Constraint an_set_cond_link_an_cond_fk foreign key(an_cond_fk) references an_cond(an_cond_pk) ON DELETE CASCADE
+) without OIDs;
+
+
+REVOKE ALL on "an_set_cond_link" from PUBLIC;
+GRANT ALL on "an_set_cond_link" to "%%GEOSS_SU_USER%%";
+
+
+CREATE TABLE "an_cond_am_link" (
+	"an_cond_fk" integer,
+	"am_fk" integer,
+         Constraint an_cond_am_link_an_cond_fk foreign key(an_cond_fk) references an_cond(an_cond_pk) ON DELETE CASCADE,
+         Constraint an_cond_am_link_am_fk foreign key(am_fk) references arraymeasurement(am_pk) ON DELETE CASCADE
+) without OIDs;
+
+
+REVOKE ALL on "an_cond_am_link" from PUBLIC;
+GRANT ALL on "an_cond_am_link" to "%%GEOSS_SU_USER%%";
+
+--INDEXES on analysis preparation tables
+
+CREATE UNIQUE INDEX "an_set_name_an_set_created_ind" on "an_set" using btree (an_set_name,an_set_created);
+
+CREATE UNIQUE INDEX "an_cond_name_an_cond_created_ind" on "an_cond" using btree (an_cond_name,an_cond_created);
+
+CREATE UNIQUE INDEX "an_set_fk_an_cond_fk_ind" on "an_set_cond_link" using btree (an_set_fk,an_cond_fk);
+
+CREATE UNIQUE INDEX "an_cond_fk_am_fk_ind" on "an_cond_am_link" using btree (an_cond_fk,am_fk);
+
+--Spotted Array tables added by Jodi July 2003
+--tables and fields provided by Daniela Puiu at VCU (Virginia Commonwealth University)
+--arraylayout_sa is listed toward top of script. It needed to be placed before arraymeasurement due to the FK reference
+CREATE SEQUENCE "al_spots_sa_als_sa_pk_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "al_spots_sa_als_sa_pk_seq" from PUBLIC;
+GRANT ALL on "al_spots_sa_als_sa_pk_seq" to "%%GEOSS_SU_USER%%";
+
+
+CREATE SEQUENCE "am_spots_sa_ams_sa_pk_seq" start 1 increment 1 maxvalue 2147483647 minvalue 1  cache 1 ;
+
+REVOKE ALL on "am_spots_sa_ams_sa_pk_seq" from PUBLIC;
+GRANT ALL on "am_spots_sa_ams_sa_pk_seq" to "%%GEOSS_SU_USER%%";
+
+        
+CREATE TABLE "al_spots_sa" (
+        "als_sa_pk" integer DEFAULT nextval('"al_spots_als_pk_seq"'::text) NOT NULL,
+        "al_sa_fk" integer NOT NULL,
+	"als_sa_name" character varying(128),
+        "als_sa_spot_type" character varying(128),
+        "als_sa_spot_identifier" character varying(128),
+        "als_sa_spot_description" character varying(128),
+	"als_sa_spot_concentration" double precision,
+	"usf_fk_seq" integer,
+        "usf_fk_forward" integer,
+        "usf_fk_reverse" integer,
+	"array_row" integer,
+	"array_column" integer,
+	"subarray_row" integer,
+        "subarray_column" integer,
+	"x_location" double precision,
+	"y_location" double precision,
+	"plate" integer, 
+	"well" character varying(128),
+	"expected_product_size" integer,
+	"accession_number" character varying(128),
+	"al_spots_sa_comment" text,
+         Constraint al_spots_sa_pkey primary key(als_sa_pk),
+	 Constraint al_spots_sa_al_sa_fk foreign key(al_sa_fk) references arraylayout_sa(al_sa_pk)
+) without OIDs;
+        
+REVOKE ALL on "al_spots_sa" from PUBLIC;
+GRANT ALL on "al_spots_sa" to "%%GEOSS_SU_USER%%";
+
+
+CREATE TABLE "am_spots_sa" (
+        "ams_sa_pk" integer DEFAULT nextval('am_spots_sa_ams_sa_pk_seq'::text) NOT NULL,
+        "am_fk" integer NOT NULL,
+        "als_sa_fk" integer NOT NULL,
+	"ch1_intensity" double precision,
+	"ch1_background" double precision,
+	"ch1_intensity_std_dev" double precision,
+	"ch1_background_std_dev" double precision,  
+	"ch1_diameter" double precision,
+	"ch1_area" double precision,
+	"ch1_footprint" double precision,
+	"ch1_circularity" double precision,
+	"ch1_spot_uniformity" double precision,
+	"ch1_bkg_uniformity" double precision,
+	"ch1_signal_noise_ratio" double precision,
+	"ch1_confidence" double precision,
+	"ch2_intensity" double precision,
+	"ch2_background" double precision,
+	"ch2_intensity_std_dev" double precision,
+	"ch2_background_std_dev" double precision,  
+	"ch2_diameter" double precision,
+	"ch2_area" double precision,
+	"ch2_footprint" double precision,
+	"ch2_circularity" double precision,
+	"ch2_spot_uniformity" double precision,
+	"ch2_bkg_uniformity" double precision,
+	"ch2_signal_noise_ratio" double precision,
+	"ch2_confidence" double precision,
+         Constraint am_spots_sa_pkey primary key(ams_sa_pk),
+	 Constraint am_spots_sa_am_fk foreign key(am_fk) references arraymeasurement(am_pk),
+	 Constraint am_spots_sa_als_sa_fk foreign key(als_sa_fk) references al_spots_sa(als_sa_pk)
+) without OIDs;
+        
+REVOKE ALL on "am_spots_sa" from PUBLIC; 
+GRANT ALL on "am_spots_sa" to "%%GEOSS_SU_USER%%";
+
+
+CREATE TABLE "smp_am_link" (
+	"smp_fk" integer not null,
+	"am_fk" integer not null
+) without OIDs;
+
+REVOKE ALL on "smp_am_link" from PUBLIC; 
+GRANT ALL on "smp_am_link" to "%%GEOSS_SU_USER%%";
+
+
+--CREATE UNIQUE INDEX "am_spots_sa_ams_sa_pkey" on "am_spots_sa" using btree ("ams_sa_pk");
+
+--CREATE UNIQUE INDEX "arraylayout_sa_al_sa_pkey" on "arraylayout_sa" using btree ("al_sa_pk");
+
+--CREATE UNIQUE INDEX "al_spots_sa_als_sa_pkey" on "al_spots_sa" using btree ("als_sa_pk");
+
+INSERT into configuration (inact_logout_administrator) values (15);

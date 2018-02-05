@@ -1,0 +1,32 @@
+<form action="upl_filetype.cgi" enctype="multipart/form-data" method=post>
+<br>
+<input type="hidden" name="filetype" value="analysis_input">
+<input type="hidden" name="templatefile" value="upl_ana_in.html">
+<table width="700" border=0 cellpadding=4 cellspacing=0>
+<tr>
+<td valign="top"><div align="right">Filename:</div></td>
+<td><input type="text" name="file_name" size=30 maxlength=30 value="{file_name}"></td>
+</tr>
+<tr><td valign="top">
+<div align="right">*Condition Grouping:</div></td>
+<td><input type="text" name="conds" size=30 maxlength=30 value="{conds}"></td>
+</tr>
+<tr><td valign="top">
+<div align="right">*Condition Labels:</div></td>
+<td><input type="text" name="cond_labels" size=30 maxlength=30 
+     value="{cond_labels}"></td>
+</tr>
+<tr>
+<td valign="top"><div align="right">*Affymetrix Chip:</div></td>
+<td>{select_arraylayout}</td>
+</tr>
+<tr>
+<td valign="top"><div align="right">*File to Upload:</div></td>
+<td><input type="file" name="filedata" size=60 value="{file_data}"></td>
+</tr>
+<tr>
+<td valign="top"><div align="right">&nbsp;</div></td>
+<td><input type="submit" name="submit" value="Upload"></td>
+</tr>
+</table>
+</form>

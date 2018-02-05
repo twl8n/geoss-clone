@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+  <head>
+<title>GEOSS Background</title>
+<meta name="keywords" content="gene, chip, expression, affymetrix, genechip, oligo, two, color, spotted, array, dna, rna, oligonucleotide, cdna, analysis, analytical, copy, copy dna, spotted array, hybridization, mrna, messenger, messenger rna, cy3, cy5, probe, reverse transcriptase, reverse transcription, glass, slide, sage, serial, serial analysis of gene expression, photo dimerization, genotype, genotypes, genotyping, fold change, over expression, under expression, up regulation, down regulation, photo lithography, linux, open source, apache, postgres, postgresql, database, secure, curate, curation, curator, perfect match, westfa, young, stat analysis, clustering, perm cluster, r-cluster, r cluster, tree view, go, gene ontology, flurochroms, patrick brown, t-test, anova, function prediction">
+<meta name="description" content="GEOSS is an Open Source Gene Expression Database supporting storage and analysis of Affymetrix&reg; GeneChip&reg; technology, with planned support for two color spotted arrays and other gene expression measurement technologies. GEOSS is designed to serve as an secure repository and archive for many researchers' data. ">
+</head>
+
+  
+<body bgcolor="#FFFFFF" marginheight="0" marginwidth="0" topmargin="0"
+  leftmargin="0" link="#006633" vlink="#666633">
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr valign="top"> 
+    <td width="10" bgcolor="990066" valign="bottom"><img src="graphics/white.gif" width="10" height="10"></td>
+    <td width="10" valign="bottom"><img src="graphics/white.gif" width="10" height="10"></td>
+    <td width="580"> 
+      <table width="600" border="0" cellspacing="0" cellpadding="0">
+        <tr valign="top"> 
+          <td width="100"><font face="Verdana, Arial, Helvetica, sans-serif" size="+1"><a href="./index.cgi"><img src="graphics/geoss_logo.jpg" width="216" height="96" border="0"></a></font></td>
+          <td width="8">&nbsp;&nbsp;</td>
+          <td width="490"><font face="Verdana, Arial, Helvetica, sans-serif" size="+1">Background 
+            and History</font><br>
+          </td>
+        </tr>
+      </table>
+      <p><b>GEOSS Components and Description</b></p>
+      <p>The Gene Expression Open Source System (GEOSS) consists of a relational 
+        database, a web interface, and an analysis suite. There is also a repository 
+        for each user's files, and an comprehensive security system. The gene 
+        expression work flow begins with a researcher describing an experimental 
+        protocol in a minimal fashion. When samples are ready, the researcher 
+        creates an order for the microarray research center which at the University 
+        of Virginia (UVA) is the Biomedical Research Facility (BRF). The BRF hybridizes 
+        the samples as specified by the researcher, and imports the resulting 
+        data into GEOSS. At this stage the data is available to the researcher. 
+        Data can be exported and/or analyzed with built-in GEOSS analysis tools. 
+        Our innovative Analysis Tree package allows users to build a flow chart 
+        (yes, there is a graphical flow chart on the screen) of routines to analyze 
+        data and produce reports. Except for system administrators, all interaction 
+        with the system is via secure web pages. No special software is required 
+        for end users. All data is warehoused on powerful, secure servers. </p>
+      <p>Data is loaded by curators (personnel in the microarray center) via a 
+        web interface. Data is visible only to the researcher who owns it, unless 
+        the researcher explicitly allows group read permissions. The security 
+        system allows all users to create groups, to control group membership, 
+        and to enable/disable group read and/or write permissions. Permissions 
+        apply separately to studies/experimental conditions, orders, data, and 
+        derived data (files).</p>
+      <p>Our Analysis Tree package allows the user to build a graphical representation 
+        of the flow of data through various modules of an analysis. See the user 
+        documentation for descriptions and tutorials of Analysis Trees.</p>
+      <p>Our servers run Fedora Linux. GEOSS is written in Perl. Most of the analysis 
+        routines are written in R, although they can be written in C, Perl or 
+        other languages. We use PostgreSQL as our relational database. Its abilities 
+        to do transactions, its standards compliance, and its high availability 
+        were critical to the project. Users must login to the system. All the 
+        web pages are accessed via SSL so that all data traveling between the 
+        user's web browser and the server is secure from eavesdropping. </p>
+      <p>Several Perl modules that aren't standard in Perl 5.8 are required. R 
+        is required, and of course Apache. All of the Perl used by GEOSS amounts 
+        to only 11,000 lines of code. GEOSS is compact. Installation has been 
+        vastly simplified and should only take a few hours.</p>
+      <p>While GEOSS is theoretically portable to Windows NT, 2000, or XP, there 
+        are a few aspects that would be nontrivial.</p>
+      <p><b>History of GEOSS</b></p>
+      <p>GEOSS is historically related to the two GeneX projects. The original 
+        name of GEOSS was Genex Va since our version was created at the University 
+        of Virginia. All three systems are composed of a relational database, 
+        a web-based user interface, and an analysis system. All three teams interact 
+        on a regular basis, and share as much technology as possible. We also 
+        get help from several other groups for analysis modules and testing. The 
+        three projects are:</p>
+      <ul>
+        <li> GEOSS (formerly known as Genex Va)</li>
+        <li>GeneX-Lite</li>
+        <li>GeneX 2</li>
+      </ul>
+      <p>GeneX began as a project at the National Center for Genome Resources. 
+        Known as NCGR you can find their web site at: <a href="http://www.ncgr.org/">http://www.ncgr.org/</a> 
+        <br>
+      </p>
+      <p>The first version was GeneX 1.4, which NCGR released to the public domain. 
+        This system was essentially early alpha software. The background and underpinnings 
+        were present, but user interface, data curation, and analysis were not 
+        well developed. </p>
+      <p>A small team here at the University of Virginia rewrote version 1.4 and 
+        released Genex Va 1.5 in October of 2002. We shipped a dozen updates over 
+        the subsequent two years and were getting ready to create version 2. At 
+        that point GeneX Va was renamed to GEOSS to more accurately reflect its 
+        nature, and to avoid naming confusion. </p>
+      <p>In the meantime, Open Informatics and Caltech have been working on GeneX 
+        2 by modifying the 1.4 schema to have a high degree of MAGE compliance. 
+        Their project is nearing completion. See GeneX at Sourceforge: <a href="http://sourceforge.net/projects/genex/">http://sourceforge.net/projects/genex/</a></p>
+      <p><b>Genex-Lite</b></p>
+      <p>Todd Peterson (of NCGR) created Genex-Lite. In the Summer of 2004 Todd 
+        released Genex-Gold as an extension of Genex-Lite 2.0. 
+      <p>GeneX Gold at Sourceforge: <a href="http://sourceforge.net/projects/genexgold/">http://sourceforge.net/projects/genexgold/</a></p>
+      <p>Here is Todd's description of Genex-Lite:
+      <p> &quot;The design of GeneX-Lite is based on lessons learned from the 
+        GeneX 1.x system. The primary problems with the prototype system were 
+        mainly with the Curation Tool, system installation and data loading. Many 
+        parts of the GeneX 1.x system were good such as the web interface and 
+        integration with the analysis tools. We are currently working with the 
+        TIGR Multiple Experiment Viewer to provide an interface to GeneX-Lite. 
+        This tool has many normalization and analysis tools built in and provides 
+        a simple interface to add more. 
+      <p>GeneX-Lite was built with a simple data loading mechanism as the heart. 
+        This data loading mechanism can process tab-delimited files of arbitrary 
+        format. The storage of the data in the database is much more efficient 
+        than was the case for GeneX 1.x. Consequently, data loading with GeneX-Lite 
+        is much quicker than with GeneX 1.x.</p>
+      <p>Annotation is very generalized in GeneX-Lite. Annotation of any kind 
+        may be attached to Experiments, Array_Layouts, Array Measurements, Features 
+        and Measurement Factors. The annotation mechanism is currently being enhanced 
+        to provide the controlled vocabularies similar to the original GeneX 1.x 
+        system. When this is accomplished correctly, the system will be MIAME 
+        and MAGE compliant.</p>
+      <p>Installation of the GeneX-Lite system is much easier than the original 
+        system. Minimal configuration is required to have GeneX-Lite up and running.</p>
+      <p>Another important feature of GeneX-Lite is that the core functions are 
+        all accessible via the command line. This means that repetitive loading 
+        and annotation could be automated through the use of scripts. The core 
+        functions are also wrapped with a user-friendly GUI.</p>
+      <p>A web interface is being developed as well as integration with analysis 
+        and visualization tools. Enhanced security is also planned. The current 
+        GeneX-Lite works with both PostgreSQL and Oracle databases. Porting to 
+        another database would not be difficult due to the simple and flexible 
+        design of GeneX-Lite.</p>
+      <p></p>
+      <p></p>
+      <p></p>
+      <p>GeneX-Lite is supported on Solaris, Linux, Windows and Macintosh (OS-X).&quot;</p>
+      <p>&nbsp;</p>
+    </td>
+  </tr>
+</table>
+<p><br>
+</p>
+</body>
+</html>

@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<article id="analysis_tutorial">
+<title>Analysis Tutorial</title>
+<para>
+This document is prepared to help GEOSS users to run analysis trees and interpret the results. 
+For our illustration here, analysis trees are gradually constructed and illustrated by adding analysis nodes 
+and explaining their results one at a time, 
+while the final analysis tree contains most of the current analysis routines on the system. 
+However, different combinations of analysis tools and their corresponding options can be used in an analysis tree.
+</para>
+
+<sect1 id="analysis_tutorial_quality_control">
+<title>Quality Control</title>
+<para>
+Once an analysis tree is created, the first analysis routine is usually recommended with 'Quality Control'.
+ This provides statistical and graphical assessment of array data quality and the IQR (inter-quartile-range) 
+ and lowess (local regression) normalization procedures.
+</para>
+
+<imageobject>
+  <imagedata fileref="../graphics/quality_control.gif" format="GIF"></imagedata>
+</imageobject>
+
+<para>
+When you run the simple tree by clicking 'Run Analysis', you see a message for your run. C
+licking 'file repository' takes you to the file repository like 'View my files'. T
+he file you may want to look at is the 'Quality_Control_-_Scatter_Plot.pdf'. 
+This is a scatter plot matrix graph of all the chips in the data file you previously chose.
+These scatter plot show the correlation and distribution patterns among the replicates 
+in the same condition and among the chips between different conditions. 
+The assumption is that the replicate chips should look much more similar to 
+each other than the chips from different conditions and 
+that the relationship is generally linear across all intensity ranges. 
+For example, if two chips are very similar and highly reproducible, 
+the data points should concentrate along the 45-degree line in the scatter plot. 
+The more the points are scattered away from the 45-degree line, 
+the more dissimilar the chips are. Sometimes the scatter plots show a non-linear curvature, 
+often near the origin. In that case it is recommended to do "lowess normalization". 
+This simple tree can be rerun with the lowess normalization by checking the box for 
+'Perform lowess normalization' in the tree. 
+If unusual patterns persist, it is recommended to consult with the GMB (GeneChip/Micorarray Bioinformatics) 
+core staff (refer to the GEOSS home page for further information).
+</para>
+
+<imageobject>
+  <imagedata fileref="../graphics/quality_control_plot.gif" format="GIF"></imagedata>
+</imageobject>
+
+<para>
+The second file you may want to look at is 'Quality_Control_-_Correlation_and_Specificity_and_Sensitivity.txt'.
+This file includes specificity and sensitivity. Specificity, or reproducibility, 
+is the average correlation between replicated arrays within each condition. 
+Sensitivity is the difference between specificity and average correlation between non-replicated arrays. 
+If sensitivity is large in the positive direction, 
+there are often many genes differentially expressed between different conditions, 
+vice versa.
+</para>
+
+<imageobject>
+  <imagedata fileref="../graphics/quality_control_text.gif" format="GIF"></imagedata>
+</imageobject>
+</sect1>
+
+<sect1 id="analysis_tutorial_differential_discovery">
+<title>Differential Discovery</title>
+<para>
+The next node you may want to add to your analysis is 'Differential Discovery', 
+which evaluates statistical significance of differential expression, together with fold change values. 
+The two-sample t-test, Westfall and Young's permutation test, LPE (Local Pooled Error) test, 
+and SAM (Significance Analysis of Microarrays) test are performed in this node.
+These statistical tests can be used to discover differentially expressed genes under two conditions. 
+If there are more than two conditions, all pairs of the conditions are examined. 
+The two-sample t-test is the most popular procedure for comparing means of two conditions and the Westfall and Young's 
+permutation test is a resampling-based procedure. Genes with small p-values from the tests are claimed as significant, 
+i.e., differentially expressed. The LPE test has high statistical power for array data with a small number of replicates 
+(e.g., duplicate or triplicate) because it precisely estimates baseline error variances by pooling genes with similar expression levels. 
+The LPE test provides FDRs (False Discovery Rates), as well as z-statistics and p-values. 
+FDR is used to control the average proportion of false positives among all positives, 
+so select genes with low FDRs. SAM uses a variance stabilizing factor to improve variance estimation in low-replicated array data. 
+SAM also provides FDR-based q-values as well as d-statistics. 
+Note that LPE z-statistics/p-value and SAM d-statistic are computed as defaults; 
+however, LPE FDR and SAM q-value can be computed by selecting boxes in the (Optional) differential discovery. 
+The LPE FDR and SAM q-value require a considerable computing time.
+</para>
+
+<imageobject>
+  <imagedata fileref="../graphics/differential_discovery.gif" format="GIF"></imagedata>
+</imageobject>
+
+<para>
+When you run the tree, the main output file 'Differential_Discovery_-_Differential_Signal_Data.txt' is produced and saved in the file repository 
+('View my files' in File Management). It is generally a big file (&gt;2 MB). To view the content more easily, 
+download the file onto your machine and then open it in MS Excel.
+</para>
+
+
+<imageobject>
+  <imagedata fileref="../graphics/differential_discovery_out.gif" format="GIF"></imagedata>
+</imageobject>
+
+<para>
+There are quite a few columns, depending on the number of chips and conditions in the data file you chose in the analysis. 
+For example, here are the column headings:
+</para>
+
+<orderedlist numeration="arabic">
+<listitem><para>
+Probe.Set
+</para></listitem>
+<listitem><para>
+X04.01_naive_A_3
+</para></listitem>
+<listitem><para>
+X04.01_naive_A_2
+</para></listitem>
+<listitem><para>
+X04.01_naive_A_1
+</para></listitem>
+<listitem><para>
+X04.01_clone_A_3
+</para></listitem>
+<listitem><para>
+X04.01_clone_A_2
+</para></listitem>
+<listitem><para>
+X04.01_clone_A_1
+</para></listitem>
+<listitem><para>
+X04.01_48hour_A_3
+</para></listitem>
+<listitem><para>
+X04.01_48hour_A_2
+</para></listitem>
+<listitem><para>
+X04.01_48hour_A_1
+</para></listitem>
+<listitem><para>
+TRADFOLD-naive-clone
+</para></listitem>
+<listitem><para>
+TRADFOLD-naive-48hour
+</para></listitem>
+<listitem><para>
+TRADFOLD-clone-48hour
+</para></listitem>
+<listitem><para>
+LOGFOLD-naive-clone
+</para></listitem>
+<listitem><para>
+LOGFOLD-naive-48hour
+</para></listitem>
+<listitem><para>
+LOGFOLD-clone-48hour
+</para></listitem>
+<listitem><para>
+T-statistic- naive VS clone
+</para></listitem>
+<listitem><para>
+T.p.value- naive VS clone
+</para></listitem>
+<listitem><para>
+Bonferroni.p- naive VS clone
+</para></listitem>
+<listitem><para>
+Permutation.p- naive VS clone
+</para></listitem>
+<listitem><para>
+T-statistic- naive VS 48hour
+</para></listitem>
+<listitem><para>
+T.p.value- naive VS 48hour
+</para></listitem>
+<listitem><para>
+Bonferroni.p- naive VS 48hour
+</para></listitem>
+<listitem><para>
+Permutation.p- naive VS 48hour
+</para></listitem>
+<listitem><para>
+T-statistic- clone VS 48hour
+</para></listitem>
+<listitem><para>
+T.p.value- clone VS 48hour
+</para></listitem>
+<listitem><para>
+Bonferroni.p- clone VS 48hour
+</para></listitem>
+<listitem><para>
+Permutation.p- clone VS 48hour
+</para></listitem>
+<listitem><para>
+LPE.z.statistic- naive VS clone
+</para></listitem>
+<listitem><para>
+LPE.p.value- naive VS clone
+</para></listitem>
+<listitem><para>
+LPE.z.statistic- naive VS 48hour
+</para></listitem>
+<listitem><para>
+LPE.p.value- naive VS 48hour
+</para></listitem>
+<listitem><para>
+LPE.z.statistic- clone VS 48hour
+</para></listitem>
+<listitem><para>
+LPE.p.value- clone VS 48hour
+</para></listitem>
+<listitem><para>
+SAM.d.statistic- naive VS clone
+</para></listitem>
+<listitem><para>
+SAM.d.statistic- naive VS 48hour
+</para></listitem>
+<listitem><para>
+SAM.d.statistic- clone VS 48hour
+</para></listitem>
+</orderedlist>
+
+<para>
+Columns 2 to 10 contain normalized expression data. For each pair of conditions,  
+the results of t-test and permutation test (columns 17 to 28), LPE test (columns 29 to 34), 
+SAM test (columns 35 to 37) are provided. Additional columns for LPE FDR and 
+SAM q-value can be added if they are computed by checking their boxes. 
+Fold-changes are presented in columns 11 to 16. A traditional fold change takes
+ the average of gene expressions for each condition, divides the two averages, 
+ and then takes the log of the ratio. A log fold change transforms the expressions to log scale, 
+ takes the average, and then takes the difference between the two averages. These two different ways 
+ of fold-change calculation generally provide very similar results, but sometimes may differ due to extreme values a
+ nd ratios; in those cases, the latter fold-change value may be preferred, 
+ but more careful attention is required for such outliers.
+</para>
+</sect1>
+
+<sect1 id="analysis_tutorial_filter">
+<title>Filter</title>
+
+<para>
+This routine gives some options to subset the genes based on the statistical analysis results above 
+and/or functional key words. 
+To filter genes, this routine also provides annotations, such as gene symbol, gene name, unigene ID, locus ID, chromosome location, and gene ontology.
+Since there are often several pair-wise comparisons between the conditions, 
+you may need to select a specific pair of conditions for your selection. 
+The filter routine can subset the gene probes based on one or two statistical criteria, 
+such as p-value from the LPE test and a fold value from Log Fold Change. 
+Note that if LPE FDR or SAM q-value is used for filtering, it must be run in 'Differential Discover'.
+</para>
+
+
+<imageobject>
+  <imagedata fileref="../graphics/filter1.gif" format="GIF"></imagedata>
+</imageobject>
+
+<imageobject>
+  <imagedata fileref="../graphics/filter2.gif" format="GIF"></imagedata>
+</imageobject>
+
+
+<para>
+A subset of genes can be obtained by entering  one or more key words in 'Functional Filtering', 
+where key words must be separated by a coma (,).  
+Also, a file containing a list of genes (probe set IDs or gene symbols) can be uploaded for filtering. 
+The filter file should contain a list of genes in the one column (one per one row). 
+Genes with the probe set IDs (or gene symbols) in the filter file are selected and 
+marked by '+' in the last column of the output file. 
+If the box for 'Include all genes in the filter file' is checked, all the genes in the filter file uploaded are included 
+regralress of their significance.	
+If the box for 'Include all significant genes' is checked, all the significant genes are included 
+in addition to genes in the filter file. 
+If both boxes are unchecked, only the genes that are significant and 
+in the filter file are included.
+If both boxes are checked, the genes that are significant or in the filter file are included. 	
+</para>
+
+<para>
+You need to limit the number of gene probes for further investigation because if 1900 or more genes are kept, 
+the files generated with 'Cluster' will not be viewable with Acrobat Reader. 
+The conditions of expression values  can be re-ordered by entering order numbers (e.g., 3, 1, 1) in 'Condition order'. 
+If you do not want to re-order, leave the boxes  blanks.
+</para>
+
+<imageobject>
+  <imagedata fileref="../graphics/filter_out.gif" format="GIF"></imagedata>
+</imageobject>
+
+<para>
+The results are saved in two text files "Filter_-_Filtered_Signal_Data_and_Comparison_Data.txt" and "Filter_-_Filtered_Signal_Data.txt", 
+which contain the expression values of all the genes (across all conditions) that meet the selection criteria specified in the filter routine. 
+The file "Filter_-_Filtered_Signal_Data.txt" is used as an input for a cluster analysis and the file "Filter_-_Filtered_Signal_Data_and_Comparison_Data.txt" 
+contains statistical results in addition to expression values.  For example, the file may be open as an Excel spreadsheet as shown below.
+</para>
+</sect1>
+
+<sect1 id="analysis_tutorial_cluster">
+<title>Cluster</title>
+<para>
+Next, you may want to run a clustering analysis on the subset. This is done by adding node 'Cluster', 
+which performs the hierarchical clustering analysis.  Log with base 2 transformation is usually taken 
+for clustering as well as differential discovery, so it should be set to True unless log2 transformation is taken elsewhere.  U
+sers can choose a measure of similarity (or dissimilarity) between genes (or clusters of genes) 
+and one of the following clustering procedures: average linkage (average distance), 
+complete linkage (maximum distance or farthest neighbor), and single linkage (minimum distance or nearest neighbor).
+</para>
+
+<imageobject>
+  <imagedata fileref="../graphics/cluster.gif" format="GIF"></imagedata>
+</imageobject>
+
+<para>
+The result of 'Cluster' is a picture showing the clustering of the selected gene probes. 
+It is saved in file 'Cluster_-_Hierarchical_Clustering_Tree.pdf'. Running the tree with the five nodes produces several output files. 
+You can see the list by clicking 'View my files' in File Management.
+</para>
+
+
+<imageobject>
+  <imagedata fileref="../graphics/cluster_out.gif" format="GIF"></imagedata>
+</imageobject>
+
+<para>
+From this run, 'tdout.pdf' contains the hierarchical clustering tree with direct links to the NCBI's 
+web site based on their gene accession numbers. This graphic is zoomable (using a standard pdf viewer, such as Adobe Acrobat) 
+and in high quality for manuscript and grant preparations.
+</para>
+
+
+<imageobject>
+  <imagedata fileref="../graphics/ncbi.gif" format="GIF"></imagedata>
+</imageobject>
+
+<para>
+In the tree dendogram, genes with similar expression patterns are linked in lower levels. 
+This can be confirmed in a heat map. High expression intensities are represented by red, 
+while low expression intensities are represented by green. Black indicates medium intensities.
+For a direct link to the NCBI's web site in this plot, 
+click a gene accession number, resulting in a link to the following website.
+</para>
+</sect1>
+
+<sect1 id="analysis_tutorial_summary1">
+<title>Summary I</title>
+
+<para>
+For your first round of analyis, you may want to focus on the following five files from the last analysis tree shown above:
+</para>
+
+<orderedlist numeration="arabic">
+<listitem><para> File 'Quality_Control_-_Scatter_Plot.pdf' showing the
+scatter plot matrix from the <link
+linkend="analysis_tutorial_quality_control">Quality Control</link> node.
+</para></listitem>
+<listitem><para>
+File 'Quality_Control_-_Correlation_and_Specificity_and_Sensitivity.txt'
+containing the correlation matrix, plus sensitivity and specificity,
+from the <link linkend="analysis_tutorial_quality_control">Qulity
+Control</link>  node.
+</para></listitem>
+<listitem><para>
+File 'Differential_Discovery_-_Differential_Signal_Data.txt' containing
+results of statistical analysis for discovery of differentially
+expressed genes from the <link
+linkend="analysis_tutorial_differential_discovery">Differntial
+Discovery</link> node.
+</para></listitem>
+<listitem><para>
+File 'Filter_-_Filtered_Signal_Data_and_Comparison_Data.txt' containing
+a subset of 'Differential_Discovery_-_Differential_Signal_Data.txt' by
+your choice in the <link linkend="analysis_tutorial_filter">Filter</link> node.
+</para></listitem>
+<listitem><para>
+File 'Cluster_-_Hierarchical_Clustering_Tree.pdf' that containing a
+cluster plot of genes, from the <link linkend="analysis_tutorial_cluster">Cluster</link>
+node.
+</para></listitem>
+</orderedlist>
+
+<para>
+The rest of the files on the list are some log files that keep track of
+how a node has been run and what options have been selected for a
+particular node. Such log files may help you to reconstruct (reproduce)
+your analysis later.  However, it may require familiarity with the use
+of GEOSS analysis interface for their full utilization.  There are some
+intermediate data files that transfer the results of one node to the
+next.  The interpretation of the results from a more complex analysis
+can be supported by the GMB core staff (refer to the GEOSS home page for
+the procedure).
+</para>
+
+</sect1>
+
+<sect1 id="analysis_tutorial_multicondition">
+<title>Multi-Condition Differential Discovery and Filter</title>
+<para>
+When you have more than two conditions, you may want to compare all the
+conditions simultaneously rather than pairs of the conditions.  The
+'Multi-Condition Differential Discovery' module evaluates statistical
+significance of differential expression under all the conditions.  ANOVA
+(Analysis of Variance) and HEM (Heterogeneous Error Model) analyses are
+performed in this node.  ANOVA is the most popular procedure for
+comparing means of multiple conditions and WY(Westfall &amp; Young) and
+BH (Benjamini &amp; Hochberg) tests are resampling-based procedurse.
+Genes with small p-values from the tests are claimed as significant,
+i.e., differentially expressed.  HEM is a Bayesian or emprical Bayes
+procedure for comparing multiple conditions, which is statistically
+powerful, particularly, with a small number of replicates.  HEM provides
+FDRs (False Discovery Rates), as well as H-statistics.  FDR is used to
+control the average proportion of false positives among all positives,
+so select genes with low FDRs. 
+</para>
+
+
+<para>
+Like the 'Filter' module, the 'Multi-Condition Filter' module gives some
+options to subset the genes based on the statistical analysis results
+above  and/or functional key words.  The results are saved in two text
+files
+"Multi-Condition_Filter_-_Filtered_Signal_Data_and_Comparison_Data.txt"
+and "Multi-Condition_Filter_-_Filtered_Signal_Data.txt", which contain
+the expression values of all the genes (across all conditions) that meet
+the selection criteria specified in the filter routine.  The file
+"Multi-Condition_Filter_-_Filtered_Signal_Data.txt" is used as an input
+for a cluster analysis and the file
+"Multi-Condition_Filter_-_Filtered_Signal_Data_and_Comparison_Data.txt"
+contains statistical results in addition to expression values.  Note
+that 'Quality Control'and 'Cluster' are the same as above.
+</para>
+
+<imageobject>
+  <imagedata fileref="../graphics/multicond.gif" format="GIF"></imagedata>
+</imageobject>
+</sect1>
+
+<sect1 id="analysis_tutorial_summary2">
+<title>Summary II</title>
+
+<para>
+For your multi-condition analyis, you may want to focus on the following
+five files from the last analysis tree shown above:
+</para>
+
+<orderedlist numeration="arabic">
+<listitem><para>
+File 'Quality_Control_-_Scatter_Plot.pdf' showing the scatter plot
+matrix from the  <link
+linkend="analysis_tutorial_quality_control">Qulity Control</link> node.
+</para></listitem>
+<listitem><para>
+File 'Quality_Control_-_Correlation_and_Specificity_and_Sensitivity.txt'
+containing the correlation matrix, plus sensitivity and specificity,
+from the <link linkend="analysis_tutorial_quality_control">Quality
+Control</link>  node.
+</para></listitem>
+<listitem><para>
+File
+'Multi-Condition_Differential_Discovery_-_Differential_Signal_Data.txt'
+containing results of statistical analysis for discovery of
+differentially expressed genes from the <link
+linkend="analysis_tutorial_differential_discovery">Differential
+Discovery</link> node.
+</para></listitem>
+<listitem><para>
+File
+'Multi-Condition_Filter_-_Filtered_Signal_Data_and_Comparison_Data.txt'
+containing a subset of
+'Differential_Discovery_-_Differential_Signal_Data.txt' by your choice
+in the <link linkend="analysis_tutorial_filter">Filter</link> node.
+</para></listitem>
+<listitem><para>
+File 'Cluster_-_Hierarchical_Clustering_Tree.pdf' that containing a
+cluster plot of genes, from the <link
+linkend="analysis_tutorial_cluster">Cluster</link>
+node.
+</para></listitem>
+</orderedlist>
+
+
+</sect1>
+
+</article>

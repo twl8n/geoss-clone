@@ -1,0 +1,139 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>GEOSS Introduction</title>
+<meta name="keywords" content="gene, chip, expression, affymetrix, genechip, oligo, two, color, spotted, array, dna, rna, oligonucleotide, cdna, analysis, analytical, copy, copy dna, spotted array, hybridization, mrna, messenger, messenger rna, cy3, cy5, probe, reverse transcriptase, reverse transcription, glass, slide, sage, serial, serial analysis of gene expression, photo dimerization, genotype, genotypes, genotyping, fold change, over expression, under expression, up regulation, down regulation, photo lithography, linux, open source, apache, postgres, postgresql, database, secure, curate, curation, curator, perfect match, westfa, young, stat analysis, clustering, perm cluster, r-cluster, r cluster, tree view, go, gene ontology, flurochroms, patrick brown, t-test, anova, function prediction">
+<meta name="description" content="GEOSS is an Open Source Gene Expression Database supporting storage and analysis of Affymetrix&reg; GeneChip&reg; technology, with planned support for two color spotted arrays and other gene expression measurement technologies. GEOSS is designed to serve as an secure repository and archive for many researchers' data. ">
+</head>
+
+<body bgcolor="#FFFFFF" link="#006633" vlink="#666633" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr valign="top"> 
+    <td width="10">&nbsp;</td>
+    <td width="100"><font face="Verdana, Arial, Helvetica, sans-serif" size="+1"><a href="./index.cgi"><img src="graphics/geoss_logo.jpg" width="216" height="96" border="0"></a></font></td>
+    <td width="8">&nbsp;&nbsp;</td>
+    <td width="490"><font face="Verdana, Arial, Helvetica, sans-serif" size="+1">GEOSS 
+      Virginia: a Collaborative Internet Database and Toolset for Gene Expression 
+      Data</font> </td>
+  </tr>
+</table>
+<br>
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr> 
+    <td width="10" valign="top">&nbsp;</td>
+    <td width="20" valign="top" bgcolor="990066">&nbsp;</td>
+    <td width="8" valign="top">&nbsp;</td>
+    <td width="490" valign="top"> <p>Jodi Kanter<br>
+        University of Virginia<br>
+        June 20th, 2003<br>
+        <br>
+        A load script is available to load the particular chip layouts that you 
+        are using at your institution. These layout files must be in a delimited 
+        format as created from the www.netaffx.com (Affymetrix) web site (see 
+        instructions below).<br>
+        <br>
+        Affymetrix now has some static .CSV files available for download, but 
+        they do not currently include the control probe sets. Affymetrix is planning 
+        to correct that in the next month, but until then the most reliable way 
+        to create the layouts is by generating them manually via an interactive 
+        query. <br>
+        <br>
+        1. The main web site, www.netaffx.com, provides a link the their analysis 
+        center. Click on the "analysis" tab at the top of the page. The download 
+        center provides a number of FASTA formatted files but we were not able 
+        to obtain a complete listing of the unique probe sets since the sequences 
+        from the TIGR database cannot be shown without proper licensing. The best 
+        way to obtain a complete listing of the required columns is via the analysis 
+        center. If you have not been to this site before you will need to register.<br>
+        <br>
+        2. Click on "interactive query."<br>
+        <br>
+        3. To create a custom view with the desired fields Click the "views" tab 
+        in the secondary navigation bar (this navigation bar also has "top page" 
+        "query" "results" "sessions" and "databanks" tabs). <br>
+        <br>
+        4. Type a name for your custom view in the "view name" text field on the 
+        left. <br>
+        <br>
+        5. Select the desired target databank from the list on the left ("Select 
+        databanks to define a view for"). For e.g. "HG-U95 Target".<br>
+        <br>
+        6. Click the "Create New View" button.<br>
+        <br>
+        7 . Select ProbeSet_ID, Seq_Derived_From, Sequence_Type, and Sequence 
+        Description..<br>
+        <br>
+        8 . Click "Save View" button.<br>
+        <br>
+        9. You can now apply this view to the query results. The downloaded file 
+        will be tab delimited.<br>
+        <br>
+        Performing Queries:<br>
+        <br>
+        1. To get all the probes on all the U95 arrays, select the HG-U95 Target 
+        databank (or databank corresponding to the chip that you are interested 
+        in) in the "TOP PAGE" in Analysis Center, then click "All entries." <br>
+        <br>
+        2. Most likely you will want to get information for each chip separately. 
+        Type the array name (e.g. u95a) in the "quick search" text field and be 
+        sure to check the appropriate target in the "Target Sequences" section. 
+        Then click the "quick search" button. <br>
+        <br>
+        3. Once the results are returned you will need to apply the view that 
+        you created in order to limit the information to the four desired fields. 
+        The current script is set up only to load these items. If you find that 
+        there is other data that you want to load you will need to modify the 
+        current GEOSS loader scripts.<br>
+        <br>
+        4. Choose your view from the drop down box and click the "view" button. 
+        Your results should now be limited to the four fields chosen when the 
+        view was created.<br>
+        <br>
+        5. Click the "save" button on the left side of the screen.<br>
+        <br>
+        6. Under "save options" you will need to change the selection to "Download 
+        to my Computer." This will place a text file in whatever location you 
+        specify. <br>
+        <br>
+        Loading the Layout to the Database:<br>
+        <br>
+        To load the layout to the database you will need to use the loadaffylayout.pl 
+        file which can be located in the home/install/geoss/va-geoss-1_?_?/site/webtools 
+        directory.<br>
+        <br>
+        The following command is an example of what needs to be run (substituting 
+        the file name and information relevant to your system; this command must 
+        be entered on a single line):<br>
+        <br>
+        <tt>loadaffylayout.pl --dbname=geoss --name=HG-U95Av2 --input=./samples/HG-U95Av2.xls 
+        --login=&quot;from usersec table&quot; --speciesid=50<br>
+        </tt><tt><br>
+        </tt> The script is currently setup such that it needs to be run from 
+        the directory where the loadaffylayout.pl file is located.<br>
+      </p>
+      <ul>
+        <li> The "--dbname" variable represents the name of the database within 
+          postgreSQL, which should be "geoss" unless you have made a modification 
+          to the installation. 
+        <li>The "--name" variable can be set to whatever you want the layout to 
+          be called within your database. This value will be loaded into the "name" 
+          field in the arraylayout table. 
+        <li>The "--input" variable is simply the path and file that you wish to 
+          load. 
+        <li>The login value must be a curator and represents the &quot;login&quot; 
+          field in the usersec table.
+        <li>"speciesid" is the spc_pk from the appropriate species in the "species" 
+          table. 
+      </ul>
+      Once the file is loaded the following tables will have been modified:<br>
+      <br>
+      arraylayout<br>
+      al _spots<br>
+      usersequencefeature<br>
+    </td>
+  </tr>
+</table>
+<p>&nbsp; </p>
+</body>
+</html>
+

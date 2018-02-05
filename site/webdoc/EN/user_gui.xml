@@ -1,0 +1,1828 @@
+<part id="user_gui">
+<title>Member Home: The User GUI Tool</title>
+<article id="array_study_management">
+
+<title>Array Study Management</title>
+<sect1 id="create_new_array_study">
+<title>Create new array study</title>
+<para>
+Clicking on the create link, will take you to
+the page for editing studies, but the "Array Study Name" will be blank.  
+Fill in the name for your study and then proceed with configuration as
+described in <link linkend="edit_or_delete_an_existing_array_study">help
+for editing an existing array study</link>.
+For an overview of the process of creating studies and orders, see <link
+linkend="placing_an_order_with_the_array_center">Placing an Order with
+the Array Center</link>.  
+</para>
+</sect1>
+
+<sect1 id="edit_or_delete_an_existing_array_study">
+<title>Edit/Delete an existing array study</title>
+<para>
+Use this link when you wish to edit or delete an <link
+linkend="array_study">array study</link>.  See <link
+linkend="placing_an_order_with_the_array_center">Placing an Order with
+the Array Center</link> for an overview of the process of defining
+studies and placing associated <link linkend="array_order">array
+orders</link>.
+</para>
+<para>
+To delete an array study, click on the "Delete Array Study" button
+associated with the study you wish to delete.  Note that you will not be
+able to delete the study if it contains an <link
+linkend="experiment_condition">experimental condition</link> that is in
+use (has data loaded).  If you are allowed to delete the study, you will
+be taken to a confirmation screen where you can verify that you wish to
+delete the study.</para>
+<para>
+To edit the study, choose the "Edit Array Study" button associated with
+the study you wish to edit.  From the resulting page, you access two
+configuration pages: the "Edit Array Study" page and the "Edit Study
+Components" page.  
+</para>
+<para>
+If you do not see the study you wish to edit as an available choice, it
+means that you are unable to write changes to the study.  Most likely,
+you are not in a group that has write permissions for the study.
+</para>
+<formalpara>
+<title>Edit Array Study</title>
+This page is divided into several sections.  The "Edit Study Configuration"
+configuration allows configuration of information associated with the study.
+The "Edit Defaults for Conditions and Samples Associated with this
+Study" section allows users to set values that will be used
+repeatedly in editing study components.  In the majority of cases, most
+values for experimental conditions and samples within a study are the
+same, so setting defaults will save users time in setting individual
+values.  &mandatory; Finally, once you have added <link
+linkend="experiment_condition">experimental conditions</link>, there
+will be a table that shows the details for each experimental condition
+associated with the study.  Note that once data is loaded, you will no
+longer be able to change fields associated with the loaded data.  
+</formalpara>
+<para>
+The following fields can be configured on the Edit Array Study page:
+<variablelist>
+<varlistentry>
+<term>
+  Study Name</term>
+<listitem>
+<para>
+This name identifies the array study.  Currently, it must be unique across 
+the system.  Use the "Names In Use" link allows you to determine what 
+study names are in use.  Study names can be up to 128 characters in
+length, but longer names do not display well on all pages, so users are
+advised to select names around 30 characters in length.  Once data is
+loaded for your study, you will no longer be able to change the name.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Study Owner/Group</term>
+<listitem>
+<para>
+The array study owner/group field identifies the 
+<link linkend="primary_investigator">PI/</link><link
+linkend="group">PI group</link>  who will own the study. Only
+<link linkend="users">users</link> who are PIs are able to own studies.
+Once this field is set, the PI cannot be modified.  The group can be
+modified by the PI if required via the <link
+linkend="change_permissions_for_array_studies">Change permissions for
+array studies</link> link.  Most users have only one PI, so will have
+only one option here (unless their PI has several groups).
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Start Date</term>
+<listitem>
+<para>
+This is the date that study was started.  It will default to the current
+date if no date is specified.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Classification</term>
+<listitem>
+<para>
+Studies should be classified if possible--classification is used to
+search and sort studies.  You cannot add new classifications, but can
+email GEOSS administrators to suggest new classifications.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Comments
+</term>
+<listitem>
+<para>
+These comments are sometimes displayed near the study names to help
+distiguish studies.  Filling out this field is particularly useful 
+to array center staff, as they look at many studies. 
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+ Chip Type
+ </term>
+<listitem>
+<para>
+This is the default chip type for the study.  Most studies only use one
+chip type, so setting this default saves specifying it repeatedly on the
+"Edit Study Components" page.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Species
+</term>
+<listitem>
+<para>
+This field specifies the default species associated with each
+experimental condition.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Number of samples per condition (biological replicates)
+</term>
+<listitem>
+<para>
+This field specifies the default number of samples per experimental
+conditions.  Essentially, it indicates the number of biological
+replicates for each condition.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Number of chips per sample (chip replicates)
+</term>
+<listitem>
+<para>
+This field specifies the default number of chips per sample.  This is
+the number of chip replicates, or technical replicates, associated with
+the sample.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Lab Notebook ID
+</term>
+<listitem>
+<para>
+This field specifies the default lab notebook ID associated with
+samples.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Lab Notebook Owner
+</term>
+<listitem>
+<para>
+This field specifies the default lab notebook owner associated with
+samples.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Sample type for microarray analysis
+</term>
+<listitem>
+<para>
+This field specifies the default sample type associated with the
+experimental condition.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Sample Origin
+</term>
+<listitem>
+<para>
+This field specifies the default sample origin associated with samples.
+Sample origin is used to make data more meaningful and is used later to
+supply MIAME information if you choose to publish your study in GEOSS.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Sample Manipulation
+</term>
+<listitem>
+<para>
+This field specifies the default sample manipulation associated with samples.
+Sample manipulation is used to make data more meaningful and is used later to
+supply MIAME information if you choose to publish your study in
+&product;.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Experimental Condition Name</term>
+<listitem>
+<para>
+  This is your name for the experimental condition.  
+  It used to clarify the design of the study.  Additionally, if you
+  choose to <link
+  linkend="publishing_your_data">publish your data</link> through
+  &product;, your experimental conditions will be identified using the
+  name you specify here.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Short name</term>
+<listitem>
+<para>
+  The <link linkend="array_center">array center</link> requires a short
+  name for each experimental condition.  This name is used to label
+  samples when they are brought to the lab for processing.  It is also
+  used in the filename of <link linkend="chip_data_files">data
+  files</link> created by the <link
+  linkend="array_center_staff_user">array center staff user</link> and
+  is included in the &product; hybridization naming convention.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Species</term>
+<listitem>
+<para>
+This is the species associated with the experimental condition.  If the
+appropriate species is not listed, please contact <link
+linkend="&product;_developers">&product; Developers</link>.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Sample Type for Microarray Analysis
+</term>
+<listitem>
+<para>
+  This field describes the sample type associated with the experimental
+  condition.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Notes
+</term>
+<listitem>
+<para>
+  This is a descriptive field.  It is used only if you choose to publish
+  your study results in &product;.  In that case, this information is
+  used, along with the experimental condition names to populate the
+  <link linkend="miame">MIAME</link> experimental factors field.  You
+  will still have an opportunity to modify the description of the
+  experimental factors when you publish your data.
+</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry>
+<term>
+  Description
+</term>
+<listitem>
+<para>
+This description can be used to specify additional information about an
+experimental condition.  It is used only for display purposes.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Sample Name</term>
+<listitem>
+<para>
+  This is a descriptive field used by the user to uniquely identify
+  their sample.  This name can be linked to the hybridization name so
+  that result files associated with the biological replicates correspond
+  to the sample name. 
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Chip Type
+</term>
+<listitem>
+<para>
+  This is the chip type associated with the sample.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  # of Chips (replicates)
+</term>
+<listitem>
+<para>
+  This is the number of chips associated with this sample.  It
+  determines the number of chip replicates.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Lab Book ID
+</term>
+<listitem>
+<para>
+  This field identifies the lab book ID associated with the sample.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Lab Book Owner 
+</term>
+<listitem>
+<para>
+  This field identifies the lab book owner associated with the lab book.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Sample Origin
+</term>
+<listitem>
+<para>
+This field specifies the sample origin associated with samples.
+Sample origin is used to make data more meaningful and is used later to
+supply MIAME information if you choose to publish your study in GEOSS.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+  Sample Manipulation
+</term>
+<listitem>
+<para>
+This field specifies the sample manipulation associated with samples.
+Sample manipulation is used to make data more meaningful and is used later to
+supply MIAME information if you choose to publish your study in GEOSS.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</para>
+
+<para>
+To add experimental conditions, specify the number of conditions to add,
+and click "Add Experimental Conditions".  To save changes, click "Save Study".  When configuration of
+a study is complete, the status (top line) with change to "COMPLETE".
+Once the study status is complete, you can "Order Chips from Array
+Center" if the installation supports an array center.
+</para>
+<para>
+Clicking on the order button, takes you to the "Order Chips" page.
+This page displays a summary of chips associated with the study and
+what their order status is.  If they have not yet been ordered, you
+can order chips by specifying associated information (PI/PI group,
+Special Center Affiliation, Billing code) and clicking the "Submit
+Order" button.  This informs the array center that you would like them
+to order chips and ready to bring in samples for processing.
+</para>
+</sect1>
+
+<sect1
+id="view_all_array_studies">
+<title>View All Array Studies</title>
+<para>
+This link can be used to view a summary of all <link
+linkend="array_study">array studies</link> that you have permission to
+view.  The summary displays information on the study name, the organism
+being studied, the <link linkend="chip">chip(s)</link> used in the
+study, and the disease(s) being studied.  
+</para>
+<para>
+Note that you can sort summary information by any column by clicking on
+the button in the column header.  To reverse sort, click on the button a
+second time.
+</para>
+<para>
+You may also search through the studies and display a subset based on
+the search results.  To search on a particular column, click on the
+checkbox associated with that column.  Then specify the criteria you
+wish to search for in the input areas in the same cell as the checkbox.
+</para>
+<para>
+You can access additional information by clicking on the "Source" or
+"Edit" links if they exist.  Alternatively, if the study name is a link,
+you can follow it to view full details on the array study configuration.
+</para>
+</sect1>
+
+<sect1
+id="view_array_study">
+<title>View Array Study</title>
+<para>
+This link can be used to view details of an <link
+linkend="array_study">array study</link> that you have permission to
+view.  The page displays information on the study name, the organism
+being studied, the <link
+linkend="experiment_condition">conditions</link> of the study, 
+the <link linkend="chip">chip(s)</link> used in the
+study, and the disease(s) being studied.  Additionally, the page provides
+a link to analysis result files, if there is an analysis associated with
+the study.  There is also a button that provides a quick link to
+creating a custom data set using the study data to facilitate customized
+analysis of the data.
+</para>
+</sect1>
+
+<sect1
+id="change_permissions_for_array_studies">
+<title>Change permissions for array studies</title>
+<para>
+This link can be used to set permissions for <link
+linkend="array_study">array studies</link>.  Note that only <link
+linkend="primary_investigator">PIs</link> can change group ownership and
+read/write permissions for their studies.  If you are not a PI, then you
+will have no studies listed under this link.
+</para>
+<para>
+The following items can be configured:
+<variablelist>
+<varlistentry>
+<term>
+Group
+</term>
+<listitem>
+<para>
+This can be used to change the <link linkend="group">group</link> that
+the study is associated with.  The permissions on the <link
+linkend="array_study">array study</link> apply to this group only.
+Anyone who is not a member of the group will not have permissions to see
+the study.  Anyone who is a member will have the permissions set here
+applied to them.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+Group Read
+</term>
+<listitem>
+<para>
+This will allow <link linkend="users">users</link> who are part of the
+group associated with the array study to read details pertaining to this
+study.  This means that they will be able to see the <link
+linkend="chip_data_files">chip data files</link> associated with the
+study, but they cannot modify the study. 
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+Group Write
+</term>
+<listitem>
+<para>
+This will allow <link linkend="users">users</link> who are part of the
+group associated with the array study to write details pertaining to this
+study.  This will allow them to modify the array study definition.  They
+could, for example, add an <link
+linkend="experiment_condition">experimental condition</link>.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</para> 
+</sect1>
+
+<sect1 id="load_a_study">
+<title>Load a study</title>
+<para>
+This link can be used to load an <link linkend="array_study">
+array study</link>.  Note that this link is only available if your
+installation allows users to load data.
+To load a study, the study data file must first be
+uploaded via the <link linkend="upload_a_file">Upload a file</link>
+page.  Data file format should be a <link
+linkend="single_data_file">single data file</link> containing signal 
+values for all hybridizations in the study.  Once a file is uploaded, it
+will be available in the list of files to load from.  You must also
+select the name of the array study that you are loading.  Only studies
+that have a "COMPLETE" status can be loaded.  
+</para>
+<para>
+Once you have selected the study and data file, select "Load Data".  You
+will receive an email when the data load is complete.  The loaded data
+can then be used for analysis and publishing.
+</para>
+</sect1>
+
+<sect1 id="create_publishing_information">
+<title>Create publishing information</title>
+<para>
+This link can be used to initiation publication of <link
+linkend="array_study">array study</link> data. For an overview of the
+publication process, see the <link linkend="publishing_your_data">Publishing
+your Data</link>  link.
+</para>
+<para>
+On this page, you must specify initial information on the data you wish
+to publish.  &mandatory;
+</para>
+<variablelist>
+
+<varlistentry>
+<term>
+Miame Name
+</term>
+<listitem>
+<para>
+This is the name that your publishing information is stored under.  It
+should correspond to one experiment.  It is used to identify this set of
+publishing information when you return to edit it using <link
+linkend="edit_or_delete_or_submit_publishing_information">Edit/Delete/Submit
+publishing information</link>.
+</para>
+<para>
+Furthermore, this name will be used, in conjunction with the name of the
+owner of the data, as a header for published data.  It also is a
+component of the url for the published data.  If you wish to publish a
+direct url to your study, you may wish to use underscores instead of
+spaces in the name to make the url easier to remember (as spaces are
+converted to special characters within the url).</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+Miame Description
+</term>
+<listitem>
+<para>
+This description should summarize important information (like species
+and intent of experiment) about the array study you are publishing.  The
+description will appear in a summary table of all published experiments
+and provided those who are browsing through the list with a brief
+description of your experiment.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+Associated Study
+</term>
+<listitem>
+<para>
+If your study is tracked in the local &product; system, select it from the
+list.  This allows the system to fill in some of the miame data for you
+from your existing study definition and will save you from having to
+type duplicate information.  Additionally, it provides &product;
+information about the ownership information for the array study so that
+you do not need to specify it manually.
+If your study is
+not tracked by the system, then do not choose an associated study, but
+make sure to select a <link
+linkend="primary_investigator">PI</link>/<link linkend="group">PI group</link> 
+who owns the data.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+PI/PI group
+</term>
+<listitem>
+<para>
+You must select the PI/PI group that owns the information you intend to
+publish if you have not selected an associated study.
+  The published information for the array study will be filed
+under the PI's name and the PI will be contacted to verify the desire to
+publish the information. 
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+Experiment type
+</term>
+<listitem>
+<para>
+<link linkend="miame">MIAME</link> standards require that different
+information is stored depending on the type of experiment.  Depending on
+the type of experiment specified here, you will be prompted to enter the
+appropriate types of MIAME information.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para>
+Once you have completed the necessary fields, click 'Next'.  This will
+take you to the page that allows you to <link
+linkend="edit_or_delete_or_submit_publishing_information">edit MIAME
+data</link> for the array study.
+</para>
+<para>
+You only need to go through this create process once.  After you have
+created the MIAME record you can return to editing it via the <link
+linkend="edit_or_delete_or_submit_publishing_information">Edit/Submit/Delete
+Publishing Information</link> link.
+</para>
+</sect1>
+
+<sect1 id="edit_or_delete_or_submit_publishing_information">
+<title>Edit/Delete/Submit publishing information</title>
+<para>
+This link allows you to edit, delete, and submit publishing information
+for an <link linkend="array_study">array study</link>.
+</para>
+<formalpara>
+<title>Editing and Submitting publishing information
+</title>
+To edit publishing information, click the "Edit" button for the
+appropriate study.  The fields on the resulting page allow you to
+specify the appropriate <link linkend="miame">MIAME</link> information
+for the the kind of array study data that you are publishing.  It is
+important to provide thorough information about your study so that the
+data is meaningful.  If you associated the publishing information with
+and existing array study, many of the fields will have default values,
+taken from your array study configuration.  You may modify these
+defaults. Help is available for each of the fields on the page itself,
+just click on the help link beside each question to see a description of
+what the question means.  To remove the help popup, just click on the
+page outside of the popup. 
+</formalpara>
+<para>
+If you are not yet ready to publish your data, but plan to continue
+editing at another time, select 'Save form'.  If you have finished
+providing the MIAME information and are ready to publish the results,
+click 'Submit information'.</para>
+<para>
+Once you submit the information, the <link
+linkend="public_data_administrator">public data administrator</link> is
+emailed.  Once they have verified the intent to publish data with the
+owner of the data, they will post the appropriate files on the public
+data part of the site.  Data is now available for use by all.
+</para>
+<para>
+If you wish to modify some of the descriptive information after the data
+has been published, you may do so.  Simply return to the edit page, make
+the changes, and re-submit the information.</para>
+
+<formalpara>
+<title>Deleting publishing information
+</title>
+If you have not previous submitted the publishing information, then you
+can delete it.  To do this, simply click on the "Delete" button for the
+appropriate array study.
+</formalpara>
+<para>
+If you wish to delete a study that has already been published, you will
+need to contact the &product; <link
+linkend="administrator_user">administrator</link> for assistance.</para>
+</sect1>
+
+<sect1 id="view_all_array_orders">
+<title>View all array orders</title>
+<para>
+This page provides a brief view of all <link
+linkend="array_order">array orders</link> that you have permission to
+see.  Note that you will see information for all orders
+associated with <link linkend="group">groups</link> that you are a
+member of that have the appropriate read permissions.  Typically, you
+will not be able to edit orders.  Occasionally, <link
+linkend="array_center_staff_user">array center staff</link> may unlock an
+order so that you can edit components of the order via the <link
+linkend="edit_or_delete_an_existing_array_study">Edit/Delete an Existing
+Array Study</link> interface.
+</para>
+</sect1>
+
+<sect1 id="change_permissions_for_array_orders">
+<title>Change permissions for array orders</title>
+<para>
+This link can be used to set permissions for <link
+linkend="array_order">array orders</link>.  Note that only <link
+linkend="primary_investigator">PIs</link> can change group ownership and
+read/write permissions for their orders.  If you are not a PI, then you
+will have no orders listed under this link.
+</para>
+<para>
+The following items can be configured:
+<variablelist>
+<varlistentry>
+<term>
+Group
+</term>
+<listitem>
+<para>
+This can be used to change the <link linkend="group">group</link> that
+the order is associated with.  The permissions on the <link
+linkend="array_order">array order</link> apply to this group only.
+Anyone who is not a member of the group will not have permissions to see
+the order.  Anyone who is a member will have the permissions set here
+applied to them.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+Group Read
+</term>
+<listitem>
+<para>
+This will allow <link linkend="users">users</link> who are part of the
+group associated with the array order to read details pertaining to this
+order.  This means that they will be able to see the <link
+linkend="chip_data_files">chip data files</link> associated with the
+order, but they cannot modify the order. 
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+Group Write
+</term>
+<listitem>
+<para>
+This will allow <link linkend="users">users</link> who are part of the
+group associated with the array order to write details pertaining to this
+order. Typically array orders are locked, so users will be unable to
+write changes to orders even if they have write permission.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</para>
+</sect1>
+</article>
+
+
+<article id="file_management">
+<title>File Management</title>
+<sect1 id="view_my_files">
+<title>View my files</title>
+<para>
+This link provides <link linkend="users">users</link> with the ability
+to view their <link linkend="user_file">files</link>.  Users can have several types of files including
+<link linkend="chip_data_files">chip data files</link>, <link
+linkend="analysis_files">analysis files</link>, and <link
+linkend="uploaded_files">uploaded files</link>.  
+All files can be viewed and downloaded from
+this location.
+</para>
+<para>
+Files can be viewed in one of two modes: directory tree mode or current
+directory only mode.  Both views allow users to see all files and
+which mode to use is entirely a matter of personal preference.  The
+directory tree mode shows the entire tree structure, which is more
+intuitive to many users.  The current directory mode is slightly faster,
+however, which may be useful to users who must navigate a large number
+of files (<link linkend="array_center_staff_user">array center
+staff</link>). To switch between the two modes, click on
+the "View Current Directory Only" button or the "View Entire Directory
+Tree" button as appropriate.
+</para>
+<para>
+The "View my files" page is divided into three distinct parts:
+  <variablelist>
+    <varlistentry>
+    <term>
+      Directory Navigation
+    </term>
+    <listitem>
+    <para>
+      Regardless of the mode you use, you can navigate through the directory
+      structure by clicking on the names of directories.  Note that in the
+      "Current Directory Only" view, ".." will
+      take you up a directory and the "top" will take
+      you to the top level directory for the current user.  In "Directory
+      Tree" view, the current directory is highlighted in yellow.
+      Only the files in
+      your current directory are displayed in the file viewer.
+    </para>
+    <para>
+      The directory structure format is fixed.  The top level contains <link
+      linkend="&product;_login_id">&product; login ids</link> for every user
+      who has files that you can see (i.e. you are in one of their groups).
+      Under each user directory, you may see the following directories:
+
+      <variablelist>
+        <varlistentry>
+          <term>
+            Data_Files
+          </term>
+          <listitem>
+            <para>
+  This directory contains subdirectories for each finished <link
+  linkend="array_order">array order</link> owned by the user.  The
+  subdirectories are named after the <link
+  linkend="order_number">order number</link> and contain the <link
+  linkend="chip_data_files">chip data files</link> associated with that
+  order.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>
+            Analysis_Files
+          </term>
+          <listitem>
+            <para>
+  This directory contains subdirectories for each <link
+  linkend="analysis_tree">analysis tree</link> owned by the user.  The
+  subdirectories are named after the tree and contain the <link
+  linkend="analysis_files">analysis files</link> associated with that
+  tree.
+            </para>
+          </listitem>
+         </varlistentry>
+
+         <varlistentry>
+           <term>
+             Upload
+           </term>
+             <listitem>
+               <para>
+  This directory contains <link linkend="uploaded_files">uploaded 
+  files</link>.  Depending on what files the
+  user has uploaded, there can be several subdirectories including:
+  criteria, data, mas5, other, logo, and icon.  Uploaded files are found in the
+  appropriate subdirectory based on the type specified during the upload. 
+               </para>
+              </listitem>
+             </varlistentry>
+
+           </variablelist>
+         </para>
+
+       </listitem>
+     </varlistentry>
+
+   <varlistentry>
+     <term>
+       File Viewer
+     </term>
+     <listitem>
+       <para>
+  The file viewing component of the page displays all files in the current
+  directory.  You can view the file by clicking on the filename.  If your
+  browser understands how to display that file type, it will show it to
+  you.  Otherwise it will download it to your computer.  Note that some
+  downloads may be time consuming as some of chip data files are very
+  large.
+       </para>
+
+       <para>
+  Some files may be deleted.  Raw data files may not be deleted, but analysis
+  files and uploaded files can be.  To delete a file, click on the trash
+  can icon on the far right that is associated with the file.  Note that
+  the quickest way to delete analysis files is to delete the entire
+  analysis using <link
+  linkend="edit_or_delete_or_run_an_existing_analysis_tree">Edit/Delete/Run
+  an existing analysis tree</link>.
+       </para>
+       <para>
+  The list of files displayed can be filtered using the "Filename Pattern"
+  field.  To use this field type in the pattern that the filename must
+  contain and click "Select".  This pattern will apply until you clear the
+  "Filename Pattern" field and click "Select" again.  For instance, if you
+  only wish to see files of type "txt" in the "Filename Pattern" and click
+  "Select".  The view will be filtered accordingly.
+       </para>
+      </listitem>
+     </varlistentry>
+
+     <varlistentry>
+       <term>
+         Navigation Short Cuts
+       </term>
+       <listitem>
+         <para>
+  The short cuts are an alternative technique for navigating through
+  directories and a provide quick ways to navigate to commonly viewed i
+  areas.  There are four short cuts:
+        <variablelist>
+          <varlistentry>
+             <term>
+               View Files Owned By
+             </term>
+             <listitem>
+             <para>
+  If you are in several <link linkend="group">groups</link>, it is often
+  useful to look only at files owned by a specific user.  This short cut
+  is particularly useful to <link
+  linkend="administrator_user">administrators</link> and <link
+  linkend="array_center_staff_user">array center staff</link>.
+             </para>
+             </listitem>
+           </varlistentry>
+
+           <varlistentry>
+           <term>
+             View Files Associated with Loaded Orders
+           </term>
+           <listitem>
+             <para>
+  This short cut allows users to go directly to the directory containing
+  chip data files for a specific <link linkend="array_order">array order
+  </link>.
+             </para>
+           </listitem>
+           </varlistentry>
+
+           <varlistentry>
+             <term>
+                View Files Associated with Sample
+             </term>
+             <listitem>
+             <para>
+  This short cut allows users to look at all files associated with a
+  specific <link linkend="sample">sample</link>.  It allows users to 
+  select the sample based on the
+  researcher's name for the sample.  The short cut then navigates to the
+  appropriate array order directory and uses the array center staff name
+  for the sample in the "Filename Pattern" field.  The result is a listing
+  of all files associated with that sample.  Note that you will need to
+  manually clear the "Filename Pattern" field after using this short cut
+  if you wish to view files not associated with the sample.
+             </para>
+             </listitem>
+           </varlistentry>
+
+           <varlistentry>
+           <term>
+  View Analysis Tree File Results
+           </term>
+           <listitem>
+           <para>
+  This short cut allows users to look at all files associated with a
+  specific <link linkend="analysis_tree">analysis tree</link>.  
+           </para>
+           </listitem>
+         </varlistentry>
+
+       </variablelist>
+  To use a short cut, simple select the desired target and hit the
+  associated "Go" button.
+     </para>
+    </listitem>
+  </varlistentry>
+  </variablelist>
+</para>
+</sect1>
+
+<sect1
+id="change_permissions_for_files">
+<title>Change group ownership and read/write permissions for existing files</title>
+<para>
+This link can be used to set permissions for <link
+linkend="user_file">user files</link>.  
+Note that for most data files, permissions will be set correctly given
+the permissions for the associated <link linkend="array_order">array 
+order</link> or <link linkend="array_study">array study</link>.  
+However, you may occasionally wish to change permissions
+on certain files so that other users in your <link
+linkend="group">groups</link> can see them.  Note that this page can get
+lengthy.  Files are arranged alphabetically.
+</para>
+<para>
+The following items can be configured:
+<variablelist>
+<varlistentry>
+<term>
+Group
+</term>
+<listitem>
+<para>
+This can be used to change the <link linkend="group">group</link> that
+the file is associated with.  The permissions on the <link
+linkend="user_file">user file</link> apply to this group only.
+Anyone who is not a member of the group will not have permissions to see
+the file.  Anyone who is a member will have the permissions set here
+applied to them.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+Group Read
+</term>
+<listitem>
+<para>
+This will allow <link linkend="users">users</link> who are part of the
+group associated with the file to see and download the file.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>
+Group Write
+</term>
+<listitem>
+<para>
+This allows <link linkend="users">users</link> 
+who are part of the
+group associated with the file to 
+write to the file.
+In actuality, this provides very limited permissions.  No users are
+allowed to overwrite or delete <link linkend="chip_data_files">chip data
+files</link>, so no permissions are granted for this type of file.
+Users can't overwrite other users' <link
+linkend="analysis_files">analysis files</link> or <link
+linkend="uploaded_files">uploaded files</link>.  This permission would
+allow users in your group to delete your analysis files and uploaded
+files though.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</para>
+</sect1>
+
+<sect1 id="upload_a_file">
+<title>Upload a File</title>
+<para>
+This link allows <link linkend="users">users</link> to upload <link
+linkend="uploaded_files">files</link>.  Typically uploaded files are
+used to in association with data analysis.  For an overview of this 
+process, see <link linkend="determining_tree_input">Determining Tree 
+Input</link>.  To upload a file, you must first specify the type of 
+file you wish to upload.  Several types have very specific formats 
+that must be adhered to.  Possible upload types include:
+<variablelist>
+  <varlistentry>
+    <term>
+    data
+    </term>
+    <listitem>
+      <para>
+      This filetype allows users to upload a file that contains
+      all data for an <link linkend="array_study">array_study</link>.
+      Data should be in the <link linkend="single_data_file">single data
+      file</link> format.  Uploading a file of this type makes it
+      available for users to <link linkend="load_a_study">load a
+      study</link>.  Note that users may not be able to load studies on
+      all installations.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+    mas5
+    </term>
+    <listitem>
+      <para>
+      Users may upload <link linkend="microarray_suite">mas5</link>
+      data for individuals chips. This will result in the creation of a
+      hybridization and the chip data will be loaded into the database.
+      The data will then be available for use in <link 
+      linkend="analysis_condition">analysis conditions</link>.   File
+      format for this kind of upload is a <link
+      linkend="affymetrix_txt_file">Affymetrix mas5 txt
+      file</link>Affymetrix mas5 txt file.  The
+      following fields must be specified when uploading mas5 data:
+      <variablelist>
+        <varlistentry>
+          <term>
+            Hybridization Name
+         </term>
+         <listitem>
+           <para>
+        This field needs to be filled out if a mas5 file is being
+        uploaded.  The <link linkend="hybridization">hybridization</link> 
+        name, combined with the upload
+        timestamp provides a unique identifier for the uploaded data.
+        The name will be used when including uploaded hybridizations in
+        analysis conditions.
+           </para>
+         </listitem>
+       </varlistentry>
+       <varlistentry>
+         <term>
+           Affymetrix Chip
+         </term>
+         <listitem>
+           <para>
+        This field needs to be filled out if a mas5 file is being
+        uploaded.  As a hybridization is being created, it is necessary
+        to know the <link linkend="layout">layout</link> (chip type).  If the 
+        correct chip type is not in the drop down box, contact the
+        <link linkend="administrator_user">administrator</link> for
+        assistance.
+           </para>
+          </listitem>
+         </varlistentry>
+       </variablelist>
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+    analysis input
+    </term>
+    <listitem>
+      <para>
+      This filetype allows users to upload a file that is already 
+      appropriately formatted for use by analysis trees.  This is 
+      useful if you wish to analyze results for currently unsupported
+      data types, such as <link linkend="cdna">cDNA</link> data.
+      See <link linkend="uploading_external_experiment_data">Uploading
+      external experiment data</link> for a description of this format.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+    criteria
+    </term>
+    <listitem>
+      <para>
+      <link linkend="criteria_file">Criteria files</link> can be used
+      to facilitate creation of analysis conditions and <link
+      linkend="analysis_set">analysis sets</link>. 
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+    other
+    </term>
+    <listitem>
+      <para>
+      This file type can be used up upload any other type of file.
+      Uploading files of this type will have no effect on GEOSS, except
+      to store the file and make it available via the <link
+      linkend="view_my_files">View My Files</link>.
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+Regardless of which file type you choose, you will be asked to specify 
+the following:
+<variablelist>
+  <varlistentry>
+    <term>
+      Filename
+    </term>
+    <listitem>
+      <para>
+      This field is optional.  If you wish to give the file a different
+      name than the name it has on the source system, you may specify
+      that name in the filename field.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      File to Upload
+    </term>
+    <listitem>
+      <para>
+        Specify the appropriate file to upload from your local machine.
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+
+Once all fields have been configured, click "Upload".  Please note that
+loading a very large data file may take several minutes.  If the file is
+too large, your browser may time out and return an error.  This error
+reflects a timeout on the part of the browser, but does not necessarily
+mean that the file failed to load.  Wait for a bit and then check
+whether the file has been loaded via the <link
+linkend="view_my_files">View My Files</link> link.  All uploaded files
+should be accessible from that interface.
+</para>
+</sect1>
+
+<sect1 id="view_quality_control_records">
+<title>View Quality Control records</title>
+<para>
+To view the quality control information for a specific <link
+linkend="hybridization">hybridization</link>, select the hybridization
+from the drop down list and click "View QC".  The quality control data
+is taken from the <link linkend="chip_data_files">chip data files</link>
+generated while running the array experiment.  Note that not all
+hybridizations will have quality control data as the appropriate files
+may not have been present when the data was loaded.
+</para>
+</sect1>
+
+<sect1 id="create_a_data_file_containing_all_data_for_one_study">
+<title>Create a data file containing all data for one study</title>
+<para>
+This link will create a data file that contains the signal values for
+all hybridizations is a specific study.  This file is very similar in
+format to the files used as input to analysis trees.  
+</para>
+<para>Provide a filename and comments.  Choose the <link
+linkend="array_study">array study</link> you wish to obtain data from
+from the drop down box.  Note that only studies that have all their
+associated data loaded are listed in the box as you clearly cannot get
+data for a study that has none loaded.  Choose "Create Data File".  The
+resulting data file will be loaded under your <link
+linkend="&product;_login_id">login id</link> in the <link
+linkend="view_my_files">file viewer</link>.</para>
+
+</sect1>
+</article>
+
+<article id="analysis_management">
+<title>Analysis Management</title>
+<sect1 id="create_or_run_a_new_analysis_tree">
+<title>Create/Run a new Analysis Tree</title>
+<para>
+This link allows <link linkend="users">users</link> to create new
+<link linkend="analysis_tree">analysis trees</link>.  For an overview of
+analysis trees, see <link
+linkend="analyzing_data_using_analysis_trees">Analyzing your data
+using analysis trees</link>.
+</para>
+<para>
+When you create a new tree, you must specify the name, the desired
+initial structure, and the source of input.
+<variablelist>
+<varlistentry>
+<term>
+Analysis Tree Name
+</term>
+<listitem>
+<para>
+This name must be unique.  Use the "Show list of used tree names" link
+to determine uniqueness.  A combination of the analysis creation date
+and the input data name tends to be a useful naming convention.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+Tree Structure
+</term>
+<listitem>
+<para>
+The "Initial node only" setting will result in your tree having only one
+node, "Quality Control", when it is created.  For there you can go on to
+add additional nodes as necessary.  The "Entire default tree" setting
+results in the tree's initial structure consisting of several nodes in
+an arrangement that is typically used by &product; analysis staff. 
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+Analysis Input Data Source
+</term>
+<listitem>
+<para>
+To select a source, click on the radio button to the left of the desired
+source type, then click "Choose Source".  All sources of the applicable
+type will be displayed in a table below the source radio buttons.
+Select the desired source for the tree.  For an overview of the
+different source types (array study, analysis set, and public data), see
+<link linkend="determining_tree_input">Determining Tree Input</link>.
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+Once you have set the appropriate values, click "Next" to create the
+tree and proceed to the
+<link
+linkend="edit_or_delete_or_run_an_existing_analysis_tree">Edit/Delete/Run
+an existing analysis tree</link> page where you can refine the
+configuration of the new tree.
+</para>
+</sect1>
+
+<sect1 id="edit_or_delete_or_run_an_existing_analysis_tree">
+<title>Edit/Delete/Run an existing Analysis Tree</title>
+<para>
+This link allows <link linkend="users">users</link> to edit, delete or
+run existing 
+<link linkend="analysis_tree">analysis trees</link>.  For an overview of
+analysis trees, see <link
+linkend="analyzing_data_using_analysis_trees">Analyzing your data
+using analysis trees</link>.
+</para>
+<formalpara>
+<title>
+Editing an existing analysis tree
+</title>
+The current node is the node that is highlighted in yellow.  All
+configuration activities are performed on the current node.  To change
+the current node, click on the pencil icon for node that you wish to
+make current.  Configuring a tree involves several steps:
+<variablelist>
+
+<varlistentry>
+<term>
+Adding Nodes
+</term>
+<listitem>
+<para>
+To add a new node to the tree, select the type of analysis from the
+"Choose" drop down list and click "Add Node".  The new analysis node
+will use the output of the current node as input.  Note that the list
+of possible analyses to add is restricted by the current node selection.
+The list only contains analyses that can use the output of the current
+node as input.
+</para>
+<para>
+Only current versions of <link linkend="analysis">analyses</link> 
+are available in the "Choose" box (the version number is indicated by
+the number behind the analysis name).  
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+Deleting Nodes
+</term>
+<listitem>
+<para>
+Nodes can be deleted by clicking on the trash can icon on the node.
+This will delete the node and all nodes below it in the tree structure.
+There is currently no confirmation, the nodes are just deleted.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term>
+Configuring Nodes
+</term>
+<listitem>
+<para>
+The configuration parameters for the current node are located on the
+right hand portion of the page.  The parameters vary, based on the type
+of analysis.  To obtain help on the parameters of each analysis, look at
+the help page for that analysis.  It can be accessed by clicking on the
+name of the analysis inside the node.
+</para>
+<para>
+The default tree should run successfully using the default values for
+each parameter.  
+</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</formalpara>
+<formalpara>
+<title>
+Deleting an existing analysis tree
+</title>
+To delete an analysis tree, click on the "delete" button for the
+appropriate tree.  Note that if the tree has been run, this will delete
+all associated input and output files (but not the actual <link
+linkend="chip_data_files">chip data files</link> used to generate the
+input file).
+</formalpara>
+<formalpara>
+<title>
+Running an existing analysis tree
+</title>
+Once the analysis tree has been configured, it can be run by clicking
+the "Run Analysis" button.  This runs the tree, which typically takes a
+non-trivial amount of time.  The actual amount of time depends largely
+on which nodes are included in the tree, the size of the input data
+set and the other load on the system while the analysis tree is being
+run. To provide a very general guideline, it takes about fifteen minutes
+to run the default tree on a data set that includes nine MG_U74Av2
+chips.  Large analyses can often take over a day to run.
+</formalpara>
+<para>
+Note that is some cases, after a new &product; release, the nodes in
+your tree may become obsolete.  This relates to upgrading the node, the
+R version, or R libraries.  If your tree contains obsolete nodes, the
+"Run Analysis" button will not be present, as you cannot run obsolete
+trees.  However, the "Upgrade Tree" and "Copy Tree" buttons should
+appear.  These buttons can be used to upgrade the tree, if possible.
+The "Upgrade Tree" button upgrades all obsolete nodes in the tree.  If
+this action is successful, the "Run Analysis" button will reappear and
+you can run your tree again.  Note that your result files from the older
+version of the tree will be overwritten.  If you wish to preserve the
+results files from the older version, you can copy the tree instead of
+upgrading.  This creates a copy of the old tree, then upgrades the
+versions on the copy.  You then have two versions of the tree: an older
+one containing obsolete nodes and a new, upgraded one.  When you run the
+new one, the old tree is unaffected, so you can still access the result
+files.  All trees have an associated "versions.txt" file that shows the
+versions of softward that the tree results were generated with.
+</para>
+<para>
+Due to the large amount of time involved in running trees,
+ &product; will send you an
+email to notify you when the analysis is complete and the completion
+status.  <link linkend="analysis_files">Analysis result files</link> can
+be viewed via the <link linkend="view_my_files">View My Files</link>.
+Note the navigational short cut at  the bottom of the "View My Files"
+page that will take you directly to the results for a specific tree.  If
+the tree did not complete successfully, see the <link
+linkend="troubleshooting_tree_failures">Troubleshooting tree 
+failures</link> link for guidance.
+</para>
+</sect1>
+
+<sect1 id="create_new_analysis_condition">
+<title>Create new analysis condition</title>
+<para>
+This link allows <link linkend="users">users</link> to create new
+<link linkend="analysis_condition">analysis conditions</link>. 
+For an overview of this process, see <link
+linkend="determining_tree_input">Determining tree input</link>.
+</para>
+<para>
+To create a new analysis condition, specify the condition name and
+description.  As many analysis conditions can represent the same data
+(if many analyses are performed), it is helpful to provide a description
+even though it is not mandatory.  Also choose the <link
+linkend="primary_investigator">PI</link>/<link linkend="group">PI
+group</link> that will own the condition.  This will allow others in the
+group to use the analysis condition.  Click 'Next' to create the
+analysis condition.  Then you will be ready to specify which
+hybridizations to include in the analysis condition.
+</para>
+</sect1>
+<sect1 id="edit_existing_analysis_conditions">
+<title>Edit existing analysis conditions</title>
+<para>
+This link allows <link linkend="users">users</link> to edit existing
+<link linkend="analysis_condition">analysis conditions</link>.  
+For an overview of this process, see <link
+linkend="determining_tree_input">Determining tree input</link>.
+</para>
+<para>
+This page allows <link linkend="users">users</link> to modify
+<link linkend="hybridization">hybridizations</link> included 
+in the analysis condition.  To add hybridizations, choose the desired
+analysis condition and click "Add Hybridization". Click on the desired
+source, then click "Choose hybridization" source.  The use of each
+source is as follows:
+<variablelist>
+  <varlistentry>
+    <term>
+    Analysis Conditions
+    </term>
+    <listitem>
+      <para>
+      An existing analysis condition can be used as the source for
+      hybridizations.  If this source is used, a list of analysis
+      conditions you have permissions to read is displayed.  You may
+      select one or more analysis conditions by checking the checkbox
+      beside the condition name.  All hybridizations in all selected
+      analysis conditions will be included in the current analysis
+      condition once you click "Add hybrids to Condition".
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+    Studies
+    </term>
+    <listitem>
+      <para>
+      An existing <link linkend="array_study">array study</link> may be 
+      used as the source for hybridizations.  If this source is used, a 
+      list of array studies you have permission to use is displayed.
+      You may select one or more studies.  All hybridizations in all
+      selected studies will be included in the current analysis
+      condition once you click "Add hybrids to Condition".
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      Experimental Conditions
+    </term>
+    <listitem>
+      <para>
+      An existing <link linkend="experiment_condition">experimental
+      condition</link> may be used as the source for hybridizations.  If
+      this source is used, a list of experimental conditions that you
+      have permission to use is displayed.  You may select one or more
+      experimental conditions.  All hybridizations in all selected
+      experimental conditions will be included in the current analysis
+      condition once you click "Add hybrids to Condition".
+      </para>
+      <note>
+      Experimental conditions are easily confused with analysis
+      conditions as analysis conditions are derived from experimental
+      conditions.  Remember that experimental conditions are defined as
+      part of an array study and are used by array orders.  They relate
+      to a specific experimental intent and are unchanging.  Analysis
+      conditions often mimic experimental conditions (as we wish to
+      analyze data based on the intent of the experiment).  However
+      analysis condition is entirely theoretical and is subject to
+      change.  Users can change the grouping of hybridizations in
+      analysis conditions at any time.</note>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      Hybridizations
+    </term>
+    <listitem>
+      <para>
+      Existing hybridizations may also be
+      used as the source for hybridizations.  If this source is used, a 
+      list of hybridizations you can read is displayed.
+      You may select one or more hybridizations.  All hybridizations 
+      selected will be included in the current analysis
+      condition once you click "Add hybrids to Condition". 
+      </para>
+      <note>This option provides direct access to hybridizations that
+      have been created by uploading a mas5 data file.</note>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      From Criteria File
+    </term>
+    <listitem>
+      <para>
+      This is an advanced option for selecting hybridizations.  See
+      <link linkend="using_criteria_files">Using criteria files</link>
+      for a conceptual background of this process.  To use this source,
+      you will first need to upload an appropriate criteria file using the
+      <link linkend="upload_a_file">Upload a file </link> link
+      available from <link linkend="user_gui">&mem_home;</link>.  If
+      this has been done, the criteria filename should appear in the
+      drop down box.  Select the appropriate file, then click "Get
+      Criteria File".
+      </para>
+      <para>
+      If the criteria file is well formed, a selection of <link
+      linkend="continuous_parameter">Continuous Parameters</link> and/or
+      <link linkend="categorical_parameter">Categorical
+      Parameters</link> will be displayed.  Use this selection interface
+      to specify which hybridizations you want included.  Hybridizations
+      will be added to the analysis condition when you click "Add
+      Hybrids to Condition".
+      </para>
+    </listitem>
+  </varlistentry>
+
+</variablelist>
+Once you have added the hybridizations to the analysis condition, you
+are returned to the the Edit Analysis Condition page and can view the
+hybridizations that are currently part of the analysis condition.
+Hybridizations can be removed from the analysis condition by checking
+the "Delete" checkbox and hitting "Update".
+</para>
+<para>
+When the configuration of the analysis condition is satisfactory, you
+can return to <link linkend="user_gui">&mem_home;</link> via the header
+links at the top of the page.</para>
+</sect1>
+
+<sect1 id="create_new_set_of_conditions">
+<title>Create new set of conditions</title>
+<para>
+This link allows <link linkend="users">users</link> to create new
+<link linkend="analysis_set">analysis set</link>.  
+For an overview of this process, see <link
+linkend="determining_tree_input">Determining tree input</link>.
+</para>
+<para>
+To create a new analysis set, specify the condition name and
+description.  As many analysis sets can represent the same data
+(if many analyses are performed), it is helpful to provide a description
+even though it is not mandatory.  Also choose the <link
+linkend="primary_investigator">PI</link>/<link linkend="group">PI
+group</link> that will own the analysis set.  This will allow others in the
+group to use the analysis set.  Click 'Next' to create the
+analysis set.  Then you will be ready to specify which
+conditions to include in the analysis set.
+</para>
+</sect1>
+
+<sect1 id="edit_existing_set_of_conditions">
+<title>Edit existing set of conditions</title>
+<para>
+This page allows <link linkend="users">users</link> to modify
+<link linkend="analysis_condition">analysis conditions</link> included 
+in the set of analysis conditions.  To add conditions, choose the desired
+analysis set.   From the "Edit Set of Conditions" page, click "Add
+Conditions". Click on the desired
+source, then click "Choose Condition Source" button.  The use of each
+source is as follows:
+<variablelist>
+  <varlistentry>
+    <term>
+    Analysis Conditions
+    </term>
+    <listitem>
+      <para>
+      An existing analysis condition can be used as the source for
+      analysis conditions.  If this source is used, a list of analysis
+      conditions you can read is displayed.  You may
+      select one or more analysis conditions by checking the checkbox
+      beside the condition name.  All selected
+      analysis conditions will be included in the current analysis
+      set once you click "Add Conditions".
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+    Studies
+    </term>
+    <listitem>
+      <para>
+      An existing <link linkend="array_study">array study</link> may be 
+      used as the source for analysis conditions.  If this source is used, a 
+      list of array studies you can read is displayed.
+      You may select one or more studies.  Analysis conditions are
+      automatically created that correspond to all <link
+      linkend="experiment_condition">experimental conditions</link> that
+      are part of the study. The new analysis conditions are included in
+      the current analysis set once you click "Add Conditions".
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      Experimental Conditions
+    </term>
+    <listitem>
+      <para>
+      Existing <link linkend="experiment_condition">experimental
+      conditions</link> may be used as the source for analysis sets.  If
+      this source is used, a list of experimental conditions that you
+      have can read is displayed.  You may select one or more
+      experimental conditions.  Analysis conditions are automatically
+      created that correspond to all checked experimental conditions.
+      The new analysis conditions are included in the current analysis
+      set once you click "Add Conditions".
+      </para>
+      <note>
+      Experimental conditions are easily confused with analysis
+      conditions as analysis conditions are derived from experimental
+      conditions.  Remember that experimental conditions are defined as
+      part of an array study and are used by array orders.  They relate
+      to a specific experimental intent and are unchanging.  Analysis
+      conditions often mimic experimental conditions (as we wish to
+      analyze data based on the intent of the experiment).  However
+      analysis condition is entirely theoretical and is subject to
+      change.  Users can change the grouping of hybridizations in
+      analysis conditions at any time.</note>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      From Criteria File
+    </term>
+    <listitem>
+      <para>
+      This is an advanced option for selecting hybridizations.  See
+      <link linkend="using_criteria_files">Using criteria files</link>
+      for a conceptual background of this process.  To use this source,
+      you will first need to upload an appropriate criteria file using the
+      <link
+      linkend="upload_a_file">Upload a file</link> link
+      available from <link linkend="user_gui">&mem_home;</link>.  If
+      this has been done, the criteria filename should appear in the
+      drop down box.  Select the appropriate file, then click "Get
+      Criteria File".
+      </para>
+      <para>
+      If the criteria file is well formed, it will specify a grouping of
+      hybridizations into analysis conditions.  Those conditions will be
+      automatically inserted into the set.
+      </para>
+    </listitem>
+  </varlistentry>
+
+</variablelist>
+Once you have added the analysis condition to the analysis set, you
+are returned to the the Edit Analysis Set page and can view the
+analysis conditions that are currently part of the analysis set.
+Analysis conditions can be removed from the analysis set by checking
+the "Delete" checkbox and hitting "Update".
+</para>
+<para>
+When the configuration of the analysis set is satisfactory, you
+can return to <link linkend="user_gui">&mem_home;</link> via the header
+links at the top of the page.</para>
+</sect1>
+</article>
+
+<article id="account_management">
+<title>Account Management</title>
+<sect1 id="update_my_personal_info">
+<title>Update my personal info</title>
+<para>
+Initial account information is set when the account is initially
+created.  To update information change the appropriate values in the
+appropriate fields, and click "submit".  Note that you can't change your
+<link linkend="users">user type</link>.  This information is provided
+for informational purposes only.
+</para>
+<para>
+It is particularly important to keep your name, phone number, and email
+address up-to-date as this information is used by &product; and <link
+linkend="array_center_staff_user">array center staff</link> to
+communicate with you.  
+</para>
+</sect1>
+
+<sect1 id="change_my_password">
+<title>Change my password</title>
+<para>
+To change your password, simply enter your old and new <link
+linkend="password">password</link> in the appropriate fields.
+&password_rule;
+</para>
+</sect1>
+
+<sect1 id="create_a_new_group">
+<title>Create a new group</title>
+<para>
+This link allows <link linkend="users">users</link> to create new <link
+linkend="group">groups</link> to provide control over who can see and
+work with their data.  To add a new group, simply click on this link and
+specify the name for the new group.  This name should be meaningful to
+members of the group.  Then click "Submit".  After creating the group
+you can set the members using the <link
+linkend="manage_membership_of_my_groups">Manage membership of my
+groups</link> link.
+</para>
+</sect1>
+
+<sect1 id="manage_membership_of_my_groups">
+<title>Manage membership of my groups</title>
+<para>
+This link allows users to control which <link
+linkend="users">users</link> are part of their <link
+linkend="group">groups</link>.  Initially, each user owns one group
+(named after their <link linkend="&product;_login_id">login id</link>).  If
+necessary, users can create additional groups.  To modify membership in
+a group, click this link and the click on the "Manage" button for the
+group you wish to edit.  To add users to your group, check the checkboxes
+under "Is a member?" that correspond to the appropriate names and login
+ids.  To remove users, simply uncheck the appropriate boxes.  When the
+configuration is correct, save the changes by clicking "Finish".
+</para>
+</sect1>
+</article>
+
+</part>

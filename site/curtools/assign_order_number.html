@@ -1,0 +1,41 @@
+<form action="assign_order_number.cgi" method=POST
+  enctype="multipart/form-data">
+<table width=700 border=1 cellpadding=2 cellspacing=0>
+  <tr>
+   <th>Select Order</th>
+   <th>Order Pk</th>
+   <th>Order Number</th>
+   <th>Owner/Group</th>
+   <th>Status</th>
+   <th>Samples</th>
+   <th>Chips</th>
+   <th>Chip Type</th>
+   <th>Study</th>
+   <th>Organization</th>
+   <th>Billing Code</th>
+  </tr>
+  <loop>
+  <tr>
+   <td><input type="radio" name="oi_pk" value="{oi_pk}"></td>
+   <td>{oi_pk}</td>
+   <td>{order_number}</td>
+   <td>{owner_group}</td>
+   <td>{order_status}</td>
+   <td>{number_of_samples}</td>
+   <td>{number_of_chips}</td>
+   <td>{chip_type}</td>
+   <td>{study_name}</td>
+   <td>{org_name}</td>
+   <td>{billing_code}</td>
+  </tr>
+  <tr>
+</loop>
+</table>
+<p>
+{assign_html}
+<input type="submit" name="submit" value="Assign Order Number">
+</form>
+<p>
+<small>* denotes mandatory field</small>
+</p>
+

@@ -1,0 +1,297 @@
+<article id="admin_faq" class="faq">
+<title>Administrator FAQ</title>
+
+<qandaset>
+<qandadiv id="admin_faq_administrator_account"><title>Administrator Account</title></qandadiv>
+
+<qandaentry>
+  <question>
+    <para>
+     How do I log in as <link linkend="administrator_user">administrator</link>?
+    </para>
+  </question> 
+  <answer>
+    <para>
+     Logging in as an administrator is the same as logging in as a regular 
+     user. Provide your <link linkend="&product;_login_id">login</link> and 
+     password in the login section of the &product; home page.
+    </para>
+  </answer>
+</qandaentry> 
+
+<qandaentry>
+  <question>
+    <para>
+    How do I change the <link linkend="administrator_user">administrator</link>    password?
+    </para>
+  </question> 
+  <answer>
+    <para>
+     Administrators can change their password in two ways. They can log 
+     on and change their password via the 
+     <link linkend="change_user_password">Change User Password</link> 
+     link from <link linkend="admin_gui">&admin_home;</link> 
+     or through the 
+     <link linkend="change_my_password">Change My Password</link> 
+     link from <link linkend="user_gui">&mem_home;</link> 
+    </para>
+  </answer>
+</qandaentry> 
+
+        
+<qandadiv id="admin_faq_user_administration"><title>User Administration</title></qandadiv>
+        
+<qandaentry>
+  <question>
+    <para>
+    Why can't I remove a <link linkend="users">user</link>?
+    </para>
+  </question> 
+  <answer>
+    <para>
+    If the user owns any data, you will not be able to remove them. If this 
+    is the case, their <link linkend="&product;_login_id">login</link> 
+    won't even show up in the drop down list for users that you are allowed 
+    to remove. 
+    </para>
+  </answer>
+</qandaentry> 
+
+<qandaentry>
+  <question>
+    <para>
+    How do I change a <link linkend="users">user's</link> password?
+    </para>
+  </question> 
+  <answer>
+    <para>
+          User <link linkend="password">passwords</link> can be changed 
+          via the <link linkend="change_user_password">Change User
+          Password</link> in <link linkend="admin_gui">&admin_home;</link>. 
+          Passwords can also be changed using the <link
+          linkend="geoss_change_userpw"><command>geoss_change_userpw</command></link>
+           command line script.
+    </para>
+  </answer>
+</qandaentry> 
+
+<qandadiv id="admin_faq_layout_management"><title>Layout Management</title></qandadiv>
+        
+<qandaentry>
+  <question>
+    <para>
+    Where do I get <link linkend="layout">layouts</link>?
+    </para>
+  </question> 
+  <answer>
+    <para>
+      Layouts can be obtained from the <ulink
+      url="http://www.affymetrix.com/support/technical/byproduct.affx?cat=arrays">Affymetrix
+      website</ulink>.
+      Click on the hyperlink for the array of interest and scroll down 
+      to the section "NetAffx Annotation Files." Choose the 
+      .CSV file.  This file will contain more columns than are needed 
+      for our system.  Eliminate all columns with the exception of 
+      GeneChip Array, Probe Set ID, Representative Public ID, Sequence Type,
+      and Target Description. Columns should be in this order.
+      Save file as a text file making sure that the first row is actual 
+      data. To do so remove column headings from the text file. 
+    </para>
+    <para>
+      For convenience, we supply the layouts we use in a file,
+       <filename>geoss_layouts.tar.gz</filename>, that
+      is available for download from the &sourceforge_site;.  Generally,
+      these should be downloaded as part of the installation process.
+    </para>
+  </answer>
+</qandaentry> 
+
+
+<qandaentry>
+  <question>
+    <para>
+     How do I load a <link linkend="layout">layout</link>?
+    </para>
+  </question> 
+  <answer>
+    <para>
+    Layouts should be in text format for loading. Currently you 
+    must run the <link
+    linkref="geoss_loadaffylayout"><command>geoss_loadaffylayout</command></link> 
+    script from the command line. 
+    </para>
+  </answer>
+</qandaentry> 
+
+
+<qandaentry>
+  <question>
+    <para>
+    How do I unload a <link linkend="layout">layout</link>?
+    </para>
+  </question> 
+  <answer>
+    <para>
+    Affymetrix layouts are loaded into three tables in the following 
+    order: <database class="table">arraylayout</database>,
+    <database class="table">al_spots</database> and 
+    <database class="table">usersequencefeature</database>. The only 
+    way to remove a layout is to do so manually. You must identify all 
+    the fields first and then delete in reverse order or the foreign 
+    key constraints will not allow the deletion. The <database
+    class="table">arraylayout</database>table 
+    will have only one record, however, the <database
+    class="table">al_spots</database> and <database
+    class="table">usersequencefeature</database> 
+    tables will have many. Identify the records by associating 
+    the foreign key relationships and then begin your delete. As always 
+    it is a good idea to have a backup (<command>pg_dump</command>)
+     done just in case.
+    <note>
+    Removing layouts should not typically be required. 
+    </note>
+    </para>
+  </answer>
+</qandaentry> 
+
+<qandaentry>
+  <question>
+    <para>
+    Why can't I unload a <link linkend="layout">layout?</link> 
+    </para>
+  </question> 
+  <answer>
+    <para>
+    Most likely you are attempting to remove a layout from the arraylayout 
+    table before deleting the associated records in the <database
+    class="table">usersequencefeature</database>
+    and <database class="table">al_spots</database> tables. 
+    You must do the deletes in the reverse order 
+    from which the tables are populated. The foreign key 
+    constraints will keep you from leaving orphan records in any child 
+    tables.
+    </para>
+    <para>
+    Another possibility is that you are attempting to delete a layout 
+    that has already been associated with some data.  Layouts should
+    not be deleted if they have associated data. 
+    </para>
+  </answer>
+</qandaentry> 
+
+<qandadiv id="admin_faq_analysis_management"><title>Analysis Management</title></qandadiv>
+        
+<qandaentry>
+  <question>
+    <para>
+    Where do I get <link linkend="analysis">analyses</link>?
+    </para>
+  </question> 
+  <answer>
+    <para>
+    Analyses are developed by &product; developers and loaded into
+    &product; during the install. 
+    As new analyses are created, 
+    they will be included in system updates. It is possible to write your 
+    own analyses, but you will need to have &product; source installed to do 
+    this. If you have an analysis you would like to have included in
+    &product;, please contact the <link
+    linkend="&product;_developers">GEOSS developers</link>.
+    </para>
+  </answer>
+</qandaentry> 
+
+<qandaentry>
+  <question>
+    <para>
+    How can I load an <link linkend="analysis">analysis</link>? 
+    </para>
+  </question> 
+  <answer>
+    <para>
+    Analyses are loaded via the <link
+    linkend="geoss_add_analysis"><command>geoss_add_analysis</command></link> 
+    command.
+    </para>
+  </answer>
+</qandaentry> 
+
+<qandaentry>
+  <question>
+    <para>
+    How can I unload an <link linkend="analysis">analysis</link>? 
+    </para>
+  </question> 
+  <answer>
+    <para>
+    Analyses that are not currently in use can be removed using the
+    <link linkend="geoss_rm_analysis"><command>geoss_rm_analysis</command>
+    </link> 
+    command. <note>Typically, you should not need to remove analyses.
+    This functionality is generally only required by application
+    developers.</note>
+    </para>
+  </answer>
+</qandaentry> 
+
+<qandadiv id="admin_faq_public_data_management"><title>Public Data Management</title></qandadiv>
+          
+<qandaentry>
+  <question>
+    <para>
+    What is the <link linkend="administrator_user">administrator's</link> 
+    role in making publishing <link linkend="public_data">
+     public data</link>? 
+    </para>
+  </question> 
+  <answer>
+    <para>
+    <link linkend="users">Users</link> may choose to make their data 
+    available to the public by <link
+    linkend="publishing_your_data">publishing their data</link>.  When a
+    request to publish is submitted the <link
+    linkend="public_data_administrator">Public Data Administrator</link>
+    is emailed.  Typically, the Public Data Administrator is the same
+    person as the Administrator.
+    </para>
+    <para>
+    The Public Data Administrator reviews the publishing request.
+    This is because it may not be the <link
+    linkend="primary_investigator">PI</link>
+    who submits the request. In that case, the PI is emailed 
+    by GEOSS, informing them that their data is about to be published. If 
+    they do not wish it to be published, they can contact the 
+    Public Data Administrator who can prevent the publication of the 
+    data.  When the  Public Data Administrator is satisfied 
+    regarding the legitimacy of the request, they post the data on the
+    system through a process described in the email they receive.
+    </para>
+  </answer>
+</qandaentry> 
+
+<qandaentry>
+  <question>
+    <para>
+    How do I remove public data? 
+    </para>
+  </question> 
+  <answer>
+    <para>
+    If data is published that you wish to remove from the site, it can be 
+    removed by removing the appropriate files from the public data directory. 
+    To determine the public data directory, check the <link
+    linkend="&product;_installation_information">GEOSS Installation
+     Information</link> 
+    link from <link linkend="admin_gui">&admin_home;</link>. 
+    Public data is in WEB_DIR/site/public_files. 
+    You will need to find the directory named after the PI of the data you 
+    wish to remove. If the PI has only published one set of data, you may 
+    remove the entire directory. If the PI has published more than one set 
+    of data, you will need to remove the appropriate files from inside the 
+    directory.  The filenames will include the miame name of the data.
+    </para>
+  </answer>
+</qandaentry> 
+
+</qandaset>
+</article>

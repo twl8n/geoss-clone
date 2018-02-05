@@ -1,0 +1,14 @@
+To: {email}
+Cc: {ccMail}
+From: {fromMail}
+Subject: GEOSS account request
+Dear {name},
+
+Thank you for requesting a GEOSS account.  You have requested an account 
+type that has priviledges that require us to verify your identity prior to
+creating your new account.  We will contact you shortly to obtain the 
+information we require to create your account.
+
+Thank you,
+
+GEOSS Admins

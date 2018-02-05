@@ -1,0 +1,207 @@
+============================
+GeneX Perl Coding Guidelines
+============================
+
+12-4-2000 Jiaye Zhou, Jason Stewart
+
+We put together this document for the GeneX Perl programmers. As more
+code is written and shared, we thought that being able to quickly 
+understand the code itself rather than spending a lot of time 
+understanding another programmer's coding style is very important. Also
+as larger programs are co-developed by more than one programmers, and 
+as we get ready to release source code to the public domain, it is
+important to come up and conform to a coding guideline. This is a
+recommendation for good practice and by no means is placing restriction
+of any kind onto programmers. We also realize that the guideline, 
+especially the naming convention is very different from the one widely 
+used in the Java community. 
+
+
+Naming Convention
+=================
+
+We are going to follow the naming convention recommended by CPAN as 
+closely as possible:
+
+1. Modules: 
+
+   First letter capitalized, e.g. Genex 
+
+2. Constants: 
+
+   All upper case, e.g. $SOME_CONSTANT
+
+3. Variables with function and method scope:
+
+   Lower cased and connected with '_', e.g. $my_var_one
+
+4. Variables with global or package scope: 
+
+   Mix-capped and connected with '_', e.g. $My_Var_One
+
+5. Methods and subroutines: 
+
+   Lower case and connected with '_', e.g. call_me 
+
+6. Methods and variables not intended for use outside of the package: 
+
+   Starts with '_', e.g. _do_not_call_me
+
+
+File Structure
+==============
+
+1. Modules:  
+
+   1.1 All modules should have tests, in test.pl or t/ directory
+
+2. Applications: 
+
+   We recommend components of the Perl programs placed in the following
+   order:
+
+   2.1 Header
+
+       All scripts should includ a header which provides an abstract, 
+       general description of the program, and author information
+       including contact information, and a CVS version.
+
+   2.2 USE statements 
+       
+       'use subs qw()' should be used for all subroutines. This is mainly
+       for code reader to get an idea on what subroutines are used in the
+       application.
+
+   2.3 User modifiable global variables
+
+   2.4 Variables that are not user modifiable
+
+   2.5 Options definition 
+
+       All applications should have a usage option accessable by -h or
+       --help command line options. Generally, either long or short 
+       options are acceptable, so long as usage will be printed if no
+       recognizable options and arguments are provided.
+
+   2.6 Application code
+
+   2.7 Subroutines
+
+
+Usage
+=====
+
+1. Directed vs. indirected methods when using modules
+
+   We do not recommend use of indirected methods,
+   e.g instead of '$foo = new Foo $arg1, $arg2;' 
+       use '$foo=Foo->new($arg1, $arg2);'
+	    
+2. Subroutines and methods
+
+   Arguments to subroutines can be passed as: ordered list, named
+   paramemeter, or mixed. If there are optional arguments use named 
+   paramemeters, e.g. 'foo(arg1 => "foo 1", arg2 => $foo_2)' or, if there 
+   are many arguments (>3), use named paramemeters. 
+
+
+3. Exception handling
+
+   Returned values of methods need to be checked, for example, any call
+   to 'system'; use of backticks should check $!; any call to DBI should
+   be checked (e.g. '$sth->execute() or die $dbh->err');  XML,  
+   '$dom_node->getAttribute("attribute1")' could also return an empty 
+   string to $dom_node instead of undef if no attribute1 is found.
+	     
+4. Open for discussion
+
+   When should 'die' used instead of 'carp', vise versa?
+
+	
+Documentation
+=============
+
+1. Modules
+
+   1.1 All modules should have pod documentation. The pod documentation 
+       for each method should be placed before the methods.
+
+2. Applications
+
+   2.1 If pod documentation exists for applications, they should be placed 
+       in the bottom of the file.
+
+   2.2 Comments for subroutines should go above the subroutines. The 
+       comments should include: name of the subroutine, input parameters, 
+       output, side effects, description of the subroutine, and exceptions
+       raised. For example:
+
+       ######################################################################
+       # 
+       # foo ($arg1, $arg2)
+       #   return value: sum of $arg1 and $arg2
+       #   side effects: none
+       #   description:  returns the sum of two arguments
+       #   exceptions:   none
+       #
+       ######################################################################
+
+       sub foo { 
+	 my ($arg1, $arg2) = @_;
+	 return $arg1+$arg2;
+       }
+	    
+   2.3 Unless comments are short, they should be placed before the line of code
+       or inside the code structure (if, while, for, etc), instead of on the same
+       line. For example:
+
+       #this line of code does some magic
+       $var1 = $var2 + 1;
+
+       or
+
+       if (my_test()) {
+         #time to add 1 to $var2 and assign to $var1
+	 $var1 = $var2 + 1;
+	 
+       }
+
+
+CGIs and Web Scripts
+====================
+
+1. While CGI.pm is nice, it does not provide a straight forward way of writing
+   HTML code, especially for non-programmers. It becomes even more difficult 
+   when we try to address some of the style issues with the generated web pages. 
+   We recommend printing HTML code as much as possible. For example:
+   
+   $user_name = 'Web User';
+   print <<END;
+     <table border=0 cellpadding=0 cellspacing=0>
+	<tr>
+	    <td>User Name</td>
+            <td>$user_name</td>
+	</td>
+        <tr>
+	    <td>Your Input:</td>
+	    <td>nothing</td>
+	</tr>
+     </table>
+   END
+
+   Possible alternative: look at HTML::Mason
+	   
+2. -w option should be removed after /usr/../perl 
+
+
+Style Issues
+============
+
+Here are some important style issues to keep in mind for readability.
+
+1. Indentation: two spaces for each level of indentation
+
+2. Lines in file by default should be less than 70 chars
+
+3. '{' should go after the operator (if, while, else, for and subs) on the same line
+

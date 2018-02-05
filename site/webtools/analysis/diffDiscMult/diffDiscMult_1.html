@@ -1,0 +1,75 @@
+<html>
+<head><title>Differential Expression Discovery Documentation</title></head>
+<body bgcolor="#FFFFFF">
+<p><b>Description</b><br>
+The GEOSS module 'Multi-condition Differential Discovery' performs calculations that are intended for
+discovery of differentially expressed genes under multiple conditions. 
+This module compares multiple conditions simultaneously 
+while 'Differential Discovery' compares all possible pairs of multiple conditions.  
+This module uses the following methods:  ANOVA and HEM.
+The output from this module is formatted in a table structure for easier access and readability. 
+Multi-condition Differential Discovery version 1 uses R 2.1.
+<br>
+</p>
+<p><br>
+<b>Statistical Methods</b><br>
+
+The following computations are done on the input data::<br>
+
+<li> ANOVA (Analysis of Variance) is a standard statistical procedure for comparing multiple conditions. <br><br>
+
+
+<li> WY (Westfall & Young) and BH (Benjamini & Hochberg) tests compute adjusted p-values for multiple
+     testing procedures.  For explanation of the WY and BH tests, look at:<br>
+
+<ul>
+1. Westfall, P.H., and Young, S.S. (1993). Resampling-based multiple
+     testing: examples and methods for p-value adjustment. </i> John Wiley
+     & Sons. </i> <br>
+
+2. Benjamini, Y. and Hochberg, Y. (1995). Controlling the false
+     discovery rate: a practical and powerful approach to multiple
+     testing.  <i> J. R. Statist. Soc. B.</i> 57: 289-300.<br>
+
+3. Ge, Y., Dudoit, S., and T. P. Speed (2003). 
+Resampling-based multiple testing for microarray data analysis.  <i> Test</i>. 12 (1): 1-44. 
+</ul>
+
+<li> HEM (Heterogeneous Error Model) is a statistically powerful procedure for multiple conditions, 
+particularly, with a small number of replicates.  For explanation of the HEM
+test, look at:<br>
+<ul>
+1. Cho, H. and Lee, J.K. (2004).  Bayesian Hierarchical Error Model for Analysis of Gene Expression Data,
+<i>Bioinformatics</i>,  20, 2016-2025.<br>
+</ul>
+
+
+<p><br>
+  <b>Input files</b><br>
+Multi-condition Differential Discovery expects input in this form:<br>
+</p>
+<ul>
+  <li> A file containing chip data. The file should have row and column labels.<br>
+    <br>
+</ul>
+Analyses that create input in this format include:<br>
+<ul>
+  <li> Quality Control<br>
+</ul>
+<p>&nbsp;</p>
+<p><b>Output files</b><br>
+Multi-condition Differential Discovery creates the following output:<br>
+</p>
+<ul>
+  <li> An intermediate data file containing expression data and statistics for all probe sets.
+</ul>
+   
+</ul>
+Analyses that accept differential discovery output as input include:<br>
+<ul>
+  <li>Multi-condition Filter<br>
+</ul>
+
+</body></html>
+
+

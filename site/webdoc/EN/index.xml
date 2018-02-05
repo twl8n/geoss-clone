@@ -1,0 +1,62 @@
+<!DOCTYPE set PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd" [
+<!ENTITY product "GEOSS">
+<!ENTITY sourceforge_site 
+  "<ulink url=&#34;http://sourceforge.net/projects/geoss/&#34;>&product;
+  Source Forge site</ulink>">
+<!ENTITY admin_home "Admin Home">
+<!ENTITY mem_home "Member Home">
+<!ENTITY center_home "Special Center Home">
+<!ENTITY array_home "Array Center Staff Home">
+<!ENTITY how_sort "Results may be sorted by clicking one of the button
+column headers.">
+<!ENTITY mandatory "Fields marked with an asterix(*) are mandatory.">
+<!ENTITY valid_order_config_rule "Each array order must have at least
+one sample.  Each sample must have at least one hybridization.">
+<!ENTITY order_number_rule "Order numbers take the form YY-NN, where YY
+is the year the array order was created and NN is a sequential number
+within that year.">
+<!ENTITY password_rule "Passwords must be at least six characters long
+and can contain any non-whitespace characters.">
+<!ENTITY overview SYSTEM "overview.xml">
+<!ENTITY summary SYSTEM "summary.xml">
+<!ENTITY install SYSTEM "install.xml">
+<!ENTITY install_faq SYSTEM "install_faq.xml">
+<!ENTITY glossary SYSTEM "glossary.xml">
+<!ENTITY user_guide SYSTEM "user_guide.xml">
+<!ENTITY user_workflow SYSTEM "user_workflow.xml">
+<!ENTITY user_gui SYSTEM "user_gui.xml">
+<!ENTITY user_faq SYSTEM "user_faq.xml">
+<!ENTITY data_load_guide SYSTEM "data_load_guide.xml">
+<!ENTITY data_load_faq SYSTEM "data_load_faq.xml">
+<!ENTITY special_center_guide SYSTEM "special_center_guide.xml">
+<!ENTITY special_center_workflow SYSTEM "special_center_workflow.xml">
+<!ENTITY special_center_gui SYSTEM "special_center_gui.xml">
+<!ENTITY special_center_faq SYSTEM "special_center_faq.xml">
+<!ENTITY array_center_staff_guide SYSTEM "array_center_staff_guide.xml">
+<!ENTITY array_center_staff_workflow SYSTEM "array_center_staff_workflow.xml">
+<!ENTITY array_center_staff_gui SYSTEM "array_center_staff_gui.xml">
+<!ENTITY array_center_staff_faq SYSTEM "array_center_staff_faq.xml">
+<!ENTITY admin_guide SYSTEM "admin_guide.xml">
+<!ENTITY admin_workflow SYSTEM "admin_workflow.xml">
+<!ENTITY admin_gui SYSTEM "admin_gui.xml">
+<!ENTITY admin_command SYSTEM "admin_command.xml">
+<!ENTITY admin_faq SYSTEM "admin_faq.xml">
+<!ENTITY developer_guide SYSTEM "developer_guide.xml">
+<!ENTITY developer_faq SYSTEM "developer_faq.xml">
+<!ENTITY developer_article_documentation SYSTEM
+"developer_article_documentation.xml">
+<!ENTITY user_article_analysis_tutorial SYSTEM
+"user_article_analysis_tutorial.xml">
+]>
+<set id="geoss_doc">
+<title>GEOSS Documentation Suite</title>
+&overview;
+&user_guide;
+&data_load_guide;
+&special_center_guide;
+&array_center_staff_guide;
+&admin_guide;
+&developer_guide;
+&summary;
+</set>

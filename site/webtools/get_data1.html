@@ -1,0 +1,96 @@
+<html><head><title>Choose MAS5 hybridizations</title></head>
+<body bgcolor="#FFFFFF">
+  <table width="600" border="0" cellpadding="0" cellspacing="0">
+    <tr><td valign="top" width="216"><a href="./"><img src="../graphics/geoss_logo.jpg" border="0" width="216" height="96"></a></td>
+    <td>&nbsp;&nbsp;</td>
+    <td valign="top">GEOSS MAS5 hybridization data export<br><br>
+    <a href="./">Return to GEOSS Member Home</a>
+    <br>
+      Choose hybridizations to export.<br>
+      Choose and export format.<br>
+      Check each hybridization you wish to export.<br>
+    </td>
+  </tr>
+  </table>
+
+<font color="#FF0000">{message}</font>
+
+<form action="get_data2.pl" method="post">
+  <input type="submit" name="submit" value="Next">
+<br>
+  <table width="800" border="0" cellspacing="0" cellpadding="5">
+    <tr> 
+      <td width="172"> 
+        <div align="right">Comments</div>
+      </td>
+      <td width="628"> 
+        <input type="text" name="comments" value="{comments}" size=50 maxlength="128">
+      </td>
+    </tr>
+    <tr> 
+      <td width="172"> 
+        <div align="right">File name</div>
+      </td>
+      <td width="628"> 
+        <input type="text" name="file_name" value="{file_name}" size=30 maxlength="30">
+      </td>
+    </tr>
+    <tr valign="top"> 
+      <td width="172"> 
+        <div align="right">GEOSS format 
+          <input type="radio" name="export_format" value="geoss" checked>
+          <br>
+        </div>
+      </td>
+      <td width="628">Single line of column names as a header. Use this format 
+        if you are doing Analysis Tree analyses in GEOSS. Tab separated columns. 
+        <br>
+        <br>
+      </td>
+    </tr>
+    <tr valign="top"> 
+      <td width="172"> 
+        <div align="right">Human format 
+          <input type="radio" name="export_format" value="human">
+          <br>
+        </div>
+      </td>
+      <td width="628">Two header lines. The first header line has the condition 
+        grouping, and the second line is column names. Tab separated columns. 
+      </td>
+    </tr>
+  </table>
+  <table width="800" border=1 cellspacing=0 cellpadding=3>
+    <tr bgcolor="#ccccff"> 
+      <td valign=top width="22">&nbsp;</td>
+      <td valign=top width="150">Study:Exp. Condition<br>
+        Chip/Hyb. Name</td>
+      <td valign=top width="93">Sample <br>
+        Name </td>
+      <td valign=top width="123">Hybridization Comments </td>
+      <td valign=top width="57">Experiment Notes </td>
+      <td valign=top width="109"> Short Exp. Name /<br>
+        Exp. Cond. Description </td>
+      <td valign=top width="124"> Owner </td>
+      <td valign=top width="59"> UserID </td>
+    </tr>
+    <loop> 
+    <tr> 
+      <td valign=top width="22"> 
+        <input type="checkbox" name="am_pk" value="{am_pk}">
+      </td>
+      <td valign=top width="150">{select_exp}<br>
+        {al_name} / {hybridization_name}</td>
+      <td valign=top width="93">{smp_name}&nbsp; </td>
+      <td valign=top width="123">{comments}&nbsp; </td>
+      <td valign=top width="57"> {notes}&nbsp; </td>
+      <td valign=top width="109"> {abbrev_name} / {description}&nbsp; </td>
+      <td valign=top width="124"> {contact_fname} {contact_lname}&nbsp; </td>
+      <td valign=top width="59"> {login}&nbsp; </td>
+    </tr>
+    </loop> 
+  </table>
+ 
+  <br>
+  <input type="submit" name="submit" value="Next">
+</form>

@@ -1,0 +1,294 @@
+<book id="data_load_guide">
+<title>Data Load Guide</title>
+
+<part id="data_load">
+<title>Data Load Overview</title>
+<article id="data_load_overview">
+  <title>Overview</title>
+  <para>
+  Loading data into &product; can be accomplished in a variety of ways.
+  Depending on the configuration of the system, data may be loaded by
+  different kinds of users.  Additionally, data may be loaded from a
+  variety of formats. Thus, techniques for loading data vary and can be 
+  summarized as follows:
+
+<table frame='all'><title>Data Load Summary</title>
+<tgroup cols='5' align='left' colsep='1' rowsep='1'>
+<colspec colname='User Type'/>
+<colspec colname='Load Tools'/>
+<colspec colname='Data Formats'/>
+<colspec colname='Components Loaded'/>
+<colspec colname='Comments'/>
+<thead>  
+<row>
+  <entry>User Type</entry>
+  <entry>Load Tools</entry>
+  <entry>Data Formats</entry>
+  <entry>Components Loaded</entry>
+  <entry>Comments</entry>
+</row>
+</thead> 
+<tbody>
+<row>
+  <entry>
+    <link linkend="public_user">public user</link>,
+    <link linkend="member_user">member user</link>,
+    <link linkend="array_center_staff_user">array center staff user</link>
+  </entry>
+  <entry>
+    <link linkend="upload_a_file">Upload a file</link> via 
+    <link linkend="user_gui">&mem_home;</link>,
+  </entry>
+  <entry>
+    mas5 txt file
+  </entry>
+  <entry>
+    One <link linkend="hybridization">hybridization</link>
+  </entry>
+  <entry>
+    Typically used to load data unrelated to a GEOSS study for analysis.  
+    Only option currently available to public users.
+  </entry>
+</row>
+<row>
+  <entry>
+    <link linkend="member_user">member user</link>,
+    <link linkend="array_center_staff_user">array center staff user</link>
+  </entry>
+  <entry>
+    <link linkend="load_a_study">Load a study</link> via 
+    <link linkend="user_gui">&mem_home;</link>,
+  </entry>
+  <entry>
+    <link linkend="single_data_file">Single data file</link> 
+  </entry>
+  <entry>
+    One <link linkend="array_study">array study</link>
+  </entry>
+  <entry>User data load must be enabled for the installation by the 
+    &product; administrator via <link linkend="configure_&product;">Configure
+    &product;</link> link in <link linkend="admin_gui">&admin_home;
+    </link>
+  </entry>
+</row>
+<row>
+  <entry>
+    <link linkend="array_center_staff_user">array center staff user</link>
+  </entry>
+  <entry>
+    <link linkend="get_one_array_order">Get one array order</link> via 
+    <link linkend="array_center_staff_gui">&array_home;</link>,
+  </entry>
+  <entry>
+    <link linkend="data_directory">Data directory</link> (under <link 
+    linkend="chip_data_path">chip data path</link>)
+  </entry>
+  <entry>
+    One <link linkend="array_order">array order</link>
+  </entry>
+  <entry>Enable Array Center Processing must be enabled for the installation 
+    by the 
+    &product; administrator via <link linkend="configure_&product;">Configure
+    &product;</link> link in <link linkend="admin_gui">&admin_home;
+    </link>
+  </entry>
+</row>
+<row>
+  <entry>
+    Users who have shell access on the installation box
+  </entry>
+  <entry>
+    <link linkend="geoss_bulk_load"><command>geoss_bulk_load</command></link>
+  </entry>
+  <entry>
+    <link linkend="single_data_file">Single data file</link> 
+    <link linkend="data_directory">Data directory</link>
+  </entry>
+  <entry>
+    Multiple <link linkend="array_study">array studies</link>
+  </entry>
+  <entry>
+    This script is intended for bulk configuration of data.  The
+    <link linkend="geoss_bulk_configurator"><command>geoss_bulk_configurator
+    </command></link> script may be used for bulk configuration of data 
+    prior to using <command>geoss_load_available</command>.
+  </entry>
+</row>
+<row>
+  <entry>
+    Users who have shell access on the installation box
+  </entry>
+  <entry>
+    <link linkend="geoss_load_available"><command>geoss_load_available
+    </command></link>
+  </entry>
+  <entry>
+    <link linkend="data_directory">Data directory</link> (under <link 
+    linkend="chip_data_path">chip data path</link> by default)
+  </entry>
+  <entry>
+    Multiple <link linkend="array_order">array orders</link>
+  </entry>
+  <entry>
+    This script is intended for bulk load of orders.  It can be used by 
+    save array center staff from individually loading each order.  The 
+    <link linkend="geoss_bulk_configurator"><command>geoss_bulk_configurator
+    </command></link> script may be used for bulk configuration of data 
+    prior to using <command>geoss_load_available</command>.
+  </entry>
+</row>
+</tbody>
+</tgroup>
+</table> 
+Each technique is discussed in more detail in the help for that tool.  The 
+general process involves ensuring dependencies are configured, obtaining 
+correctly formatted data file(s), then loading the data.  A detailed 
+explanation of data file formats follows.
+</para>
+</article>
+
+<article id="data_load_file_formats">
+<title>Data Load File Formats</title>
+<para>
+In GEOSS, a variety of file/directory formats can be used to load data.  
+They include:
+
+<variablelist>
+  <varlistentry>
+    <term>
+    <link linkend="single_data_file">Single data file</link> 
+    </term>
+    <listitem>
+      <para>
+        This file contains the name of the chip (i.e. HG_U95Av2).  The
+        chip name must correspond to the value of the "name" field of a
+        record in the arraylayout table.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+    <link linkend="data_directory">Data directory</link>
+    </term>
+    <listitem>
+      <para>
+        This file contains the name of the chip (i.e. HG_U95Av2).  The
+        chip name must correspond to the value of the "name" field of a
+        record in the arraylayout table.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+    <link linkend="affymetrix_txt_file">mas5 txt file</link> 
+    </term>
+    <listitem>
+      <para>
+        This file is generated by mas5/gcos software when the chip is 
+        processed.  
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist> 
+</para>
+
+<formalpara id="single_data_file">
+  <title>Single Data File</title>
+  Files of this type contain signal data for many chips in one file.  The 
+  file is a tab-delimited txt file.  The first line is the header line.  The 
+  first column contains probe set ids and subsequent columns contain names 
+  of the chips to be loaded.  The column header for the probe set ids must be
+  "Probesets" or "probe set name".  If the file is to be used by the   
+  geoss_bulk_configurator script, then the names of the chips to be loaded must
+  correspond to &product; arraymeasurement naming conventions as these names are
+  used to determine study configuration.  If the file is to be used by
+  <link linkend="geoss_bulk_load"><command>geoss_bulk_load</command></link>
+  or <link linkend="geoss_load_available"><command>geoss_load_available
+  </command></link>, then the chip names must correspond to chip that exist 
+  within the arraymeasurement table and are part of the study/order being 
+  loaded.  Subsequent rows contain data and must start with a valid probe 
+  set id for the chip type and contain signal values for each chip.  All
+  chips in a file must have the same <link
+  linkend="layout">layout</link>.
+
+  <example>
+  <title>Single Data File Example</title>
+    <para>This is a sample data file for four hybridizations with the 
+    HG-U133A layout type.  The naming of the hybridizations indicates 
+    that this <link linkend="array_study">array study</link> has two
+    <link linkend="experiment_condition">experimental conditions</link> (age1,
+    age2) and that each condition has two biological replicates (A,B)
+    </para> 
+    <screen>
+     Probesets       age1_A  age1_B  age2_A  age2_B
+     1007_s_at       895.5   1142.5  1253    1555.2
+     1053_at         259.8   96.1    324.7   245.8
+     117_at          252.7   210.7   339.7   167.7
+     121_at          2758.4  2446.5  2359.5  2688.7
+     1255_g_at       184.8   181     170.6   170.5
+    </screen>
+    <ulink url="../examples/single_data_file.txt">
+      Full example file</ulink>
+  </example>
+  <note>
+  Make sure the EOL character of your text file is appropriate for the OS
+  &product; is installed on if you are moving the file from a different OS 
+  type. 
+  </note> 
+</formalpara>
+
+<formalpara id="data_directory">
+  <title>Data Directory</title>
+  A data directory contains multiple files for each chip to be loaded.
+  These are Affymetrix files generated when the chip is run and can
+  include files of type txt, exp, dat, cel, chp, rpt, and data.  Note
+  that you must have a txt file that contains signal values for each
+  <link linkend="hybridization">hybridization</link> scheduled for
+  loading.  If you have an rpt file, the chip type can be verified and
+  quality control information will be loaded.  An exp file will be used
+  to load the lot number, if one is specified in the exp file.  All
+  other data files do not load experiment data, but will be linked to
+  the study so that they are available for download by users with the
+  appropriate permissions.
+
+  <example>
+  <title>Data Directory</title>
+    <para>The study illustrtated in the directory listing below contains 
+     two experimental conditions: B6_ameba, and B6_sham.  Each condition 
+     has one biological sample (A) with two chip replicates (1,2).  A 
+     sample data directory might contain:
+    </para> 
+    <screen>
+B6_ameba_A_1.CEL  B6_sham_A_1.CEL 
+B6_ameba_A_1.CHP  B6_sham_A_1.CHP
+B6_ameba_A_1.DAT  B6_sham_A_1.DAT 
+B6_ameba_A_1.EXP  B6_sham_A_1.EXP
+B6_ameba_A_1.RPT  B6_sham_A_1.RPT
+B6_ameba_A_1.TXT  B6_sham_A_1.TXT
+B6_ameba_A_2.CEL  B6_sham_A_2.CEL
+B6_ameba_A_2.CHP  B6_sham_A_2.CHP
+B6_ameba_A_2.DAT  B6_sham_A_2.DAT
+B6_ameba_A_2.EXP  B6_sham_A_2.EXP
+B6_ameba_A_2.RPT  B6_sham_A_2.RPT
+B6_ameba_A_1.TXT  B6_sham_A_1.TXT
+    </screen>
+  </example>
+</formalpara>
+
+<formalpara id="affymetrix_txt_file">
+  <title>Affymetrix TXT File</title>
+  This file is generated by affymetrix software when the chip is
+  processed.  An individual txt file contains data for one chip and is
+  associated with a specific layout.
+  <example>
+  <title>Affymetrix TXT File</title>
+    <ulink url="../examples/affymetrix_txt.txt">
+      Full example file</ulink>
+  </example>
+</formalpara>
+
+
+</article>
+</part>
+&data_load_faq;
+</book>

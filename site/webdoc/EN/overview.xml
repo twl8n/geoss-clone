@@ -1,0 +1,553 @@
+<book id="overview">
+<title>&product; Overview</title>
+<article id="introduction_to_&product;">
+<title>Introduction to &product;</title>
+
+<para>
+The <link linkend="&product;">&product;</link>
+project is a rewrite of the original 
+GeneX 1.4 project which was initially conceived at 
+<ulink
+url="http://www.ncgr.org">National Center for Genome Resources (NCGR)
+</ulink>
+as a proprietary software 
+project. Along with two other projects, &product; has emerged from this 
+earliest 
+version as a direct result of diverging requirements and a need for a 
+practical and functional system. &product; is open source and freely available 
+at the <ulink url="http://geoss.sourceforge.net/">SourceForge</ulink> web site.
+</para>
+
+<para> 
+The evolution of &product; continues to be driven by the need to get the 
+greatest use of gene expression data. Developers at the <ulink
+url="http://www.virginia.edu">University of Virginia</ulink>, 
+through modification and innovation, have created a secure, 
+web based relational database management system that allows users to load, 
+archive, manage and analyze gene expression data. 
+</para>
+
+<para>&product; includes: 
+<orderedlist numberation="arabic">
+<listitem>
+ <para>
+ A convenient user interface based on the workflow of biomedical microarray 
+ research. Investigators login via a web browser to enter a variety of 
+ general and 
+ <link linkend="miame">MIAME</link> required information pertaining to their 
+ <link linkend="array_study">array studies</link>, 
+ <link linkend="experiment_condition">experimental conditions</link>, 
+ <link linkend="sample">samples</link>, and
+ <link linkend="hybridization">hybridizations</link>. 
+ </para>
+ <para>
+ The <link linkend="array_center">array center</link>
+ has been supplied with a number of online processing 
+ tools which allow them to track and bill <link
+ linkend="array_order">array orders</link>, create reports, and 
+ manage work load. 
+ <link linkend="special_center">Special center</link>
+ support is included so the array center 
+ can adjust their array order approval and billing practices 
+ according to each 
+ center's individual requirements. 
+ </para>
+</listitem>
+<listitem>
+<para>
+A web tool that allows each user to post his array data for public 
+access. Public data can be viewed and downloaded from the main &product; web 
+site without a user account. It can also be analyzed via the &product; set 
+of analysis tools by simply creating a public access account. In addition, 
+personal data can be analyzed once uploaded to the &product; system. 
+</para>
+</listitem>
+<listitem>
+<para>
+An innovative 
+<link linkend="analysis_tree">Analysis Tree</link> 
+interface that can interactively incorporate 
+different analytical tools into a unified analysis tree.
+ &product; is a database 
+combined with an integrated toolset to enable researchers to analyze their 
+data, and in some circumstances to make a comparative reference to public 
+data. Text delimited data sets can be uploaded, regardless of technology, 
+to be analyzed.
+</para>
+<para>
+The current <link linkend="analysis">analysis</link> tools include:
+
+  <orderedlist>
+   <listitem>
+     up-to-date statistical methods for 
+     discovering differential expression patterns in microarray data: t-test, 
+     SAM, permutation test, and LPE (Local Pooled Error) test, especially the 
+     last recommended for small-sample (less than six replicated arrays per 
+     condition) microarray data analysis,
+   </listitem>
+   <listitem>
+   statistical and functional filtering, 
+   </listitem>
+   <listitem>
+    annotation tool which can provide many different types of annotation 
+    and functional information, and 
+   </listitem>
+   <listitem>
+    hierarchical clustering tool which 
+    provides both cluster-image-map and direct links to 
+    <ulink url="www.ncbi.nlm.nih.gov">National Center for Biotechnology
+    Information (NCBI)</ulink> 
+    genome information sites for each microarray data set analyzed.
+   </listitem>
+</orderedlist>
+</para>
+</listitem>
+</orderedlist>
+</para>
+</article>
+
+<article id="history_of_&product;">
+<title>History of &product;</title>
+  <para>
+  The &product; project is a rewrite of the original GeneX project
+  which was initially conceived at 
+  <ulink
+  url="http://www.ncgr.org">National Center for Genome Resources (NCGR)
+  </ulink>
+  .  The original GeneX is 
+  largely considered to be a prototype and has been leveraged in the
+  development of three separate projects:
+
+  <itemizedlist mark="bullet">
+  
+  <listitem>
+  <para>
+  <ulink url="http://geoss.sourceforge.net/">&product;</ulink> 
+  </para>
+  </listitem>
+  
+  <listitem>
+  <para>
+  <ulink url="http://genex.sourceforge.net/">GeneX 2</ulink> 
+  </para>
+  </listitem>
+  
+  <listitem>
+  <para>
+  <ulink url="http://www.ncgr.org/genex/">GeneX-Lite</ulink> 
+  </para>
+  </listitem>
+
+ </itemizedlist>
+  
+  All three projects have emerged from this
+  early version as a direct result of diverging requirements
+  and a need for a practical and functional system.
+  &product; is composed of a relational database, 
+  a web-based user interface and an analysis system. 
+  </para>
+  <para>
+  Although &product; is historically related to the original GeneX project,
+  it has diverged considerably and has an entirely new code base. The original 
+  name of &product; was GeneX-Va since it was created at the University 
+  of Virginia with the involvement of the <ulink
+  url="http://vabioinfo.org/">Virginia Bioinformatics
+  Consortium (VBC)</ulink>.
+  </para>
+      
+  <para>
+   A small team at the University of Virginia rewrote Genex 1.4 and 
+   released Genex Va 1.5 in October of 2002.   Since that time many
+   upgrades have been made and there are frequent new releases.
+   In 2004 GeneX-Va was renamed to &product;
+   to more accurately reflect its 
+   framework and to avoid any confusion among project names.  The product is installed and
+   used regularly by the UVa <link linkend="array_center">array center</link>
+   and  UVa researchers.  Development on the project is on-going as we
+   continue to add new functionality and improve on the user interface.
+  </para> 
+</article>
+
+<article id="&product;_developers">
+<title>&product; Developers</title>
+
+<formalpara>
+<title>Dr. Jae K Lee</title>
+<itemizedlist>
+<listitem>
+<para>
+Associate Professor
+</para>
+</listitem>
+<listitem>
+<para>
+<ulink url="http://www.virginia.edu/">University of Virginia</ulink>
+</para>
+</listitem>
+<listitem>
+<para>
+<ulink url="http://www.healthsystem.virginia.edu/internet/hes/">Health
+Evaluation Sciences</ulink>
+</para>
+</listitem>
+<listitem>
+<para>
+<email>jaeklee@virginia.edu</email>
+</para>
+</listitem>
+</itemizedlist>
+<ulink
+url="http://healthsystem.virginia.edu/internet/hes/biostat/docs/personnel/lee.cfm">Dr.
+Lee</ulink> holds a PhD in statistical genetics from the University of
+Wisconsin-Madison and has a wealth of bioinformatics experience.  He 
+manages the &product; project and provides product direction in 
+requirements, collaborations, publication, and resources.  
+</formalpara>
+
+<formalpara>
+<title>Teela James</title>
+<itemizedlist>
+<listitem>
+  <para>
+Technical Team Leader
+  </para>
+</listitem>
+<listitem>
+  <para>
+<ulink url="http://www.virginia.edu/">University of Virginia</ulink>
+  </para>
+</listitem>
+<listitem>
+  <para>
+<ulink url="http://www.healthsystem.virginia.edu/internet/hes/">Health
+Evaluation Sciences</ulink>
+  </para>
+</listitem>
+<listitem>
+  <para>
+<email>teela-virginia@peff.net</email>
+  </para>
+</listitem>
+</itemizedlist>
+Teela James is responsible for
+the implementation and integration of all new software components and
+for maintaining the existing code base.  Her additions to the project
+have included public user functionality, the addition of special
+centers, public data publication, the addition of the administrator
+user and graphical administrator tools, and creation of the analysis
+trees infrastructure. 
+</formalpara>
+
+<formalpara>
+<title>
+Jodi Kanter
+</title>
+<itemizedlist>
+<listitem>
+  <para>
+Bioinformatics Database Administrator
+  </para>
+</listitem>
+<listitem>
+  <para>
+<ulink url="http://www.virginia.edu/">University of Virginia</ulink>
+  </para>
+</listitem>
+<listitem>
+  <para>
+<ulink url="http://www.itc.virginia.edu/achs/">
+Academic Computing Health Sciences</ulink>
+  </para>
+</listitem>
+<listitem>
+  <para>
+<email>jkanter@virginia.edu</email>
+  </para>
+</listitem>
+</itemizedlist>
+Jodi Kanter designed, implemented, and maintains the &product; database.
+Additionally, Jodi manages product testing and support.
+</formalpara>
+
+<formalpara>
+<title>
+Dawn Adelsberger
+</title>
+<itemizedlist>
+<listitem>
+  <para>
+System Administrator
+  </para>
+</listitem>
+<listitem>
+  <para>
+<ulink url="http://www.virginia.edu/">University of Virginia</ulink>
+  </para>
+</listitem>
+<listitem>
+  <para>
+<ulink url="http://www.itc.virginia.edu/achs/">
+Academic Computing Health Sciences</ulink>
+  </para>
+</listitem>
+<listitem>
+  <para>
+<email>dma9w@virginia.edu</email>
+  </para>
+</listitem>
+</itemizedlist>
+Dawn Adelsberger performs system administrator for UVa's &product;
+installation.
+</formalpara>
+
+
+<formalpara>
+<title>
+Dr. HyungJun Cho
+</title>
+<itemizedlist>
+<listitem>
+  <para>
+Bioinformatics Analysis Developer
+  </para>
+</listitem>
+<listitem>
+  <para>
+<ulink url="http://www.virginia.edu/">University of Virginia</ulink>
+  </para>
+</listitem>
+<listitem>
+  <para>
+<ulink url="http://www.healthsystem.virginia.edu/internet/hes/">Health
+Evaluation Sciences</ulink>
+  </para>
+</listitem>
+<listitem>
+  <para>
+<email>hcho@virginia.edu</email>
+  </para>
+</listitem>
+</itemizedlist>
+HyungJun Cho is a Bioinformatics specialist and biostatistician.  He is
+responsible for writing and refining analysis routines. 
+</formalpara>
+
+
+<formalpara>
+<title>
+Tom Laudeman
+</title>
+<itemizedlist>
+<listitem>
+  <para>
+Software Developer
+  </para>
+</listitem>
+<listitem>
+  <para>
+<ulink url="http://www.virginia.edu/">University of Virginia</ulink>
+  </para>
+</listitem>
+<listitem>
+  <para>
+<ulink url="http://www.itc.virginia.edu/achs/">
+Academic Computing Health Sciences</ulink>
+  </para>
+</listitem>
+<listitem>
+  <para>
+<email>twl8n@virginia.edu</email>
+  </para>
+</listitem>
+</itemizedlist>
+Tom Laudeman is the former technical lead on the &product; project.
+Although he is not actively working on &product; at this time, he is
+responsible for the initial design and implementation of &product;
+including web site generation, installation, and system integration.
+</formalpara>
+
+<para>
+Additional contributions have been made by the following individuals:
+</para>
+
+<formalpara>
+<title>
+Jennifer Weller
+</title>
+<itemizedlist>
+<listitem>
+  <para>
+<ulink url="http://www.gmu.edu/">George Mason University</ulink>
+  </para>
+</listitem>
+</itemizedlist>
+Jennifer Weller was one of the founding members of the original GeneX
+project.  Her specialties include computational biology, gene expression
+analysis, and gene ontology.
+</formalpara>
+
+<formalpara>
+<title>
+Karen Schlauch
+</title>
+<itemizedlist>
+<listitem>
+  <para>
+<ulink url="http://www.gmu.edu/">George Mason University</ulink>
+  </para>
+</listitem>
+</itemizedlist>
+Karen Schlauch is a mathematician and programmer.  The 
+&product; clustering analysis is mostly her work.
+</formalpara>
+
+<formalpara>
+<title>
+Jason Stewart
+</title>
+<itemizedlist>
+<listitem>
+  <para>
+<ulink url="http://openinformatics.sourceforge.net/">OpenInformatics.org</ulink>
+  </para>
+</listitem>
+</itemizedlist>
+Jason Stewart is a founding member of the original GeneX project and has
+been instrumental in the continued progress of GeneX as open source
+software.  He wrote all the core object classes used in GeneX versions
+prior to 1.5.x and continues to build GeneX 2.  While primarily a
+software developer, he has vast knowledge on gene expression and issues
+related to capturing gene expression data.
+</formalpara>
+
+<formalpara>
+<title>
+Greg Riddick</title>
+<itemizedlist>
+<listitem>
+  <para>
+<ulink url="http://www.virginia.edu/">University of Virginia</ulink>
+  </para>
+</listitem>
+<listitem>
+  <para>
+<email>gr3k@virginia.edu</email>
+  </para>
+</listitem>
+</itemizedlist>
+Greg Riddick is a biochemist, programmer, and bioinformatics specialist.
+He ported the clustering analysis routine, and built the functionality
+to draw a tree from the clustering output.
+</formalpara>
+
+</article>
+
+<article id="home_page">
+<title>Home Page</title>
+<para>
+The home page provides an introduction to the product and
+provides a starting point for all &product; activity. <link
+linkend="users">Users</link> can login via the login interface on the
+left side bar.  If they are already logged in, there is an "Already
+logged in" link to take them directory to the appropriate set of GUI
+tools for their user type.  Non-users may make use of several
+publicly available functions including <link
+linkend="view_public_data">downloading and viewing public gene
+data</link>, <link linkend="request_an_account">requesting a &product;
+account</link> on that installation, reviewing <link
+linkend="&product;_documentation">&product; documentation</link>, 
+or <link linkend="&product;_downloads">downloading &product; source</link>.
+</para>
+<para>
+Depending on the installation, there may be several other items
+viewable.  Logos of supported <link linkend="special_center">special
+centers</link> may be displayed on the left hand side of the page.
+Additionally, there may be special descriptive or news items of interest
+to users of that installation on the page.  An example of a news item
+would be a &product; training session being provided.  
+These items are configured by the <link
+linkend="administrator_user">Administrator</link> for each installation
+via the <link linkend="configure_&product;">Configure &product;</link>
+link.
+</para>
+
+<sect1 id="view_public_data">
+<title>View Public Data</title>
+<para>
+If a researcher chooses to publish their experiment data on &product;,
+it will be available via the "View Public Data" link.  Each box on this
+page represents one study.  Currently, there are no special
+navigational/search controls for this page, but that is planned for
+future development.</para>
+<para>
+Each study is delimited in a separate box.  The first items displayed
+are the study name, a short description, and the name of the <link
+linkend="primary_investigator">PI</link>.  The first link provides <link
+linkend="miame">MIAME</link> information about the study in either text
+or html format.  Following that are the <link
+linkend="chip_data_files">chip data files</link> associated with the
+study.  Files can be downloaded by clicking on the link.
+</para>
+
+<para>
+Occasionally, if a study has just be published, data may be unavailable.
+If this is the case, a message to that effect will be returned.  This
+likely means that the <link linkend="public_data_administrator">public
+data administrator</link> is verifying the publication information, and
+the files will be posted shortly.  If the files are not available after
+several days, contact the <link linkend="administrator_user">&product;
+administrator</link> for that installation.</para>
+</sect1>
+
+<sect1 id="request_an_account">
+<title>Request An Account</title>
+<para>
+This link allows non-users to request an account on a specific &product;
+installation.  For security reasons, not all installations support all
+<link linkend="users">account types</link>.  If not all account
+types are supported there may be a link to a <link
+linkend="companion_installation">companion installation</link> that
+supports the missing types.</para>
+<para>
+To request an account, first select the desired account type, then
+click 'Next'.  Then fill out the fields for account generation.
+&mandatory;  Although an email address is not required for some user
+types, it is highly recommended that you provide one as &product; sends
+emails to communicate details regarding account creation and <link
+linkend="analysis">analysis</link> results.</para>
+<para>
+An email containing account details is send immediately if the request
+is for a <link linkend="public_user">public user</link> account.  If the
+request is for a different account type, the response email may take a
+couple days, as it is necessary for the <link
+linkend="administrator_user">administrator</link> to verify validity of
+the account request.
+</para>
+</sect1>
+<sect1 id="&product;_documentation">
+<title>&product; Documentation</title>
+<para>
+The &product; Documentation links provide access to all product
+documentation.  The documentation is divided into sections based on
+<link linkend="users">user type</link>.  Each section contains overview
+articles that provide general discussion of specific tasks that type of
+user may wish to perform, a detailed discussion of each of the GUI
+options available to that type of user, and an FAQ section.  If you have
+questions that are not addressed by the documentation or have noticed
+inaccuracies in the documentation, please email <link
+linkend="&product;_developers">
+&product; developers</link>
+ so that the concern can be answered and documentation modified
+ accordingly.
+</para>
+</sect1>
+
+<sect1 id="&product;_downloads">
+<title>&product; Downloads</title>
+Currently, &product; downloads are available from the SourceForge.  The
+downloads link from &product; home page takes the user directly to the
+relevant page.
+</sect1>
+
+</article>
+</book>

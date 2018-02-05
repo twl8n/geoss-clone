@@ -1,0 +1,19 @@
+<a href="assign_order_number.cgi">Assign a New Order Number</a><br>
+<a href="insert_order_curator1.cgi">Create a New Array Order</a><br>
+<a href="link_order_number.cgi">Assign a Historical Order to an
+Existing Study</a><br>
+<a href="delete_order.cgi">Delete an Array Order</a><br>
+<a href ="view_reports.cgi">View Reports<a><br>
+<a href="view_brief_curator.cgi">Brief View All Array Orders</a><br>
+<br>
+<form action="show1_curator.cgi" method="post">Order number, PI name (PI group)
+<br>
+<select name="oi_pk">
+<loop>
+  <option value="{oi_pk}">{order_number} {pi_name} ({pi_group})</option>
+</loop>
+</select>
+<input type="submit" name="submit" value="Get One Array Order">
+</form>
+
+

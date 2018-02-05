@@ -1,0 +1,639 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>GEOSS Schema Changes</title>
+<meta name="keywords" content="gene, chip, expression, affymetrix, genechip, oligo, two, color, spotted, array, dna, rna, oligonucleotide, cdna, analysis, analytical, copy, copy dna, spotted array, hybridization, mrna, messenger, messenger rna, cy3, cy5, probe, reverse transcriptase, reverse transcription, glass, slide, sage, serial, serial analysis of gene expression, photo dimerization, genotype, genotypes, genotyping, fold change, over expression, under expression, up regulation, down regulation, photo lithography, linux, open source, apache, postgres, postgresql, database, secure, curate, curation, curator, perfect match, westfa, young, stat analysis, clustering, perm cluster, r-cluster, r cluster, tree view, go, gene ontology, flurochroms, patrick brown, t-test, anova, function prediction">
+<meta name="description" content="GEOSS is an Open Source Gene Expression Database supporting storage and analysis of Affymetrix&reg; GeneChip&reg; technology, with planned support for two color spotted arrays and other gene expression measurement technologies. GEOSS is designed to serve as an secure repository and archive for many researchers' data. ">
+</head>
+
+<body bgcolor="#FFFFFF" link="#006633" vlink="#666633" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr valign="top"> 
+    <td width="10">&nbsp;</td>
+    <td width="100"><font face="Verdana, Arial, Helvetica, sans-serif" size="+1"><a href="./index.cgi"><img src="graphics/geoss_logo.jpg" width="216" height="96" border="0"></a></font></td>
+    <td width="8">&nbsp;&nbsp;</td>
+    <td width="490"><font face="Verdana, Arial, Helvetica, sans-serif" size="+1">GEOSS 
+      Virginia: Database Schema Change History</font> <br>
+    </td>
+  </tr>
+</table>
+<br>
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr> 
+    <td width="10" valign="top">&nbsp;</td>
+    <td width="20" valign="top" bgcolor="990066">&nbsp;</td>
+    <td width="8" valign="top">&nbsp;</td>
+    <td width="564" valign="top"> <p>GEOSS Schema changes<br>
+        <br>
+        (March 2002)<br>
+        1) Created geoss_schema.sql which contains the now modified schema, and 
+        minimal data for two tables: "contacttype"and "species". The other tables 
+        are empty.<br>
+        <br>
+        The new schema is free of experimenter data and test data. We have moved 
+        test data into separate files. This simplifies the installation and testing 
+        of a new GEOSS site. After the test phase, is it easy to create a clean 
+        database.<br>
+        <br>
+        (April 2002) <br>
+        Table additions and deletions in support of security model:<br>
+        <br>
+        1) The "us_fk" and "gs_fk" fields were removed from all tables. These 
+        fields existed in support of the original proposed security model and 
+        are no longer used by the new model. Fields "us_fk" and "gs_fk" remain 
+        in the new security tables ("usersec", "groupsec", "groupref").<br>
+        <br>
+        2) "sessions" - This table is not currently in use but has been reserved 
+        for possible deployment in the future. Current sessioning is based on 
+        Apache's .htaccess authorization model, and may need future improvement.<br>
+        <br>
+        3) "groupref" - This one table will hold the primary key values for all 
+        secured tables as well as data pertaining to user and group permissions 
+        By keeping all these primary key values in the groupref table we can easily 
+        implement row level security. No primary key value will repeat across 
+        the secured tables. The "us_fk" and "gs_fk" fields will link to the users 
+        and/or groups that have access to viewing the data. The "is_group_rw" 
+        field will identify rows of data which are writable by particular groups 
+        and users. Our current somewhat simplified model assumes that the user 
+        (owner) always has read-write (rw) abilities. Group permissions may be 
+        read-only (ro) or rw as controlled by the is_group_rw field. The "groupref" 
+        table is further described in the security system documentation.<br>
+        <br>
+        4) "pk_seq" - A sequence which generates the primary key values for all 
+        the secured tables. These tables will no longer have their own individual 
+        sequences for primary key generation. The following is a list of the sequence 
+        tables that were removed:<br>
+        <br>
+        arraylayout_al_pk_seq<br>
+        arraymeasurement_am_pk_seq<br>
+        blasthits_bh_pk_seq<br>
+        chromosome_chr_pk_seq<br>
+        citation_cit_pk_seq<br>
+        contact_con_pk_seq<br>
+        experimentfactors_ef_pk_seq<br>
+        experimentset_es_pk_seq<br>
+        protocol_prt_pk_seq<br>
+        sample_smp_pk_seq<br>
+        scanner_scn_pk_seq<br>
+        software_sw_pk_seq<br>
+        species_spc_pk_seq<br>
+        spotter_sptr_pk_seq<br>
+        treatmentlevel_tl_pk_seq<br>
+        usersec_us_pk_seq<br>
+        <br>
+        (*Note: Tables that have the potential to get very large have been secured 
+        indirectly through linking tables. For example, the "al_spots" table will 
+        not receive a primary key through the "pk_seq" but will be implicitly 
+        secured as it can only be accessed through the "arraylayout" table which 
+        has been secured. The same goes for the "am_spots" tables which will be 
+        indirectly secured through the "arraymeasurement" table.)<br>
+        <br>
+        5) "guc_seq" - (guc is mnemonic for group-user-contact) This sequence 
+        was added to generate primary key values for three of the security tables 
+        "groupsec," "usersec," and "contact." When users are created using the 
+        admin_cli.pl script, the "contact" table is populated first and then "usersec" 
+        and "groupsec" are populated using the same value in the primary key field 
+        as was generated for "contact". In other words, the "contact" primary 
+        key (con_pk), "usersec" primary key (us_pk), and "groupsec" primary key 
+        (gs_pk) are identical for a given user This format helps to simplify much 
+        of the associated code.<br>
+        <br>
+        Groups can be created separate from the addition of new accounts, so the 
+        "groupsec" primary key will increase sequentially without any modification 
+        to the "contact" or "usersec" tables. When users create additional groups 
+        the "guc_seq" is incremented. This leaves what might seem to be an apparent 
+        gap in the sequence of contact/user/group primary keys, but makes no difference 
+        in the performance or function of the database.<br>
+        <br>
+        <br>
+        (end April 2002)<br>
+        Additions of other tables:<br>
+        <br>
+        1) "billing" - This table was created specifically for our Biomolecular 
+        Research Facility (BRF). The table can be ignored or modified to accommodate 
+        the needs of other universities. <br>
+        <br>
+        2) "order_info" - This table was created specifically for our Biomolecular 
+        Research Facility (BRF) and is used to hold data regarding orders placed 
+        by UVA experimenters. The table can be ignored or modified to accommodate 
+        the needs of other institutions.<br>
+        <br>
+        3) "order_seq" - This sequence was created to assist in the construction 
+        of a unique string value associated with each hybridization. Known as 
+        the "hybridization_name" in the arraymeasurement table, this field represents 
+        a concatenation of values: a two digit value representing the year, a 
+        sequential value taken from this sequence, the name of the sample, a chip 
+        designation, and a hybridization indicator. It is used by the GEOSS web 
+        interface to present hybridization data and related meta-data. It is also 
+        used by our Biomolecular Research Facility as a means to track their samples/experiments.<br>
+        <br>
+        4) "quality_control" - The QC table was also created specifically for 
+        the BRF. Sets of QC data exist for every chip (hybridization) and are 
+        entered directly by BRF. <br>
+        <br>
+        5) "sampletype" - The sampletype table was created so that the list of 
+        sample types could be limited to a select few. A drop down box appears 
+        on the corresponding web interface page.<br>
+        <br>
+        <br>
+        (end April 2002)<br>
+        Modifications of existing GEOSS tables:<br>
+        <br>
+        1) The "groupsec" table came from the original GEOSS schema but some changes 
+        were made to accommodate our security model.<br>
+        "gs_owner" was added to the table to reflect the individual who owns the 
+        data. <br>
+        "group_name" was shortened and standardized to "gs_name"<br>
+        The "groupsec_group_name_key" index was changed to "groupsec_gs_name_key" 
+        due to the field name change above.<br>
+        <br>
+        2) "contact" table changes: <br>
+        change "contact_person" to "contact_fname" and "contact_lname" (first 
+        name and last name)<br>
+        change "contact_person_phone" to "contact_phone" to simplify name<br>
+        change "contact_person_email" to "contact _email" to simplify name<br>
+        add "department"<br>
+        add "room_number"<br>
+        add "building"<br>
+        <br>
+        3) "arraymeasurement" table changes:<br>
+        add "qc_fk" as a foreign key to quality_control table. There will be one 
+        set of quality control data per hybridization.<br>
+        add comments field for various items including lab notebook value when 
+        available.<br>
+        <br>
+        4) "experimentset" table changes:<br>
+        remove us_fk and gs_fk fields in support of new security model<br>
+        add experiment_notes (text) field for use by experimenters<br>
+        add "locked" boolean field so that experimenters can be prevented from 
+        changing experimental meta data and sample hybridization <br>
+        selection after samples have been delivered to the chip bioassay lab.<br>
+        <br>
+        5) "sample" table changes:<br>
+        add "oi_fk" as a foreign key to the order_info table<br>
+        add "sample_name" - a short description provided by the experimenter. 
+        Will be used as part of unique hybridization_name <br>
+        (arraymeasurement table). <br>
+        add "type" as link to sampletype table<br>
+        add "sample_description" - to be provided by the experimenter<br>
+        add "sample_treatment" - to be provided by the experimenter<br>
+        <br>
+        <br>
+        (May 2nd, 2002)<br>
+        6) "am_spots" table changed to "am_spots_mas5" - The original GEOSS 1 
+        schema contained multiple rows in the arraymeasurement table for each 
+        hybridization. Each row was representative of one of the derived values 
+        for that hybridization (i.e we are currently storing values for 5 different 
+        measurements from a MAS 5.0 data spreadsheet). Having multiple rows per 
+        hybridization caused duplication in the smp_fk, qc_fk, type, description, 
+        primary_es_fk and al_fk fields.<br>
+        <br>
+        This duplication presented a problem in identifying replicates. We decided 
+        to resolve this problem by breaking the am_spots tables into several tables, 
+        one for each type of stored data: Affymetrix MAS version 5.0, Affymetrix 
+        MAS version 4.0, and cDNA data. Each table will store the derived values 
+        as well as the meta data specifically associated with that kind of data. 
+        By moving these fields into the appropriate am_spots tables we can eliminate 
+        duplication of data within the arraymeasurement table. We have also provided 
+        a column based presentation of spots data which decreases the number of 
+        rows within each of the am_spots tables. Replicates can now be identified 
+        by those entries in the arraymeasurement table that have the same sample 
+        (smp_fk).<br>
+        <br>
+        7) "am_spots_ams_pk_seq" sequence changed to match the new "am_spots_mas5" 
+        table. The convention used in Jason's Bio::GEOSS database classes is tablename_pkname_seq. 
+        Thus table "am_spots_mas5" with pk "ams_pk" becomes "am_spots_mas5_ams_pk_seq".<br>
+        <br>
+        <br>
+        <br>
+        (May 10, 2002)<br>
+        Schema additions:<br>
+        <br>
+        1) "am_spots_mas4" table was added to hold data from Affymterix Software, 
+        version 4. The name of the primary key for this table as well as the names 
+        of indexes remain as they exist for the version 5 am_spots table. Other 
+        than the slight difference in the table name the only other difference 
+        will be the name of the columns related to the type of derived values 
+        stored. All other fields will look the same. We do not anticipate that 
+        this will cause any confusion as the web interface will most likely not 
+        query both tables simultaneously. If the need for this arrives we would 
+        merely need to prefix the field names with the table name to reduce confusion 
+        (i.e. am_spots_mas5.ams_pk or am_spots_mas4.ams_pk).<br>
+        <br>
+        2) "am_spots_mas4_ams_pk_seq" - This sequence was added for purposes of 
+        generating a serial primary key value for the am_spots_mas4 table.<br>
+        <br>
+        3) Three indexes (similar to those for the am_spots_mas5 table) were created 
+        for the am_spots_mas4 table. The names of the indexes had to be modified 
+        slightly as postgreSQL will not allow indexes of the same name to exist 
+        in one database. <br>
+        am_spots4_pkey<br>
+        ams4_am_fk_ind<br>
+        ams4_usf_fk_ind<br>
+        <br>
+        <br>
+        (July 2002)<br>
+        Schema Additions:<br>
+        <br>
+        1) "study" table was created to house information pertaining to an investigator's 
+        study (or research). Investigators can have one or more studies listed 
+        in the table.<br>
+        <br>
+        2) The "am_spots_dchip" table was added as an additional spots data table. 
+        It will hold derived values from dchip software and will closely resemble 
+        the format of the other spots tables.<br>
+        <br>
+        3) A "file_info" table was created to hold information pertaining to various 
+        user files. These files are stored in personal directories located on 
+        the server. The attributes consist of the filename, a comments field where 
+        users can store information regarding the contents of the file, and a 
+        checksum which will be used by the system to retrieve the file.<br>
+        <br>
+        <br>
+        (July 2002)<br>
+        Table Modifications:<br>
+        <br>
+        1) One of the larger changes made to the original GEOSS 1 schema involves 
+        the removal of the experimentset table in favor of an experimental conditions 
+        table, known as "exp_condition." The experimentset table presented an 
+        issue in terms of how the experiments were being grouped. The schema now 
+        reflects a more practical view of the data. The exp_condition table reflects 
+        the attributes unique to one experimental condition or treatment. Many 
+        samples can be linked back to one experimental condition. By creating 
+        the experimental condition table and moving many of the sample table fields 
+        we have eliminated a lot of duplication which existed in the original 
+        sample table.<br>
+        <br>
+        2) Modifications to sample and new exp_condition table:<br>
+        - delete "sample_name" from sample. Now using "name" field in exp_condition 
+        table.<br>
+        - merge "type" from experimentset table and "sample_name" to "sample_name" 
+        in exp_condition table.<br>
+        - merge "sample_description" to "description" in exp_condition table.<br>
+        - delete biology_description from what is now exp_condition table.<br>
+        - change "experiment_notes" to "notes" in exp_condition. <br>
+        - add "ec_fk" to sample table.<br>
+        - add "abbrev_name" to exp_condition for use in auto-generating unique 
+        hybridization name.<br>
+        - change "phenotype_name" to "phenotype" in what is now exp_condition 
+        table.<br>
+        - add "type," "quantity," "unit," "time_series," and "time_point" to exp_condition 
+        table.<br>
+        - add "lab_book" and "lab_book_owner" to sample table.<br>
+        - add "timestamp" to sample table to reflect time sample was run by experimenter. 
+        May be useful to differentiate between portions of same sample.<br>
+        - add foreign key to study table (sty_fk) from exp_condition.<br>
+        <br>
+        3) Remove "is_public," "release_date," "submission_date," "archive_bundle_ref," 
+        and "provider_con_fk" from what is now exp_condition (old experimentset) 
+        table:<br>
+        <br>
+        4) Change the es_pk field in the old experimentset table to ec_pk in the 
+        experimental_condition table.<br>
+        <br>
+        5) Change the es_fk in the following tables to ec_fk:<br>
+        experimentalfactors<br>
+        hotspots<br>
+        treatmentlevel<br>
+        arraymeasurement<br>
+        order_info<br>
+        <br>
+        6) Delete "primary_es_fk" from arraymeasurement table. Link no longer 
+        required. Access to arraymeasurement will be through the exp_condition 
+        table through the sample table .<br>
+        <br>
+        7) The following indexes were related to the experimentset table and were 
+        modified to reflect change to exp_condition table.<br>
+        experimentfactors table: "ef_es_fk_ind" was changed to "ef_ec_fk_ind"<br>
+        "experimentfactors_es_fk_key" to "experimentfactors_ec_fk_key"<br>
+        hotspots: "hs_es_fk_ind" to "hs_ec_fk_ind"<br>
+        treatmentlevel: "tl_es_fk_ind" to "tl_ec_fk_ind"<br>
+        arraymeasurement: "am_primary_es_fk" to "am_primary_ec_fk"<br>
+        <br>
+        8) Delete "is_public" and "group_can_update" from arraymeasurement table. 
+        These fields are no longer useful given new security model.<br>
+        <br>
+        9) Delete "name" from arraymeasurement. This field stored the name of 
+        derived value when multiple records were being stored per hybridization. 
+        These names are now stored in the spots tables.<br>
+        <br>
+        10) Add "dic_" to the following dictionary (i.e. lookup) tables to make 
+        identification of these tables more apparent:<br>
+        al_coating<br>
+        al_defaultspotconcunits<br>
+        al_identifiercode<br>
+        al_medium<br>
+        al_technologytype<br>
+        als_spottype<br>
+        am_equationtype<br>
+        am_spotmeasurementunits<br>
+        am_suspectspots<br>
+        am_type<br>
+        contacttype<br>
+        ef_majorcategory<br>
+        ef_minorcategory<br>
+        hs_thresholdtype<br>
+        prt_type<br>
+        smp_ageunits<br>
+        smp_developmentstagename<br>
+        smp_developmentstageunits<br>
+        smp_geneticstatus<br>
+        smp_organismintactness<br>
+        smp_organtype<br>
+        smp_primarycelltype<br>
+        smp_sexmatingtype<br>
+        smp_tissuetype<br>
+        spc_cellstructure<br>
+        spc_generalclassification<br>
+        spt_modeldescription<br>
+        <br>
+        11) Add "billing_code" field to billing table.<br>
+        <br>
+        12) Moved "locked" field from exp_condition to order_info table.<br>
+        <br>
+        13) Change "is_group_rw" filed3xPar1s</p>
+      <p>(August 2002)<br>
+        Table Modifications:</p>
+      <p>1) Change character type of &quot;usersequencefeature.short_description&quot; 
+        field from character varying(128) to text. The original code for GEOSS 
+        version 1 truncated the descriptions found in the Affymetrix layout files. 
+        The code adjusted by Tom Laudeman in August 2002 does not.</p>
+      <p>2) We upgraded PostgreSQL to version 7.2 this month and now have the 
+        option of not including OIDs when creating tables. We chose not to include 
+        OIDs in each of the tables as there was no good reason to do so. Given 
+        that we are not using the OIDs for any purpose, they take up unnecessary 
+        space, and can &quot;eventually&quot; repeat, we felt they were no longer 
+        necessary.</p>
+      <p>(September 2002)<br>
+        Schema Modifications:</p>
+      <p>1) OIDs are no longer required with PostgreSQL version 7.2. The schema 
+        has been changed to reflect our decision to no longer use OIDS. Each &quot;CREATE 
+        TABLE&quot; ends with the syntax &quot;without OIDs.&quot;</p>
+      <p>(October 2002)<br>
+        Table Modifications:</p>
+      <p>1) Alter &quot;usersequencefeature&quot; table such that the &quot;provider_con_fk&quot; 
+        field is called &quot;flags.&quot; The provider_con_fk field is not being 
+        used and the new flags field will be used to help control what data the 
+        investigators are allowed to change. We will also use this flag field 
+        to identify records that have been marked as invalid for some reason.</p>
+      <p>2) The &quot;quality_control&quot; table was designed for use by our 
+        BioMolecular Research Facility. Originally we had two fields known as 
+        beta_actin_3_5_ratio and gapdh_3_5_ratio. These fields are found in the 
+        .rpt file created by the Affymetrix software. We had decided to collect 
+        this data to be stored in the quality_control table. We realized that 
+        these two fields were only relevant to the human chips. The other chips, 
+        i.e. mouse, yeast, etc.., have one to three related fields that are called 
+        by different names. To solve this problem we created fields with general 
+        names that could be used regardless of chip type. They are:</p>
+      <p>control1_name character varying(128)<br>
+        control1_value double precision <br>
+        control2_name character varying(128)<br>
+        control2_value double precision <br>
+        control3_name character varying(128)<br>
+        control3_value double precision</p>
+      <p>Most chips will have two controls and therefore will use four of the 
+        six fields above. Six fields were created because there are a few chips 
+        that will have three control values to store.</p>
+      <p>(November 2002)<br>
+        Table Modifications:</p>
+      <p>1) The usf_fk field in the am_spots table was being set to the als_fk 
+        instead as a result of some code written by Michael Pear. This was done 
+        as a means to create a direct link from the am_spots table to the al_spots 
+        table. The link between these two tables is still valuable and I have 
+        changed the name of the field to reflect the data that is actually being 
+        stored (i.e the pk values from the al_spots table). We now have multiple 
+        spots tables for various types of derived values. The field was changed 
+        in all three spots tables that currently exist: am_spots_mas5, am_spots_mas4, 
+        and am_spots_dchip.</p>
+      <p>2) All the &quot;comments&quot; fields throughout the database were made 
+        unique by adding a prefix that identifies which table the field comes 
+        from. For example, the &quot;arraymeasurement.comments&quot; field is 
+        now &quot;arraymeasurement.am_comments.&quot;</p>
+      <p>(November 2002)<br>
+        Table Additions:</p>
+      <p>1) A series of sequences and tables were added to support the various 
+        analyses that will be run via the GEOSS user interface. They are:</p>
+      <p> analysis <br>
+        analysis_an_pk_seq <br>
+        analysis_filetypes_link <br>
+        extension <br>
+        extension_ext_pk_seq<br>
+        filetypes <br>
+        filetypes_ft_pk_seq <br>
+        node <br>
+        sys_parameter_names <br>
+        sys_parameter_names_spn_pk_seq <br>
+        sys_parameter_values <br>
+        sys_parameter_values_spv_pk<br>
+        tree <br>
+        user_parameter_names <br>
+        user_parameter_names_upn_pk_seq<br>
+        user_parameter_values <br>
+        user_parameter_values_upv_pk </p>
+      <p>See the geoss_schema.sql file for more detailed information.</p>
+      <p><br>
+        (January 2003)</p>
+      <p>1) The &quot;order_seq&quot; was altered to have a minimum value of 0 
+        instead of 1. We currently have a perl script that generates an order 
+        number which includes a sequential value that merely counts the number 
+        of orders being submitted. At the start of a new year we need to reset 
+        this value to start at &quot;01.&quot; In order to have the first order 
+        of the year be &quot;01&quot; we need the minimum sequence value to be 
+        zero. </p>
+      <p>Table Modifications:<br>
+        2) Two fields were added to the &quot;file_info&quot; table. They are:</p>
+      <p>conds<br>
+        cond_labels</p>
+      <p>These two fields hold the column headers and condition labels for the 
+        data which can be exported via the user interface. This data is extracted 
+        from the table and passed along to &quot;R.&quot; Human readable exported 
+        data will not use this data. Instead this data is inserted into the human 
+        readable file.</p>
+      <p>(February 2003)</p>
+      <p>Table Modifications:<br>
+        1) Removed the following fields from the &quot;quality_control&quot; table:</p>
+      <p>control1_name<br>
+        control1_value<br>
+        control2_name<br>
+        control2_value<br>
+        control3_name<br>
+        control3_value</p>
+      <p>These fields were originally created to hold the housekeeping values 
+        from the Affymetrix .RPT file. We have created a separate table called 
+        &quot;Housekeeping_control&quot; to house this information (see below). 
+      </p>
+      <p>Table Additions:<br>
+        1) add table &quot;pi_sec&quot; <br>
+        We needed a way to show a relationship between users and their PI(s). 
+        This table will house the integer value associated with a user (us_fk) 
+        and integer value associated with the PI (this is also a us_fk value but 
+        we will refer to it as pi_key to avoid confusion). If an individual has 
+        more than one PI then there will<br>
+        be more than one record associated with that person in this table. If 
+        the person is a PI then the two integer values will be the same. Every 
+        user will have at least one entry in this table. This system assumes that 
+        the PI's account is always set up first.</p>
+      <p>2) added &quot;housekeeping_control&quot; table to track housekeeping 
+        values that come out of Affymetrix .rpt file. By creating a separate table 
+        we will be able to handle any amount of housekeeping controls. The database 
+        is not limited should we decide to collect more in the future. Each hybridization 
+        will have one set of quality control values and will have a varying amount 
+        of housekeeping controls depending on the chip which is run. The &quot;housekeeping_control&quot; 
+        table will contain a separate record for each housekeeping control. One 
+        set of quality control values will have many housekeeping_ control values.</p>
+      <p>Table Modifications:<br>
+        1) added &quot;created_by&quot; integer field to &quot;study&quot; table 
+        to identify user that created the study. This field will hold the us_fk 
+        value.</p>
+      <p>2) added &quot;created_by&quot; integer field to &quot;order_info&quot; 
+        table to identify user that requested the creation of an order. Orders 
+        are now created by curators only. (Request from BRF)</p>
+      <p>Schema Modifications:<br>
+        1) Removed all unused tables, sequences and indexes. Many were left over 
+        from the original version 1 of GEOSS, which has now been completely rewritten.</p>
+      <p>(March 2003)<br>
+        Table Modifications:<br>
+        1) added foreign key to filetypes(ft_fk) to file_info table. </p>
+      <p>2) added &quot;last_modified&quot; field to file_info to track date of 
+        last change.</p>
+      <p>3) added &quot;up_optional&quot; field to user_parameter_names table. 
+        This field will indicate whether or not a user parameter is optional. 
+      </p>
+      <p>4) added index to al_spots table on al_fk to improve query performance.</p>
+      <p>Schema Additions:<br>
+        1) created the following indexes to improve performance on existing queries 
+        within code. Some tables were newly added and had not had indexes created 
+        yet. </p>
+      <p>CREATE INDEX al_spots_al_fk_ind on &quot;al_spots&quot; using btree (&quot;al_fk&quot;);<br>
+        CREATE UNIQUE INDEX &quot;order_info_pkey&quot; on &quot;order_info&quot; 
+        using btree (&quot;oi_pk&quot;);<br>
+        CREATE UNIQUE INDEX &quot;order_info_order_number_ind&quot; on &quot;order_info&quot; 
+        using btree (&quot;order_number&quot;);<br>
+        CREATE UNIQUE INDEX &quot;exp_condition_pkey&quot; on &quot;exp_condition&quot; 
+        using btree (&quot;ec_pk&quot;);<br>
+        CREATE INDEX &quot;exp_condition_sty_fk_ind&quot; on &quot;exp_condition&quot; 
+        using btree (&quot;sty_fk&quot;);<br>
+        CREATE UNIQUE INDEX &quot;study_pkey&quot; on &quot;study&quot; using 
+        btree (&quot;sty_pk&quot;);<br>
+        CREATE UNIQUE INDEX &quot;billing_oi_fk_ind&quot; on &quot;billing&quot; 
+        using btree (&quot;oi_fk&quot;);<br>
+        CREATE UNIQUE INDEX &quot;groupref_ref_fk_ind&quot; on &quot;groupref&quot; 
+        using btree (&quot;ref_fk&quot;);<br>
+        CREATE INDEX &quot;groupref_us_fk_ind&quot; on &quot;groupref&quot; using 
+        btree (&quot;us_fk&quot;);<br>
+        CREATE INDEX &quot;groupref_gs_fk_ind&quot; on &quot;groupref&quot; using 
+        btree (&quot;gs_fk&quot;);<br>
+        CREATE INDEX &quot;arraymeasurement_al_fk_ind&quot; on &quot;arraymeasurement&quot; 
+        using btree (&quot;al_fk&quot;);<br>
+        CREATE INDEX &quot;arraymeasurement_smp_fk_ind&quot; on &quot;arraymeasurement&quot; 
+        using btree (&quot;smp_fk&quot;);<br>
+        CREATE INDEX &quot;sample_ec_fk_ind&quot; on &quot;sample&quot; using 
+        btree (&quot;ec_fk&quot;);<br>
+        CREATE INDEX &quot;sample_oi_fk_ind&quot; on &quot;sample&quot; using 
+        btree (&quot;oi_fk&quot;);<br>
+        <br>
+        2 ) created the following indexes for the analysis tables:</p>
+      <p>CREATE UNIQUE INDEX &quot;tree_pkey&quot; on &quot;tree&quot; using btree 
+        (&quot;tree_pk&quot;);<br>
+        CREATE UNIQUE INDEX &quot;node_pkey&quot; on &quot;node&quot; using btree 
+        (&quot;node_pk&quot;);<br>
+        CREATE UNIQUE INDEX &quot;user_parameter_values_pkey&quot; on &quot;user_parameter_values&quot; 
+        using btree (&quot;upv_pk&quot;);<br>
+        CREATE UNIQUE INDEX &quot;sys_parameter_values_pkey&quot; on &quot;sys_parameter_values&quot; 
+        using btree (&quot;spv_pk&quot;);<br>
+        CREATE UNIQUE INDEX &quot;user_parameter_names_pkey&quot; on &quot;user_parameter_names&quot; 
+        using btree (&quot;upn_pk&quot;);<br>
+        CREATE UNIQUE INDEX &quot;sys_parameter_names_pkey&quot; on &quot;sys_parameter_names&quot; 
+        using btree (&quot;spn_pk&quot;);<br>
+        CREATE UNIQUE INDEX &quot;analysis_pkey&quot; on &quot;analysis&quot; 
+        using btree (&quot;an_pk&quot;);<br>
+        CREATE UNIQUE INDEX &quot;filetypes_pkey&quot; on &quot;filetypes&quot; 
+        using btree (&quot;ft_pk&quot;);<br>
+        CREATE UNIQUE INDEX &quot;extension_pkey&quot; on &quot;extension&quot; 
+        using btree (&quot;ext_pk&quot;);</p>
+      <p>(April 2003)<br>
+        Schema Additions:<br>
+        1) added the following indexes based on existing queries in current code 
+        (version 1.6.0).</p>
+      <p>CREATE INDEX &quot;user_parameter_names_an_fk_ind&quot; on &quot;user_parameter_names&quot; 
+        using btree (&quot;an_fk&quot;);<br>
+        CREATE INDEX &quot;sys_parameter_names_an_fk_ind&quot; on &quot;sys_parameter_names&quot; 
+        using btree (&quot;an_fk&quot;);<br>
+        CREATE INDEX &quot;node_parent_key_ind&quot; on &quot;node&quot; using 
+        btree (&quot;parent_key&quot;);<br>
+        CREATE INDEX &quot;node_an_fk_ind&quot; on &quot;node&quot; using btree 
+        (&quot;an_fk&quot;);<br>
+        CREATE INDEX &quot;spv_node_fk_ind&quot; on &quot;sys_parameter_values&quot; 
+        using btree (&quot;node_fk&quot;);<br>
+        CREATE INDEX &quot;upv_node_fk_ind&quot; on &quot;user_parameter_values&quot; 
+        using btree (&quot;node_fk&quot;);<br>
+        CREATE INDEX &quot;tree_fi_input_fk_ind&quot; on &quot;tree&quot; using 
+        btree (&quot;fi_input_fk&quot;);</p>
+      <p>2) added &quot;is_loaded&quot; field to arraymeasurement table. The purpose 
+        of this field is to identify which hybridizations have data loaded in 
+        the spots table(s), thus eliminating the costly query that is currently 
+        being used within the code to identify hybridizations with loaded data. 
+        Collecting this information is necessary in keeping data from being loaded 
+        more than one time.</p>
+      <p>(May 2003)<br>
+        Table Modifications:<br>
+        1) added &quot;sp_optional&quot; field to sys_parameter_names table. This 
+        field will indicate whether or not a sys parameter is optional. </p>
+      <p>Schema Additions:<br>
+        1) added the following indexes in support of analysis queries that will 
+        access data from the usersequencefeature table.</p>
+      <p>CREATE INDEX &quot;al_spots_usf_fk_ind&quot; on &quot;al_spots&quot; 
+        using btree (&quot;usf_fk&quot;);</p>
+      <p>CREATE INDEX &quot;usersequencefeature_usf_name_ind&quot; on &quot;usersequencefeature&quot; 
+        using btree (&quot;usf_name&quot;);</p>
+      <p>CREATE UNIQUE INDEX &quot;al_spots_usf_pkey&quot; on &quot;usersequencefeature&quot; 
+        using btree (&quot;usf_pk&quot;);</p>
+      <p>&nbsp;</p>
+      <p>(August 2003)<br>
+        Schema Additions:<br>
+        1) added Primary Key and Foreign Key constraints to all tables in effort 
+        to enforce referential integrity.</p>
+      <p>2) added &quot;smp_name&quot; to sample table for user convenienvce. 
+        This field will allow investigators to identify their samples by choosing 
+        their own names. This field will be displayed on order pages as well as 
+        in some reports.</p>
+      <p>(September 2003)</p>
+      <p>Schema Additions:<br>
+        1) added smp_origin and smp_manipulation to sample table in support of 
+        MIAME requirements. </p>
+      <p>2) A public data area has been created on the GEOSS system. In support 
+        of this public area it has been necessary to collect MIAME data pertaining 
+        to each public study posted. The &quot;miame&quot; table was added to 
+        store data entered by each investigator when he/she is publishing a study. 
+        The &quot;miame_type&quot; table simply stores the two types of technologies 
+        currently supported: Affymetrix and cDNA. The &quot;display_type&quot; 
+        table was also added but is not being used yet.</p>
+      <p>(November 2003)</p>
+      <p>Schema Additions and Deletions:<br>
+        1) Sessioning implemented across system:<br>
+        &quot;sessions&quot; table modified to &quot;session&quot; - fields added 
+        as well. See geoss_schema.sql file for details on current table setup. 
+      </p>
+      <p>The &quot;key_value&quot; table added to track information pertaining 
+        to these sessions.</p>
+      <p>2) Various dates were added to support the reporting needs of the BioMolecular 
+        Research Facility (BRF). Some unnecessary dates were also removed.</p>
+      <p> Dates added:<br>
+        order_info.date_report_completed<br>
+        order_info.date_samples_received<br>
+        order_info.date_last_revised<br>
+      </p>
+      <p><br>
+      </p>
+      <p>&nbsp;</p></td>
+  </tr>
+  <tr> 
+    <td valign="top">&nbsp;</td>
+    <td valign="top" bgcolor="990066">&nbsp;</td>
+    <td valign="top">&nbsp;</td>
+    <td valign="top">&nbsp;</td>
+  </tr>
+</table>
+<p>&nbsp; </p>
+</body>
+</html>

@@ -1,0 +1,18 @@
+To: {email}
+Cc: {ccMail}
+From: {fromMail}
+Reply-To: {fromMail}
+Subject: New GEOSS account in your group.
+Dear {pi_name},
+
+A new account has been created for your team member {name}.
+{name} has been added to your primary GEOSS group, and will
+be able to read and edit your GEOSS records based on group permissions.
+
+If you have any questions about this new account, or about
+GEOSS group permissions, please reply to this email.
+
+
+Thank you
+
+GEOSS Admins

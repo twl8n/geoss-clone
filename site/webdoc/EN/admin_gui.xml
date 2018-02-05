@@ -1,0 +1,758 @@
+<part id="admin_gui">
+  <title>Administrator Home: Administrator GUI Tools</title>
+    <partintro>
+    <para>Graphical administration tools are available for &product; and can 
+be accessed via the &admin_home; page. When an administrator logs in, 
+they are immediately taken to Admin Home. The majority of administrative 
+tasks can be accomplished from this location, but there are also command 
+line scripts for some tasks to facilitate scripting of administration
+tasks.  Additionally, there are some command line scripts for some
+functionality that has not yet been integrated into &admin_home;, namely
+the management of <link linkend="analysis">analyses</link> and <link
+linkend="layout">layouts</link>.
+    </para>
+    </partintro>
+
+  <article id="&product;_administration">
+  <title>&product; Administration</title> 
+  <sect1 id="configure_&product;">
+  <title>Configure &product;</title>
+    <para>This page may be used to set the runtime configuration 
+variables for your &product; implementation. This should be done directly after 
+an installation. You may occasionally wish to update parameters, but they 
+should only require seldom changes (if ever) after installation.  A brief 
+description of each parameter follows:
+    <variablelist>
+      <title>General</title>
+      <varlistentry>
+        <term>WWW Host</term>
+        <listitem>
+        <para>
+          This is the FQDN of the server that &product; is installed on.
+        </para>
+        </listitem>
+      </varlistentry>
+         
+      <varlistentry>
+        <term id="additional_path">Additional Path Information</term>
+        <listitem>
+        <para>
+If you did not set your DocumentRoot to /var/www/html/&product;/site, you 
+will need to enter additional path information.  That path information 
+should contain the path from HTML_DIR to the site directory.  For instance, 
+if your DocumentRoot is /var/www/html, you would set your additional 
+path information to /&product;/site.  If this variable is not set
+correctly, &product; will be unable to find its web pages correctly.
+        </para>
+        </listitem>
+      </varlistentry>
+         
+      <varlistentry>
+        <term><link linkend="chip_data_path">Chip Data Path</link></term>
+        <listitem>
+        <para>
+         This specifies the location of chip data files.
+         When the <link linkend="array_center_staff_user">array center
+         staff user</link>  attempts to load data, the system
+         will look for the <link linkend="chip_data_files">chip data
+         files</link> in this location and in its subdirectories. 
+         The user running the web server needs to have read permission on
+         this directory.  Administrators can verify correct permissions
+         via the <link
+         linkend="&product;_installation_information">&product;
+         Installation Information</link> link.
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Administrator Email</term>
+        <listitem>
+        <para>
+        This is the email address of the primary <link
+        linkend="administrator_user">Administrator User</link>.
+        This email address is provided as a contact for users.
+        Additionally, this address is the recipient for automatically
+        generated alerts regarding improper system configuration.
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Alternate Email</term>
+        <listitem>
+        <para>
+        Formerly, this email address was cc'd on all correspondence to
+        the Array Center Staff Email address.  Currently, the field is 
+        not in use, but may be revived if the need arises.
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>URL for companion &product; system</term>
+        <listitem>
+        <para>
+        If an installation does not support all <link
+        linkend="users">user</link> types, then this field should be set
+        to the URL of another installation that does provide access for
+        that user type (if available).
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Bug Report URL</term>
+        <listitem>
+        <para>
+        This URL specifies a link that can be used to report bugs. It 
+        defaults to the bug tracking system for the &product; development 
+        team and shouldn't be changed unless you wish to track bugs 
+        separately. 
+        </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+    <variablelist>
+      <title>User</title>
+
+      <varlistentry>
+        <term>Allow new public users on the system</term>
+        <listitem>
+        <para>
+        For security reasons, a &product; installation may choose not to
+        support <link linkend="public_user">public users</link>.
+        Setting this parameter will allow public users to automatically
+        generate their own accounts and to use the system immediately.
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Allow new member users on the system</term>
+        <listitem>
+        <para>
+        A &product; installation may be installed purely for use by
+        <link linkend="public_user">public users</link>.  
+        Typically, such an installation would not be
+        associated with an array center and would exist for the purpose
+        of sharing and analyzing existing data.  Unsetting this
+        parameter will restrict the kinds
+        users allowed on such an installation and will help avoid confusion.
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>General Inactivity Logout (minutes)</term>
+        <listitem>
+        <para>
+        This specifies the number of inactive minutes
+        before <link linkend="member_user">member users</link> 
+        and <link linkend="public_user">public users</link> are
+        automatically logged out. 
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Administrator Inactivity Logout (minutes)</term>
+        <listitem>
+        <para>
+        This specifies the number of inactive minutes
+        before <link linkend="administrator_user">administrator users</link> 
+        are automatically logged out. 
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Number of days a new public user has to confirm their
+        account</term>
+        <listitem>
+        <para>
+        <link linkend="public_user">Public users</link> who request
+        an account but fail to login within the specified number of
+        days
+        will be automatically removed from the system.  Public user
+        removal is managed automatically, but can also be done manually
+        from the <link linkend="remove_inactive_users">Remove Inactive
+        Users</link> GUI tool or the <link
+        linkend="geoss_rm_inactive_users"><command>geoss_rm_inactive_users</command></link>
+        command line tool.  The manual techniques allow removal of all types of
+        <link linkend="users">users</link>, not just public users.  
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Allow all users to load data</term>
+        <listitem>
+        <para>
+        Selecting this option will make the "Load Study Data" link
+        appear on <link linkend="user_gui">&mem_home;</link>.  This
+        allows users to load all data for one of their studies from a
+        file they have previously uploaded.  This option is typically
+        enabled on installations not associated with an array center. 
+        </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+    <variablelist>
+      <title>Array Center</title> 
+
+      <varlistentry>
+        <term>Enable Array Center Processing</term>
+        <listitem>
+        <para>
+        This option should be enabled on installations associated with
+        an array center.  It enables the creation or array center staff
+        users and enables links in <link
+        linkend="array_center_staff_gui">&array_home;</link>
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Array Center Staff Email</term>
+        <listitem>
+        <para>
+        This is the email address of the <link
+        linkend="array_center_staff_user">Array Center Staff User</link>
+        who is responsible for fulfilling <link
+        linkend="array_order"> array order</link> requests and uploading <link
+        linkend="gene_chip_data">gene chip data</link>.
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Array Center Staff Inactivity Logout (minutes)</term>
+        <listitem>
+        <para>
+        This specifies the number of inactive minutes
+        before <link linkend="array_center_staff_user">array center
+        staff users</link> 
+        are automatically logged out. 
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Add array center staff to all groups by default</term>
+        <listitem>
+        <para>
+        If selected, this will cause new <link
+        linkend="array_center_staff_user"> array center staff users 
+        </link>  to be added to all <link linkend="group">groups</link>
+        when user is added.
+        Additionally, when new groups are added, existing array center
+        staff users will automatically be added to the group.
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Order Number Format</term>
+        <listitem>
+        <para>
+        This link specifies the convention used to determine the <link
+        linkend="order_number">order number</link>.  This number is used
+        in naming <link linkend="hybridization">hybridizations</link>
+        and consequently the data files loaded by the array center staff
+        member.  Year sequential order numbers take the format
+        "07-05", where 07 means year 2007 and 05 means the fifth order
+        of the year.  Sequential order numbers are generated via
+        sequence that does not get reset.  User configurable order
+        numbers allow the array center staff user to enter the order
+        number.
+
+        <note>The only format that has received extensive testing is
+        year sequential.</note>
+        </para>
+        </listitem>
+      </varlistentry>
+
+    </variablelist>
+
+    <variablelist>
+      <title>Data Publishing</title>
+
+      <varlistentry>
+        <term>Enable Data Publishing</term>
+        <listitem>
+        <para>
+        This option enables the links to publish data and the option on
+        the GEOSS home page to view published data.
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Public Data Admin Email</term>
+        <listitem>
+        <para>
+        This is the email address of the <link
+        linkend="public_data_administrator">Public Data Administrator</link>
+         who will receive emails regarding data that is to be published.
+        </para>
+        </listitem>
+      </varlistentry>
+         
+    </variablelist>
+
+    <variablelist>
+      <title>Analysis</title>
+
+      <varlistentry>
+        <term>Enable Analysis Package</term>
+        <listitem>
+        <para>
+        This option enables the links associated with creating and
+        viewing analysis trees.
+        </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+    <variablelist>
+      <title>Configurable Text</title>
+
+      <varlistentry>
+        <term>Organization Name</term>
+        <listitem>
+        <para>
+This is the name of the organization installing the &product; system. This 
+value is used for display purposes only on the home page.
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Header/Footer Link Text</term>
+        <listitem>
+        <para>
+        Each installation has the ability to add a custom
+        link to the navigational controls. This is the text
+        that will be displayed for that link. 
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Header/Footer Link URL</term>
+        <listitem>
+        <para>
+        Each installation has the ability to add a custom
+        link to the navigational controls. This is the URL
+        of the link.
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Custom Home Page Description</term>
+        <listitem>
+        <para>
+        Each installation has the ability to add a custom
+        home page description.  This description will appear on the site
+        home page prior to the generic &product; description. 
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Custom News Item #1</term>
+        <listitem>
+        <para>
+        Each installation can configure custom "news items"
+        that can be used to inform users of periodic events such as
+        training sessions or GEOSS related publications or activities.
+        Item #1 will appear just above the <link
+        linkend="view_public_data">View Public Data</link> link on the
+        home page.
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Custom News Item #2</term>
+        <listitem>
+        <para>
+        Each installation can configure custom "news items"
+        that can be used to inform users of periodic events such as
+        training sessions or GEOSS related publications or activities.
+        Item #2 will appear in the top left hand corner of the home
+        page.
+        </para>
+        </listitem>
+      </varlistentry>
+
+    </variablelist>
+    </para>
+  </sect1>
+
+  <sect1 id="&product;_installation_information">
+    <title>&product; Installation Information</title>
+    <para>The installation information link provides details about the 
+&product; installation on your system. This page is strictly informative 
+in nature and may be used to diagnose installation difficulties. It 
+reports the build parameters of the system, the installed versions 
+of required software, whether the permissions on essential directories 
+are correct, the currently loaded layouts, and the currently loaded 
+analyses.</para>
+   </sect1>
+
+   <sect1 id="change_the_postgres_password_for_the_&product;_user">
+     <title>Change the Postgres password for the &product; user</title>
+     <para>
+For security reasons, the password protecting the geoss database
+should be changed periodically.  It is important that both the 
+password in Postgres for the geoss user and the password in the 
+&product; access file be
+changed to the same value.  If only one of these is changed, the
+&product; web GUI will be unable to connect to the database.  This link
+can be used to simultaneously change both passwords.
+     </para>
+   </sect1>
+
+   <sect1 id="email_all_users">
+     <title>Email all users</title>
+     <para>
+This link is intended to be used to contact all users of a specific
+&product; installation.  Typically, it is used to inform users about
+system outages or training sessions.
+     </para>
+   </sect1>
+</article>
+
+<article id="user_administration">
+   <title>User Administration</title>
+   <sect1 id="view_user_list">
+   <title>View user list</title>
+   <para>This page provides information regarding all configured users.
+   &how_sort;
+   </para>
+   </sect1>
+
+
+    <sect1 id="add_a_user">
+    <title>Add a user</title>
+      <para>
+      This page allows the administrator to add a user.  The following
+      fields are mandatory:
+
+      <variablelist>
+
+      <varlistentry>
+        <term>Login Name</term>
+        <listitem>
+        <para>
+        This is the user's login name. They will use it to
+        log in to &product;.
+        </para>
+        </listitem>
+      </varlistentry>
+         
+      <varlistentry>
+        <term>Initial Login Password</term>
+        <listitem>
+        <para>
+        This is the user's password.  They will use it to
+        log in to &product; initially. Users should be encouraged
+        to change their password after their initial login. 
+        &password_rule;
+        </para>
+        </listitem>
+      </varlistentry>
+         
+      <varlistentry>
+        <term>Confirm Initial Login Password</term>
+        <listitem>
+        <para>
+        This must be the same as the Initial Login
+        Password.
+        </para>
+        </listitem>
+      </varlistentry>
+         
+      <varlistentry>
+        <term>User Type</term>
+        <listitem>
+        <para>
+        This field indicates the type of <link linkend="users">user</link>.
+        </para>
+        </listitem>
+      </varlistentry>
+         
+      <varlistentry>
+        <term>PI Login:</term>
+        <listitem>
+        <para>
+        This is login name of the <link 
+        linkend="primary_investigator">Primary Investigator
+        (PI)</link> associated with the new user. All <link
+        linkend="users">users</link> must have
+        a PI. A user may be their own PI, as is typically the case with
+        <link linkend="administrator_user">administrator users</link>  
+        and <link linkend="array_center_staff_user">array center staff
+        users</link>. 
+        </para>
+        </listitem>
+      </varlistentry>
+         
+      </variablelist>
+      </para>
+      <para>Most of the other fields are self-explanatory.  Although
+        an email address is not required, it is strongly recommended.
+        Email addresses are used to send users notification of their new
+        account and to provide information about the processing of
+        <link linkend="array_order">array >orders</link> and 
+        analysis trees.
+      </para>
+      <para>There may be a series of select boxes to indicate
+        membership in a variety of <link
+        linkend="special_center">special centers</link>  These will vary
+        based on the special centers configured on your system.  Users
+        can be made members of an special center by selecting "Yes".
+        Selecting "Administrator" will designate the user as a <link
+        linkend="special_center_administrator_user">Special Center
+        Administrator User</link> for that special center.
+      </para>
+      <para>
+        Users can also be added using the <link
+        linkend="geoss_adduser"><command>geoss_adduser</command></link> command line
+        script.</para>
+    </sect1>
+    <sect1 id="remove_a_user">
+    <title>Remove a user</title>
+      <para>
+      Typically there should be no need to remove a user. Most users who
+      no longer have access to the system will be disabled.
+      However, if you have added a user with an incorrect login
+      name, you may deleted and re-enter the user. This will
+      need to be done before the user uses the account as
+      users who own data or who are PIs for other users can not be
+      deleted.</para>
+    </sect1>
+    <sect1 id="disable_a_user">
+    <title>Disable a user</title>
+      <para>
+      If a <link linkend="users">user</link>should no longer 
+      have log in privileges to the system,
+      but owns data, they need to be disabled. Once they are
+      disabled, they will no longer be able to login. If they
+      are currently logged on when they are disabled, they will
+      be able to continue to use the system until they logout
+      or their session expires.
+      </para>
+    </sect1>
+    <sect1 id="enable_a_user">
+    <title>Enable a user</title>
+      <para>
+      In the event that you need access to a disabled user's
+      account, you can re-enable the account. You will need to set 
+      <link linkend="users">user</link> type.
+      </para>
+    </sect1>
+    <sect1 id="change_user_password">
+    <title>Change user password</title>
+      <para>
+        The administrator can change the password of any <link
+        linkend="users">user</link>. Simply
+        select the target user and set the new password. 
+        &password_rule;
+      </para>
+      <para>
+        User passwords can be also be changed via the <link
+        linkend="geoss_change_userpw"><command>geoss_change_userpw</command></link> command
+        line script.</para>
+    </sect1>
+    <sect1 id="remove_inactive_users">
+    <title>Remove inactive users</title>
+      <para>
+      This script will remove <link linkend="inactive_user">inactive
+      users</link>.  Users are considered
+      inactive if they have not logged in for a specified number of
+      days.  
+      </para>
+      <para>Users can also be removed using the
+      <link
+      linkend="geoss_rm_inactive_users"><command>geoss_rm_inactive_users</command></link>
+      command line script.
+      </para>
+    </sect1>
+    <sect1 id="manage_pis_and_users">
+    <title>Manage PIs and Users</title>
+    <para>All <link linkend="users">users</link> must have at least one
+    <link linkend="primary_investigator">PI</link>.  The initial PI for
+    a user is set when the user account is created.  However, it is
+    possible for users to have more than one PI if they work on multiple
+    experiments or for users to change PIs.  This page can be used to
+    manage PI/user associations.  To use this page, select the user you
+    wish to modify.  You may either add/delete PIs for the user by selecting
+    "Edit PIs Associated with this User" or, if the user is a PI, you
+    may select "Edit Users Associated with this PI" to modify associated
+    users.  You will not be able to make any changes that result in a
+    user not having a PI.  For instance, if the user has only one PI,
+    you will not be able to remove that PI until a new PI has first been
+    added.
+    </para>
+    <para>Administrative users often do not have a logical PI.  In these
+    instances, users should be their own PI.</para>
+    </sect1>
+</article>
+
+<article id="special_center_administration">
+    <title>Special Center Administration</title>
+    <sect1 id="view_all_special_centers">
+    <title>View all special centers</title>
+    <para>
+    This page shows all <link linkend="special_center">Special
+    Centers</link> configured for the system. &how_sort;
+    </para>
+    </sect1>
+    <sect1 id="add_a_special_center">
+    <title>Add a special center</title>
+    <para>
+    This page allows administrators to add a <link
+    linkend="special_center">Special Center</link>.  Fields are defined
+    below:
+    
+    <variablelist>
+
+      <varlistentry>
+        <term>Special Center Name</term>
+        <listitem>
+        <para>
+        The name of the special center is displayed in numerous
+        locations.  Most notably, <link
+        linkend="special_center_member">special center members</link>
+        can associate their <link linkend="array_order">array orders </link>
+        with a special center.  This is done
+        by special center name.
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Special Center Description</term>
+        <listitem>
+        <para>
+         For display purposes only.
+        </para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term>Special Center Phone Number</term>
+        <listitem>
+        <para>
+        For display purposes only.
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Billing Discount (%)</term>
+        <listitem>
+        <para>
+        Centers can receive discounts on <link
+        linkend="array_order">array orders</link>.  This shows up
+        in the <link linkend="array_center_staff_view_reports">billing
+        reports</link>.  At this time, the billing component of
+        &product; is still very 
+        <link linkend="university_of_virginia">UVa</link> specific
+        and there is no way to modify the billing formula.
+        </para>
+        <para>
+        Currently, users are billed for the cost of chips used in their
+        order and for array center staff labor.  The discount applies to
+        the labor component of the bill.
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Special Center URL</term>
+        <listitem>
+        <para>
+        If the special center has their own website, &product; will link
+        to it.  If the special center logo is set to display on the main
+        page, then the URL specified here will be linked to the logo.
+        Remember to include the "http://".
+        </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>Special Center Logo</term>
+        <listitem>
+        <para>
+        Each special center can have a logo associated with it.  Logos
+        files must first be uploaded from <link
+        linkend="upload_logo_or_icon_file">Upload logo/icon file</link>
+        in &center_home; and can then be associated with the
+        special center.  Logos can be displayed on the main page if that
+        option is set.
+        </para>
+        </listitem>
+      </varlistentry>
+      
+      <varlistentry>
+        <term>Special Center Icon</term>
+        <listitem>
+        <para>
+        Eventually, we hope to have an icon associated with special
+        centers that will be associated with <link
+        linkend="users">users</link> who are members of that special
+        center.  Unfortunately, this feature is not implemented yet.
+        So, while you can set an icon file, it is not used anywhere.
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Display Logo on Main Page</term>
+        <listitem>
+        <para>
+        If this option is selected and a logo file is configured, then
+        it will be displayed on the &product; home page.
+        </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>Orders Require Approval Before Array Center Processing</term>
+        <listitem>
+        <para>
+        If this option is selected, when a user submits an <link
+        linkend="array_order">array order</link>, an email is sent to the <link
+        linkend="special_center_administrator_user">special center
+        administrators</link> requesting they approve the order. Once
+        the order has been approved, an email is sent to <link
+        linkend="array_center_staff_user">array center staff</link>
+        informing them that the order is ready for processing.
+        </para>
+        <para>If this option is not selected, orders associated with the
+        special center are automatically approved and sent directly to
+        the array center staff upon submission.</para>
+        </listitem>
+      </varlistentry>
+         
+    </variablelist>
+    </para>
+    </sect1>
+
+    <sect1 id="delete_a_special_center">
+    <title>Delete a special center</title>
+    This page can be used to remove a <link
+    linkend="special_center">Special Center</link>.  Special Centers can
+    only be removed if they have no <link linkend="array_order">
+    array orders</link> associated with them.
+    This option is mostly intended for removal of special centers that
+    have been added erroneously.
+    </sect1>
+</article>
+</part>

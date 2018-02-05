@@ -1,0 +1,57 @@
+<form action="chgrp_order2.cgi" method="post">
+  <input type="submit" name="submit" value="Update">
+  <table width="800" border=1 cellspacing=0 cellpadding=3>
+  <tr bgcolor="#ccccff"> 
+    <td valign=top width="99"> Name</td>
+    <td valign=top width="112"> Group</td>
+    <td valign=top width="104"> User Read</td>
+    <td valign=top width="103"> User Write</td>
+    <td valign=top width="127"> Group Read</td>
+    <td valign=top width="114"> Group Write</td>
+    <!--<td valign=top > Permissions (octal)</td>-->
+  </tr>
+
+<loop>
+
+    <tr> 
+      <td valign=top width="84"> {order_number}&nbsp; 
+        <input type="hidden" name="ref_fk" value="{ref_fk}">
+        <input type="hidden" name="gs_fk" value="{gs_fk}">
+	<input type="hidden" name="permissions" value="{permissions}">
+      </td>
+      <td valign=top width="72"> {select_gs_name}&nbsp; </td>
+      <td valign=top width="105"> 
+        {user_read}
+        &nbsp; </td>
+      <td valign=top width="102"> 
+        {user_write}
+        &nbsp; </td>
+      <td valign=top width="126"> 
+        <input type="checkbox" name="group_read" value="1">
+        &nbsp; </td>
+      <td valign=top width="110"> 
+        <input type="checkbox" name="group_write" value="1">
+      </td>
+      <!--<td valign=top> 
+        {octal_permissions}
+      </tdai>-->
+    </tr>
+
+</loop> 
+    
+  </table>
+  <input type="submit" name="submit" value="Update">
+</form>
+<br>
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>Array orders can be locked by the microarray center. You cannot 
+      unlock orders, since they have been locked to preserve data integrity. If 
+      you need an array order unlocked, please contact the GEOSS administrators. 
+      <br>
+      <br>
+      You can change the group ownership at any time, and you can change group 
+      permissions. You cannot make a locked array order group writable.</td>
+  </tr>
+</table>
+<br>

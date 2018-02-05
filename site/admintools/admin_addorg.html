@@ -1,0 +1,65 @@
+
+<table width="600" border="0" cellpadding="3" cellspacing="0">
+  <tr>
+    <td bgcolor="#7c0000"> 
+      <table width="100%" border="0" cellpadding="3" cellspacing="0">
+        <tr>
+          <td bgcolor="#FFFFFF">
+
+ <form method="POST" action="admin_addorg.cgi">
+ <input type=hidden name=step value=3>
+ <table>
+ <tr><td colspan=2>Use this form to add a special center .</td></tr>
+ <tr><td colspan=2>&nbsp;</td></tr>
+ <tr>
+ <td>*Special Center Name:</td>
+ <td><input type="text" name="org_name" size=40 value="{org_name}"></td>
+ </tr>
+ <tr>
+ <td>Special Center Description:</td>
+ <td><textarea name="org_description" rows=5 cols=40 wrap="virtual">{org_description}</textarea></td>
+ </tr>
+ <tr>
+ <td>Special Center Phone Number:</td>
+ <td><input type="text" name="org_phone" value="{org_phone}"></td>
+ </tr>
+ <tr>
+ <td>Billing Discount (%):</td>
+ <td><input type="real" name="chip_discount" size=5 value="{chip_discount}"></td>
+ </tr>
+ <tr>
+ <td>Special Center URL (include "http" for external URLs)</td>
+ <td><input type="text" name="org_url" value="{org_url}"></td>
+ </tr>
+ <tr>
+ <td>Special Center Logo:</td>
+ <td>{select_logo}</td>
+ </tr>
+ <tr>
+ <td>Special Center Icon:</td>
+ <td>{select_icon}</td>
+ </tr>
+ <tr>
+ <td>Display Logo on Main Page:</td>
+ <td><input type="checkbox" name="display_logo" size=15 value="{display_logo}"></td>
+ </tr>
+ <tr>
+ <td>Orders Require Approval Before Array Center Processing:</td>
+ <td><input type="checkbox" name="needs_approval" value="{needs_approval}"></td>
+ </tr>
+ <tr>
+ <td>&nbsp;</td>
+ <td>
+ <input type="submit" value="Add Special Center"><br><br><input type="reset" value="Reset Values">
+ </td>
+ </tr>
+ </table>
+ </form>
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+

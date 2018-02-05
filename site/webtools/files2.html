@@ -1,0 +1,84 @@
+<form action="files2.cgi" method="POST">
+<input type="hidden" name="pwd" value="{pwd}">
+<font class=page_text><b>Directories:&nbsp;&nbsp;</b><br>
+{view_type}
+<br>
+Current Directory: <font class=directory>{pwd_display} {pwd_note}</font>
+{directory_navigator}
+<p><sub>{pwd_note2}</sub></p>
+<hr>
+<b>Files:</b>&nbsp;&nbsp;<br>Filename Pattern:&nbsp;
+<input type="text" size="16" name="file_pattern" value="{file_pattern}">
+<input type="submit" name="submit_filter" value="Select">
+            <table border=0 cellspacing=3 cellpadding=2>
+            <tr> 
+              <td valign=top align=center bgcolor=#c9dfae><font class=table_column>File</td>
+              <td valign=top align=center bgcolor=#c9dfae><font class=table_column> Comments </td>
+              <td valign=top align=center bgcolor=#c9dfae><font class=table_column> Last Modified </td>
+
+              <td valign=top align=center bgcolor=#c9dfae><font class=table_column> Size </td>
+              <td valign=top align=center bgcolor=#c9dfae><font class=table_column> Owner </td>
+              <td valign=top align=center bgcolor=#c9dfae><font class=table_column> Group </td>
+              <td valign=top align=center bgcolor=#c9dfae><font class=table_column> Delete </td>
+            </tr>
+
+            <loop3>
+            <tr bgcolor=#efefef> 
+              <td valign="top"><a class=table_link  href="{href}">{file_name}</a></td>
+              <td valign=top><font class=table_text>{fi_comments}</td>
+              <td valign=top><font class=table_text>{last_modified}</td>
+              <td valign=top><font class=table_text>{size}</td>
+              <td valign=top><font class=table_text>{login}</td>
+              <td valign=top><font class=table_text>{gs_owner}</td>
+
+              <td valign=top align=center>{delete_link}</td>
+            </tr>
+            </loop3>
+            </tr>
+            </table>
+
+          </td>
+        </tr>
+        </table>
+<i>{none}</i>
+<hr>
+<b>Navigation Short Cuts:</b>
+<table border="0">
+<tr>
+  <td>View Files Owned By:&nbsp;&nbsp;</td>
+  <td>
+    {select_file_owner}
+  </td>
+  <td>
+    <input type="submit" name="submit_owner" value="Go">
+  </td>
+</tr>
+<tr>
+  <td>View Files Associated with Loaded Orders:&nbsp;&nbsp;</td>
+  <td>
+    {select_order}
+  </td>
+  <td>
+    <input type="submit" name="submit_order" value="Go">
+  </td>
+</tr>
+<tr>
+  <td>View Files Associated with Sample:&nbsp;&nbsp;</td>
+  <td>
+    {select_sample}
+  </td>
+  <td>
+    <input type="submit" name="submit_sample" value="Go">
+  </td>
+</tr>
+<tr>
+  <td>View Analysis Tree Result Files:&nbsp;&nbsp;</td>
+  <td>
+    {select_analysis}
+  </td>
+  <td>
+    <input type="submit" name="submit_analysis" value="Go">
+  </td>
+</tr>
+</table>
+</form>

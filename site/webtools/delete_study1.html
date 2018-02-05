@@ -1,0 +1,19 @@
+<table width="600" border=1 cellspacing=0 cellpadding=3>
+<tr>
+    <td valign="top"> Are you sure you want to delete array study &quot;{short_name}&quot;? 
+      <br>
+      <br>
+Array study name: {name}<br>
+Date started: {date}<br>
+Comments: {comments}<br>
+Status: {status}<br>
+</td>
+<td valign=top width="30%">
+<form action="delete_study2.cgi" method="post">
+  <input type="hidden" name="sty_pk" value="{sty_pk}">
+  <input type="submit" name="submit" value="Delete &quot;{short_name}&quot; now">
+</form>
+
+</td>
+</tr>
+</table>

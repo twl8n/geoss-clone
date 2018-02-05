@@ -1,0 +1,44 @@
+
+<!--MIAME_NAME_POPUP-->
+<div onclick='event.cancelBubble = true;' class=popup
+id=miame_name_popup>
+This is the name that your publishing information is stored under.  It should correspond to one experiment.
+</div>
+
+<!--MIAME_DESCRIPTION_POPUP-->
+<div onclick='event.cancelBubble = true;' class=popup
+id=miame_description_popup>
+This description should summarize important information (like species and intent of experiment) about the study you are publishing.  The description will appear in a summary table of all published experiments.
+</div>
+
+<!--ASSOCIATED_STUDY_POPUP-->
+<div onclick='event.cancelBubble = true;' class=popup
+id=associated_study_popup>
+If your study is tracked in the local GEOSS system, select it from the list.  This allows the system to fill in some of the Miami data for you.  You can modify all the values that the systems sets. If your study is not tracked by the system, then do not choose an associated study, but make sure to select a pi/group who owns the data.</div>
+
+<form action="edit_miame1.cgi" method=POST>
+<br>
+
+<h2>GEOSS Information</h2>
+*Miame Name:
+[<a href="help_miame.html#miame_name" class=popupLink onclick="return !showPopup('miame_name_popup', event);">help</a>]<br>
+<input type="text" size="32" name="miame_name" value="{miame_name}"><p>
+Miame Description:
+[<a href="help_miame.html#miame_description" class=popupLink onclick="return !showPopup('miame_description_popup', event);">help</a>]<br>
+<textarea rows="3" name="miame_description" cols="90">{miame_description}</textarea><br>
+<p>
+<hr>
+Associated Study:
+[<a href="help_miame.html#associated_study" class=popupLink onclick="return !showPopup('associated_study_popup', event);">help</a>]<br>
+{exp_select1}<p>
+<b>or</b><p>
+Choose the PI/PI group that will own this study: <br>
+{user_pi}<p>
+<hr>
+<h2>Experiment Type</h2>
+Experiment type:
+{exp_type_select}<br>
+<br>
+<hr>
+<input type="submit" value="Next">
+</form>

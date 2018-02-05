@@ -1,0 +1,29 @@
+<form method="POST" action="groups.cgi">
+  <input type=hidden name="step" value="{step}">
+  <input type="hidden" name="gs_pk" value="{gs_pk}">
+
+  Membership of group {gs_name}<br><br>
+
+ <input type=submit name=submit value="Finish">
+
+  <p></p>  
+  <table width=300 border=0 cellpadding=0 cellspacing=0>
+  <tr>
+  <td>User name<br><hr></td>
+  <td>
+      Is a member?<br><hr>
+  </td>
+  </tr>
+
+  <start>
+  <tr>
+  <td><nobr>{username}</nobr></td>
+  <td>
+    <input type=checkbox name="gl" value="{us_pk}" {checked}>
+  </td>
+  </tr>
+  <end>
+
+</table>
+
+</form>

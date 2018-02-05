@@ -1,0 +1,704 @@
+<part id="array_center_staff_gui">
+<title>Array Center Staff Home: The Array Center Staff GUI Tool</title>
+<article id="assign_a_new_order_number">
+
+<sect1>
+<title>Assign a New Order Number</title>
+<para>
+When users ready to place an <link linkend="array_order">array
+order</link> with the array center, they will submit the order.
+Depending on &product; configuration, the submission may or may not
+required special center approval before being forwarded to array center
+staff.  Once the order is ready for processing, the array center staff
+will receive an email stating that the order has been submitted. 
+</para>
+<para>
+The first step in processing an order is to assing a <link
+linkend="order_number">order number</link>.  There are two ways to do
+this.  Array center staff may click on the link in the notification
+email, or they may go the "Assign a New Order Number" page via <link
+linkend="array_center_staff_gui">&array_home;</link>.
+</para>
+<para>
+This page shows all array orders that do not have an order number
+assigned.  First, select the appropriate order (it will be automatically
+selected the email link was clicked) and then click "Assign Order
+Number".  This will assign the next order number in the sequence.
+</para>
+</sect1>
+
+<sect1 id="create_a_new_array_order">
+<title>Create a New Array Order</title>
+<para>
+Generally, <link linkend="array_order">array orders</link> will be
+created when the user places an order with the array center.  However,
+in rare circumstances array center staff may wish to create orders that
+are not yet associated with a study. This can be accomplished via the
+"Create a New Array Order" page.  The 
+first screen allows specification of the <link linkend="primary_investigator">
+PI</link>/<link linkend="group">group</link> associated with the order. 
+An array order can also be associated with <link linkend="special_center">
+special center</link> if required.  
+</para>
+<para>
+The next screen is a confirmation screen.  If you create the order via the
+the email link, you are taken directly to this screen as the other
+information is provided directly via the request link.  To create the
+order, click on "Create Array Order".
+</para>
+</sect1>
+
+<sect1 id="assign_a_historical_order_to_an_existing_study">
+<title>Assign a Historical Order to an Existing Study</title>
+<para>
+If array orders are created via the <link
+linkend="create_a_new_array_order">Create a New Array Order</link> page,
+no <link linkend="array_study">array study</link> will be associated
+with the order.  Normally, users would create an order when study
+configuration is complete, however, if desired, the order can be
+associated with an existing order.  Note that if some of the <link
+linkend="sample">samples</link> associated with the study are already
+associated with a different order, they will not be associated with the
+new order.  Only samples that are not currently associated with an order
+will be assigned to the specified order when assigning a historical
+order to an existing study.
+</para>
+<para>
+There are two ways to creatOe the array order: it can be created via the 
+"Create a New Array Order" link or by clicking on the link in the request
+email.  There are two screens associated with creating an order.  The 
+first screen allows specification of the <link linkend="primary_investigator">
+PI</link>/<link linkend="group">group</link> associated with the order. 
+An array order can also be associated with <link linkend="special_center">
+special center</link> if required.  
+</para>
+<para>
+To assign a historical order to an existing study, first select the
+appropriate study.  Then select the existing order.  Finally, click on
+"Assign Order To Study".
+</para>
+</sect1>
+
+<sect1 id="delete_an_array_order">
+<title>Delete an Array Order</title>
+<para>
+If an <link linkend="array_order">array order</link>, has been
+erroneously created, only the array center staff can delete it.  This is
+done via the "Delete an Order" link from <link
+linkend="array_center_staff_gui">&array_home;</link>.  To delete an
+order, simply select the appropriate order, then click on "Delete
+Order".
+</para>
+<note>
+Orders cannot be deleted once loaded data is associated with them.  Only
+orders with a status of "INCOMPLETE", "COMPLETE", "SUBMITTED", or
+"APPROVED" can be deleted.
+</note>
+</sect1>
+
+<sect1 id="array_center_staff_view_reports">
+<title>View Reports</title>
+<para>
+Reports screens provide information on the state of <link
+linkend="array_order">array orders</link>.  There
+are two reports: the order log and the billing log.
+</para>
+<formalpara id="order_log">
+<title>Order Log</title>
+The order log contains the following fields:
+<variablelist>
+  <varlistentry>
+    <term>
+      <link linkend="order_number">Order #</link>
+    </term>
+    <listitem>
+      <para>
+        This field specifies the order number that is used to uniquely
+        identify the order.  Note that the order number is a link.
+        Clicking on the link will take you to the <link
+        linkend="get_one_array_order">Get One Array Order</link>
+        interface for that order.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      <link linkend="primary_investigator">PI</link> First
+    </term>
+    <listitem>
+      <para>
+        This field contains the PI's first name.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      <link linkend="primary_investigator">PI</link> Last
+    </term>
+    <listitem>
+      <para>
+        This field contains the PI's last name.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      Order Placed
+    </term>
+    <listitem>
+      <para>
+        This field contains the date when the <link
+        linkend="order_status">order status</link> became "Complete".
+        Note that this does not necessarily mean that configuration of
+        the array order has was completed, but rather that the configuration
+        was is a valid state.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      Chips Scanned
+    </term>
+    <listitem>
+      <para>
+        This field contains the date that the <link
+        linkend="gene_chip_data">gene chip data</link> was loaded.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      Samples Received
+    </term>
+    <listitem>
+      <para>
+        This field is intended to contain the date that the <link
+        linkend="array_center">array center</link> receives the samples.
+        In order for this field to be accurate, the data must be entered
+        by <link linkend="array_center_staff_user">array center
+        staff</link> via the <link linkend="get_one_array_order">Get One
+        Array Order</link> interface.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      Report Completed
+    </term>
+    <listitem>
+      <para>
+        This field is intended to contain the date that the <link
+        linkend="array_center">array center</link> finishes the report
+        on the experiment.
+        In order for this field to be accurate, the data must be entered
+        by <link linkend="array_center_staff_user">array center
+        staff</link> via the <link linkend="get_one_array_order">Get One
+        Array Order</link> interface.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      # of <link linkend="sample">Samples</link>
+    </term>
+    <listitem>
+      <para>
+        This field contains the total number of samples associated with
+        the array order.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      # of <link linkend="chip">Chips</link>
+    </term>
+    <listitem>
+      <para>
+        This field contains the total number of chips associated with
+        the array order.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      Chip Type
+    </term>
+    <listitem>
+      <para>
+       This field lists the chip type(s) associated with the array
+       order (see <link linkend="layout">layout</link>).
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      Have Chips
+    </term>
+    <listitem>
+      <para>
+        This field is intended to contain information 
+        as to whether the <link
+        linkend="array_center">array center</link> has chips in stock to
+        complete the array order.
+        In order for this field to be accurate, the data must be entered
+        by <link linkend="array_center_staff_user">array center
+        staff</link> via the <link linkend="get_one_array_order">Get One
+        Array Order</link> interface.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+</variablelist>
+Note that you can sort on any of the columns by pressing the button that
+is the column header.
+</formalpara>
+<formalpara id="billing_log">
+<title>Billing Log</title>
+The billing log contains the following fields:
+<variablelist>
+  <varlistentry>
+    <term>
+      <link linkend="order_number">Order #</link>
+    </term>
+    <listitem>
+      <para>
+        This field specifies the order number that is used to uniquely
+        identify the order.  Note that the order number is a link.
+        Clicking on the link will take you to the <link
+        linkend="get_one_array_order">Get One Array Order</link>
+        interface for that order.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      <link linkend="primary_investigator">PI</link> First
+    </term>
+    <listitem>
+      <para>
+        This field contains the PI's first name.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      <link linkend="primary_investigator">PI</link> Last
+    </term>
+    <listitem>
+      <para>
+        This field contains the PI's last name.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      PATEO
+    </term>
+    <listitem>
+      <para>
+        This contains the billing code for the order.  The billing code
+        is set by the <link linkend="member_user">Member User</link>
+        when the initial array order is generated.  Once submitted, the
+        user is unable to modify the billing code.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      Dept
+    </term>
+    <listitem>
+      <para>
+        This is the department associated with the <link
+        linkend="primary_investigator">PI</link>.  The department value
+        is set when the user account is created.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      Special Center
+    </term>
+    <listitem>
+      <para>
+        If the <link linkend="array_order">array order</link> is
+        associated with a <link linkend="special_center">special
+        center</link>, then the special center name is displayed here.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      Isolations
+    </term>
+    <listitem>
+      <para>
+         Isolations defaults to the number of <link
+         linkend="sample">samples</link> associated with the array order.
+         If necessary, <link linkend="array_center_staff_user">array
+         center staff</link> can override the isolation count using the
+         <link linkend="get_one_array_order">Get One Array Order</link>
+         interface.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      Preps
+    </term>
+    <listitem>
+      <para>
+        Preps are the total number of samples.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      <link linkend="chip">Chips</link>
+    </term>
+    <listitem>
+      <para>
+        This field contains the total number of chips associated with
+        the array order.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      Total
+    </term>
+    <listitem>
+      <para>
+        This is the total amount of the bill for the <link
+        linkend="array_order">array order</link>.  Currently, the
+        formula is hardcoded and specific to the UVa array center.  The
+        formula is:
+        <informalequation>
+       ((38  *I) + (325 * N)) * (1 - (P/100) + T
+       </informalequation>
+
+       <para>
+       I - number of isolations
+       </para> 
+       <para>
+       S - number of samples
+       </para> 
+       <para>
+       P - discount percentage for the special center associated with
+       the array order
+       </para> 
+       <para>
+       T - total <link linkend="chip_cost">chip cost</link> for all
+       chips associated with the order
+       </para>
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      Isolation Bill Date
+    </term>
+    <listitem>
+      <para>
+        This field is intended to contain the date that the <link
+        linkend="array_center">array center</link> 
+        bills for the isolations.
+        In order for this field to be accurate, the data must be entered
+        by <link linkend="array_center_staff_user">array center
+        staff</link> via the <link linkend="get_one_array_order">Get One
+        Array Order</link> interface.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+    <term>
+      Preps Bill Date
+    </term>
+    <listitem>
+      <para>
+        This field is intended to contain the date that the <link 
+        linkend="array_center">array center</link>  bills for the preps.
+        In order for this field to be accurate, the data must be entered
+        by <link linkend="array_center_staff_user">array center
+        staff</link> via the <link linkend="get_one_array_order">Get One
+        Array Order</link> interface.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+  
+  <varlistentry>
+    <term>
+      Chips Bill Date
+    </term>
+    <listitem>
+      <para>
+        This field is intended to contain the date that the <link 
+        linkend="array_center">array center</link>  bills for the chips.
+        In order for this field to be accurate, the data must be entered
+        by <link linkend="array_center_staff_user">array center
+        staff</link> via the <link linkend="get_one_array_order">Get One
+        Order</link> interface.
+      </para>
+    </listitem>
+  </varlistentry>
+  
+</variablelist>
+Note that you can sort on any of the columns by pressing the button that
+is the column header.
+</formalpara>
+</sect1>
+
+<sect1 id="brief_view_of_all_array_orders">
+<title>Brief View of All Array Orders</title>
+<para>
+This is a summary screen that provides a smaller amount of information
+on all <link linkend="array_order">array orders</link>. 
+ Information displayed includes the <link
+linkend="order_number">Order Number</link>, the billing code,
+the contact name, the number of <link
+linkend="sample">samples</link> associated with the order, the name of
+the <link linkend="layout">layout</link> associated with the <link
+linkend="chip">chip</link>, and the total number of chips associated
+with the array order.
+</para>
+</sect1>
+<sect1 id="get_one_array_order">
+<title>Get One Array Order</title>
+<para>
+When an <link linkend="array_order">array order</link> is ready for
+processing, &product; generates an email that is sent to 
+<link linkend="array_center_staff_user">array center staff</link>.
+Processing activities are accessible via the "Get One Array Order" link.  
+See below for a description of all activities:
+</para>
+
+<mediaobjectco>
+<imageobjectco>
+<areaspec units="calspair">
+<area id="view_account_information" coords="50,50 100,100"/>
+<area id="array_order_number"/>
+<area id="special_center_affiliation"/>
+<area id="tracking_checkboxes"/>
+<area id="isolations"/>
+<area id="locked"/>
+<area id="number_of_samples"/>
+<area id="billing_code" />
+<area id="date_tracking" />
+<area id="goao_hyb_name" />
+<area id="goao_chip" />
+<area id="goao_study_name" />
+<area id="goao_exp_condition_name"/>
+<area id="goao_run_date"/>
+<area id="view_qc"/>
+<area id="goao_load_buttons"/>
+<area id="goao_update"/>
+</areaspec>
+<imageobject>
+  <imagedata fileref="../graphics/get_one_array_order.gif" format="gif"/>
+</imageobject>
+<calloutlist>
+<callout arearefs="view_account_information">
+<para>
+These links allow <link linkend="array_center_staff_user">array center
+staff</link> to view additional information (including contact
+information) for the owner and the creator or the order.
+</para>
+</callout>
+
+<callout arearefs="goao_update">
+  <para>
+    Click on the "Update" button to save changes to checkboxes and text
+    fields.
+  </para>
+</callout>
+
+<callout arearefs="array_order_number">
+  <para>
+    This is the <link linkend="order_number">order number</link>  that
+    uniquely identifies the <link linkend="array_order">array
+    order</link>.
+  </para>
+</callout>
+
+<callout arearefs="special_center_affiliation">
+  <para>
+    If the <link linkend="array_order">array order</link>  is associated
+    with a <link linkend="special_center">special center</link> then the
+    name of the special center is displayed here.
+  </para>
+</callout>
+
+<callout arearefs="tracking_checkboxes">
+  <para>
+    Several checkboxes are provided on this screen to allow <link
+    linkend="array_center_staff_user">array center staff</link>  to track
+    significant events.  Checkboxes include "Chips Ordered", "RNA Iso.
+    Billed", "Have Chips", "Chips Billed", and "Analysis Billed".  
+  </para>
+</callout>
+
+<callout arearefs="isolations">
+  <para>
+    The number of isolations is calculated automatically, but in rare
+    instances <link linkend="array_center_staff_user">array center
+    staff</link>  may wish to override that value.  This can be
+    accomplished by manually changing the number of isolations in the
+    text edit field on this screen.
+  </para>
+</callout>
+
+<callout arearefs="locked">
+  <para>
+    This field allows <link linkend="array_center_staff_user">array center
+    staff</link> to lock and unlock <link linkend="array_order">array
+    orders</link>.  When an array order is locked, <link
+    linkend="member_user">member users</link> are unable to edit the
+    array order.  The order is automatically locked when it is submitted
+    to the <link linkend="array_center">array center</link> to prevent
+    edits once order processing has begun.  However, it is sometimes
+    necessary to edit array order configuration if a mistake has been
+    made.  In these instances, array center staff can unlock the order
+    from this interface to allow edits.
+  </para>
+</callout>
+
+<callout arearefs="number_of_samples">
+  <para>
+    This field displays the total number of <link
+    linkend="sample">samples</link>.
+  </para>
+</callout>
+
+<callout arearefs="billing_code">
+  <para>
+    This field displays and allows edits to the billing code.  The
+    billing code is initially set by the <link
+    linkend="member_user">member user</link> when configuring the <link
+    linkend="array_order">array order</link>, however it can be
+    overridden by <link linkend="array_center_staff_user">array center
+    staff.</link>
+  </para>
+</callout>
+
+<callout arearefs="date_tracking">
+  <para>
+    There are several fields in this interface that allow the <link
+    linkend="array_center_staff_user">array center staff</link>  to
+    track significant dates.  They include the "Chips Bill Date" field,
+    the "Preps Bill Date" field, the "Date Report Completed" field, the
+    "Isolation Bill Date" field, and the "Date Samples Received" field.
+    It is the responsibility of the array center staff to keep these
+    fields current.  The values stored here are used in generating <link
+    linkend="array_center_staff_view_reports">reports</link>.
+  </para>
+</callout>
+
+<callout arearefs="goao_hyb_name">
+  <para>
+    This field contains the <link
+    linkend="hybridization">hybridization</link> name.
+  </para>
+</callout>
+
+<callout arearefs="goao_chip">
+  <para>
+    This field displays the <link linkend="layout">layout</link>
+    associated with the <link linkend="chip">chip</link>.
+  
+  </para>
+</callout>
+
+<callout arearefs="goao_study_name">
+  <para>
+    This field displays the name of the <link
+    linkend="array_study">array study</link>
+    associated with the <link linkend="array_order">array order</link>
+    and the <link
+    linkend="hybridization">hybridization</link>.
+  
+  </para>
+</callout>
+
+<callout arearefs="goao_exp_condition_name">
+  <para>
+    This field displays the name of the <link
+    linkend="experiment_condition">experimental condition</link>
+    associated with the <link
+    linkend="hybridization">hybridization</link>.
+  </para>
+</callout>
+
+<callout arearefs="goao_run_date">
+  <para>
+     This field appears to display the current data. 
+  </para>
+</callout>
+
+<callout arearefs="view_qc">
+  <para>
+    Once chip data has been loaded, the load button associated with the
+    <link linkend="hybridization">hybridization</link> disappears, and a
+    quality control link is displayed instead.  This link takes <link
+    linkend="array_center_staff_user">array center staff</link> to a page
+    that displays the quality control values associated with the
+    hybridization.  The values originate from the 
+    <link linkend="chip_data_files">chip data files</link>.
+  </para>
+</callout>
+
+<callout arearefs="goao_load_buttons">
+<para>
+When the chip experiment is run, 
+<link linkend="chip_data_files">chip data files</link>
+are generated by the
+software (<link linkend="microarray_suite">Microarray Suite</link> or <link
+linkend="gcos">GCOS</link>).  These files need to be placed in the 
+<link linkend="chip_data_path">chip data path</link>.  Once the files
+are there and available to &product;, you can load data by clicking on 
+the "Load All" button for a specific array order (or by clicking the
+individual load buttons available for each <link
+linkend="hybridization">hybridization</link> to load one at a time)
+    </para>
+    <para>
+    Once
+data has been loaded, the buttons to load hybridizations are replaced
+with links.  The links are labeled with the date that the data was loaded 
+and the links lead to the quality control information.
+   </para>
+   <para>
+Note that data is loaded based on a specific naming convention.  Files
+are expected to be named via the following convention:
+If the file is named incorrectly the data will not be loaded and an error 
+will be returned that states the name of the file the system is looking for.
+  </para>
+</callout>
+
+</calloutlist>
+</imageobjectco>
+</mediaobjectco>
+
+</sect1>
+</article>
+</part>

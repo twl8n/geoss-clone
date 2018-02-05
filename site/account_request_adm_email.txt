@@ -1,0 +1,32 @@
+To: {email}
+Cc: {ccMail}
+From: {fromMail}
+Subject: New Account Request
+
+A new account has been requested.  Please verify the requestor's 
+identity and then create their account.
+
+Request details:
+
+Account Type: {type}
+Email: {contact_email}
+Initial Password: {password}
+PI Login: {pi_login}
+First Name: {contact_fname}
+Last Name: {contact_lname}
+Credentials: {credentials}
+Organization: {organization}
+Cancer Center Member: {cancer_center_member}
+Contact Phone: {contact_phone}
+Organization Phone: {org_phone}
+Organization Toll Free Phone: {org_toll_free_phone}
+Organization Fax: {org_fax}
+Organization Email: {org_email}
+Organization Mail Address: {org_mail_address}
+Url: {url}
+
+If you are already logged into GEOSS as an administrator, then the 
+following URL will automatically populate most of the account creation 
+fields with the correct values:
+{create_url}
+

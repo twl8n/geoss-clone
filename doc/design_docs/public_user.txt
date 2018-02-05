@@ -1,0 +1,225 @@
+Design Document - Public User Functionality
+
+This document is intended to describe a proposed implementation for 
+allowing "public" users limited access to GEOSS.  It currently
+describes issues and will be revised to a more detailed implentation
+once we've made decisions about which direction to go with the
+implentation.
+
+Definitions:
+------------
+A public user is someone who can created their own account without
+interacting with GEOSS staff.  Their identity is not verfied and 
+they do not need to be associated with UVA.
+
+A member user is someone whose account has been created by the
+GEOSS administrator.
+Their identity has been verified.  For the purposes of this document,
+a member user could be of type 'administrator', 'curator', or 
+'experiment_set_provider'.
+
+Desired Functionality:
+----------------------
+1. Public users must be able to create their own accounts.
+2. Public users should have access to the following activities:
+      - "View my files"
+      - "Change file group ownership and read/write permissions"
+      - "Extract data into a file"
+      - "Edit/Delete/Run an existing Analysis Tree"
+      - "Create/Run a new Analysis Tree"
+      - "Update my personal info"
+      - "Manage membership of my groups"
+      - "Create a new group"
+      - "Change my password"
+3. Public users should be able to analyze data from public data sets.  
+This data should be readily available for an extract, and should not 
+require downloading and re-uploading the data.
+4. Public users should be able to have groups with other public users.
+5. Public users should not be able to add Member users to their groups.
+6. Member users should be able to add public users to their groups, but 
+public users should not be displayed by default.  A special sequence of
+commands should be required to view public users.
+7. Public users should not be able to create studies or request orders.
+8. Public users should not impact curator views of the system.
+9. A mechanism should exist to determine who is a public user and who 
+is a member user.
+10. Public users should not be able to destroy the ability of member users
+to use the system in a productive way.
+
+Implementation Details
+----------------------
+There are several different techniques to implement public user 
+functionality.  I think the most difficult challenge is meeting
+requirement #10 which tries to protect the system from malicious
+public users.  The most obvious attack a public user can make 
+is a DOS (denial of service) attack.  This can be accomplished
+by uploading a large number of files (take up all disk space) or
+initiating a large number of analyses (take up all CPU resources).
+Further attacks may be possible by passing in shell commands as 
+configurable parameters to analysis scripts.
+
+To address DOS attacks, we implement disk space quotas.  Unfortunately,
+because users do not have actual home directories, we may not have the 
+space pre-existing tools to do this, and may need to use utilities like 
+'du'.  This will be fairly inelegant.  There is no good way to implement 
+CPU usage quotas (http://cr.yp.to/docs/resources.html).
+
+This issue is further complicated by the fact that an attacker can 
+attempt to circumvent disk quotas by getting multiple accounts.  To 
+prevent this, we would need to get all users requesting a new account
+to solve a problem that a computer has difficulty solving (similar 
+to how Yahoo asks users to pick a word out of a picture).  Also,
+implementing quotas can be even more tricky because our users may
+legitamately need large amounts of disk space for their computations.
+
+Essentially, this approach would require a lot of programming work, and
+only provide minimal protection from attack.
+
+Alternatively, we could try to approach this from a sys admin perspective
+instead of a programming perspective. We could store public user accounts
+on a separate partition, but this would still leave us open to CPU 
+attacks.  The easiest solution would be to serve public users off a 
+different installation on GEOSS.  If this is the case, public users
+would be able to deny service to other public users, but not to UVA 
+member users and to the BRF.  
+
+So I see essentially two options:
+
+1) integrate public users into the existing system.  Provide no or 
+minimal protection against attacks.
+
+2) plan to have public users on separate installations
+
+We can make "allow public users" a configuration variable, so that 
+administrators can choose whether to allow public users on the 
+same system.  This means each admin can decide what level of risk 
+they are comfortable with.
+
+Having the public users on a separate system vastly simplifies 
+security related programming (there is none).  Additionally, it
+may simplify the filtering on groups requirements.  We could 
+leave groups the way they are.  All users see all other users on 
+the system, but because the users are on separate systems, the
+member users won't see the public users.  
+
+This approach will complicate making public data available to 
+public users for analysis.  The data is no longer even on the same box.
+Again, there are numerous ways to approach this.  We could create an 
+"everyone" group that includes all users and manually transfer public
+data across to that system (not too much programming but difficult 
+and not especially user friendly for admins).  Another approach (I
+like this one) would be to create a protocol that allows public 
+data on any registered GEOSS system to be downloaded into any 
+other GEOSS system.  So as a public users on a separate box, I can 
+go to extract data.  From there, I have access to public data
+that is published on genes.  I can select that data and extract
+it into a file.  This approach would require a fair bit of programming 
+work.  We would need to establish how to handle updated to published 
+data (currently it can be "re-published", so data with the same name 
+might actually be different).  We also need to make sure we don't
+re-download data each time (files are large) and to consider how to 
+transfer condition information correctly.  The really nice element 
+of this approach is that, assuming there are other GEOSS installations
+besides ours, we could theoretically give users access to data published
+on all of them.
+
+Below are my intended implementation for other requirements.  In
+some cases it depends on whether or not we plan to have public users 
+on a separate server. 
+
+1. Public users must be able to create their own accounts.
+- a link will be created from the GEOSS home page for public users to 
+create an account
+- this form will allow the user to request a "member" account or to
+create a "public" account.  Requests for member accounts are forwarded
+to the administrator.  Creation of a public account will require a 
+username and a valid email address.
+- once the public account data is submitted, an email will be sent to the 
+supplied address containing a log in password.  If the user does not log on 
+within a configurable number of days, the account is deleted.  If the user
+does log in, they are required to change their password immediately.
+- these accounts are placed in the usersec and contact tables.  The
+type field is set to is "public".
+- public users will be their own PI
+
+Notes on separate installs:  If we do intend to install on separate 
+machines, we can have a partner machine configuration variable.  Each 
+machine will refer new accounts to their defined partner if they 
+can't accomodate accounts of the requested type.
+
+2. Public users should have access to the following activities:
+      - "View my files"
+      - "Change file group ownership and read/write permissions"
+      - "Extract data into a file"
+      - "Edit/Delete/Run an existing Analysis Tree"
+      - "Create/Run a new Analysis Tree"
+      - "Update my personal info"
+      - "Manage membership of my groups"
+      - "Create a new group"
+      - "Change my password"
+
+I can use one of two approaches here:
+- I can provide a filtered view of links based on user type (similar
+to what we do with curators)
+- I can create a "publictools" directory (similar to what we do with
+administrators).  
+
+The first approach will muddy the code a bit, but is 
+easiest to implement  (the links are are largely the same).  
+
+I like the structure of the second approach better, but it would
+require extracting the functional parts of many of the links into
+a library so that they can be called from either webtools or publictools.
+
+3. Public users should be able to analyze data from public data sets.  
+This data should be readily available for an extract, and should not 
+require downloading and re-uploading the data.
+
+The approach to this requirement varies greatly depending on whether 
+we plan to host public users on the same box.  
+
+Different boxes requires implementation of a protocol for retrieving 
+public data sets.  
+
+Same box means that only public data sets published on that box are 
+available.
+
+In either case, we need to define a mechanism to mark data as available
+to all users.  Potential mechanisms include:
+- add a field to groupref that marks an entry ad viewable by all users, 
+regardless of group
+- create an everyone group that includes all users.  Re-load public data
+(as part of the publish process) as owned by the everyone user and readable
+by the everyone group. 
+
+4. Public users should be able to have groups with other public users.
+Available via the included group links.  No coding required.
+
+5. Public users should not be able to add Member users to their groups.
+No coding required if we have separate boxes.  On same box, we need
+to create a filtered select in the modify group link that makes only
+public users available.
+
+6. Member users should be able to add public users to their groups, but 
+public users should not be displayed by default.  A special sequence of
+commands should be required to view public users.
+N/A on separate boxes.  On same box, we need to edit the group modify
+group page to add a filter that 
+shows only member users (default) and a checkbox that expands that list
+to show all users.
+
+7. Public users should not be able to create studies or request orders.
+Restrict links so that these links are only available to "member" users.
+
+8. Public users should not impact curator views of the system.
+On separate boxes, not an issue.  On same box, we need to filter the
+manage PIs/Users link (should this link be moved to admintools?).
+
+9. A mechanism should exist to determine who is a public user and who 
+is a member user.
+Not much implementation required. We can select on user type.  It would
+be nice to provide a link in admintools that summarizes users by type
+(and maybe last_login).
+
+
+

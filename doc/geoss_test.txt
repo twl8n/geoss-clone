@@ -1,0 +1,602 @@
+GEOSS Test Procedures
+--------------------
+
+The purpose of this document is to outline the tests necessary to
+ensure basic functionality of the GEOSS system. Once the tests
+outlined here have been performed, the system is ready for Beta
+testing.
+
+As a reminder, testers should watch /var/log/httpd/error_log and
+/var/log/httpd/ssl_error_log for errors when they test.  Any error messages
+should be investigated.  Our goal is to have clean error_logs.
+
+Verify Testing Platform
+-----------------------
+
+Confirm that your testing platform is running the same software as genes by
+running the following commands on genes and the test platorm:
+
+- Note:  the geoss_versions script can be used to get most of the information
+  below
+- kernel info:
+   uname -a
+- Apache:
+   /usr/sbin/httpd -v
+- Postgres:
+   postmaster --version
+- R:
+   R --version
+  Within R:  library() to determine version modules in the libraries
+- Document Root
+   - verify same DocumentRoot value in /etc/httpd/conf/httpd.conf   
+
+New Functionality Tests
+-----------------------
+- Verify all bugs that have been fixed since the last release.  
+
+- If new functionality areas have been introduced, verify them according to
+specific plans for those areas.
+
+
+Installation Tests
+------------------
+
+- Verify that the system installs cleanly when following installation
+  instructions
+
+
+Presentation
+------------
+
+- Check spelling of all pages
+ make clean
+ for a in `find . -name '*.html'`; do aspell check $a; done
+ for a in `find . -name '*.xml'`; do aspell check $a; done
+
+- Verify that all links work
+
+- Where possible, refer to help pages while testing functionality to 
+  ensure that it is accurate and helpful.
+
+
+Account creation
+----------------
+- create an account using admintools
+
+- create an account using the geoss_adduser command 
+
+- Verify that /var/lib/geoss/<userid> is rwxrwx- - - and owned by
+  <installer>:apache
+
+- Verify that email gets sent to new account owner.
+
+- Verify that the email makes sense, and that the links in the email
+  body are correct.
+
+- Verify that you cannot create an account with a duplicate userid.
+
+- Verify that you must have a pi_login for a new account.
+
+- Verify that the pi_login must be either a valid user, or must be the
+  same new userid that you are creating.
+
+- Verify that accounts are not created if that type of user is not allowed
+  on that installation.  (Admin->Configure GEOSS->Uncheck "Allow X Users on 
+  the system").  Try adding a user of that type.
+
+- Use the request account link of the site main page to request a public
+  account.  Verify that the account is created.
+
+- Use the request account link of the site main page to request a 
+  member account.  Verify that the administrator receives a new account
+  request.
+
+- Verify that if a public user does not login within "days to confirm" days, 
+  their account is removed.
+
+- Verify that the first time a user logs on, they are advised to change their 
+  password.
+
+- Verify that if a user requests an account type that is not allowed on a
+  given installation, that a link is provided to a companion GEOSS system,
+  if such a system exists.
+
+
+Password checks
+---------------
+
+- Verify that a valid user can log on
+
+- Verify that an invalid user cannot log on
+
+
+Studies
+-------
+
+- Create a new study 
+
+- Verify that choosing create new study gets the study creation page
+
+- Verify that invalid study creation dates are rejected
+
+- Verify that duplicate studies can not be created
+
+- Verify a sanity check on the comments field
+
+- Verify that you cannot create a study in a group that is not your own (by
+  passing incorrect values through the url)
+
+- Verify that you can modify all study fields
+
+- Verify that fields provide sanity checking where appropriate
+
+- Verify that you can add an experimental conditions 
+
+- Verify that new experimental conditions use appropriate default values
+
+- Verify that you can delete an experimental condition that has no data loaded
+
+- Verify that you cannot delete or modify an experimental condition that has
+  data loaded (you can still add new samples)
+
+- Verify that updating experimental conditions is successful
+
+- Verify that creating more than 10 experimental conditions doesn't
+  overwrite the value of the second experimental condition.
+
+- Verify that you can add samples
+
+- Verify that you can delete samples that are not loaded
+
+- Verify that you cannot delete samples that are loaded
+
+- Verify that the study status correctly reflects the state of the study for
+  each status.  If mandatory fields (*) are not configured, status should be
+  INCOMPLETE.  If there is not at least one fully configured sample (with one
+  or more chips) for each experimental condition, the status should be
+  INCOMPLETE.  
+
+- Verify that the configuration specifies a array center processing is
+  enabled.  (Configure GEOSS, Admin Tools).  If the status of a study
+  is COMPLETE, verify that the Place Order button appears.
+
+- Verify that you can place an order if the order status is complete and it
+  contains chips not yet associated with an order
+
+- Verify that the array center staff receives an email stating that the order
+  needs an order number.
+
+- Verify that additional samples and chips can be added to an already loaded
+  study and that a new order can be generated for the new chips.
+
+- Verify that the configuration specifies a array center processing is
+  disabled.  If the status of a study is COMPLETE, verify that the Place Order
+  button does not appear.
+
+- Verify that you can modify a study which you do not own, but which
+  is group writable, and owned by a group you are a member of.
+
+- Verify that "change group" features work. Remember, a study can be
+  rw, but some or all of the exp_conditions r- r- - if there is a
+  locked order. 
+
+- Verify that studies have the correct ownership/group (under the new
+  system of PI ownership -- look directly at the groupref table in the db). 
+
+- Verify that you can delete a study has no data loaded
+
+- Verify that deleting a study removes the exp_conditions and the
+  related groupref records.
+
+- Verify that you cannot delete a study that has data loaded.
+
+- Verify that you can View All Studies and sort and search based on columns.
+
+Orders
+------
+- Verify that you can submit an order on completed studies.
+
+- Verify that curators can assign an order
+
+- Verify that curators can create an order
+
+- Verify that order numbers are assigned in accordance with the configuration
+  option selected in "Configure GEOSS"
+
+- Verify that you can view all orders and sort and search based on columns.
+
+- Verify that group and permissions change correctly if you use the
+  "change group" feature on an order. This requires a database
+  queries.
+
+- Verify that only users with read permission on the order can view it in View
+  All Orders
+
+- Verify that order sequence numbers reset appropriately when the year 
+  changes (year sequential order numbers only).
+
+- Verify that deleting an order deletes samples and hybridizations,
+  and works correctly for zero samples and for zero hybridizations.
+
+- Verify that groupref records are deleted for orders, samples, and
+  hybridizations. You'll have to check the order_info.oi_pk,
+  sample.smp_pk, and arraymeasurement.am_pk before the delete.
+
+- Verify that curators can delete orders for which data has not been loaded.
+  This does NOT delete samples and hybridizations, but should effectively
+  "unassign" the order (remove oi_fk from relevant samples)
+
+
+Loading Data
+------------
+- Enable "Allow all users to load data" (Configure GEOSS, Admin Tools).
+  Verify that users now have a "Load Study" link in Member Home.
+
+- Verify that "Load Study" only presents complete studies that have data to
+  load as options for loading.
+
+- Verify that you can upload a study data file.
+
+- Verify that you can load data from the study data file.
+
+- Upload a bad data file (wrong file type, bad hybridization names in the
+  header, wrong probe set identifers, wrong # of columns, etc.).  Verify that
+  an error is reported and that the data is not loaded.
+
+- Disable "Allow all users to load data"
+
+For curator data load:
+
+- Verify that you can change the directory from which data is read
+
+- Verify that an error is reported if the data is in the wrong format
+
+- Verify that the signal values in am_spots_* match the values from the 
+  data file.
+
+- Verify that the log file is in the data owners /var/lib/geoss
+  directory. It should be /var/lib/geoss/<user_id>/load_<order_number>.txt
+  for example:
+
+      /var/lib/geoss/tdj4m/load_04-30.txt
+
+- Verify the first and last probe set names. These names are in the
+  data file, and in the log file
+  select signal, spot_identifier from am_spots_mas5, al_spots where als_fk
+  = als_pk and am_fk = 57;
+
+- Verify the number of rows of data read. You must count the rows of
+  data in the input file, the confirm that this number matches the
+  rows read in the log file.
+
+- Verify the number of rows of data inserted into the am_spots_*
+  table. First find the am_pk with a SQL query like the following for
+  order 02- 22:
+
+- Select am_pk, hybridization_name from arraymeasurement where
+  hybridization_name like '02- 22%';
+
+- Plug the appropriate am_pk into this SQL query (we'll use 57 as an
+  example):
+
+- Select count(*) from am_spots_mas5 where am_fk=57;
+
+- Verify appropriate values have been loaded for the first and last row of
+  data
+
+- Verify that uploaded data is viewable by the correct, and only the
+  correct, people.
+
+- Verify that the information in the QC web page matches the data in
+  the .rpt and .exp files.
+
+
+Group and Personal Information
+------------------------------
+
+- Update your personal information. Verify the information is updated.
+
+- Enter invalid information. Verify that an error is reported.
+
+- Add a new group. Verify it exists in the list of groups that you
+  administer.
+
+- Verify that array center staff are/are not added to the group as appropriate
+  based on configuration in the "Configure GEOSS" link.
+
+- Add new members to your group. Verify that they have been added.
+
+- Verify that they can see your data.
+
+- Remove new members. Verify that they can no longer see your data.
+
+
+Files and Data Grouping
+-----------------------
+- View files using "View my files". Verify that you can navigate using 
+  current directory navigation and entire directory tree navigation.
+
+- View some user files.  
+
+- Verify that the navigation short cuts work.
+
+- Verify that only users with read permissions of a file can see it.
+
+- Verify that you can remove result files.
+
+- Verify that you can not remove data files.
+
+- Verify that "change group" file permissions work as expected.
+
+- Verify that you can view quality control records.
+
+- Upload a mas5 chip data file.  Verify that it is uploaded correctly and 
+  that a hybridization with the correct name is uploaded.  (Choose
+  hybridizations as the source for a condition to view a list of
+  hybridizations or use psql.)
+
+- Upload a file of type "other".  Verify that if is uploaded correctly using
+  the file viewer.
+
+- Create several criteria files.  Most should contain errors like invalid
+  column headers, referring to non-existent hybridizations, and missing
+  data.  A couple of the criteria files should have valid syntax.  Upload
+  each file type.  Verify that errors are reported for the bad files and
+  that the good files are uploaded correctly.  Verify that automatic 
+  sets and automatic conditions are created as appropriate.
+
+- Upload a good file a second time (with a different filename).  Verify
+  that a warning is displayed that automatic sets and conditions will not be
+  created due to duplicate naming.  Verify that duplicates are not created.
+
+- Upload a data file for a study.
+
+- Create a data file containing all data for one study.  Verify that the file
+  contains the correct data. 
+
+
+Analysis
+--------
+- Create an analysis condition based on each possible source.
+
+- Create an analysis set based on each possible source.
+
+- Use a criteria file to create analysis conditions.  Use both types
+  (categorical and continuous) of criteria.
+
+- Build an analysis tree. (qc->dd->filter->cluster, qc->addlinks)
+
+- Verify that a tree can be created from an array study (only loaded ones)
+
+- Verify that a tree can be created from an analysis set
+
+- Verify that a tree can be created from public data
+
+- Verify that a tree can be created from an analysis input file
+
+- Verify that nodes can be added and deleted.
+
+- Verify that you can change the name of the analysis tree.
+
+- Verify that the tree is run when you hit run analysis.
+
+- Verify that running multiple times works. Files should be
+  overwritten if the file names are the same.
+
+- Verify that attempting an analysis with bad input returns an error.
+
+- Verify that email notification is received when analysis is complete
+
+- Verify that the user can view their results files.
+
+- Build an analysis tree with duplicate nodes (e.g., qc->dd, two filters
+  coming from the dd, a cluster from each filter). Run the tree and
+  ensure that files are named properly.
+
+- Verify that only 'current' versions of analyses are available for
+  adding. 
+
+- If new versions have been added this release, verify that you can
+  update/copy a tree.
+
+Individual Analysis Modules
+---------------------------
+
+- Verify results using known test data
+
+- Verify graceful crash on bad input data
+
+- Change each parameter value for the analysis at least once. Re-run
+  the analysis. For radio buttons, try each option. Note: This only
+  needs to be done if there have been changes to the analysis since
+  the last test cycle.
+
+- Verify presentation of node properties. 
+
+
+Array Center Staff Home
+-----------------------
+
+- Verify that you can only see array center staff links if you are an array
+  center staff user.
+
+- Verify that non-array center staff users can't use the array center staff
+  only pages, even if they enter the URL.
+
+- Verify that locking an order disallows edits to the order.  Check that the
+  permissions are appropriately updated in the groupref table when locking.
+
+- Verify that unlocking an order allows further edits to the order.
+
+- Verify that updating each check box in the order View One Array Order page 
+  results in the appropriate update.
+
+- Verify that you can view the "Order Log".
+
+- Verify that you can sort and reverse sort on all columns in "Order Log".
+
+- Verify that changes to the fields are reflected in the "Order Log"
+  (for instance, you could modify "Date Report Completed" in the
+  curator order edit and you should see the change).
+
+- Verify that the log information is accurate (check at least one row
+completely).
+
+- Repeat the order log tests for the billing log 
+
+- Verify that you can override the isolation calculation from the
+  "View One Array Order" page.  The change should be reflected in the billing
+  log.
+
+- Verify that the Brief View of All Array Orders link works and provides
+  correct information.
+
+- Verify that you can create a new order
+
+- Verify that you can assign an order number to a submitted order.
+
+- Verify that you can retrieve order results for orders that do not have an
+  assigned order number.
+
+
+Publishing Data
+---------------
+- Create two new studies (one for cDNA, one for affy)
+
+- Initiate the publishing procedure for each by selecting "Publish Study Data"
+
+- Save the publishing information
+
+- Verify that the new studies appear in the Edit existing publishing info
+
+- Verify that the studies are not yet published
+
+- Verify that the cDNA study contains more info that the affy study
+
+- Modify the studies and save them. Re- edit and verify that the
+  information was correctly saved.
+
+- Publish the studies. Verify that they appear in View Public Data.
+
+- Verify that all links in the View Public Data summary work. The zip
+  links should report that the zip files are currently unavailable.
+
+- Have the administrator publish the zip files. Verify that you can now read the zip files.
+
+- Modify a published study. Verify that the change is not reflected
+  after a save. Re- publish and verify that the information is
+  changed.
+
+- Delete publishing data. (This should only work for non- published
+  studies.)
+
+- Publish a study that you are not the owner of. Verify that the owner
+  gets sent an email notification that you have requested publication.
+
+
+Public User
+-----------
+(typically tested on biostat.virginia.edu/geoss/site)
+
+- Verify that public users cannot create studies and orders.
+
+- Verify that public users have access to the following:
+    - View All Studies
+    - view my files
+    - change file permissions
+    - create a file for input to analysis
+    - upload a file
+    - create analysis tree
+    - edit/delete/run an analysis tree
+    - update personal info
+    - manage membership of my groups
+    - create a new group
+    - change my password
+
+- Verify that public users can create and run an analysis tree.
+
+Admin Home
+-----------
+
+- Verify that the administrator can set all values in configure GEOSS.
+
+- Verify that the administrator can view the installation information and 
+  that directory access permissions are correctly reported.
+
+- Verify that the administrator can view the list of users and sort 
+  on user criteria.
+
+- Verify that the administrator can email all users (note that you may wish to
+  verify whose email addresses are configured on the test system before
+  performing this test).
+
+- Verify that the administrator can view the user list.
+
+- Verify that the administrator can add a user via admintools
+
+- Verify that the administrator can remove a user that does not own data.
+
+- Verify that the administrator cannot remove a user that does own data.
+  (add ?step=3&remove_user=<userid> to the url)
+
+- Verify that the administrator can disable a user and that that user can
+  no longer login.
+
+- Verify that the administrator can enable a user and that that user can 
+  login.
+
+- Verify that the administrator can change a user's password and that the 
+  user can login with the new password.
+
+- Verify that the administrator can remove all users who are inactive (have
+  not logged in within days_to_confirm days) via that admintool.
+
+- Verify that you can add a new PI to a user
+
+- Verify that you can change the PI of a user
+
+- Verify that the administrator can add a special center.
+
+- Verify that the adminsitrator can remove a special center.
+
+- Verify that the administrator can view all special centers.
+
+
+Center Home
+-----------
+
+- Verify that the special center administrator can approve orders for their 
+  special center.  Verify that the status is changed to "Approved" and
+  that the GEOSS curator is notified via email that the order is ready 
+  for processing. 
+
+- Verify that special center administrators cannot approve orders for other
+  special centers.
+
+- Verify that the special center administrator can View Reports
+
+- Verify that that the special center administrator can add/remove members from 
+  the special center.
+
+- Verify that the special center administrator can upload logos and icons. 
+  Successful upload will mean that the file is available for use
+  in edit special center info.
+
+- Verify that the special center administrator can edit special center info. 
+  Changing the logo and url should result in a change of logo/url on 
+  the main page.  (No logo/url should be visible if those booleans
+  are not set via admintools).
+
+- Verify that if a special center administrator administers more than one 
+  special center, they are presented with a choose special center option 
+  for each link in Center Home.  They should not get a choose option if they 
+  administer only one special center.
+
+
+Bulk Data Load
+--------------
+
+- Verify that studies can be configured using geoss_bulk_configurator.
+
+- Verify that studies/orders can be loaded using geoss_bulk_load (single data 
+   file format and multiple data file format).

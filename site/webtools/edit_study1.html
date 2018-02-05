@@ -1,0 +1,161 @@
+<form action="edit_study2.cgi" method=POST>
+<input type="hidden" name="sty_pk" value="{sty_pk}">
+
+<table width="700" border=0 cellpadding=4 cellspacing=0>
+<tr><td valign="top">
+<div align="right">Array Study Name &nbsp;&nbsp;</div></td><td>
+        <input type="text" name="study_name" value="{study_name}" maxlength="128">
+</td></tr>
+
+<tr><td valign="top">
+<div align="right">Array Study Start Date &nbsp;&nbsp;</div></td><td>
+        <input type="text" name="start_date" value="{start_date}" maxlength="128">
+</td></tr>
+<tr><td>
+<div align="right">Array Study Comments &nbsp;&nbsp;</div></td><td> <textarea name="sty_comments" rows=5 cols=40 wrap="virtual">{sty_comments}</textarea>
+</td></tr>
+
+<tr><td valign="top">
+<div align="right">No. of Exp. Conditions &nbsp;&nbsp;</div>
+      </td>
+<td valign="top">{number_of_conditions}
+&nbsp;&nbsp;&nbsp;
+</td></tr>
+
+<tr><td valign="top">
+<div align="right">Classification &nbsp;&nbsp;</div>
+      </td>
+<td valign="top">{classification_select}
+&nbsp;&nbsp;&nbsp;
+</td></tr>
+
+<tr><td valign="top">
+<div align="right">Status &nbsp;&nbsp;</div>
+      </td>
+<td valign="top">{status}
+&nbsp;&nbsp;&nbsp;
+</td></tr>
+
+{set_default_tree}
+</table>
+
+  <br>
+  <table width="700" border="1" cellspacing="0" cellpadding="4">
+    <tr valign="top"> 
+      <td width="306"> Add a blank, empty experimental condition.<br>
+        <input type="submit" name="insert_exp_conditions" value="Add">
+      </td>
+      <td width="448"> Paste in an experimental condition from another array study. 
+        Select from the list, then click 'Paste'.<br>
+        <input type="submit" name="paste_exp_condition" value="Paste">
+        {exp_select1}</td>
+    </tr>
+  </table>
+<p>
+<input type=submit name="Finish" value="Finish">
+  <br>
+  <br>
+  <br>
+  <loop> 
+  <table width="700" border="0" cellpadding=4 cellspacing=0>
+<tr bgcolor="#2222FF">
+<td><font color="#FFFFFF">{count}&nbsp;</font></td><td>&nbsp;</td>
+</tr>
+
+<tr>
+<td  valign="top"><div align="right">Delete &nbsp;&nbsp;</div></td>
+<td valign="top"><input type="checkbox" name="delete" value="{ec_pk}">
+</td>
+</tr>
+
+
+<tr>
+<td><div align="right">*Experimental Condition Name &nbsp;&nbsp;</div></td>
+<td>
+        <input type="text" name="name" value="{name}" size="60" maxlength="128">
+        <br>
+<input type="hidden" name="ec_pk" value="{ec_pk}">
+</td>
+</tr>
+
+
+
+<tr>
+<td valign="top"><div align="right">* Short name (6 chars. max) &nbsp;&nbsp;</div></td>
+<td>
+        <input type="text" name="abbrev_name" value="{abbrev_name}" size="10" maxlength="6">
+</td>
+</tr>
+
+<tr>
+<td valign="top"><div align="right">Notes &nbsp;&nbsp;</div></td>
+<td>
+<textarea name="notes" rows="5" cols="40" wrap="virtual">{notes}</textarea>
+</td>
+</tr>
+
+<tr>
+<td valign="top"><div align="right">*Species &nbsp;&nbsp;</div></td><td>{species_select}</td>
+</tr>
+
+<tr>
+<td><div align="right">*Sample Type &nbsp;&nbsp;<br></div></td><td>
+<select name="sample_type">
+<option value="tissue">tissue</option>
+<option value="cells">cells</option>
+<option value="total RNA">total RNA</option>
+</select>
+</td>
+</tr>
+
+<tr>
+<td width="300" valign="top">
+If your Sample type is cells, please fill in "Cell Line/Cell Type" below.
+</td>
+
+<td valign="top">
+If your Sample type is tissue, please fill in "Tissue Type" below.
+</td>
+</tr>
+
+<tr>
+<td valign="top"><nobr>Cell Line/Cell Type 
+        <input type=text name="cell_line" value="{cell_line}" maxlength="128">
+        </nobr></td>
+<td valign="top">OR &nbsp;&nbsp;&nbsp;Tissue Type 
+        <input type=text name="tissue_type" value="{tissue_type}" maxlength="128">
+      </td>
+</tr>
+
+<tr>
+<td><div align="right">Description &nbsp;&nbsp;</div></td><td><input type=text name="description" value="{description}" size="60"><br></td>
+</tr>
+
+</table>
+<br><br>
+  </loop> 
+  <a name="__bottom">
+  <table width="760" border="1" cellspacing="0" cellpadding="0">
+    <tr valign="top"> 
+      <td width="306"> Add a blank, empty experimental condition.<br>
+        <input type="submit" name="insert_exp_conditions" value="Add">
+      </td>
+      <td width="448"> Paste in an experimental condition from another array study. 
+        Select from the list, then click 'Paste'.<br>
+        <input type="submit" name="paste_exp_condition" value="Paste">
+        {exp_select2}</td>
+    </tr>
+  </table>
+  <br><br>
+<input type=submit name="Finish"
+value="Finish">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="./choose_study.cgi">Back to 'Choose Array Study'</a>
+
+</form>
+<br>
+* Please complete these fields. This information is required before your order 
+is processed by the microarray center. <br>
+<br>
+<table width="700" border=0 cellpadding=0 cellspacing=0>
+<tr><td>
+<br>
+</td></tr></table>

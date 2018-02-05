@@ -1,0 +1,254 @@
+GEOSS 2.5.0 Release Item:
+
+The purpose of this document is to describe prospective additions to GEOSS
+for the 2.5.0 release.  Most items have been chosen with the intention of 
+improving public users services.  This document discussed enhancements in 
+the following areas:  general enhancements, analysis functionality, UVa 
+public data, supported data types, and public user analysis of foreign 
+data sets.  
+
+Section 1 is essentially a task list.  In Section 2, I provide some
+notes/thoughts on the implementation of each task and time estimates for tasks
+that I understand well enough to provide a meaningful estimate for.
+
+
+Section 1 - Enhancement Descriptions
+------------------------------------
+
+General Enhancements: 
+
+1.  Improve description of services offered on the home page for our public
+server.  The improved description is intended to offer prospective users
+information about on how they can use GEOSS if they request a public account.
+This information should include information on the number of public data sets
+available for analysis and the types of analyses that can be performed (or
+statistics that can be obtained).
+
+
+Public User Analysis of Foreign Data Sets: (200 hrs)
+
+1. Acquire public data sets to load onto biostat
+
+2. Add a default public user who owns public data sets
+
+3. Study Viewer
+    
+   The study viewer provides information on a specific study.  There will be
+   two modes: condensed and full.  Condensed views are intended for use when
+   multiple studies are being displayed.  Full view provides all available
+   information on a study.
+
+   The study viewer works in conjunction with the study finder.  The study
+   finder returns rows of condensed view studies. 
+
+   Condensed view includes:
+     - study name
+     - investigator
+     - short description
+     - organism
+     - chip type
+     - number of chips
+     - link to full view
+     
+   Full view includes:
+     - all condensed view items
+     - long description
+     - description of conditions and replicates
+     - miame information if available
+     - link to default analysis
+     - link to external articles
+     - link to external data source
+     - short cut to "build a customized tree"
+
+4.  Study Finder
+The study finder works in conjunction with the study viewer and is used to
+control the order and selection of studies to view (in condensed study
+format).  The finder allows the user to sort on any of the columns.  In
+addition, the study finder allows users to restrict the set of studies
+displayed by searching on the following criteria:
+     - study name
+     - investigator
+     - organism / species
+     - data type (mas5, cDNA)
+
+
+5. Study finder extension
+The extension allows users to restrict the displayed studies according to
+gene.  
+
+
+
+UVa Public Data Service: (50 hrs)
+
+1. Change the public data page that contains UVa data sets to use the new
+study viewer/study finder.
+
+2. Modify the UVa public data service to increase flexibility in type of file
+published (i.e. include CAB file, Excel files, user uploaded files).
+
+3. Manually load current public data sets that are published but not part of
+GEOSS so that they can be used for analysis. 
+
+
+
+Analysis Functionality: (60 hrs)
+
+1.  Modify analysis tree processing to check for known error conditions prior
+to running the analysis (these include duplicate chips, insufficient number of
+conditions, etc.). (Bug 343).
+
+2.  Enhance analysis error reporting.  Specifically, error messages from Rout
+should be returned to user.  Additionally, cc the analysis failed message
+directly to the administrator so that they can better assist users.
+
+3.  Upgrade to R 2.1.  Current analyses need to be upgraded to R 2.1 to
+support future R development.
+
+4.  New analyses - HyungJun/Jae to add this section
+
+
+Supported Data Types (? hrs)
+
+1. Expand supported data types to include cDNA data.  We will not
+support array center processing of cDNA data, but would support upload of cDNA
+through file upload and bulk upload.  This will provide the ability to analyze
+cDNA data data sets. 
+
+
+
+
+Section 2 - Implementation Notes
+--------------------------------
+
+General Enhancements:
+
+1.  Improve description of services offered on the home page for our public
+server.  
+
+This can be done using our customized install options just following our
+release.  All we need to do is agree on the text.  Time estimate: 1 hr.
+
+
+Public User Analysis of Foreign Data Sets:
+
+1.  Acquire public data sets to load onto biostat
+I'm not certain how long it will take to gather the necessary files, however,
+once the files are here we should do the following:
+- load the data using geoss_bulk_load functionality
+- review the data to ensure correct loading
+- run default analysis tree
+
+Time Estimate:
+2 hrs per study if no errors in analysis or data load
+4-8 hrs per study if there are errors
+
+2.  Add a default public user who owns public data sets
+- Modify geoss_initialize to add a public user
+- Modify the user add code to automatically add all users to the public user
+  group
+- Add public user to existing installed systems
+- Add everyone to the public users group on installed systems
+- Add a confirmation when creating an order of type public that states that
+  order data will be available to all users.  This will provide a safeguard
+  against array center staff accidentally creating a publicly viewable order. 
+
+Time Estimate:
+16 hours
+
+3. Study Viewer
+
+- create a "View all Studies" link from member home
+- build the html/pl files for viewer (condensed and full)
+- modify user documentation to describe the new viewer
+- database modifications:
+   -  add default_tree_pk to study
+- modify order load to run a default tree as soon as the study data is loaded
+
+??s
+- do we want to present any summary statistics in the viewer?  If so, we will
+  need to write a function to extract summary statistics from default results
+  files.  We would need to modify the db to store summary statistics (new
+  table linked to tree?) and modify runtree.pl to populate the summary
+  statistics after tree is finished running.  The full viewer would need to be
+  modified to display summary statistics.  
+
+Time Estimate - 60 hrs
+
+4.  Study Finder
+- modify the study viewer to have sortable columns
+- modify the study viewer to filter by specified fields
+
+Time Estimate - 16 hrs
+
+5. Study finder extension
+The extension allows users to restrict the displayed studies according to
+gene.  
+
+Time Estimate: ?
+
+
+UVa Public Data Service:
+
+1. Change the public data page that contains UVa data sets to use the new
+study viewer/study finder.
+
+2. Modify the UVa public data service to increase flexibility in type of file
+published (i.e. include CAB file, Excel files, user uploaded files).
+
+3. Manually load current public data sets that are published but not part of
+GEOSS so that they can be used for analysis. 
+
+- modify either the miame table or the indexrec file that is created to
+  include all fields required by the study viewer
+- link to the study viewer
+- write utilities to save and load miame records for easier transfer of study
+  data between different servers
+- modify the publish to link to all specified files instead of the strictly
+  defined subset
+    
+Time Estimate: 1-2: 30 hrs  3: 20 hrs
+
+
+
+Analysis Functionality:
+
+1.  Modify analysis tree processing to check for known error conditions prior
+to running the analysis (these include duplicate chips, insufficient number of
+conditions, etc.). (Bug 343).
+
+2.  Enhance analysis error reporting.  Specifically, error messages from Rout
+should be returned to user.  Additionally, cc the analysis failed message
+directly to the administrator so that they can better assist users.
+
+3.  Upgrade to R 2.1.  Current analyses need to be upgraded to R 2.1 to
+support future R development.
+
+4.  New analyses - HyungJun/Jae to add this section
+
+Time Estimate for 1-3:  60 hrs
+
+
+
+Supported Data Types
+
+1. Expand supported data types to include cDNA data.  We will not
+support array center processing of cDNA data, but would support upload of cDNA
+through file upload and bulk upload.  This will provide the ability to analyze
+cDNA data data sets. 
+
+- obtain test cDNA data sets
+- modify upl_data1.pl to allow cDNA files
+- ensure that cDNA files are accessible from "View my files" and have uploaded
+  correctly
+- resolve the best way to store cDNA data
+    - option 1 - make a way to load cDNA layouts
+    - option 2 - add a probe_set_id field to the am_spots_cDNA - if each cDNA
+      file has a distinct layout, we might as well store the probe_set_id with
+      the data
+    - option 3 - automatically create a layout from the data file named after
+      the study - we would need to modify select_arraylayout so that it
+      doesn't display custom layouts in edit_order
+- modify the database in accordance with the storage solution
+- create the appropriate load functions in geoss_session_lib.pl
+
+Time Estimate(?)

@@ -1,0 +1,159 @@
+
+######################################################################################
+#
+#
+# This analysis provides optimal gene models that classify samples into multiple classes.
+#
+# Last updated on Oct 2005, HyungJun Cho (hcho@virginia.edu)
+#
+#
+######################################################################################
+
+
+######################################################################################
+#
+# MiPP
+#
+######################################################################################
+func.MiPP <- function(logData, conditions, new.cond, role.cond, rule, probename, testset,
+                      nsplit=20, nseq=3, cutoffpt=0.7)
+{
+
+     library(MiPP)
+
+     #Classification rule  
+     if(rule=="LDA") rule <- "lda"
+     if(rule=="QDA") rule <- "qda"
+     if(rule=="SVM-linear") rule <- "svmlin"
+     if(rule=="SVM-brf") rule <- "svmrbf"
+     if(rule=="Logistic") rule <- "logistic"
+   
+     #Restrict the number of the candicate genes
+     p <- 1.0         
+     if(nrow(logData) > 500) p <- 500/nrow(logData) #max up to 500 
+            
+     #when train and test sets are distinct 
+     if(testset=="Yes") {
+             
+        k <- which(role.cond=="Train")
+        x.train <- logData[,k]
+        y.train <- as.integer(new.cond[k])
+
+        k <- which(role.cond=="Test")
+        x.test <- logData[,k]
+        y.test <- as.integer(new.cond[k])
+        
+        if((length(table(y.train)) < 2) | length(table(y.test)) < 2) 
+            stop('You have too small number of samples. At least 10 samples for each class should be present.')
+        if((min(table(y.train)) < 10) | (min(table(y.test)) < 10)) 
+           stop('You have too small number of samples. At least 10 samples for each class should be present.')
+        out <- mipp.seq(x=x.train, y=y.train, x.test=x.test, y.test=y.test, probe.ID=probename, percent.cut= p, rule=rule, n.seq=nseq)
+
+        return(list(model.eval=out$model, genes.selected=out$genes.selected))
+        
+     }    
+     
+     #when train and test sets are NOT distinct 
+     if(testset=="No") {
+
+        cl <- as.integer(new.cond)
+        k <- which(is.na(cl) == TRUE)         
+        if(length(k) >0) {
+           cl <- cl[-k]      
+           if(length(unique(cl)) >= 2) logData <- logData[,-k]
+
+           #use the first two codntions           
+           if(length(unique(cl)) < 2) {
+              n <- 2 #2-class, later extend to multil-class, n <- length(conditions) 
+              cl <- c()
+              for(i in 1:n) cl <- c(cl, rep(i, conditions[i])) #for multi-class
+              logData <- logData[,1:sum(conditions[1:n])]
+           }
+        }
+                            
+        #Fit MiPP
+        if((min(table(cl)) < 10) | (length(table(cl)) < 2)) 
+           stop('You have too small number of samples. At least 10 samples for each class should be present.')
+        out <- mipp.seq(x=logData, y=cl, probe.ID=probename, n.split=nsplit, percent.cut=p, rule=rule, n.seq=nseq, cutoff.sMiPP=cutoffpt)
+        return(list(model=out$model, model.eval=out$model.eval, genes.selected=out$genes.selected))
+        
+     }         
+}
+
+
+
+########################################################################
+#
+#   Regonize conditions
+#
+########################################################################
+
+reg.condition <- function(x, conditions, labels.old){
+
+   n.chips <- sum(conditions)
+   n.conds <- length(conditions)
+      
+   a <- unlist(strsplit(x, split=","))
+   labels.new <- a[(1:n.conds)*4-3]
+   order2 <- a[(1:n.conds)*4-1]
+ 
+   i <- match(labels.old, labels.new)   
+   order2 <- order2[i]  
+   
+   new.conds <- c()
+   for(j in 1:n.conds){
+       new.conds <- c(new.conds, rep(order2[j], conditions[j]))   
+   }
+   
+   return(new.conds)
+}
+
+######################################################################################
+### MAIN
+######################################################################################
+
+
+### REPLACE infile
+geneSigs.N <- read.table("infile", header=TRUE)
+### REPLACE conds
+conditions <- c(conds)
+### REPLACE outfile
+outFile <- "outfile"
+### REPLACE condLabels
+labels <- c(condLabels)
+### REPLACE crule
+rule <- "crule"
+### REPLACE newcondition
+newcond <- "newcondition"
+### REPLACE rolecondition
+rolecond <- "rolecondition"
+### REPLACE testset
+testsett <- "testset"
+
+new.cond <- reg.condition(newcond, conditions, labels)
+role.cond <- reg.condition(rolecond, conditions, labels)
+
+# strip the 1st column of probe.set
+probename <-  geneSigs.N[,1] 
+probename <- as.matrix(probename)
+
+# data
+geneSigs.N <- geneSigs.N[,-1] 
+geneSigs.N.log2 <- logb(geneSigs.N[,1:sum(conditions)], base=2)
+
+
+# analyses
+results <- func.MiPP(logData=geneSigs.N.log2, conditions, new.cond, role.cond, rule, probename, testsett,
+### REPLACE nsplit ###
+nsplit, 
+### REPLACE nseq ###
+nseq,
+### REPLACE cutoffpt ###
+cutoffpt)
+
+write.table(results$model.eval, file=outFile , row.names=F, sep='\t')
+
+
+############################################################################################
+### END
+############################################################################################

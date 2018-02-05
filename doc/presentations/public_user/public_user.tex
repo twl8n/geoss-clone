@@ -1,0 +1,329 @@
+\documentclass{compactslide} %% DEPEND
+
+\author{Jae. K. Lee \\
+Teela James \\
+\texttt{University of Virginia}}
+\title{GEOSS Public User Analysis Service}
+\date{}
+
+\begin{document}
+
+\titleslide
+
+\begin{slide}
+\heading{Introduction}
+GEOSS (Gene Expression Open Source System) is a system for the storage
+and analysis of microarray data.  GEOSS provides a variety of functions:
+\begin{itemize}
+\item repository for gene chip data
+\item used by the array lab at the University of Virginia to manage
+    ordering, processing, and billing of gene chips 
+\item used by investigators at the University of Virginia to retrieve,
+    analyze, and share chip data
+\item used by public users to access and analyze gene chip data
+\end{itemize}
+\end{slide}
+
+\begin{slide}
+\heading{Introduction}
+This presentation illustrates the public user interface and how
+public users can analyze gene chip data.  Specifically, it addresses:
+\begin{itemize}
+\item how to create an analysis tree that analyzes others' data
+\item how to create an analysis tree to analyze your own data
+\item how to view the results files
+\item what each of the current analysis modules does and what their
+    results mean
+\end{itemize}
+\end{slide}
+
+\begin{slide}
+\heading{Getting Started}
+
+The UVa public server is at: \\
+\texttt{http://biostat.virginia.edu/geoss/site}
+\begin{itemize}
+\item accounts may be requested via the ``Request An Account'' link
+\item public user accounts are automatically generated and users may login
+    immediately with their new account
+\end{itemize}
+\end{slide}
+
+\begin{slide}
+\heading{Member Home}
+The ``Member Home'' page is the main menu for public users. There are four 
+main activity areas:
+\begin{itemize}
+\item Array Study Management
+\item File Management
+\item Analysis Management
+\item Account Management
+\end{itemize}
+\end{slide}
+
+\begin{slide}
+\heading{View All Studies}
+
+The ``View All Studies'' link provides an overview of publicly
+accessible studies.  Users interested in viewing and analyzing data sets
+made available by investigators should use this link as a starting
+point.
+\begin{itemize}
+\item searching and sorting capabilities can be used to identify studies of
+  interest
+\item clicking on the ``Study Name'' link will provide information on the
+  source of the study  (typically the PubMed entry)
+\item clicking on ``Full View'' provides detailed information about a study,
+  including the study abstract, the condition grouping, the default
+  GEOSS analysis results, and a shortcut to creating your own analysis
+  tree using the data from the study in question
+\end{itemize}
+\end{slide}
+
+\begin{slide}
+\heading{File Management}
+The ``View My Files'' link allows the user to view and/or download files that
+they have access to.  For public users, this is primarily analysis
+results files.
+\begin{itemize}
+\item use the ``Directories'' section to navigate to the directory you wish to
+  view.  Note that results files for each analysis tree are in their own
+  directory
+\item use the ``Files'' section to view/download a file by clicking on the
+  link in the ``File'' column
+\end{itemize}
+\end{slide}
+
+\begin{slide}
+\heading{Analysis Trees}
+
+GEOSS analyses are called ``Analysis Trees''.  Each tree consists of one
+or more analyses being performed on a set of input data.  In order to
+create an analysis tree, we must define several items:
+\begin{itemize}
+\item the data source
+\item the data grouping
+\item the analyses to perform, including their order and parameters
+\end{itemize}
+\end{slide}
+
+\begin{slide}
+\heading{Data Sources}
+
+There are three possible data sources available to public users:
+\begin{enumerate}
+\item Array Study \\
+A study that is already defined in the system and has been made
+accessible to public users.  The data is already loaded and the chips
+have been grouped into conditions.  These include a collection of
+publicly-available biomedical microarray data sets.
+\item Analysis Set \\
+A customized grouping of chips into conditions, and conditions into
+sets.  The chip data may have been uploaded by the user or may be
+obtained from data other users have made available.
+\item UVa Public Data \\
+UVa array studies that have been made publicly available.  The data is
+already loaded and the chips have been grouped into conditions.
+\end{enumerate}
+\end{slide}
+
+\begin{slide}
+\heading{Creating a Tree}
+
+Trees can be created using the ``Create/Run a new analysis tree'' link.
+\begin{itemize}
+\item provide a unique name
+\item specify a structure (we recommend starting with the default
+structure and modifying it as needed)
+\item designate a data source type and then click ``Choose Source''
+\item pick the specific source then click ``Next''
+\end{itemize}
+\end{slide}
+
+\begin{slide}
+\heading{Refining a tree}
+
+The ``Edit Analysis Tree'' page allows you to refine the tree structure.
+You can:
+\begin{itemize}
+\item Add/Remove modules
+\item Set the parameters for each node
+\item View help for a particular node
+\end{itemize}
+
+When you have completed tree configuration, you may run the tree by
+clicking ``Run Analysis''
+\end{slide}
+
+\begin{slide}
+\heading{Tree Result Files}
+
+You will receive an email indicating the status of your analysis when
+the analysis is complete.  Tree result files can be viewed via the
+``View My Files'' link.  Alternatively, several shortcuts to tree
+results are provided:
+\begin{itemize}
+\item the ``View tree files'' link from Edit Analysis Tree
+\item the ``View Analysis Result Files'' from the Full View inside the Study
+  Viewer
+\item the ``file repository'' link from ``Run Analysis Tree''
+\item a link in the status email
+\end{itemize}
+Results files include:
+\begin{itemize}
+\item module-specific output files
+\item error log for each module
+\end{itemize}
+\end{slide}
+
+\begin{slide}
+\heading{Advanced Data Preparation}
+
+The Advanced Data Preparation links allow users to specify their own
+grouping.  This allows them to use their own data or to specify
+customized grouping of others data.
+
+You must upload your own data prior to grouping and analyzing it.  
+\end{slide}
+
+\begin{slide}
+\heading{Upload external array data file or a criteria file}
+
+To upload data use the  ``Upload external array data file or a criteria 
+file'' link.  
+
+\begin{itemize}
+\item currently, only data files generated using mas5 or GCOS may be
+    uploaded
+\item specify the data file to upload
+\item specify the chip type associated with the data file
+\item provide a unique, meaningful name for the chip data
+\end{itemize}
+
+Click on ``Upload'', to upload the data.  Note that if you are uploading
+large data files, there may be some delays associated with this action.
+
+Currently public users can only load chips individually. Future versions
+may make bulk chip loading available to public users.
+\end{slide}
+
+\begin{slide}
+\heading{Grouping Terminology}
+
+Analysis Condition - a grouping of several chips into one condition.
+Chips in the same condition should be either biological or technical
+replicates.  As such, they will have the same chip layout.  There must
+be one or more chips in each condition.
+
+Analysis Set - a grouping of analysis conditions.  There must be two
+or more conditions in an analysis set.
+\end{slide}
+
+\begin{slide}
+\heading{Building an Analysis Condition}
+
+The ``Create new analysis condition'' link can be used to build an
+analysis condition.
+
+Hybridizations can be specified from a variety of sources:
+\begin{itemize}
+\item uploaded hybridizations are accessible from choosing
+    ``Hybridizations'' as the source.
+\item multiple hybridizations can be added at once by choosing one of the
+    other options.  For instance, choosing studies as a source would add
+    all conditions associated with a specific study to the analysis
+    condition.
+\item criteria files can be used to select hybridizations to add based on
+    specified criteria.  For instance, your criteria file might specify
+    the gender and age associated with a set of hybridizations.  You
+    could then specify a condition that contains only samples taken from
+    males over 50.
+\end{itemize}
+\end{slide}
+
+\begin{slide}
+\heading{Building an Analysis Set}
+
+The ``Create new analysis set'' link can be used to build an analysis set.
+
+Again, several sources are available:
+\begin{itemize}
+\item if you select ``Analysis Conditions'' as the source, you can choose the
+  conditions you just created to be included in the set
+\item other options provide shortcuts.  For instance, if you choose an
+  entire study, the system will automatically build the analysis
+  conditions for you and you can refine those conditions as appropriate
+\end{itemize}
+
+As discussed earlier, ``Analysis Sets'' are one of the possible inputs to
+a tree.  The newly created set can now be analyzed.       
+\end{slide}
+
+\begin{slide}
+\heading{Example:  Analyze your own data}
+\begin{enumerate}
+\item Upload each chip file using ``Upload an external array data file or
+criteria file''
+\item Group all the chips in to analysis conditions using ``Create new
+analysis condition''
+\item Group all the analysis conditions together into an analysis set using
+``Create new set of conditions''
+\item Click on ``Create tree using this Set''
+\item Run the tree
+\item View the results via ``View my files''
+\end{enumerate}
+\end{slide}
+
+\begin{slide}
+\heading{Example: Get analysis results from public data}
+\begin{enumerate}
+\item Use ``View all studies'' to find a study of interest
+\item Click on ``Full View'' for detail on the study.  Use ``View Analysis
+Result File'' to see the default analysis results for the study.
+\item If you wish to create a customized tree, provide a name and 
+click on ``Create Customized Data Set for Analysis'' from the full view.
+\item Customize set and conditions
+\item Click on ``Create tree using this Set''
+\item Run the tree
+\item View the results via ``View my files''
+\end{enumerate}
+\end{slide}
+
+\begin{slide}
+\heading{Account Management}
+
+These links provide the ability to modify account settings including:
+\begin{itemize}
+\item personal info (email address)
+\item password
+\item other users in your group who may see your data
+\end{itemize}
+\end{slide}
+
+\begin{slide}
+\heading{Future GEOSS development}
+
+Future GEOSS development plans include:
+\begin{itemize}
+\item add more public, biomedical microarray data sets based on user
+feedback
+\item add more analysis tools, such as classification methods (LDA, QDA,
+SVM) for biomarker discovery based on user demand
+\item support cDNA data and other customized microarrays
+\end{itemize}
+\end{slide}
+
+\begin{slide}
+\heading{Availability}
+
+It is not necessary to download GEOSS in order to use the public
+service.  However if you are interested in installing your own version
+of GEOSS to support an array center processing chip data, to analyze
+data, or to build custom analyses, GEOSS can be obtained from: \\
+\texttt{http://sourceforge.net/projects/geoss/}
+
+Questions can be sent to: \\
+  \texttt{geoss@biostat.virginia.edu}
+\end{slide}
+
+\end{document}

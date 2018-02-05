@@ -1,0 +1,21 @@
+To: {email}
+Cc: {ccMail}
+From: {fromMail}
+Subject: GEOSS account is ready
+Dear {name},
+
+Thank you for requesting a GEOSS account.  Your account has been created.
+
+Your login name is: {login}
+
+For security purposes, you will be required to change your password 
+immediately after logon.  You must logon to the system in the next 
+{days} days for your account to become permanent.
+
+To login, visit:
+
+{nextURL}
+
+Thank you
+
+GEOSS Admins

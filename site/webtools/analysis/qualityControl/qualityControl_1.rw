@@ -1,0 +1,188 @@
+
+# This function performs quality control and normalization on gene chip data.
+#
+# geneData: dataframe with Probe.Set.Name in the first column, and signals for all chips.
+# lwss is a logical variable, whether to do lowess normalization; defaults to FALSE.
+#
+#	 outdata, outtxt, outgph - output filenames
+#	 conditions - a numeric vector describing experiment set
+#
+# OUTPUT: sensitivity and specificity
+#     outdata - data file that can be read by subsequent analyses
+# 	  outtxt  - text analysis info 
+#	  outgph - graphical analysis
+#
+
+qualityControl <- function(geneData, outdata, outtxt, outgph, conditions, lwss=FALSE)
+{
+
+  # include necessary functions
+
+  #remove control spots
+  #expected format Probe.Set.Name -Signal columns named "set.chip"
+  geneData <- geneData[substring(geneData[,1],1,4)!='AFFX',]
+  #remove Probe.Set.Name and make type numeric for the applies below
+
+  geneSigs <- geneData[,-1]
+
+  geneSigs.N <- btwn.norm(geneSigs)
+  labels <- as.character(geneData[,1])
+  if (lwss) geneSigs.N <- lowess.nor.mult(geneSigs.N)
+
+  if(length(which(geneSigs.N<1)) >0) geneSigs.N[geneSigs.N<1] <- 1
+
+
+  # output data after normalization
+  tmp <- cbind(Probe.Set=labels , geneSigs.N)
+# writes a tab-delimited file with column headers, and with the first column=Probe.Set
+  write.table( tmp , outdata, sep='\t', row.names=FALSE);
+
+
+  #Threshold and log adjusted avg difference
+  geneSigs.N <- data.frame(logb(geneSigs.N,base=2))
+
+  # output graph data
+  if (gphFormat == "jpg")
+  {
+	bitmap(file=outgph, type="jpeg")
+	pairs(geneSigs.N,pch=".")
+	graphics.off()
+  }
+  if (gphFormat == "pdf")
+  {
+	pdf(file=outgph)
+	pairs(geneSigs.N, pch=".")
+	dev.off()
+  }
+
+  #calculate values for specificity and sensitivity
+  tmp.cor <- cor(geneSigs.N,use="complete.obs")
+
+  write("Correlation: ", outtxt, append=FALSE)
+
+
+# write a tab-separated matrix of numbers with row and column headings.
+tmp2 <- as.data.frame(tmp.cor)
+tmp3 <- cbind(rownames(tmp.cor))
+tmp4 <- cbind('cor'=tmp3, tmp2)
+  write.table( tmp4 , outtxt, sep='\t', row.names=FALSE, append=TRUE);
+
+  write("\n", outtxt, append=TRUE)
+
+
+  numConditions <- length(conditions)
+  meanList <- c()
+  x <- 1
+  rowbase <- 1
+  while (x <= numConditions)
+  {
+	replicates <- conditions[x]
+	rowIdx <- rowbase
+	rowLess <- rowbase + replicates - 1
+        colLess <- rowbase + replicates
+	while (rowIdx < rowLess)
+        {
+	  colIdx <- rowIdx + 1
+	  while (colIdx < colLess)
+          {
+		meanList <- c(meanList, tmp.cor[rowIdx,colIdx])
+		colIdx <- colIdx + 1
+   	  }
+ 	  rowIdx <- rowIdx + 1
+	} 	
+        rowbase <- rowIdx+1
+ 	x <- x + 1
+  }
+  specificity <- mean(meanList)
+  sensitivity <- specificity - mean( 
+	setdiff(tmp.cor[lower.tri(tmp.cor)], meanList))
+ 
+  #output sensitivity and specificity values
+  write("Specificity: ", outtxt, append=TRUE)
+  write(specificity, outtxt, append=TRUE)
+  write("\n", outtxt, append=TRUE)
+  write("Sensitivity: ", outtxt, append=TRUE)
+  write(sensitivity, outtxt, append=TRUE)
+  write("\n", outtxt, append=TRUE)
+
+  return(tmp)
+
+} #qualityControl
+
+
+# This function performs lowess normalization on 
+# gene chip data.  The function is intended to handle data for
+# up to 20 chips.  
+#
+# INPUT: array with columns of data representing pairs on which to perform
+# 	 lowess normalization
+#	 outfile - name of output file for output data
+#
+# OUTPUT: out - array of x, y normalization values.
+# 	  outfile  - text analysis info 
+#
+# FUNCTIONALITY: 
+# This function will assume the first column in the input array is the column
+# to compare all other columns against.  It then performs lowess normalization
+# for each column.
+#
+lowess.nor.mult <- function(datacols)
+{
+        out <- c()
+	numCols <- ncol(datacols)
+	x <- datacols[,1]
+	for (i in 2:numCols)
+	{	
+		y <- datacols[,i]
+        	na.point <- (1:length(x))[!is.na(x) & !is.na(y)]
+        	x <- x[na.point]; y <- y[na.point]
+        	fit <- lowess(x+y, y-x)
+        	# moc: changed from approx(fit,x+y)
+        	diff.fit <- approx(fit$x,fit$y,x+y)
+        	diffy <- y - diff.fit$y
+		out <- cbind(out, diffy)
+	}
+	
+	outData <- cbind(x, out)
+colnames(outData) <- colnames(datacols)
+# returns a matrix with column headers, but without probe.sets as a first column.
+        return(outData)
+}
+
+
+### IQR normalization between channels or chips ###
+btwn.norm <- function(tmp)
+{  
+	#Adjust IQ ranges to be the same as max of IQRs
+	divisor <- matrix(rep(apply(tmp,2,iqrfn)/max(apply(tmp,2,iqrfn)),
+					dim(tmp)[1]), nrow=dim(tmp)[1],byrow=T)
+	tmp.adj <- tmp/divisor
+	
+	#Adjust medians to be the same as max of medians
+	adjustment <- matrix(rep(max(apply(tmp.adj,2,median,na.rm=T))-apply(tmp.adj,2,median,na.rm=T),
+	  					dim(tmp.adj)[1]),nrow=dim(tmp.adj)[1],byrow=T)
+	tmp.adj2 <- tmp.adj+adjustment
+	return(tmp.adj2)
+}
+
+iqrfn <- function(x)
+{
+    quantile(x,0.75,na.rm=T)-quantile(x,0.25,na.rm=T)
+}
+
+### MAIN ###
+### REPLACE infile ###
+geneData <- read.delim("infile", header=TRUE)
+### REPLACE conds
+conditions <- c(conds)
+### REPLACE graphFormat
+gphFormat <- "graphFormat"
+### REPLACE outfile ###
+qualityControl(geneData, "outfile",
+### REPLACE outtxt ###
+"outtxt",
+### REPLACE outgph ###
+"outgph", conditions,
+### REPLACE lowess ###
+lowess)
+

@@ -1,0 +1,54 @@
+<loop> 
+<table width="700" border=0 cellspacing=0 cellpadding=3>
+  <tr> 
+    <td valign="top" bgcolor="#99CC99"> 
+      <table width="100%" border="0" cellspacing="5" cellpadding="0" bgcolor="#FFFFFF">
+        <tr> 
+          <td width="30%" valign="top"> 
+            <form action="edit_study.cgi" method="post">
+              <div align="right"> 
+                <input type=submit name=submit2 value="Edit Array Study">
+                <input type="image" border="0" name="imageField" src="../graphics/pencil.gif" width="25" height="25">
+                <input type=hidden name="pk" value="{pk}">
+              </div>
+            </form>
+          </td>
+          <td width="70%" valign="top"> </td>
+        </tr>
+        <tr> 
+          <td width="30%" valign="top"> 
+            <div align="right"><b>Array Study name</b>:</div>
+          </td>
+          <td width="70%" valign="top">{name}</td>
+        </tr>
+        <tr> 
+          <td width="30%" valign="top"> 
+            <div align="right">Date started:</div>
+          </td>
+          <td width="70%" valign="top">{date}</td>
+        </tr>
+        <tr> 
+          <td width="30%" valign="top"> 
+            <div align="right">Status:</div>
+          </td>
+          <td width="70%" valign="top">{status}</td>
+        </tr>
+        <tr> 
+          <td width="30%" valign="top"> 
+            <div align="right">Comments:</div>
+          </td>
+          <td width="70%" valign="top">{comments}</td>
+        </tr>
+        <tr> 
+          <td width="30%" valign="top"> 
+            <div align="right">Number of conditions:</div>
+          </td>
+          <td width="70%" valign="top">{number_of_conditions}</td>
+        </tr>
+        {delete}
+      </table>
+    </td>
+  </tr>
+</table>
+<br>
+</loop> <br>

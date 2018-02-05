@@ -1,0 +1,110 @@
+<form action="edit_study.cgi" method=POST>
+  <table width="90%" cellpadding="2">
+    <tr>
+      <th colspan=2 align="left">Edit Study Configuration</th>
+      <td>Status:</td>
+      <td>{status}</td>
+    </tr>
+    <tr>
+      <td>
+        *Study Name:
+        <a href="study_names.cgi"><small>[Names In Use]</small></a>
+      </td>
+      <td>
+        {name}
+      </td>
+      <td>
+        *Owner/Group: 
+      </td>
+      <td>
+        {user_pi}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Start Date (YYYY-MM-DD)
+      </td>
+      <td>
+        <input type="text" name="date" value="{date}" 
+        maxlength="128">
+      </td>
+      <td>
+        Classification
+      </td>
+      <td>
+        {classification_select}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        Comments
+      </td>
+      <td colspan=3> 
+        <textarea name="comments" rows=2 cols="72">{comments}</textarea>
+      </td>
+    </tr>
+    <tr>
+      <td colspan=4><hr></td>
+    </tr>
+    <tr>
+      <th colspan=4 align="left">Edit Defaults for Conditions and Samples
+      Associated with this Study</th>
+    </tr>
+    <tr>
+      <td colspan=4><font color="#808000">Note: Default values will
+      apply to all <b>new</b> experimental conditions.  Settings defaults 
+      values will reduce configuration time.
+        </font>
+      </td>
+    </tr>
+    <tr>
+      <td>Chip Type:</td>
+      <td>{select_arraylayout}</td>
+      <td>Species:</td>
+      <td>{select_species}</td>
+    </tr>
+    <tr>
+      <td>*Number of samples per condition (biological replicates):</td>
+      <td><input type="text" name="bio_reps"
+        value="{bio_reps}" size=5><br></td>
+      <td>*Number of chips per sample (chip replicates):</td>
+      <td><input type="text" name="chip_reps"
+        value="{chip_reps}" size=5><br></td>
+    </tr>
+    <tr>
+      <td>Lab Notebook ID:</td>
+      <td><input type="text" name="lab_book" 
+        value="{lab_book}"><br></td>
+      <td>Lab Notebook Owner:</td>
+      <td>{select_lab_book_owner}<br></td>
+    </tr>
+    <tr>
+      <td colspan=3>Sample type for microarray analysis:</td>
+      <td><select name="sample_type">
+        <option value="tissue">tissue</option>
+        <option value="cells">cells</option>
+        <option value="total RNA">total RNA</option>
+        </select>
+      </td>
+    </tr>
+    <tr>
+      <td>Sample Origin:</td>
+      <td><textarea rows="2" name="sample_origin" cols="25"
+        wrap="virtual">{sample_origin}</textarea></td><br>
+      <td>Sample manipulation:</td>
+      <td><textarea align="left" rows="2" name="sample_manipulation"
+        cols="25" wrap="virtual">{sample_manipulation}</textarea></td>
+    </tr>
+    <tr>
+      <td colspan=4><hr></td>
+    </tr>
+  </table>
+  {submit_html}
+ 
+  <input type=hidden name="pk" value="{pk}">
+  <hr>
+  {exp_cond_html}
+{submit2_html}
+<br>
+</form>
+<small> * denotes mandatory field</small>

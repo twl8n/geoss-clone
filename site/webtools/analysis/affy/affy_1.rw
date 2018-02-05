@@ -1,0 +1,37 @@
+### MAIN ###
+
+### REPLACE transformation ###
+trans<-transformation
+### REPLACE indirectory ###
+indir<-indirectory
+### REPLACE logfile ###
+log<-logfile
+
+library(affy)
+
+if (trans == "rma")
+{
+  eset<-justRMA(Data)
+}
+
+if (trans = "mas5")
+{
+  Data<-ReadAffy()
+  eset<-mas5(Data)
+}
+
+if (trans = "liwong")
+{
+  Data<-ReadAffy()
+  eset<-expresso(Data, normalize.method="invariantset", bg.correct=FALSE, 
+    pmcorrect.method="pmonly", summary.method="liwong")
+}
+
+### REPLACE outfile ###
+write.exprs(eset, file=outfile);
+
+
+
+### REPLACE infile ###
+Data <- ReadAffy() # assumes all CEL files in the current directory
+

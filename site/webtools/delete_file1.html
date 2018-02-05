@@ -1,0 +1,19 @@
+<a href="./files2.cgi?pwd={pwd}&file_pattern={file_pattern}&view_tree={view_tree}">Cancel</a><br>
+<br>
+<table width="600" border=1 cellspacing=0 cellpadding=3>
+<tr>
+    <td valign="top"> Are you sure you want to delete file &quot;{file_name}&quot;? 
+      <br>
+</td>
+<td valign=top width="30%">
+<form action="delete_file2.cgi" method="post">
+      <input type="hidden" name="fi_pk" value="{fi_pk}">
+      <input type="hidden" name="pwd" value="{pwd}">
+      <input type="hidden" name="file_pattern" value="{file_pattern}">
+      <input type="hidden" name="view_tree" value="{view_tree}">
+      <input type="submit" name="submit" value="Delete">
+</form>
+
+</td>
+</tr>
+</table>

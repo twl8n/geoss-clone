@@ -1,0 +1,71 @@
+<html>
+<head><title>Filter Documentation</title></head>
+<body bgcolor="#FFFFFF">
+<p><b>Description</b><br>
+The filter module allows one to triage genes for further analysis, such as
+clustering and functional analysis, based on a combination of several
+criteria, such as fold change, two-sample t-test p-value, and LPE-test
+p-value. <br>
+Reference: Nitin Jain, Jayant Thatte, Thomas Braciale, Klaus Ley, Michael
+O'Connell, and Jae K. Lee (2003).  Local pooled error test for identifying
+differentially expressed genes with a small number of replicated microarrays,
+to appear in Bioinformatics.<br>
+</p>
+<p><br>
+<b>Input files</b><br>
+  Filter expects input in this form:<br>
+</p>
+<ul>
+  <li> a file containing differential discovery results. The file should have row and column labels.<br>
+    <br>
+</ul>
+Analyses that create input in this format include:<br>
+<ul>
+  <li>diffDiscover<br>
+</ul>
+<p>&nbsp;</p>
+<p><b>Output files</b><br>
+  Filter creates the following output:<br>
+</p>
+<ul>
+  <li> A filtered data file containing a subset of input rows
+</ul>
+Analyses that accept filter output as input include:<br>
+<ul>
+  <li>permCluster<br>
+</ul>
+<p>&nbsp;</p>
+<p><b>Parameters:</b><br>
+</p>
+<ul>
+  <li> Two conditions to compare - vector levels of two conditions for
+comparison<br>
+  <li> Filter on t-p-value - whether to use t-statistics for filtering<br>
+  <li> Select for t-p-value <= - t-stat p-value<br>
+  <li> Maximum number of rows to return - maximum number of genes by t-stat
+(if you exceed 1900 rows, the files generated with the treedraw module will
+not be viewable with Acrobat Reader)<br>
+  <li> Filter on LPE - whether to use LPE test for filtering<br>
+  <li> Select for LPE values <= - LPE FDR p-value (Benjamini & Yekutieli,
+2001)<br>
+  <li> Maximum number of rows to return - maximum number of genes by LPE<br>
+  <li> Filter on LPEBY - whether to use LPE test for filtering<br>
+  <li> Select for LPEBY values <= - LPEBY FDR p-value (Benjamini & Yekutieli,
+2001)<br>
+  <li> Maximum number of rows to return - maximum number of genes by LPEBY<br>
+  <li> Filter on fold change - whether to use fold change criterion for
+testing<br>
+  <li> Select for fold change values >= - fold change value<br>
+  <li> Maximum number of rows to return - maximum number of genes by FC<br>
+  <li> Intermediate data filename - name of the data file to pass to other analysis nodes<br>
+  <li> Log filename - name of the file containing log and error messages<br>
+</ul>
+<p><br>
+Note: If no criteria are selected for filtering, LPE will be used.  If
+multiple criteria are selected, the order of precedence is: LPE, LPEBY, TP,
+FC.
+  <br>
+</p>
+</body></html>
+
+

@@ -1,0 +1,102 @@
+<br><br>
+<loop> 
+<table width="750" border="0" cellpadding="3" cellspacing="0">
+<tr>
+<td bgcolor="#990066">
+<form name="form" method="post" action="org_approve2.cgi">
+<table width="100%" border="0" cellpadding="2" cellspacing="0" bgcolor="#FFFFFF">
+  <tr> 
+    <td valign="top"> 
+      <input type="hidden" name="state_{oi_pk}" value="1">
+      <input type="hidden" name="org_pk_{oi_pk}" value="{org_pk}">
+      <input type="hidden" name="order_number_{oi_pk}" value="{order_number}">
+        {message}
+        <table width="100%" border="0" cellpadding="2" cellspacing="0">
+          <tr> 
+            <td width="10%" valign="top"> 
+              <input type=hidden name="oi_pk" value={oi_pk}>
+              <div align="right">Owner:</div>
+            </td>
+            <td width="30%">&nbsp;<a href="../curtools/view_account.cgi?login={login}">{contact_fname} {contact_lname}</a></td>
+            <td width="10%" valign="top"><div align="right">Created by:</div>
+            </td>
+            <td width="30%">&nbsp;<a href="../curtools/view_account.cgi?login={created_by_login}">{created_by_fname} {created_by_lname}</a> </td>
+          </tr>
+          <tr> 
+            <td width="30%"> 
+              <div align="right">Order number: </div>
+            </td>
+            <td width="70%">&nbsp;<b>{order_number}</b></td>
+            <td width="30%"> 
+              <div align="right">Number of samples:</div>
+            </td>
+            <td width=70%>&nbsp;{number_of_samples}</td>
+          </tr>
+          <tr> 
+            <td> 
+              <div align="right">Order Status: </div>
+            </td>
+            <td> 
+              &nbsp;{order_status}
+            </td>
+            <td> 
+              <div align="right">Approved Date: </div>
+            </td>
+            <td> 
+              &nbsp;{approval_date}
+            </td>
+          </tr>
+          <tr> 
+            <td> 
+              <div align="right">Billing Code: </div>
+            </td>
+            <td> 
+              &nbsp;{billing_code}
+            </td>
+            <td> 
+              <div align="right">&nbsp;</div>
+            </td>
+            <td> 
+              &nbsp;
+            </td>
+          </tr>
+          <tr>
+            <td width="30%">
+              <div align="right">Approval Comments: </div>
+            </td>
+            <td width="70" colspan=3>
+              <textarea rows=5 cols=80 name=approval_comments_{oi_pk}>{approval_comments}</textarea>
+            </td>
+          </tr>
+        </table>
+        <font color="#FF0000">{message}</font>
+      <br>
+      <table width="100%" border=0 cellpadding=2 cellspacing=0>
+        <tr bgcolor="#99FFCC"> 
+          <td valign="top">Hyb. Name</td>
+          <td valign="top">Chip</td>
+          <td valign="top">Study name</td>
+          <td valign="top">Protocol name</td>
+        </tr>
+        <loop2> 
+        <tr> 
+          <td>{hybridization_name}</td>
+          <td>{al_name}</td>
+          <td><a href="../curtools/show_study_curator.cgi?sty_pk={sty_pk}">{study_name}</a></td>
+          <td>{ec_name}</td>
+        </tr>
+        </loop2> 
+      </table>
+    </td>
+  </tr>
+  <tr><td>
+  {approve_button}
+  </td>
+  <tr>
+</table>
+</td>
+</tr>
+</table>
+<br>
+</form>
+</loop>

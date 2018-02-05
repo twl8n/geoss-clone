@@ -1,0 +1,1182 @@
+<glossary id="glossary"><title>&product; Glossary</title>
+<para>
+</para>
+
+<glossdiv><title>A</title>
+
+<glossentry id="administrator_user">
+<glossterm>
+Administrator User
+</glossterm>
+<glossdef>
+  <para> The Administrator User oversees the entire
+  system. He/she will maintain configuration parameters, manage user
+  accounts, and maintain general operation of the system.  </para>
+  <glossseealso otherterm="users">Users</glossseealso>
+</glossdef>
+</glossentry>
+
+<glossentry id="analysis_condition">
+<glossterm>
+Analysis Condition
+</glossterm>
+<glossdef>
+  <para>Analysis conditions are used to analyze data using <link
+  linkend="analysis_tree">analysis trees</link>.  Most analyses compare 
+  one or more conditions.  An analysis condition contains data for at least one 
+  or more gene chips.  When a condition contains more than one <link 
+  linkend="chip">chip</link>, 
+  the chips should be generally biological or technical replicates.  Most analysis 
+  conditions correspond directly to an <link
+  linkend="experiment_condition">experimental condition</link> and are 
+  typically created automatically when a user creates an analysis tree 
+  for a specific <link linkend="array_study">study</link>.  However, 
+    <link linkend="users">users</link> may create their own analysis 
+  conditions.  This is useful when grouping data in a non-default 
+  configuration or for grouping user uploaded data (as such data does 
+  not belong to a study).</para>
+</glossdef>
+</glossentry>
+
+<glossentry id="analysis_files"><glossterm>
+  Analysis Files</glossterm>
+<glossdef>
+  <para>
+  There are many kinds of files involved in running <link
+  linkend="analysis">analyses</link> using <link
+  linkend="analysis_tree">analysis trees</link>.  These files are
+  called analysis files.  They include an input file that contains
+  relevant chip data in a specific format, intermediate data files that
+  pass data from one analysis to another, and result files that contain
+  the results of each analysis module.  Data on the interpretation of
+  analysis result files are included in the help for each analysis. 
+  </para>
+</glossdef>
+</glossentry>
+
+<glossentry id="analysis_set">
+<glossterm>
+Analysis Set
+</glossterm>
+<glossdef>
+  <para>Analysis sets are used to analyze data using 
+  <link linkend="analysis_tree">analysis trees</link>.  An analysis set 
+  should consist of one or more 
+  <link linkend="analysis_condition">analysis conditions</link>.  
+  Most analysis sets are created automatically when a user creates an 
+  analysis tree.  If the user specifies a specific 
+  <link linkend="array_study">array study</link> as input, the analysis set 
+   will be created with the analysis conditions corresponding 
+  to the <link linkend="experiment_condition">experimental conditions</link>
+   associated with the study.  <link linkend="users">Users</link> can 
+   create their own analysis sets.  This is useful when grouping data 
+   in a non-default configuration or for grouping user uploaded data (as 
+   such data does not belong to a study).</para>
+</glossdef>
+</glossentry>
+
+<glossentry id="array_center">
+<glossterm>
+Array Center
+</glossterm>
+<glossdef>
+  <para>The center or facility in charge of ordering chips and  performing  
+microarray gene 
+  expression experiments.</para>
+</glossdef>
+</glossentry>
+
+<glossentry id="array_center_staff_user">
+<glossterm>Array Center Staff User</glossterm>
+<glossdef>
+  <para>The Array Center Staff User is responsible for performing 
+  microarray
+  experiments. This type of user will manage orders, hybridize chips,
+  collect and upload chip data to the &product; system, and bill
+  for services as appropriate.</para>
+  <glossseealso otherterm="users">Users</glossseealso>
+</glossdef>
+</glossentry>
+
+<glossentry id="analysis">
+<glossterm>
+Analysis or Analysis Module
+</glossterm>
+<glossdef>
+  <para>
+
+An analysis (module) is an analysis unit that performs a certain analysis function
+based on an input data set; it also typically  produces one or more output
+data files for interpretation and/or for the use of other connecting analysis modules. 
+Typical analysis modules perform statistical calculations, functional/annotational analysis,
+ and formatting data.
+Analysis modules can be written in many languages, as long as they can
+be successfully run from the command line on a Linux system. New analysis modules must be 
+added by an <link linkend="administrator_user">administrator user</link>. 
+Current analyses are written
+in Perl and R. If the output from one analysis can be used as input to
+another analysis, they can be chained together in a tree.
+  </para>
+</glossdef>
+</glossentry>
+
+
+<glossentry id="analysis_tree">
+<glossterm>
+Analysis Tree
+</glossterm>
+<glossdef>
+  <para>An analysis tree corresponds to an integrated scheme of data analysis
+  designed by each user.  
+  Each tree requires input, produces output, and performs a variety of 
+  calculations and analyses on the input data based on the nodes of analysis modules 
+  constructed in the tree.  Each node can be chosen and defined from any   
+  <link linkend="analysis">analysis</link> modules</para> compatible with connecting nodes. 
+</glossdef>
+</glossentry>
+
+<glossentry id="array_order">
+<glossterm>
+Array Order
+</glossterm>
+<glossdef>
+  <para> A request for an array order is initiated by a &product; 
+  <link linkend="member_user">member user</link> and submitted to the 
+  <link linkend="array_center_staff_user">array center
+  staff user</link> for processing. It consists of a request to have 
+  <link linkend="sample">samples</link>
+  hybridized to <link linkend="chip">gene chips</link>. The array 
+  center staff user generates the array order for the member user 
+  and then follows through with the
+  work request once the member user has supplied all required information
+  pertaining to the request.</para>
+</glossdef>
+</glossentry>
+
+<glossentry id="array_study">
+<glossterm>
+Array Study
+</glossterm>
+<glossdef>
+  <para>Defined by the <link linkend="member_user">member user</link>,
+  an array study is a way of defining and describing a project being
+  worked on by a particular member user and/or his/her <link linkend="group">
+  group</link>.  An array study is the main logical entity that can hold all <link
+  linkend="experiment_condition">experimental conditions</link> under a coherent
+  study theme.
+  More than one <link linkend="array_order">array order</link> can be
+  associated with a single array study.  Additionally, you can add new
+  experimental conditions to an array study as time passed. 
+ </para>
+</glossdef>
+</glossentry>
+
+
+</glossdiv>
+
+<glossdiv><title>B</title>
+
+<glossentry id="biological_replicate">
+<glossterm>
+Biological Replicate
+</glossterm>
+<glossdef>
+  <para>
+Biological Replicates are different biological subjects under a same
+experimental or treatment condition that can show individual sampling
+variability of the target population.
+  </para>
+</glossdef>
+</glossentry>
+
+</glossdiv>
+
+<glossdiv><title>C</title>
+
+<glossentry id="categorical_parameter">
+<glossterm>
+Categorical Parameter
+</glossterm>
+<glossdef>
+  <para>
+  A type of parameter used by <link linkend="criteria_file">criteria
+  files</link>.  A categorical parameter is a categorization that has a
+  finite number of distinct options.  An example of such a parameter is
+  gender, which has two levels of option "male" and "female".
+  </para>
+  <glossseealso otherterm="continuous_parameter">Continuous Parameter</glossseealso>
+</glossdef>
+</glossentry>
+
+<glossentry id="cdna">
+<glossterm>
+cDNA
+</glossterm>
+<glossdef>
+  <para>cDNA (complementary DNA) is DNA that is reverse-transcribed from an mRNA
+  template.  cDNA microarrays are one of widely-used microarray technologies for measuring
+  gene expression. Currently, &product; does not support the data analysis from this
+  platform; this support is planned to be developed in 2005.  &product; currently supports
+  the Affymetrix <productname
+  class="registered">GeneChip</productname> data.</para>
+</glossdef>
+</glossentry>
+
+<glossentry id="chip">
+<glossterm>
+Chip
+</glossterm>
+<glossdef>
+  <para>
+  A small (a few centimeters on each side) glass or other solid surface
+  on which thousands of immobilized oligonucleotide probes (or cDNA clones) have been
+  synthesized or robotically deposited in a predetermined array, so that
+  automated recording of fluorescence from each of the positions may be
+  easily determined.  Also called an array, an array, or a
+  microarray.
+  </para>
+</glossdef>
+</glossentry>
+
+<glossentry id="chip_cost">
+<glossterm>
+Chip Cost
+</glossterm>
+<glossdef>
+  <para>Each <link linkend="chip">chip</link> has a cost associated with
+  it.  The price is set when the <link linkend="layout">layout</link> is
+  added and cannot be modified except through direct interaction with
+  the database.  The chip cost is used in calculating the bill for an
+  <link linkend="array_order"> array order</link>.</para>
+</glossdef>
+</glossentry>
+
+<glossentry id="chip_data_files">
+<glossterm>
+Chip Data Files
+</glossterm>
+<glossdef>
+  <para>When the <link linkend="array_center_staff_user">array center 
+  staff user</link> runs the array experiment the results are stored in chip
+  data files.  Once the array center staff user loads the data, these 
+  files are available for download.  File formats may include: 
+    
+  <variablelist>
+    <varlistentry>
+    <term>
+    cel 
+    </term>
+    <listitem>
+    <para>
+    CEL files contain intensity values of all individual (perfect-match 
+    and mis-match) probes on an array
+    </para>
+    </listitem>
+    </varlistentry>
+    <varlistentry>
+    <term>
+    dat 
+    </term>
+    <listitem>
+    <para>
+    an chip image file including information on pixel intensities, grid
+    coordinates, and scan parameters
+    </para>
+    </listitem>
+    </varlistentry>
+    <varlistentry>
+    <term>
+    chp 
+    </term>
+    <listitem>
+    <para>
+    the CHP file contains the analysis results with one summary intensity
+    value for each probe set from the probe pairs on the set (by Tukey's
+    bi-weight statistics); this file can be obtained by  the GeneChip
+    Operating Software, GCOS 1.0 (January `05)
+    </para>
+    </listitem>
+    </varlistentry>
+    <varlistentry>
+    <term>
+    exp 
+    </term>
+    <listitem>
+    <para>
+    The EXP file contains experiment information as captured by
+    GCOS
+    </para>
+    </listitem>
+    </varlistentry>
+    <varlistentry>
+    <term>
+    txt 
+    </term>
+    <listitem>
+    <para>
+    data file containing probe set signals (equivalent to CHP file)
+    </para>
+    </listitem>
+    </varlistentry>
+    <varlistentry>
+    <term>
+    cab 
+    </term>
+    <listitem>
+    <para>
+    a compilation of some of the other files generated by GCOS
+    software
+    </para>
+    </listitem>
+    </varlistentry>
+  </variablelist>
+  
+  </para>
+</glossdef>
+</glossentry>
+
+<glossentry id="chip_data_path">
+<glossterm>
+Chip Data Path
+</glossterm>
+<glossdef>
+  <para>
+  This is the initial location (actual or parent directory) of the 
+  <link linkend="chip_data_files">chip data files.</link>  The <link
+  linkend="array_center_staff_user">array center staff</link> places
+  data files in this directory (or a subdirectory of this directory)
+  prior to loading data.  The <link
+  linkend="administrator_user">&product; administrator</link> must agree
+  on this path with the array center staff and set the "Chip Data Path"
+  field in the <link linkend="configure_&product;">Configure
+  &product;</link> accordingly.
+  </para>
+</glossdef>
+</glossentry>
+
+<glossentry id="chip_name">
+<glossterm>
+Chip Name
+</glossterm>
+<glossdef>
+  <para>
+  Each type of <link linkend="chip">chip</link> has an associated name 
+  that is set by the <link linkend="administrator_user">administrator 
+  user</link> when the <link linkend="layout">layout</link> for that
+  chip is loaded.  If the chip is an Affymetrix 
+  <productname class="registered">GeneChip</productname>, the 
+  &product; name must 
+  correspond to the name specified in the rpt file (under "Probe Array 
+  Type") for data to load correctly.  Otherwise a chip type mismatch 
+  error is detected.  Administrators may specify additional information 
+  about the chip in parenthesis behind the chip name
+  if necessary.  
+  </para>
+  <para>
+  For example, the Affymetrix name for the P.Aeruginoas chip is
+  "Pae_G1a".  The &product; name is "Pae_G1a (p.aeruginoas)."</para>
+</glossdef>
+</glossentry>
+
+<glossentry id="chip_replicate">
+<glossterm>
+Chip Replicate
+</glossterm>
+<glossdef>
+  <para>
+Chip replicates are the technically replicated arrays (or replicated hybridizations)
+with the same RNA samples.
+This kind of replication is useful to identify many false positives in microarray data analysis. 
+  </para>
+</glossdef>
+</glossentry>
+
+<glossentry id="companion_installation">
+<glossterm>
+Companion Installation
+</glossterm>
+<glossdef>
+  <para>
+  Installations that support an <link
+  linkend="array_center">array center</link> may not wish to allow
+  public accounts on that installation.  As public accounts can be
+  created automatically and public users can upload files and run <link
+  linkend="analysis">analyses</link> there are security implications to
+  having public user accounts.  For this reason, a companion
+  installation can be specified in the
+  <link linkend="configure_&product;">&product;
+  Configuration</link>.  Companion installations should be completely
+  separate installations (on different hardware) that support
+  complementary <link linkend="users">user types</link>.
+  </para>
+</glossdef>
+</glossentry>
+
+<glossentry id="continuous_parameter">
+<glossterm>
+Continuous Parameter
+</glossterm>
+<glossdef>
+  <para>
+  A type of parameter used by <link linkend="criteria_file">criteria
+  files</link>.  A continuous parameter is a categorization that has a
+  range of options.  Grouping based on continuous parameters tends to
+  use less than and greater than operators.  An example of such a
+   parameter is age.  Grouping could occur based on age ranges.
+  </para>
+  <glossseealso otherterm="categorical_parameter">Categorical Parameter</glossseealso>
+</glossdef>
+</glossentry>
+
+<glossentry id="criteria_file"><glossterm>
+  Criteria File</glossterm>
+<glossdef>
+  <para>
+  A criteria file is a file uploaded by the user that defines
+  associations between their data.  The criteria file can be used (via
+  the <link linkend="create_new_analysis_condition">Create new analysis
+  condition</link> and the <link
+  linkend="create_new_set_of_conditions">Create new set of conditions</link>
+  links) to create <link linkend="analysis_condition">analysis
+  conditions</link>  and <link linkend="analysis_set">analysis
+  sets</link> based on specific criteria.  For instance, the criteria
+  file might contain gender information for all of your <link
+  linkend="hybridization">hybridizations</link>.  You could then create
+  an analysis condition that contained all data associated with females
+  and an analysis condition for all data associated with males.</para>
+</glossdef>
+</glossentry>
+</glossdiv>
+
+<glossdiv><title>D</title>
+
+<glossentry id="default_public_user">
+<glossterm>
+Default Public User
+</glossterm>
+<glossdef>
+<para>
+This user is created by default by the <link
+linkend="geoss_initialize">geoss_initialize</link> script.  The default
+public user is a special user in that all users are a part of the public
+group.  This means that data sets loaded for the default public user is
+accessible to all.  This is intended for use in loading external data
+sets that other users may wish to analyze.
+</para>
+</glossdef>
+</glossentry>
+</glossdiv>
+
+
+<glossdiv><title>E</title>
+
+<glossentry id="experiment_condition">
+<glossterm>
+Experiment Condition
+</glossterm>
+<glossdef>
+  <para><link linkend="array_study">Studies</link> consist of one or more 
+  experiment conditions.  An experiment condition is the group
+  of chips under the same experimental/treatment condition in a 
+  microarray study.  (add example)</para>
+</glossdef>
+</glossentry>
+</glossdiv>
+
+<glossdiv><title>G</title>
+
+<glossentry id="gcos">
+<glossterm>
+GeneChip Operating Software
+</glossterm>
+<accronym>GCOS</accronym>
+<glossdef>
+  <para>
+  GCOS is freely available <ulink url="http://www.affymetrix.com/">
+  Affymetrix</ulink> software used for working with its GeneChip data.
+  </para>
+</glossdef>
+</glossentry>
+
+<glossentry id="&product;">
+<glossterm>
+Gene Expression Open Source System
+</glossterm>
+<accronym>&product;</accronym>
+<glossdef>
+  <para>&product; is a web-based tool for the storage an analysis of 
+  <link linkend="gene_chip_data">gene chip data</link>.
+    For a detailed description of the software see <link 
+  linkend="introduction_to_&product;">Introduction to &product;</link></para>
+</glossdef>
+</glossentry>
+
+<glossentry id="&product;_access_file">
+<glossterm>
+&product; Access File
+</glossterm>
+<glossdef>
+  <para>
+  This file contains the password for the <link linkend="postgres_user">
+  Postgres User</link> and allows the web application to access the
+  database.  The file is readable only by the Linux user who
+  runs the web server.  To determine the location of the file, check the
+  value for WEB_DIR under the <link
+  linkend="&product;_installation_information">&product; Installation
+  Information</link> link.  The file is located in the directory shown 
+  there and has the
+  filename <filename>.geoss</filename>.
+  </para>
+</glossdef>
+</glossentry>
+
+
+<glossentry id="&product;_login_id">
+<glossterm>
+&product; Login Id
+</glossterm>
+<glossdef>
+  <para>This is the unique identifier for a &product; user.  All 
+  <link linkend="users">users</link> have a &product; login id and 
+  use it to login to the system. The id is selected by the 
+  <link linkend="administrator_user"> administrator</link> when 
+  the user account is created and is typically a 
+  short combination of letters and numbers.  
+</para>
+<note>
+<para>
+<link linkend="public_user">Public users</link> select their own 
+&product; login id unless it already exists in the system.
+</para>
+</note>
+</glossdef>
+</glossentry>
+
+<glossentry id="gene_chip_data">
+<glossterm>
+Gene Chip Data
+</glossterm>
+<glossdef>
+  <para>
+  Gene chip data describes the results of a gene chip experiment and contains 
+  information like signal intensity values.  When the <link 
+  linkend="array_center_staff_user"> array center staff user </link> loads
+  the gene chip data, &product; stores it both in the database and in 
+  file format.  <link linkend="member_user"> Member users </link> can 
+  download files from the <link linkend="view_my_files"> View My Files </link>
+  link.
+  </para>
+</glossdef>
+</glossentry>
+
+<glossentry id="genex">
+<glossterm>
+GeneX
+</glossterm>
+<glossdef>
+  <para>GeneX is the name of the original open source software that &product; is based
+  on.  See <ulink url="http://genex.sourceforge.net/">GeneX 2</ulink> for
+  current information on GeneX.
+  </para>
+</glossdef>
+</glossentry>
+
+<glossentry id="genex-va">
+<glossterm>
+GeneX-Va
+</glossterm>
+<glossdef>
+  <para>GeneX-Va is the former name of &product;. </para>
+</glossdef>
+</glossentry>
+
+<glossentry id="group">
+<glossterm>
+Group
+</glossterm>
+<glossdef>
+  <para>In &product;, each user has at least one group, and can define 
+  multiple groups, under which different 
+  <link linkend="users">users</link> can be added with 
+  different access privileges (read or write) to specific array studies and data. 
+ Only the user who owns the full control on them, typically Principal Investigator (PI) user,
+ can manipulate this group creation and access options.  
+  Users can belong to more than one group and users may own more 
+  than one group.</para>
+</glossdef>
+</glossentry>
+
+
+</glossdiv>
+
+<glossdiv><title>H</title>
+<glossentry id="hybridization">
+<glossterm>
+Hybridization
+</glossterm>
+<glossdef>
+  <para>In &product;, "hybridization" refers to a 
+    <link linkend="gene_chip_data"> gene chip or array</link> that
+    corresponds to a specific hybridization of a sample.</para>
+</glossdef>
+</glossentry>
+</glossdiv>
+
+<glossdiv><title>I</title>
+<glossentry id="inactive_user">
+<glossterm>
+Inactive User
+</glossterm>
+<glossdef>
+  <para>
+  An inactive user is a user who has an account but has never logged in.
+  In order to be considered inactive, a configurable number of days must
+  have passed since the account was created.  To determine the number of
+  days on a given installation, check the "Number of days a new public
+  user has to confirm their account" parameter under the <link
+  linkend="configure_&product;">Configure &product;</link> link in <link
+  linkend="admin_gui">&admin_home;</link>.
+  </para>
+</glossdef>
+</glossentry>
+</glossdiv>
+
+<glossdiv><title>L</title>
+<glossentry id="layout">
+<glossterm>
+Layout
+</glossterm>
+<glossdef>
+  <para>
+A layout is information pertaining to an Affymetrix 
+<productname class="registered">GeneChip</productname>
+probe array. The layout information describes which probes
+belong to probe sets on the array. Currently &product; only supports layouts
+for the Affymetrix technology.  However, work is under way
+to incorporate <link linkend="cdna">cDNA</link> data and its associated layouts.
+</para>
+</glossdef>
+</glossentry>
+
+<glossentry id="login">
+<glossterm>Login</glossterm>
+<glosssee otherterm="&product;_login_id"/>
+</glossentry>
+</glossdiv>
+
+<glossdiv><title>M</title>
+
+<glossentry id="microarray_suite">
+<glossterm>
+Microarray Suite
+</glossterm>
+<glossdef>
+  <para>Microarray Suite Software (MAS) is an Affymetrix product used
+  for <link linkend="chip">GeneChip</link> 
+    data analysis, which is recently replaced by the GCOS software.  
+   See <ulink url=
+  "http://www.affymetrix.com/products/sofware/specific/mas.affx">
+  the Affymetrix specification</ulink> for further information.  
+  </para>
+</glossdef>
+</glossentry>
+
+
+<glossentry id="miame">
+<glossterm>
+MIAME
+</glossterm>
+<glossdef>
+<para><ulink url="http://www.mged.org/Workgroups/MIAME/miame.html">Minimum
+  Information About A Microarray Experiment (MIAME)</ulink>
+  data describes information that is
+  needed to enable the interpretation of the results of the experiment
+  unambiguously and potentially to reproduce the experiment.
+   MIAME is the current standard of microarray information defined 
+  by the international Microarray Gene Expression Data Society (MGED). 
+</para>
+<para>
+&product; is working towards MIAME compliance.  Although
+researchers are not required to enter MIAME information, 
+they are encouraged to provide MIAME
+information, particularly when 
+<link linkend="publishing_your_data">publishing study data</link> as 
+it increases the
+usability of the study data.
+</para>
+
+</glossdef>
+</glossentry>
+
+<glossentry id="member_user">
+<glossterm>
+Member User
+</glossterm>
+<glossdef>
+  <para>A member user is a <link linkend="users">user</link>
+   who has access to array lab functionality, particularly 
+   placing <link linkend="array_order">array orders</link>.  
+   Due to increased access, the identity of member users must be
+   confirmed prior to creation of their accounts.
+  </para>
+  <glossseealso otherterm="users">Users</glossseealso>
+</glossdef>
+</glossentry>
+
+</glossdiv>
+
+
+<glossdiv><title>O</title>
+
+<glossentry id="order_number">
+<glossterm>
+Order Number
+</glossterm>
+<glossdef>
+  <para>Each <link linkend="array_order">array order</link> has an 
+  associated order number that is created when  the
+  <link linkend="array_center_staff_user"> array center staff user</link>
+  responds to an array order request.  The numbering sequence was 
+  designed to meet the needs of the UVa array center.
+  &order_number_rule;
+</para>
+</glossdef>
+</glossentry>
+
+<glossentry id="order_status">
+<glossterm>
+Order Status
+</glossterm>
+<glossdef>
+  <para>Each <link linkend="array_order">array order</link> has an 
+  associated order status.  The status can be:
+  <variablelist>
+ 
+  
+  <varlistentry>
+  <term>
+    Incomplete
+  </term>
+  <listitem>
+  <para>
+    Array order has been generated, but is not configured in a valid
+    way.  &valid_order_config_rule;
+  </para>
+  </listitem>
+  </varlistentry>
+  
+  <varlistentry>
+  <term>
+     Complete
+  </term>
+  <listitem>
+  <para>
+  Array order has been generated and as a valid configuration.
+  The order has not yet been submitted to the <link
+  linkend="array_center">array center</link> to inform them 
+  that it is ready for processing.  Submitted Array order has 
+  been submitted to the array center or to the <link
+  linkend="special_center_administrator_user">special
+  center administrator</link> as appropriate.
+  </para>
+  </listitem>
+  </varlistentry>
+
+  <varlistentry>
+  <term>
+     Approved
+  </term>
+  <listitem>
+  <para>
+  The array order has been submitted and it has been approved.  
+  Note that many orders receive automatic approval.  Only
+  array orders that are associated with a <link
+  linkend="special_center">special center</link> that require 
+  manual approval do not receive automatic approval.
+  </para>
+  </listitem>
+  </varlistentry>
+
+  <varlistentry>
+  <term>
+    Finished
+  </term>
+  <listitem>
+  <para>
+  The array center has processed the order and loaded the <link
+  linkend="chip_data_files">gene chip data files</link>.
+  </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+</glossdef>
+</glossentry>
+
+</glossdiv>
+
+<glossdiv><title>P</title>
+
+<glossentry id="password">
+<glossterm>
+Password
+</glossterm>
+<glossdef>
+  <para>&password_rule;</para>
+</glossdef>
+</glossentry>
+
+<glossentry id="postgres_database">
+<glossterm>
+Postgres Database
+</glossterm>
+<glossdef>
+  <para>&product; store information in a Postgres database.  If
+  &product; is installed via an rpm install and following instructions
+  for a generic install, then the name of the database will be "geoss".
+  However, it is possible to install with a different database name,
+  as may be the case with a developer installation.  To confirm the
+  name of the database that your &product; connects to, you can check
+  the value of the DB_NAME setting under the <link
+  linkend="&product;_installation_information">&product; Installation
+  Information</link> link, if you have <link
+  linkend="administrator_user">administrator access.</link></para>
+</glossdef>
+</glossentry>
+
+<glossentry id="postgres_user">
+<glossterm>
+Postgres User
+</glossterm>
+<glossdef>
+  <para>When we refer to the Postgres User, we mean the user defined in
+  Postgres (as opposed to a &product; user or a Linux user) 
+  that has access to the <link
+  linkend="postgres_database">Postgres Database</link>.  To confirm the
+  name of the user that your installation uses to connect to the
+  Postgres Database, you can check the value of the GEOSS_SU_USER
+  setting under the <link
+  linkend="&product;_installation_information">&product; Installation
+  Information</link> link, if you have 
+  <link
+  linkend="administrator_user">administrator access.</link>
+  </para>
+</glossdef>
+</glossentry>
+
+<glossentry id="primary_investigator">
+<glossterm>
+Primary (or Principal) Investigator
+</glossterm>
+<glossdef>
+  <para>The primary (or principal) investigator (PI) is a <link
+  linkend="member_user">member user</link> who owns studies and their
+  associated data.  Every user must be associated with a PI (or several PIs), although the user can be
+  PI and choose himself as PI.  A typical setup involves a group with a PI, and several
+  staff members.  Staff members often <link
+  linkend="placing_an_order_with_the_array_center">define studies and
+  orders</link> and perform the majority of the interaction with
+  &product;, but the data is still owned by the PI.</para>
+  <para>
+  If a PI has several different <link
+  linkend="array_study">studies</link> and would like to set up
+  different access privileges on each one, then the PI should create 
+  several <link linkend="group">groups</link> using the <link
+  linkend="create_a_new_group">Create a New Group</link> link.  Study
+  permissions can then be set so that only members of a specific group
+  can see the study using the <link
+  linkend="change_permissions_for_array_studies">Change
+  group ownership and read/write permissions for existing array
+  studies</link> link.  Similarly, permissions for <link
+  linkend="array_order">array orders</link>
+  can be changed using the <link
+  linkend="change_permissions_for_array_orders">Change
+  group ownership and read/write permissions for existing array orders
+  </link> link.
+  </para>
+  <para>
+  Each <link linkend="users">user</link> is assigned a PI when their
+  account is created.  Only the <link
+  linkend="administrator_user">Administrator</link> can change these
+  associations, which is done using the <link
+  linkend="manage_pis_and_users">Manage PIs and Users</link> link from 
+  <link linkend="admin_gui">&admin_home;</link>.
+  </para>
+</glossdef>
+</glossentry>
+
+<glossentry id="public_data">
+<glossterm>
+Public Data
+</glossterm>
+<glossdef>
+  <para>
+  Once a researcher has published their experiment results, they may
+  wish to make the data available to the public. To do this, they enter
+  relevant <link linkend="miame">MIAME</link>information about the 
+  experiment and then request 
+  <link linkend="publishing_your_data">study publication</link>.
+  Once published, data is available to all through the
+  <link linkend="view_public_data">View Public Data</link> link from
+  the &product; home page.
+  </para>
+</glossdef>
+</glossentry>
+
+<glossentry id="public_data_administrator">
+<glossterm>
+Public Data Administrator
+</glossterm>
+<glossdef>
+  <para>The Public Data Administrator is responsible for managing 
+  the publication of data.  Once a <link linkend="users">user</link> 
+  requests publication of experiment results, the public data 
+  administrator confirms publication details and makes the appropriate
+  files available.
+</para>
+</glossdef>
+</glossentry>
+
+<glossentry id="public_user">
+<glossterm>
+Public User
+</glossterm>
+<glossdef>
+  <para>Public users have a subset of the functionality of 
+  <link linkend="member_user">Member Users</link>.
+  They can upload data and perform analyses, but they do not have
+  access to array center functionality (placing 
+  <link linkend="array_order">array orders</link>).  As
+  they do not need to have this kind of access, the identity of 
+  a public user does not need to be verified and they are
+  able to <link linkend="request_an_account">create their own 
+  accounts</link>.
+</para>
+  <glossseealso otherterm="users">Users</glossseealso>
+</glossdef>
+</glossentry>
+
+</glossdiv>
+
+
+<glossdiv><title>S</title>
+
+<glossentry id="sample">
+<glossterm>
+Sample
+</glossterm>
+<glossdef>
+  <para>Each <link linkend="array_order">array order</link> must have 
+  one or more samples associated with it.  Each sample must be 
+  associated with an <link linkend="experiment_condition">
+  experimental condition</link>.  A sample can be hybridized into 
+  more than one chip.</para>
+  <para>
+  Sometimes there is a one-to-one correlation between experimental
+  conditions and samples, but there can be many samples associated with
+  the same experimental condition if the experiment design includes
+  biological replicates.
+  </para>
+</glossdef>
+</glossentry>
+
+<glossentry id="special_center">
+<glossterm>
+Special Center
+</glossterm>
+<glossdef>
+  <para>
+    A special center is an entity that has different billing or 
+    array processing needs than regular 
+    <link linkend="users">users</link>.  Users can be associated
+    with multiple special centers, but 
+    <link linkend="array_order">array orders</link> may only be 
+    associated with one special center.</para>
+   <para>
+   For an overview of functionality available to special centers, 
+   see the <link linkend="special_center_administrator_guide">Special
+   Center Administrator Guide</link>.
+  </para>
+</glossdef>
+</glossentry>
+
+<glossentry id="special_center_administrator_user">
+<glossterm>
+Special Center Administrator User
+</glossterm>
+<glossdef>
+  <para>
+  <link linkend="users">Users </link> can be designated as a 
+  special center administrator.  Special center administrators
+  update center information, manage center members, and 
+  approve <link linkend="array_order">array orders</link>
+   associated with the special center.
+  </para>
+   <para>
+   For an overview of functionality available to special centers, 
+   see the <link linkend="special_center_administrator_guide">Special 
+   Center Administrator Guide</link>.
+  </para>
+</glossdef>
+</glossentry>
+
+<glossentry id="special_center_member">
+<glossterm>
+Special Center Member
+</glossterm>
+<glossdef>
+  <para>
+  A special center member is a <link linkend="users">user</link> who 
+  is associated with a <link linkend="special_center">special 
+  center</link>.  Special center members can choose to associate
+  their <link linkend="array_order">array orders</link> with 
+  the special center at the time of order creation.  This may 
+  result in billing discounts or in the array order being routed
+  through an approval process, depending on the configuration of 
+  the special center.
+  </para>
+</glossdef>
+</glossentry>
+
+<glossentry id="species_id">
+<glossterm>
+Species Id
+</glossterm>
+<glossdef>
+  <para>Species id must be specified when loading layouts.  
+  Species are associated with ids in the species table when &product; is
+  installed.  To determine the species id for a specific species, login
+  to the <link linkend="postgres_database">database</link> as the <link
+  linkend="postgres_user">postgres user</link> and examine the species
+  table.
+  </para>
+  <example>
+  <title>Determining a Species Id
+  </title>
+  <programlisting>
+  $ <command>psql geoss -d geoss</command>
+  Password:
+  Welcome to psql 7.3.4-RH, the PostgreSQL interactive terminal.
+
+  Type:  \copyright for distribution terms
+         \h for help with SQL commands
+         \? for help on internal slash commands
+         \g or terminate with semicolon to execute query
+         \q to quit
+
+geoss=#  <command>select spc_pk, primary_scientific_name, common_names from species;</command>
+ spc_pk |    primary_scientific_name    |             common_names             
+ --------+-------------------------------+--------------------------------------
+     89 | Lycopodium clavatum           | stag's-horn clubmoss
+     90 | Chondrus crispus              | carrageen, Irish moss
+      5 | Saccharomyces cerevisiae      | yeast
+
+geoss=<command>\q</command>
+  </programlisting>
+  </example>
+</glossdef>
+</glossentry>
+</glossdiv>
+
+<glossdiv><title>R</title>
+
+<glossentry id="replicate"><glossterm>
+  Replicates</glossterm>
+<glossdef>
+  <para>
+  Replicates can be either different biological subjects or
+  technical replicated hybridizations (or chips); these will 
+  result in different statistical analysis options and results.
+  Consult to the GMB staff for more detailed description.
+  </para>
+</glossdef>
+</glossentry>
+</glossdiv>
+
+<glossdiv><title>U</title>
+
+
+<glossentry id="university_of_virginia"><glossterm>
+  University of Virginia</glossterm>
+<glossdef>
+  <para>
+  The <ulink url="http://www.virginia.edu">University of
+  Virginia</ulink> is where &product; is created and maintained.
+  </para>
+</glossdef>
+</glossentry>
+
+<glossentry id="uploaded_files"><glossterm>
+  Uploaded Files</glossterm>
+<glossdef>
+  <para>
+  <link linkend="users">Users</link> can upload several types of files.
+  They can upload mas5 data files which they can then use with <link
+  linkend="analysis_tree">analysis trees</link>.  They can upload <link
+  linkend="criteria_file">criteria files</link>, which they can use to
+  build <link linkend="analysis_condition">analysis conditions</link>
+  and <link linkend="analysis_set">analysis sets</link>.  They can also
+  upload files under the the generic "other" category.  These files
+  could then be made viewable to other users.  Examples of such files
+  might be write-ups on experiment data.
+  </para>
+  <para>
+  Note that <link linkend="administrator_user">administrators</link> and
+  <link linkend="special_center_administrator_user">special center
+  administrators</link> can also upload logo and icon files associated
+  with <link linkend="special_center">special centers</link>.</para>
+</glossdef>
+</glossentry>
+
+<glossentry id="users"><glossterm>
+  Users</glossterm>
+<glossdef>
+  <para>Currently, GEOSS supports the following user types:.
+  <itemizedlist>
+  <listitem>
+  <link linkend="public_user">Public User</link>
+  </listitem>
+  <listitem>
+  <link linkend="member_user">Member User</link>
+  </listitem>
+  <listitem>
+  <link linkend="array_center_staff_user">Array Center Staff User</link>
+  </listitem>
+  <listitem>
+  <link linkend="administrator_user">Administrator</link>
+  </listitem>
+  </itemizedlist> 
+  Additionally, it is possible for a user to be designated as <link
+  linkend="special_center_administrator_user">special center administrator
+  user.</link> 
+  Note, however, that this is not a user type, but rather a
+  designation, and such a user will also have one of the four user types
+  mentioned above.  
+</para>
+<note>
+Please note that the user type names have recently changed and you may 
+encounter instances where the legacy user type is still in use.
+Specifically, "member users" used to be "experiment set providers",
+"Array Center Staff Users" used to be "curators", and "special center
+administrators" used to be "organization curators".  The "public" user
+type has not changed.
+</note>
+</glossdef>
+</glossentry>
+
+<glossentry id="user_file"><glossterm>
+  User File</glossterm>
+<glossdef>
+  <para>
+  Individual &product; users own several kinds of files: <link
+  linkend="chip_data_files">chip data files</link>, <link
+  linkend="analysis_files">analysis files</link> and  <link
+  linkend="uploaded_files">uploaded files</link>.  These are the user
+  data files.
+  </para>
+</glossdef>
+</glossentry>
+
+</glossdiv>
+
+</glossary>

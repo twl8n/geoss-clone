@@ -1,0 +1,25 @@
+<form action="insert_tree.cgi" method=POST>
+  <br>
+  *Analysis Tree Name:<br>
+  <input type="text" name="tree_name" value="{tree_name}" maxlength="128">
+  <a href="tree_names.cgi"><small>[Tree Names In Use]</small></a>
+  <p>
+  Tree Structure:
+  <select name="structure">
+    <option value="one">Initial node only</option>
+    <option value="all">Entire default tree</option>
+  </select>
+  <p>
+  Choose source of analysis input data:<br>
+<input type=radio name=source value="study" {study_checked}>Array Study &nbsp; &nbsp;
+<input type=radio name=source value="an_set" {an_set_checked}>Analysis Set &nbsp; &nbsp;
+<input type=radio name=source value="public" {public_checked}>UVa Public
+Data &nbsp; &nbsp;
+<input type=radio name=source value="an_file" {an_file_checked}>Analysis
+Input File<br>
+<input type=submit name="submit" value="Choose Source"><br>
+<br>
+{source_html}
+{submit_html}
+<input type=submit name="submit" value="Next">
+</form>

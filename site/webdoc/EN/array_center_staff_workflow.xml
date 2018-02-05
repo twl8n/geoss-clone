@@ -1,0 +1,69 @@
+<part id="array_center_staff_workflow">
+<title>Overview: Workflows for Array Center Staff Users</title>
+<article id="processing_orders">
+<title>Processing Orders</title>
+  <sect1 id="fulfilling_order_requests">
+  <title>Fulfilling order requests</title>
+    <para>
+    When a <link linkend="users">user</link> wants to place an <link 
+    linkend="array_order">array order</link>, they will submit an 
+    order to the array center.  Array center staff will receive an email
+    stating that the order has been submitted.  At this time, array
+    center staff can assign an <link linkend="order_number">order 
+    number</link> to the order via the <link
+    linkend="assign_a_new_order_number">Assign a New
+    Order Number</link> or by clicking on the link in the notification
+    email. Note that the 
+    array center staff user must already be logged in to &product; for 
+    the link to work.
+    </para>
+    <para>
+    Typically, orders are created when the user submits an order, and
+    the array center staff will assign an order number to the order
+    using the "Assign a New Order Number" link.  However, in rare
+    circumstances, array center staff may wish to create an order, which
+    can be done via the <link linkend="create_a_new_array_order">
+    Create a New Array Order</link> link.  Typically, this is done if
+    the array center staff wished to reserve an order number for some
+    reason.  Orders created in this fashion will have no <link
+    linkend="sample">samples</link> associated with them.  These orders
+    can later be assigned to a samples via the <link
+    linkend="assign_a_historical_order_to_an_existing_study">Assign a
+    Historical Order to an Existing Study</link> link. 
+    </para>
+  </sect1>
+  <sect1 id="loading_data">
+  <title>Loading data</title>
+  <para>
+   Once the array center staff has completed running the experiment, the 
+   <link linkend="gene_chip_data">gene chip data</link> must be loaded.
+   To load the data, the <link linkend="chip_data_files">chip data files
+   </link> must be placed in the <link linkend="chip_data_path">chip data
+   path</link>.  Not all chip data files are mandatory, but the "txt" 
+   file is required and the "rpt" file is recommended.  Other files
+   should be loaded so that they are available to the user, but are 
+   not mandatory for data load.
+  </para>
+  <para>
+   Once the data files are in place, data must be loaded via the 
+   <link linkend="get_one_array_order">Get One Array Order</link> 
+   link.
+  </para> 
+  </sect1>
+
+  <sect1 id="billing_and_reports">
+  <title>Billing and reports</title>
+    <para>
+      Several <link linkend="array_center_staff_view_reports">reports
+      </link> are available to help the array center staff with their
+      billing activities.  This portion of the application has been 
+      tailored to the needs of the <link linkend="array_center">array 
+      center</link> at the <ulink url="http://www.virginia.edu">UVa</ulink>.
+      If your array center requires different functionality, please
+      submit an enhancement bug in 
+      <ulink url="http://biostat.virginia.edu/bugzilla">our bug tracking 
+      system</ulink> and we will try to accommodate your needs.
+    </para>
+  </sect1>
+</article>
+</part>

@@ -1,0 +1,773 @@
+<html>
+<head>
+  <title>GEOSS Install Guide</title>
+</head>
+
+<body bgcolor="#FFFFFF" marginheight="0" marginwidth="0" topmargin="0"
+  leftmargin="0" link="#006633" vlink="#666633">
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <!-- Answers to the aforementioned questions -->
+  <tr valign="top"> 
+    <td width="10" bgcolor="#db003b" valign="bottom"><img src="graphics/white.gif" width="10" height="10"></td>
+    <td width="10" valign="bottom"><img src="graphics/white.gif" width="10" height="10"></td>
+    <td width="580"> 
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td width="37%"><a href="./index.cgi"><img src="graphics/geoss_logo.jpg" width="216" height="96" border="0" alt="GEOSS Gene Expression Analysis Database"></a></td>
+          <td width="63%" valign="top"><font face="Verdana, Arial, Helvetica, sans-serif" size="+1">GEOSS 
+            Install Guide</font></td>
+        </tr>
+      </table>
+      <p>
+        <a href="install_guide.html">Install Guide</a>&nbsp;
+        <a href="admin_guide.html">Admin Guide</a>&nbsp; 
+        <a href="user_guide.html">User Guide</a>&nbsp; 
+        <!--   <a href="curator_guide.html">Curator Guide</a>&nbsp; -->
+        <a href="org_curator_guide.html">Org Curator Guide</a>&nbsp; 
+        <a href="developer_guide.html">Developer Guide</a></p>
+      <hr noshade color="000000">
+      <p>This documentation describes how to install the GEOSS system. </p>
+      <hr noshade>
+      <p><strong>Install Guide Table of Contents</strong>: </p>
+      <p><a name="__TOC1.0"></a><a href="#__BODY1.0">1.0</a>&nbsp;Installation</p>
+      <ul>
+        <li><a name="__TOC1.1"></a><a href="#__BODY1.1">Install Dependencies</a></li>
+        <li><a name="__TOC1.2"></a><a href="#__BODY1.2">Configure Postgres</a></li>
+        <li><a name="__TOC1.3"></a><a href="#__BODY1.3">Install GEOSS</a></li>
+        <li><a name="__TOC1.4"></a><a href="#__BODY1.4">Configure Apache</a></li>
+        <li><a name="__TOC1.5"></a><a href="#__BODY1.5">Configure GEOSS</a></li>
+        <li><a name="__TOC1.6"></a><a href="#__BODY1.6">Change passwords</a></li>
+      </ul>
+      <p><a name="__TOC2.0"></a><a href="#__BODY2.0">2.0</a>&nbsp;Installation 
+        Transcript</p>
+      <p><a name="__TOC3.0"></a><a href="#__BODY3.0">3.0</a>&nbsp;FAQ</p>
+      <ul>
+        <li><a name="__TOC3.1"></a><a href="#__BODY3.1">3.1 General</a> 
+          <ul>
+            <li><a name="__TOC3.1.1"></a><a><a href="#__BODY3.1.1">3.1.1 How do 
+              I get further assistance with an install?</a></a> </li>
+            <li><a><a name="__TOC3.1.2"></a><a href="#__BODY3.1.2">3.1.2 Had GEOSS 
+              been ported to other platforms?</a></a></li>
+          </ul>
+        </li>
+        <li><a><a name="__TOC3.2"></a><a href="#__BODY3.2">3.2 Installing GEOSS</a></a> 
+          <ul>
+            <li><a><a name="__TOC3.2.1"></a><a><a href="#__BODY3.2.1">3.2.1 Why 
+              would I want to install from a tarball?</a></a> </a></li>
+            <li><a><a><a name="__TOC3.2.2"></a><a href="#__BODY3.2.2">3.2.2 How 
+              do I install from from the GEOSS tarball?</a></a></a></li>
+            <li><a><a><a name="__TOC3.2.3"></a><a href="#__BODY3.2.3">3.2.3 What 
+              do the settings in build-options.mk do?</a></a></a></li>
+            <li><a><a><a name="__TOC3.2.4"></a><a href="#__BODY3.2.4">3.2.4 Can 
+              you give me an example of the build-options file for a non-root 
+              install?</a></a></a></li>
+            <li><a><a><a name="__TOC3.2.5"></a><a href="#__BODY3.2.4">3.2.4 I 
+              installed from the rpm. The files installed successfully, but the 
+              initialization script failed. What should I do?</a></a></a></li>
+          </ul>
+        </li>
+        <li><a><a><a name="__TOC3.3"></a><a href="#__BODY3.3">3.3 Security</a></a></a> 
+          <ul>
+            <li><a><a><a name="__TOC3.3.1"></a><a><a href="#__BODY3.3.1">3.3.1 
+              What should I do to secure GEOSS?</a></a> </a></a></li>
+            <li><a><a><a><a name="__TOC3.3.2"></a><a href="#__BODY3.3.2">3.3.2 
+              Are there security issues that I should be aware of?</a></a></a></a></li>
+          </ul>
+        </li>
+        <li><a><a><a><a name="__TOC3.4"></a><a href="#__BODY3.4">3.4 Installing/Configuring 
+          Dependencies</a></a></a></a> 
+          <ul>
+            <li><a><a><a><a name="__TOC3.4.1"></a><a><a href="#__BODY3.4.1">3.4.1 
+              Apache</a></a> </a></a></a> 
+              <ul>
+                <li><a><a><a><a><a name="__TOC3.4.1.1"></a><a href="#__BODY3.4.1.1">3.4.1.1 
+                  How do I get Apache to run when the system starts up?</a></a></a></a></a></li>
+                <li><a><a><a><a><a name="__TOC3.4.1.2"></a><a href="#__BODY3.4.1.2">3.4.1.2 
+                  How do I set up Virtual Hosting?</a></a></a></a></a></li>
+                <li><a><a><a><a><a name="__TOC3.4.1.3"></a><a href="#__BODY3.4.1.3">3.4.1.3 
+                  How do I set up Apache to support an install in a User Directory?</a></a></a></a></a></li>
+                <li><a><a><a><a><a name="__TOC3.4.1.4"></a><a href="#__BODY3.4.1.4">3.4.1.4 
+                  How do I set up Apache to use suExec?</a></a></a></a></a></li>
+                <li><a><a><a><a><a name="__TOC3.4.1.5"></a><a href="#__BODY3.4.1.5">3.4.1.5 
+                  Do I have to use Apache as my web server?</a></a></a></a></a></li>
+              </ul>
+            </li>
+            <li><a><a><a><a><a name="__TOC3.4.2"></a><a href="#__BODY3.4.2">3.4.2 
+              Perl Modules</a></a></a></a></a> 
+              <ul>
+                <li><a><a><a><a><a name="__TOC3.4.2.1"></a><a href="#__BODY3.4.2.1">3.4.2.1 
+                  Do I have to use rpm to install Perl Modules?</a></a></a></a></a></li>
+              </ul>
+            </li>
+            <li><a><a><a><a><a name="__TOC3.4.3"></a><a href="#__BODY3.4.3">3.4.3 
+              Postgres</a></a></a></a></a> 
+              <ul>
+                <li><a name="__TOC3.4.3.1"><a href="#__BODY3.4.3.1">3.4.3.1 
+                  How do I get Postgres to run when the system starts up?</a></a>
+                  </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <a href="#__BODY3.4.3.1">
+      <p><a name="__TOC4.0"></a><a href="#__BODY4.0">4.0</a>&nbsp;Upgrades</p>
+      <ul>
+        <li><a name="__TOC4.1"></a><a href="#__BODY4.1">Upgrade Description</a></li>
+        <li><a name="__TOC4.2"></a><a href="./release_notes.txt">View Release Notes</a></li>
+      </ul>
+      <hr noshade color="990066">
+      </a>
+      <p><b><font size="+1">Install Guide: Contents </font></b></p>
+      <p><b> </b></p>
+      <b><p><a name="__BODY1.0">1.0</a>&nbsp;Installation</p>
+      </b> This section describes GEOSS installation in detail. There are many 
+      ways to install GEOSS. This section describes how to install GEOSS via the 
+      GEOSS rpm. The installer is expected to have root access and to have a good 
+      grasp of basic LINUX commands. If you are not comfortable with the Linux 
+      command line and with editing text files, we strongly suggest that you have 
+      your Linux system administrator install GEOSS for you. 
+      <p></p>
+      <a href="#__TOC1.0">Back to TOC</a> 
+      <ul>
+      </ul>
+      <p><b><a name="__BODY1.1"><font color="#FF0000">&#149;</font>1.1 Install 
+        Dependencies</a></b></p>
+      <p>Prior to installing GEOSS, all products that GEOSS depends on must be 
+        installed. For complete information on how to install these products, 
+        see their respective documentation. We realize the Linux documentation 
+        is often incomplete and inaccurate, so we'll try to provide hints and 
+        warnings about possible problems. However, we can't fully document all 
+        the related products, or help you fix all the possible issues that may 
+        arise. The information we provide on how to install these products may 
+        be GEOSS specific, and is intended to supplement existing product documentation.<br>
+        <br>
+        Here are some Fedora hints: During the graphical install, there is a page 
+        asking which packages to install. The easy (albeit longer install and 
+        longer updates) is to install everything. You'll get extra stuff you don't 
+        need, but as far as we know that doesn't cause any problems. If you want 
+        to choose packages, this as worked for us: KDE, Editors, Server configuration, 
+        Web server, SQL database, Development tools, Kernel development, KDE development, 
+        Administration Tools, System tools.<br>
+        <br>
+        When you get to the firewall configuration of the install, turn the firewall 
+        on, but allow SSH and HTTP through the firewall.<br>
+        <br>
+        After installing Fedora, we recommend that you run yum update to get all 
+        pertinent updates and fixes. The standard yum configuration uses the Fedora 
+        site which can be very slow. You might have better luck with a Fedora 
+        mirror. Login as root, and change /etc/yum.conf. Change the baseurl line 
+        of the [updates-released] section:<br>
+        <br>
+        <b>baseurl=http://ftp.dulug.duke.edu/pub/fedora/linux/core/updates/$releasever/$basearch/<br>
+        ftp://ftp.linux.ncsu.edu/pub/fedora/linux/core/updates/$releasever/$basearch/<br>
+        ftp://ftp.tu-chemnitz.de/pub/linux/fedora-core/updates/$releasever/$basearch/<br>
+        http://fedora.redhat.com/updates/released/fedora-core-$releasever<br>
+        </b><br>
+        After that, simply run yum update. This may take a several minutes.<br>
+        <i>[root] # </i><b>yum update<br>
+        </b><br>
+      </p>
+      <p> Configure the mail server of your choice to send mail.<br>
+        If you are installing on Fedora, sendmail should already be installed 
+        and configured.<br>
+        <br>
+        <b><font color="#FF0000">&#149; </font>Install <a href="http://httpd.apache.org/docs-2.0/install.html"> 
+        Apache</a></b><br>
+        If you are installing on Fedora, Apache should already be installed. You 
+        will need to make sure that Apache is configured to start automatically 
+        when the system boots and to ensure that the appropriate ports are open 
+        to allow http and https communication.</p>
+      <p><b><font color="#FF0000">&#149;</font> Install <a href=
+  "http://www.postgresql.org/docs/7.4/interactive/installation.html"> Postgres</a></b><br>
+        Postgres is installed with Fedora (per our notes above as part of the 
+        SQL database package) and seems to start automatically and initializes 
+        itself the first time you boot the computer.</p>
+      <p> Install <a href="http://www.r-project.org/">R (download R)
+      </a> and the <a
+      href="http://bioconductor.org/repository/release1.1/package/html/Biobase.html">biobase</a>
+       and <a
+       href="http://bioconductor.org/repository/release1.1/package/html/multtest.html">multtest</a>
+        libraries.</a><br>
+        To install R:<br>
+        <i>[root] # </i><b> rpm -ivh R.rpm</b><br>
+        To install the biobase library:<br>
+        <i>[root] # </i><b> R CMD INSTALL Biobase_1.4.22.tar.gz</b><br>
+        To install the multtest library:<br>
+        <i>[root] # </i><b> R CMD INSTALL multtest_1.0.tar.gz</b><br>
+        To verify that libraries are installed, you can run: <br>
+        <i>[root] # </i><b> ls /usr/lib/R/library</b><br>
+        There should be a multtest directory. It contains further documentation 
+        on the library. </p>
+      <p> <b><font color="#FF0000">&#149;</font> Download and untar the
+        annotation files:</b><br>
+        You will also need to download and untar the annotations files. 
+        These files are available from <a href="http://bioconductor.org">
+        Bioconductor</a>, but we have a tarred version available 
+        at the <a href="http://sourceforge.net/projects/va-genex/">GEOSS 
+        Source Forge site</a>. Download annotation.tar.gz then </p>
+      <p><i>[root] #</i> <b>tar -zxvf annotation.tar.gz</b></p>
+      <p>This will create a directory "annotation" in the current directory.</p>
+      <p><i>[root] #</i> <b>cd annotation</b></p>
+      <p><i>[root] #</i> <b>R CMD INSTALL *</b></p>
+      
+      <p><b><font color="#FF0000">&#149;</font> Install Perl Modules:</b><br>
+        Perl modules should be installed via rpm, so that the GEOSS rpm dependencies 
+        are satisfied. </p>
+      <p>You <b>must</b> install the GEOSS versions of AppConfig and PDF-API2. 
+      </p>
+      <p>The versions we have packaged are known to work, and install in the correct 
+        location under Fedora. PDF-API2 version 0.4 is known to have bugs. Rpmpan 
+        ( rpmpan.sourceforge.net ) versions install in the wrong directory for 
+        Fedora. </p>
+      <p>The tar file with these Perl modules is called geoss_perl_modules.tar 
+        and is available for download at the <a href=
+   "http://sourceforge.net/projects/va-genex/">GEOSS Source Forge site</a>. The 
+        other modules can be installed using yum. <br>
+        <i>[root] #</i> <b> yum install perl-DBI perl-DBD-Pg perl-Compress-Zlib</b><br>
+        <i>[root] #</i> <b> tar -zxf geoss_perl_modules.tar.gz</b><br>
+        <i>[root] #</i> <b> rpm -ivh perl-AppConfig-1.56-1.noarch.rpm perl-PDF-API2-0.3r77-1.noarch.rpm 
+        </b><br>
+      </p>
+      <p> <b><font color="#FF0000">&#149;</font> Download and untar the layout 
+        files:</b><br>
+        You will also need to download and untar the layout files. We have made 
+        them available at the <a href="http://sourceforge.net/projects/va-genex/">GEOSS 
+        Source Forge site</a>. Download geoss_layouts.tar.gz then </p>
+      <p><i>[root] #</i> <b>tar -zxvf geoss_layouts.tar.gz</b></p>
+      <p>This will create a directory geoss_layouts in the current directory. 
+        Remember the path to this directory since you'll be prompted for it later 
+        in the install process.</p>
+      <p>These files are available from Affymetrix in a slightly different form. 
+        To save everyone the trouble of modifying the Affymetrix files, we provide 
+        them.</p>
+      <p>In an upcoming version, the install will have the ability to untar automatically, 
+        but that feature is disabled.</p>
+      <p><a href="#__TOC1.1">Back to TOC</a> </p>
+      <p>&nbsp;</p>
+      <p><b><a name="__BODY1.2"> </a> <font color="#FF0000">&#149;</font> 1.2 
+        Configure Postgres</b></p>
+      <p> <i>[root] #<b> </b></i><b>su -l postgres<br>
+        </b><br>
+        Check the values of <br>
+        <i>[postgres] $</i><b> pg_controldata</b><br>
+        You should see lines like this: 
+      <pre>LC_COLLATE: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C
+LC_CTYPE: &nbsp;   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C</pre>
+      <b></b>If these settings are not correct, some sorting operations will have 
+      the wrong order. Apparently the correct setting is the default for Fedora. 
+      <p>Edit /var/lib/pgsql/data/postgresql.conf. Uncomment the tcpip_socket 
+        line (by removing the leading #) and set the value to true. This will 
+        allow DBI to connect to the database. <br>
+        <i>[postgres] $</i><b> emacs data/postgresql.conf</b></p>
+      <p></p>
+      <p> 
+      <p></p>
+      <p> 
+      <p><i>[postgres] $</i><b> emacs data/pg_hba.conf</b><br>
+        Edit pg_hba.conf. Add the following lines:<br>
+        <b> local geoss geoss md5<br>
+        host geoss geoss 127.0.0.1 255.255.255.255 md5 </b><br>
+        This specifies who can connect to the geoss database and in what fashion. 
+      </p>
+      <p></p>
+      <p> Add geoss user: <br>
+        <i>[postgres] $</i><b> createuser -a -d -E -P geoss</b> <br>
+        When you are prompted for a password, enter a secure password. You will 
+        need to supply this password to the geoss_initialize script when you initialize 
+        GEOSS. Later in the instructions we will refer to this as the &quot;Postgres 
+        geoss user password&quot;. 
+      <p> 
+      <p> 
+      <p>Add geoss database: <br>
+        <i>[postgres] $ </i><b>cre</b><b>atedb geoss</b> </p>
+      <p></p>
+      <p></p>
+      <p></p>
+      <p></p>
+      <p> 
+      <p>Go back to being the root user: <br>
+        <i>[postgres] $</i><b> exit</b> </p>
+      <p>Restart postgres <br>
+        <i>[root] # </i><b>/etc/rc.d/init.d/postgresql restart</b></p>
+      <p></p>
+      <p> 
+      <p>Verify that you can connect to the database correctly by typing:<br>
+        <i>[root] <b>#</b></i><b> psql geoss -d geoss </b><br>
+        Password: <b>&lt;Postgres geoss user password&gt;</b><br>
+        <i>geoss=#</i><b> \q</b><br>
+      </p>
+      <p>If you were unable to connect to the database in this fashion, you must 
+        correct the error before proceeding or the install will not work. </p>
+      <p></p>
+      <p> 
+      <p></p>
+      <br>
+      <a href="#__TOC1.2">Back to TOC</a> 
+      <p></p>
+      <p> 
+      <p><b><a name="__BODY1.3"> </a><font color="#FF0000"> &#149;</font> 1.3 
+        Install GEOSS</b></p>
+      <p>Install the <a href="http://sourceforge.net/projects/geoss">GEOSS rpm:</a><br>
+        <i>[root] #</i><b> rpm -ivh geoss-2.0-1.i386.rpm</b></p>
+      <p>This will install GEOSS code into the following directories:<br>
+      </p>
+      <p>/usr/local/bin</p>
+      <p>/usr/local/lib</p>
+      <p>/var/lib/geoss</p>
+      <p>/var/www/html/geoss</p>
+      <p>The majority of the files are perl scripts, html files, and graphics.</p>
+      <p>&nbsp; </p>
+      <p>Now initialize the geoss database:<br>
+        <i>[root] #</i><b> geoss_initialize --db_name=geoss --db_user=geoss</b><br>
+        This script will prompt you for a password. Enter the &quot;Postgres geoss 
+        user password&quot; that you choose when you created your Postgres geoss 
+        user. Also, the script will ask you for the path to the geoss_layouts.tar.gz 
+        file that you downloaded in Step 1.1.</p>
+      <p>The geoss_initialize script loads the geoss database, adds the administrator 
+        user, loads analysis modules, and loads layouts. Loading the layouts takes 
+        15 minutes to 30 minutes. Be patient. The loader will print a stream of 
+        status messages while the load proceeds.</p>
+      <p>If there are error messages during the initialization phase, you do not 
+        need to reinstall the rpm. You can address the issue which caused the 
+        problem (most likely an inability to connect to the database) and then 
+        re-run the component of the initialization script that failed. See <a href="#__BODY3.2.4">FAQ 
+        3.2.4</a> for more detail. <br>
+        <a href="#__TOC1.3">Back to TOC</a></p>
+      <p>&nbsp; </p>
+      <p><b><a name="__BODY1.4"> </a><font color="#FF0000"> &#149;</font> 1.4 
+        Configure Apache</b></p>
+      <p>The following information applies to the most basic Apache configuration 
+        for GEOSS. Check the admin guide FAQ for information on alternative configurations 
+        including those using suExec, Virtual Hosts, or public_html.</p>
+      <p>Modify httpd.conf so that GEOSS directories are accessible and GEOSS 
+        cgi scripts can run.<br>
+        <i>[root] # </i><b>emacs /etc/httpd/conf/httpd.conf</b></p>
+      <p>The rpm post install script will print out a suggested set of directives. 
+        Apache configuration files can vary greatly, but you will want to add 
+        something like this to the end of your httpd.conf:</p>
+      <p><b> &lt;Directory &quot;/var/www/html/geoss/site&quot;&gt;<br>
+        AddHandler cgi-script .cgi .pl<br>
+        DirectoryIndex index.cgi index.html index.pl<br>
+        AllowOverride Limit<br>
+        Options ExecCGI FollowSymLinks<br>
+        Order allow,deny<br>
+        Allow from all<br>
+        &lt;/Directory&gt;<br>
+        </b></p>
+      <p>Also verify the following in the httpd.conf file:<br>
+      </p>
+      <p><b>ServerName</b> should be set to your server name</p>
+      <p><b>DocumentRoot</b> may be set to /var/www/html/geoss/site if you 
+        would like.  This will take users straight to geoss when they type
+        in the url that just contains your server name.  However, modifying
+        the DocumentRoot may be a problem if you are serving other 
+        applications.  In that case, you can leave it at /var/www/html.  If
+        you leave it, you will need to set the additional_path information
+        when you configure GEOSS.</p>        
+      <p>Restart the webserver after modifying the configuration file by entering:<br>
+        <i>[root] # </i><b>apachectl restart</b></p>
+      <p>&nbsp;</p>
+      <p><a href="#__TOC1.4">Back to TOC</a> </p>
+      <p>&nbsp;</p>
+      <p><b><a name="__BODY1.5"> </a><font color="#FF0000"> &#149;</font> 1.5 
+        Configure GEOSS</b></p>
+      <p>GEOSS is now active on your system, but prior to general use, you need 
+        to set some configuration options.</p>
+      <p> If you have not set your DocumentRoot to /var/www/html/geoss/site, 
+you will need to manually set the "additional_path" field in the configuration table.  To do this, login to postgres (psql geoss -u geoss) and modify the value (update configuration set additional_path = '/geoss/site';)</p>
+      <p> Login to GEOSS. Do this by setting your browser to "http://&lt;yourservername&gt;/geoss/site" or "http://&lt;yourservername&gt;" depending on your DocumentRoot value.
+
+        Login on the left hand side in "Member Login". Use Login: <b>admin</b> 
+        and password: <b>administrator</b>. </p>
+      <p>Click on the "Configure GEOSS" link from Administrator Home</p>
+      <p>Configure <a href="./admin_guide.html#__BODY1.2">parameters</a> for your 
+        installation.</p>
+      <p>Verify the success of the installation by choosing "GEOSS Installation 
+        Information". Check that all directory permission tests are successful.</p>
+      <p><a href="#__TOC1.5">Back to TOC</a> </p>
+      <p>&nbsp;</p>
+      <p><b><a name="__BODY1.6"> </a><font color="#FF0000"> &#149;</font> 1.6 
+        Change Passwords</b></p>
+      <p>Your installation is now complete. For security reasons, the default 
+        GEOSS administrator (the special user called &quot;admin&quot;) password 
+        should be changed.</p>
+      <p>Login to GEOSS as admin, and click on "Change Administrator Password" 
+        from Administrator Home to change your GEOSS administrator password.</p>
+      <p><a href="#__TOC1.6">Back to TOC</a> </p>
+      <p>&nbsp;</p>
+      <p><b><font color="#FF0000"> &#149;</font> </b><b>Done</b></p>
+      <p>Your installation is now complete. Next you will want to add new users, 
+        which can be done from "Admin Home" (where you logged in as admin). Review 
+        the <a href="./admin_guide.html">Admin Guide</a> and the <a href="./user_guide.html">User 
+        Guide</a> for information on how to administer and use GEOSS. </p>
+      <p><b><a name="__BODY2.0"> </a></b><b> &nbsp;<font color="#FF0000">&#149;</font> 
+        </b><b></b><b>Installation Transcript</b><br>
+      </p>
+      <p> We have a separate file of an installation transcript. This transcript 
+        is a capture of all the commands and their responses for an install of 
+        GEOSS. This is not the only way to install GEOSS, but is intended to serve 
+        as an example. Some long, repetitive sections of the transcript have been 
+        deleted for brevity and filled in with a vertical ellipsis<br>
+        <b>.<br>
+        .<br>
+        .</b> </p>
+      <p><a href="transcript.html">View the Installation Transcript</a><br>
+      </p>
+      <p><a href="#__TOC2.0">Back to TOC</a></p>
+      <p>&nbsp;</p>
+      <p><b><a name="__BODY3.0">3.0</a>&nbsp;FAQ</b> <br>
+        <a href="#__TOC3.0">Back to TOC</a> </p>
+      <ul>
+        <li><b><a name="__BODY3.1"></a>3.1 General </b> 
+          <p><br>
+            <a href="#__TOC3.1">Back to TOC</a> </p>
+          <ul>
+            <li><a name="__BODY3.1.1"></a>3.1.1 How do I get further assistance 
+              with an install? 
+              <p><br>
+                Contact one of following GEOSS developers:<br>
+                Jodi Kanter <a href="mailto:jkanter@virignia.edu">jkanter@virginia.edu</a><br>
+                Teela James <a href="mailto:teela-virginia.edu">teela-virginia@peff.net</a><br>
+                <br>
+                <a href="#__TOC3.1.1">Back to TOC</a> </p>
+              <p>&nbsp;</p>
+            </li>
+            <li><a name="__BODY3.1.2">3.1.2 Had GEOSS been ported to other platforms?</a> 
+              <p>GEOSS is only officially supported on Fedora, but it should be 
+                fairly simple to run on any Unix-based OS. We have also installed 
+                it on OS X, so it is definitely possible to install GEOSS in that 
+                environment. GEOSS has not been developed with the intention of 
+                using it in a Windows environment, although it is probably possible 
+                if you setup the appropriate Unix-emulation software (Cygwin).</p>
+              <p><a href="#__TOC3.1.2">Back to TOC</a> </p>
+              <p>&nbsp;</p>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <p><a name="__BODY3.2"></a>3.2 Installing GEOSS<a><br>
+        </a></p>
+      <blockquote> 
+        <p><a><a href="#__TOC3.2">Back to TOC</a> </a></p>
+      </blockquote>
+      <ul>
+        <ul>
+          <li><a><a name="__BODY3.2.1">3.2.1 Why would I want to install from 
+            a tarball?</a> </a> 
+            <p><a><br>
+              There are several reasons that you may wish to install GEOSS from 
+              a tarball: </a></p>
+            <ul>
+              <li><a> you aren't using Fedora on an i386 architecture (the only 
+                platform we build an rpm for)</a></li>
+              <li><a> you don't use rpm for your installs in general</a></li>
+              <li><a> you want to put GEOSS in a non-standard location</a></li>
+            </ul>
+            <p><a><br>
+              <a href="#__TOC3.2.1">Back to TOC</a> </a></p>
+            <p><a></a></p>
+          </li>
+          <li><a><a name="__BODY3.2.2">3.2.2 How do I install from from the GEOSS 
+            tarball?</a> </a> 
+            <p><a><br>
+              The following steps should be performed as the user you wish to 
+              install as:<br>
+              <b>gunzip geoss-X.X.tar.gz<br>
+              tar xvf geoss-X.X.tar<br>
+              cd geoss</b><br>
+              cp build-options.default build-options.mk<br>
+              edit <b>build-options.mk</b> for desired changes in the build<br>
+              <b>make all</b><br>
+              <b>geoss_initialize --db_name=geoss --db_user=geoss</b><br>
+              If you set the BIN_DIR (in build-options.mk) to something that is 
+              not in your path, you will need to prepend that path to the geoss_initialize 
+              command.<br>
+              <br>
+              <a href="#__TOC3.2.2">Back to TOC</a> </a></p>
+            <p><a></a></p>
+          </li>
+          <li><a><a name="__BODY3.2.3">3.2.3 What do the settings in build-options.mk 
+            do?</a> </a> 
+            <p><a><br>
+              </a></p>
+            <ul>
+              <li><a><i>GEOSS_DIR:</i> The path to GEOSS from HTML_DIR</a></li>
+              <li><a><i>HTML_DIR:</i> DocumentRoot </a></li>
+              <li><a><i>WEB_DIR:</i> The directory that GEOSS application web 
+                pages and scripts are stored in. This directory needs to be accessible 
+                to WEB_USER. Should be left at its default setting.</a></li>
+              <li><a><i>USER_DATA_DIR:</i> This is the directory that stores GEOSS 
+                user files including results from analysis trees and intermediate 
+                data load files. This directory needs to be accessible to WEB_USER.</a></li>
+              <li><a><i>BIN_DIR:</i> This is the directory where GEOSS command 
+                line scripts will be stored.</a></li>
+              <li><a><i>LIB_DIR:</i> This is the directory where GEOSS function 
+                libraries will be stored.</a></li>
+              <li><a><i>GEOSS_DBMS:</i> This specifies the type of database we 
+                are connecting to and is needed by the DBI module. We have never 
+                used a database other than Postgres.</a></li>
+              <li><a><i>DB_NAME:</i> This is the name of the database created 
+                to hold GEOSS tables. This value is used to install tables and 
+                connect to the database.</a></li>
+              <li><a><i>GEOSS_HOST:</i> This identifies the server hosting your 
+                GEOSS database and is used to connect to the database.</a></li>
+              <li><a><i>GEOSS_PORT:</i> This is the Postgres port and is used 
+                to connect to the database.</a></li>
+              <li><a><i>GEOSS_SU_USER:</i> This is the name of the postgres user 
+                that has permissions on the database specified by DB_NAME. This 
+                value is used to connect to the database. </a></li>
+              <li><a><i>PERL_LOCATION:</i> Location of your perl interpreter. 
+                Setting this value to "auto" will result in the system determining 
+                the location of the interpreter by using the 'which' command.</a></li>
+              <li><a><i>VERSION:</i> This is the current GEOSS version. It is 
+                displayed in the web page footer. It shouldn't be changed.</a></li>
+              <li><a><i>COOKIE_NAME:</i>This is the name of the cookie that GEOSS 
+                sets. It includes the database name to avoid conflicts in the 
+                event that there are several installations of GEOSS on one system. 
+                This value should not need to be changed.</a></li>
+              <li><a><i>WEB_USER:</i> This is the user who runs your web server. 
+                GEOSS uses this value to chgrp certain directories so that the 
+                web server can read them. If you use suExec, you will need to 
+                change this value to the user you suExec to.</a></li>
+            </ul>
+            <p><a><br>
+              <a href="#__TOC3.2.3">Back to TOC</a> </a></p>
+            <p><a></a></p>
+          </li>
+          <li><a><a name="__BODY3.2.4">3.2.4 Can you give me an example of the 
+            build-options.mk file for a non-root install?</a> </a> 
+            <p><a><br>
+              This is the build options set for a non-root install where GEOSS 
+              is served out of the public_html directory. <br>
+              #This file contains build options for a GEOSS installation.<br>
+              GEOSS_DIR = geoss<br>
+              HTML_DIR ?= /home/tdj4m/public_html<br>
+              WEB_DIR = $(HTML_DIR)/$(GEOSS_DIR)<br>
+              USER_DATA_DIR ?= /home/tdj4m/local/$(GEOSS_DIR)<br>
+              BIN_DIR ?= /home/tdj4m/local/$(GEOSS_DIR)/bin<br>
+              LIB_DIR ?= /home/tdj4m/local/$(GEOSS_DIR)/lib<br>
+              GEOSS_DBMS ?= Pg<br>
+              DB_NAME ?= tdj4m<br>
+              GEOSS_HOST ?= localhost<br>
+              GEOSS_PORT ?= 5432<br>
+              GEOSS_SU_USER ?= tdj4m<br>
+              PERL_LOCATION = auto<br>
+              VERSION = GEOSS 2.0<br>
+              WEB_USER=tdj4m<br>
+              <br>
+              <br>
+              <a href="#__TOC3.2.4">Back to TOC</a> </a></p>
+            <p><a></a></p>
+          </li>
+          <li><a><a name="__BODY3.2.5">3.2.5 I installed from the rpm. The files 
+            installed successfully, but the initialization script failed. What 
+            should I do?</a> </a> 
+            <p><a><br>
+              If the initialization scripts failed, you do not need to re-install 
+              the rpm. First, determine why the initialization script failed and 
+              address the issue. Then you can run the necessary initialization 
+              scripts manually. </a></p>
+            <p><a></a></p>
+            <p><a>If the database didn't get installed, run:<br>
+              <i>[root] #</i><b>geoss_initialize --db_name=geoss --db_user=geoss<br>
+              </b></a></p>
+            <p><a>If a specific layout didn't get loaded, it can be loaded using 
+              the geoss_loadaffylayout script.<br>
+              </a></p>
+            <p><a>If a specific analysis didn't get loaded, it can be loaded using 
+              the geoss_add_analysis script.<br>
+              </a></p>
+            <p><a>If the admin account was not successfully added, it can be added 
+              using the geoss_adduser script. Do note that if the admin account 
+              was not successfully created, then the layout loads will also fail. 
+              All layouts can be re-loaded using the geoss_add_all_layouts script.<br>
+              </a></p>
+            <p><a> <br>
+              See the <a href="./admin_guide.html">Admin Guide</a> for further 
+              information on initialization scripts.<br>
+              <a href="#__TOC3.2.5">Back to TOC</a> </a></p>
+            <p><a></a></p>
+          </li>
+        </ul>
+        <li><a><a name="__BODY3.3"></a>3.3 Security </a> 
+          <p><a><a>Disclaimer: While we devoted considerable effort to ensuring 
+            GEOSS data is secure, you should perform your own security analysis 
+            to ensure the product meets your security requirements.</a></a></p>
+          <p><a><a><br>
+            <a href="#__TOC3.3">Back to TOC</a> </a></a></p>
+          <p><a><a></a></a></p>
+          <ul>
+            <li><a><a><a name="__BODY3.3.1">3.3.1 What should I do to secure GEOSS?</a> 
+              </a></a> 
+              <ul>
+                <li><a><a>GEOSS is intended to be run on a box where untrusted 
+                  users do not have command line access. If you are storing sensitive 
+                  data in GEOSS, it is recommended that provide such a setting.</a></a></li>
+                <li><a><a>If you do not provide a dedicated environment, consider 
+                  using suExec.</a></a></li>
+                <li><a><a>You should definitely be using https/SSL</a></a></li>
+                <li><a><a>PostgreSQL port should only be open to the local machine</a></a></li>
+                <li><a><a>Make sure you change your administrator password from 
+                  the default value</a></a></li>
+                <li><a><a>Make sure that access to GEOSS database is encrypted 
+                  (set to md5 not trust in pg_hba.conf)</a></a></li>
+              </ul>
+              <p><a><a><br>
+                <a href="#__TOC3.3.1">Back to TOC</a> </a></a></p>
+              <p><a><a></a></a></p>
+            </li>
+            <li><a><a><a name="__BODY3.3.2">3.3.2 Are there security issues that 
+              I should be aware of?</a> </a></a> 
+              <ul>
+                <li><a><a> The database password for the geoss database is visible 
+                  to anyone who has shell access as the user who runs the webserver. 
+                  </a></a></li>
+                <li><a><a> End user files (which contain gene chip data) are accessible 
+                  to anyone who has shell access as the web user. </a></a></li>
+              </ul>
+              <p><a><a><br>
+                <a href="#__TOC3.3.2">Back to TOC</a> </a></a></p>
+              <p><a><a></a></a></p>
+            </li>
+          </ul>
+        </li>
+        <li><a><a><a name="__BODY3.4"></a>3.4 Installing/Configuring Dependencies 
+          </a></a> 
+          <p><a><a><a><br>
+            Note that we have not done extensive testing on alternate configurations. 
+            GEOSS is intended to be run in a dedicated environment. However, it 
+            is often useful to have it installed with other applications (particularly 
+            in a development scenario), so the following answers provide some 
+            hints on how to achieve an alternative installation. <br>
+            <a href="#__TOC3.4">Back to TOC</a> </a></a></a></p>
+          <p><a><a><a></a></a></a></p>
+          <ul>
+            <li><a><a><a><a name="__BODY3.4.1">3.4.1 Apache</a> </a></a></a> 
+              <p><a><a><a><br>
+                <a href="#__TOC3.4.1">Back to TOC</a> </a></a></a></p>
+              <p><a><a><a></a></a></a></p>
+              <ul>
+                <li><a><a><a><a name="__BODY3.4.1.1">3.4.1.1 How do I get Apache 
+                  to run when the system starts up?</a> </a></a></a> 
+                  <p><a><a><a><br>
+                    <b>man ntsysv</b><br>
+                    <b>man chkconfig</b><br>
+                    <br>
+                    <a href="#__TOC3.4.1.1">Back to TOC</a> </a></a></a></p>
+                  <p><a><a><a></a></a></a></p>
+                </li>
+                <li><a><a><a><a name="__BODY3.4.1.2">3.4.1.2 How do I set up Virtual 
+                  Hosting?</a> </a></a></a> 
+                  <p><a><a><a>Substitute your server's ip address and the fully 
+                    qualified domain name assigned to your server by your hostmaster.<br>
+                    NameVirtualHost 10.10.1.5 &lt;VirtualHost 10.10.1.5&gt; DocumentRoot 
+                    /var/www/html/geoss ServerName genes.med.virginia.edu &lt;/VirtualHost&gt; 
+                    # Apache will only listen on port 80 by default. Defining 
+                    the virtual server # (below) won't make it automatically listen 
+                    on the virtual server's port. Listen 443 &lt;VirtualHost _default_:443&gt; 
+                    # General setup for the virtual host DocumentRoot "/var/www/html" 
+                    # SSL Engine Switch: # Enable/Disable SSL for this virtual 
+                    host. SSLEngine on </a></a></a></p>
+                  <p><a><a><a><br>
+                    <a href="#__TOC3.4.1.2">Back to TOC</a> </a></a></a></p>
+                  <p><a><a><a></a></a></a></p>
+                </li>
+                <li><a><a><a><a name="__BODY3.4.1.3">3.4.1.3 How do I set up Apache 
+                  to support an install in a User Directory?</a> </a></a></a> 
+                  <p><a><a><a> Make the following changes in httpd.conf:<br>
+                    </a></a></a></p>
+                  <ul>
+                    <li><a><a><a> Comment out the line disabling UserDir so that 
+                      it reads:<br>
+                      <b> #UserDir disable</b></a></a></a></li>
+                    <li><a><a><a> Uncomment the line that sets the UserDir value 
+                      so that it reads:<br>
+                      <b> UserDir public_html</b></a></a></a></li>
+                    <li><a><a><a> You then need to add a directive for files served 
+                      from UserDir. Assuming you are only running geoss files, 
+                      that directive will be:<br>
+                      <b>&lt;Directory /home/*/public_html&gt;a<br>
+                      AllowOverride Limit<br>
+                      Options ExecCGI SymLinksIfOwnerMatch<br>
+                      Order allow,deny<br>
+                      &lt;/Directory&gt;<br>
+                      </b> </a></a></a></li>
+                    <li><a><a><a> Remember that the public_html directory will 
+                      need to have 755 permissions and that the user home directory 
+                      will need to have 711 permissions for this to work.</a></a></a> 
+                      <p><a><a><a> This configuration would support a build with 
+                        the options illustrated in <a href="#__BODY3.2.4">Question 
+                        3.2.4</a></a></a></a></p>
+                    </li>
+                  </ul>
+                  <p><a><a><a><br>
+                    <a href="#__TOC3.4.1.3">Back to TOC</a> </a></a></a></p>
+                  <p><a><a><a></a></a></a></p>
+                </li>
+                <li><a><a><a><a name="__BODY3.4.1.4">3.4.1.4 How do I set up Apache 
+                  to use suExec?</a> </a></a></a></li>
+                <li><a><a><a><a name="__BODY3.4.1.5">3.4.1.5 Do I have to use 
+                  Apache as my web server?</a> </a></a></a> 
+                  <p><a><a><a>We have not tested GEOSS with any other web server. 
+                    Theoretically, it should be possible to use a different one. 
+                    <br>
+                    <a href="#__TOC3.4.1.5">Back to TOC</a> </a></a></a></p>
+                  <p><a><a><a></a></a></a></p>
+                </li>
+              </ul>
+            </li>
+            <li><a><a><a><a name="__BODY3.4.2">3.4.2 Perl Modules</a> </a></a></a> 
+              <p><a><a><a><br>
+                <a href="#__TOC3.4.2">Back to TOC</a> </a></a></a></p>
+              <p><a><a><a></a></a></a></p>
+              <ul>
+                <li><a><a><a><a name="__BODY3.4.2.1">3.4.2.1 Do I have to use 
+                  rpm to install Perl Modules?</a> </a></a></a> 
+                  <p><a><a><a>If you are going to use rpm to install GEOSS, then 
+                    you should use rpm to install the Perl Modules, or the dependency 
+                    checks will fail. You can install modules anyway you want 
+                    if you don't use an rpm to install GEOSS. </a></a></a></p>
+                  <p><a><a><a><br>
+                    <a href="#__TOC3.4.2.1">Back to TOC</a> </a></a></a></p>
+                  <p><a><a><a></a></a></a></p>
+                </li>
+              </ul>
+            </li>
+            <li><a><a><a><a name="__BODY3.4.3"></a>3.4.3 Postgres </a></a></a> 
+              <p><a><a><a><a><br>
+                <a href="#__TOC3.4.3">Back to TOC</a> </a></a></a></a></p>
+              <p><a><a><a><a></a></a></a></a></p>
+              <ul>
+                <li><a><a><a><a><a name="__BODY3.4.3.1"></a>3.4.3.1 How do I get 
+                  Postgres to run when the system starts up? </a></a></a></a> 
+                  <p><a><a><a><a><a><b>man ntsysv<br>
+                    man chkconfig</b> <br>
+                    <a href="#__TOC3.4.3.1">Back to TOC</a> </a></a></a></a></a></p>
+                  <p><a><a><a><a><a></a></a></a></a></a></p>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      <p><b><a name="__BODY4.0">4.0</a>&nbsp;Upgrade</b> <br>
+        <a href="#__TOC4.0">Back to TOC</a> </p>
+      <ul>
+        <li><b><a name="__BODY4.1"></a>4.1 Upgrade Description </b> 
+          <p><br>
+            Upgrading GEOSS code is quite simple and merely involves upgrading the rpm: <b> rpm -U <current geoss rpm file> </b>.  However, there may be initial changes necessary that involve making database changes or installing new software dependencies.  For information on these changes, view the Release Notes.
+            <a href="#__TOC4.1">Back to TOC</a> </p>
+              <p>&nbsp;</p>
+         </li> 
+       </ul>
+            </li>
+
+      </ul>
+    </td>
+</table>
+
+<br>
+</body>
+</html>
+
+

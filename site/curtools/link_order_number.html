@@ -1,0 +1,65 @@
+<form action="link_order_number.cgi" method=POST
+  enctype="multipart/form-data">
+<table width=700 border=1 cellpadding=2 cellspacing=0>
+  <tr>
+   <th>*Select Study</th>
+   <th>Name</th>
+   <th>Owner</th>
+   <th>Group</th>
+   <th>Status</th>
+   <th>Unassigned Samples</th>
+   <th>Unassigned Chips</th>
+  </tr>
+  <loop2>
+  <tr>
+   <td><input type="radio" name="sty_pk" value="{sty_pk}"></td>
+   <td>{name}</td>
+   <td>{owner}</td>
+   <td>{group}</td>
+   <td>{status}</td>
+   <td>{number_of_samples}</td>
+   <td>{number_of_chips}</td>
+  </tr>
+  <tr>
+</loop2>
+</table>
+<p>
+<table width=700 border=1 cellpadding=2 cellspacing=0>
+  <tr>
+   <th>*Select Order</th>
+   <th>Order Pk</th>
+   <th>Order Number</th>
+   <th>Owner</th>
+   <th>Group</th>
+   <th>Status</th>
+   <th>Samples</th>
+   <th>Chips</th>
+   <th>Chip Type</th>
+   <th>Study</th>
+   <th>Organization</th>
+   <th>Billing Code</th>
+  </tr>
+  <loop>
+  <tr>
+   <td><input type="radio" name="oi_pk" value="{oi_pk}"></td>
+   <td>{oi_pk}</td>
+   <td>{name}</td>
+   <td>{owner}</td>
+   <td>{group}</td>
+   <td>{status}</td>
+   <td>{number_of_samples}</td>
+   <td>{number_of_chips}</td>
+   <td>{chip_type}</td>
+   <td>{study}</td>
+   <td>{organization}</td>
+   <td>{billing_code}</td>
+  </tr>
+  <tr>
+</loop>
+</table>
+<p>
+<input type="submit" name="submit" value="Assign Order To Study">
+</form>
+<p>
+<small>* denotes mandatory field</small>
+</p>

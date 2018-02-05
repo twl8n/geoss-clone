@@ -1,0 +1,86 @@
+<html>
+<head><title>Quality Control Analysis Documentation</title></head>
+<body bgcolor="#FFFFFF">
+<p><b>Description</b><br>
+The quality of the results of an analysis depend on the quality of the input
+data.  The "Quality Control" (QC) module produces some indicators of the
+quality of data. They are:<br>
+<li>Scatter plot of data from chips within the same condition, the replicates,
+along with the scatter plot of data from chips of different conditions. The
+assumption is that the data by replicate chips should look much more similar
+than the data by chips from different conditions. If data from two chips are
+very similar, the data points should concentrate along the 45-degree line in
+the scatter plot. The more the points are scattered away from the 45-degree
+line, the less similar the chips are.<br> 
+<li>Specificity and sensitivity. Specificity, or reproducibility, is
+average correlation between replicated arrays within each condition.
+Sensitivity is difference between specificity and average correlation between
+non-replicated arrays.<br>
+The QC module performs normalization of data.  It then writes the normalized
+data into the disk for later use by other GEOSS modules.  It also has an
+option for 'lowess' normalization of data.  This type of normalization may be
+required once the scatter plots show a curvature.  Version 2 uses R
+2.4.0.
+</p>
+
+<p><br>
+<b>Statistical Methods</b><br>
+The following computations are done on the inputted data:
+<li>Removes Affymetrix control probe sets.<br>
+<li>Normalizes the data by adjusting the inter-quartile range (IQR) of each
+chip to equal the maximum IQR, and the medians to the maximum median across
+all chips.  To adjust the IQRs, it computes the ratio of IQR of each chip to
+the maximum IQR of all the chips.  It then divides the chip values by this
+ratio.  For the medians it computes the difference between maximum median of
+all the chips with each chip, then subtracts the chip values.<br>
+<li> Optionally does a lowess normalization.  Using the first chip as
+reference, it fits a lowess curve to scatter plot of first chip against the
+next chip, then computes the deviation from the 45-degree line, and subtracts
+it from the second chip.  This process is repeated for each chip.<br>
+<li>A thresholding at 1 is done.
+<li>For plotting and for computing the specificity and sensitivity, a
+log-base-2 transformation is done.
+
+<p><br>
+  <b>Input files</b><br>
+Quality Control expects input in this form:<br>
+</p>
+<ul>
+  <li> A file containing chip data. The file should have row and column labels.<br>
+</ul>
+Analyses that create input in this format include:<br>
+<ul>
+  <li> File extract (analysis version)<br>
+</ul>
+<p>&nbsp;</p>
+<p><b>Output files</b><br>
+  Quality Control creates the following output:<br>
+</p>
+<ul>
+  <li> A data file containing normalized data
+  <li> Scatter plots of data
+  <li> Text file stating specificity and sensitivity <br>
+</ul>
+ Analyses that accept quality control output as input include:<br>
+<ul>
+  <li>Differential Discovery<br>
+  <li>Multi-condition Differential Discovery<br>
+  <li>Add Links<br>
+ </ul>
+<p>&nbsp;</p>
+<p><b>Parameters:</b><br>
+</p>
+<ul>
+  <li> Type of graphical output - specifies the type of output for graphical data 
+    (pdf or jpg). It you want data suitable for publishing, choose 'pdf'. The 
+    jpg format uses less space but the quality is not as good.<br>
+
+   <li> Perform lowess normalization - performs LOWESS normalization in addition to the default IQR normalization. <br>
+
+</ul>
+<p><br>
+  <br>
+</p>
+</body></html>
+
+

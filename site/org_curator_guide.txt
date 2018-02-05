@@ -1,0 +1,134 @@
+This document describes the use and purpose of the Organization portion of the GEOSS system from the curator perspectives.   
+
+
+An "Organization Curator" acts as the administrator to all relevant data
+pertaining to their associated organization. They will be in charge of adding
+and removing users as well as authorizing orders which are placed under the
+ownership of that organization.
+
+
+Organization Curator Guide Table of Contents:
+
+
+1.0 Organization Home: The Curator's Administration Tool
+	
+	1.1 Approve Orders
+
+	1.2 View Reports
+
+	1.3 Edit Organization Members
+
+	1.4 Edit Organization Information
+
+	1.5 Upload logo/icon file
+
+
+
+
+Organization Curator Guide: Contents
+
+1.0 Organization Home: The Curator's Administration Tool
+
+Administration tools are available to each organization curator via their
+"Org Home" page. When a user who is a curator of a particular organization
+logs in they will be taken to their Org Home page. They will also be provided 
+with a link to their Org Home which can be found in the page header. If they 
+are curators of more than one organization then each link on the Org Home page 
+will allow them to choose which organization they are administering at that moment.  
+Back to TOC 
+
+	1.1 Approve Orders
+	
+	The approve orders link allows a curator to see a list of all orders
+	which are currently assigned to their organization. This list includes
+	orders awaiting approval as well as those recently approved. Future
+	system enhancements will include an archive of older approved orders.
+	Once approved the orders are marked as complete and ready for
+	processing by the array lab.  
+	Back to TOC
+
+	1.2 View Reports
+	
+	Organization Curators can see reports for each organization of which
+	they are a curator. The following fields can be seen on the
+	organization report:
+		
+		Order Number: An order number is assigned to a user by the
+		array lab upon request. This order number links the samples to
+		a particular study and set of experimental conditions.  
+
+		Is Approved: This column provides the date in which the order
+		was approved and also notes if it has not been approved yet.  
+
+		Approval Comments: The organization curator can choose to list
+		comments when approving orders. These comments are posted
+		here.
+	
+		Order Status: The status of an existing order is displayed in this field and
+		can be set to Incomplete, Complete, Submitted, Approved and
+		Finished.  
+
+		Study: The name of the study under which the order was placed. 
+
+		Study Comments: Any comments that were entered at the time the
+		study was created.  
+
+		PI Name: The name of the PI on the project, or person who owns
+		the data.
+
+	The report can be sorted on any of the columns listed.
+ 
+	 	
+	1.3 Edit Organization Members
+
+	This link allows the organization curator to add and remove members
+	from their organization. The curator can also specify the role of the
+	member: user or curator.  
+
+	1.4 Edit Organization Information
+
+	The organization curator can use this link to modify the specifics of
+	their organization. The following items are configurable:
+
+		Organization Name: This field is set by the Admin when he/she
+		initially creates the organization and can only be edited by
+		the administrator.
+
+		Organization Description: This describes the curator's
+		organization. It can be seen under the admin's "view
+		all organizations link.
+
+		Organization Phone Number: The contact number for the
+		organization.
+
+		Billing Discount(%): Enter here the amount that the array
+		center should discount billing on orders based on their
+		agreement with the organization.
+
+		Organization URL: This field displays the URL to to the
+		organization's web site. It is used when the organization has
+		a logo displayed on the main GEOSS page. The logo will link to
+		this URL.	 
+
+		Organization Logo: This drop down lists the possible logos
+		that can be used by the organization on the main GEOSS web
+		page. It represents any logos that have been uploaded by the
+		organization curator (see 1.5 of this document).
+
+		Organization Icon: This feature is not yet functioning on
+		GEOSS.  	 
+		 
+		Orders Require Approval Before Array Center Processing: If
+		this box is checked all completed orders that are submitted
+		will be sent to the organization curator for approval before
+		being sent to the array center for processing.
+
+		  
+	1.5 Upload logo/icon file
+
+	Graphic images can be uploaded to be used as a logo on the main GEOSS web page.
+	The logo will be placed in the magenta colored bar on the left of the
+	screen to show support for the organization. The logo will link to the
+	Organization web site if provided in the "Organization URL" field on
+	this configuration page. 
+	The icon feature has not yet been implemented.

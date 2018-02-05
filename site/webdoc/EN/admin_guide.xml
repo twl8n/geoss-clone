@@ -1,0 +1,7 @@
+<book id="admin_guide">
+<title>Administrator Guide</title>
+&admin_workflow;
+&admin_gui;
+&admin_command;
+&admin_faq;
+</book>

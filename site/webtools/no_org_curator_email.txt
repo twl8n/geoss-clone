@@ -1,0 +1,13 @@
+To: {email}
+Cc: {ccMail}
+From: {fromMail}
+Subject: Incorrect GEOSS organization configuration
+
+Array order {oi_pk} was just submitted for approval.  It is part of 
+organization {org_name} (org_fk).   This organization requires array 
+orders to be approved, but no organization administrator has been configured.
+
+The order has been automatically approved and forward to the array center
+staff.  However, the configuration should be fixed so that there is a 
+organization administrator or so that orders do not require approval.
+

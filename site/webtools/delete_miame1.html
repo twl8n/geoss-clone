@@ -1,0 +1,21 @@
+<table width=700 border=1 cellpadding=0 cellspacing=0>
+ <tr>
+   <td valign="top">
+     Miame name: <b>{miame_name_val}</b><br>
+     Miame description: {miame_description_val}<br>
+   </td>
+   <td valign="top" width="30%">
+
+   <form action="delete_miame1.cgi" method=POST>
+   <input type="hidden" name="miame_pk" value="{miame_pk_val}"><br>
+   <input type="submit" name="submit" value="Delete publishing information
+now">
+   </form>
+   This will delete publishing information for the {miame_name_val} study. 
+    If the data has not yet been published, all MIAME information will be
+erased.  Original data will not be affected.  If the study has already been
+published, data will remain published in its current form.  To remove already
+published data, contact your system administrator.
+   </td>
+ </tr>
+</table>

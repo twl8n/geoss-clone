@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>GEOSS Affymetrix Chip Data Loading</title>
+<meta name="description" content="GEOSS is an Open Source Gene Expression Database supporting storage and analysis of Affymetrix&reg; GeneChip&reg; technology, with planned support for two color spotted arrays and other gene expression measurement technologies. GEOSS is designed to serve as an secure repository and archive for many researchers' data. ">
+</head>
+
+<body bgcolor="#FFFFFF" link="#006633" vlink="#666633" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr valign="top"> 
+    <td width="10">&nbsp;</td>
+    <td width="100"><font face="Verdana, Arial, Helvetica, sans-serif" size="+1"><a href="./index.cgi"><img src="graphics/geoss_logo.jpg" width="216" height="96" border="0"></a></font></td>
+    <td width="8">&nbsp;&nbsp;</td>
+    <td width="490"><font face="Verdana, Arial, Helvetica, sans-serif" size="+1">GEOSS: 
+      How to load Affymetrix (MAS 5.0 and DChip) data.</font> </td>
+  </tr>
+</table>
+<br>
+<br>
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr> 
+    <td width="8" valign="top">&nbsp;&nbsp; </td>
+    <td width="20" valign="top" bgcolor="990066">&nbsp;</td>
+    <td width="8" valign="top">&nbsp;&nbsp;&nbsp;</td>
+    <td width="564" valign="top"> 
+      <p>Created by Jodi Kanter, Tom Laudeman.<br>
+        University of Virginia<br>
+        December 9, 2002<br>
+        <br>
+        Currently both MAS (Affymetrix MicroArray Suite) and dchip data files 
+        can be loaded into the GEOSS version 1 database. There are three separate 
+        spots tables into which the derived values are loaded: "am_spots_mas5," 
+        "am_spots_mas4," and "am_spots_dchip." All other table modifications are 
+        consistent among all three types of data.<br>
+        <br>
+        The MAS data files are loaded in Excel format:<br>
+        <br>
+        1. Open a .chp file from within the MAS software program.<br>
+        <br>
+        2. Click on the "options" button located on the toolbar at the top of 
+        the page. On the "metrics" tab make sure the "save all metrics results" 
+        box is checked and the "save each analysis to a separate file" is selected.<br>
+        <br>
+        3. Do a FILE, SAVE AS and change the "save as type" at the bottom of the 
+        dialog box to Excel file. <br>
+        <br>
+        ** IMPORTANT NOTE: The script used to be set up to load excel files created 
+        where the option setting was "Save Analysis Setting." This was changed 
+        as the first two columns were found not to be useful. However the script 
+        still anticipates that a particular heading will exist in the Excel File. 
+        Make sure the following exists on line 16 of the file, following the header:<br>
+        <br>
+        Expression Analysis: Metrics Tab<br>
+        <br>
+        Insert this into line 16 and add a blank row. This string above must exist 
+        on line 16 and the data must begin on line 19 (column titles in row 18) 
+        for the data to load correctly, otherwise you risk missing some data in 
+        the load.<br>
+        <br>
+        ** We are hoping to correct this script by the end of July 2002. Once 
+        corrected, the script will no longer rely on this manual entry and will 
+        also support the upload of MAS 4.0 data.<br>
+        <br>
+        <br>
+        Loading the Data File.<br>
+        <br>
+        Loading MAS 5.0 Data<br>
+        <br>
+        MAS 5.0 data (and very soon MAS 4.0 data) are loaded by the curators from 
+        the curator's web page. The data must be present in a predetermined location 
+        in either Excel or tab separated text format. All of the Affymetrix files 
+        must be present as well. For each completed hybridization, there will 
+        be a &quot;Load &lt;order number&gt;&quot; button on the curator's web 
+        page.<br>
+        <br>
+        <br>
+        Loading DChip Data.<br>
+        <br>
+        To load the dchip data use the loadchip_spots.pl. The command and procedure 
+        is similar to that stated above for the MAS data. The spots data will 
+        be loaded to the am_spots_dchip table.<br>
+        <br>
+        <font size="-2" face="Courier New, Courier, mono">$ loaddchip_spots.pl 
+        --am_pk=123 --dbname=geoss /PATH/file_name.xls</font></p>
+      <p>&nbsp;</p>
+    </td>
+  </tr>
+</table>
+<p>&nbsp; </p>
+</body>
+</html>

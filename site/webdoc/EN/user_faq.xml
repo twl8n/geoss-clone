@@ -1,0 +1,69 @@
+<part id="user_faq">
+<title>FAQ</title>
+<qandaset>
+
+<qandadiv id="user_faq_analysis"><title>Analysis</title></qandadiv>
+<qandaentry>
+  <question>
+    <para>
+      My analysis didn't generate result files.  What happened?
+    </para>
+  </question>
+  <answer>
+    <para>
+      If you have waited the appropriate amount of time and there are no
+      output files, then one of the analysis modules has crashed.  See
+      <link linkend="troubleshooting_tree_failures">Troubleshooting Tree
+      Failures</link> for information on determining why the tree
+      crashed.  
+    </para>
+  </answer>
+</qandaentry>
+
+<qandaentry>
+  <question>
+    <para>
+      Why can't I view the results of the treedraw analysis? 
+    </para>
+  </question>
+  <answer>
+    <para>
+      If you are trying to view the results of the treedraw analysis
+      using Acrobat Reader and Reader crashes, you may have run treedraw
+      with too many input rows.  You may either view the output pdf
+      using a different pdf viewer, like xpdf, or you should restrict
+      the number of rows that treedraw takes as input.   
+    </para>
+  </answer>
+</qandaentry>
+
+<qandadiv id="user_faq_special_center"><title>Special Centers</title></qandadiv>
+
+<qandaentry>
+  <question>
+    <para>
+      My <link linkend="array_order">array order</link> isn't associated
+      with a <link linkend="special_center">special center</link>, but 
+      it should be.  Why?  How can I correct it?
+    </para>
+  </question>
+  <answer>
+    <para>
+      Array orders should be associated with special centers when you
+      initially request the order.  If you do not see the option for 
+      the special center that you are a part of, you need to contact 
+      the <link linkend="special_center_administrator_user">special 
+      center administrator</link> or the <link
+      linkend="administrator_user">administrator</link> so that you 
+      can be designated as a member of the special center in &product;.
+    </para>
+    <para>
+      If the order has already been created and is not associated with
+      the special center, you will have to contact the administrator for
+      assistance in correcting the problem.
+    </para>
+  </answer>
+</qandaentry>
+
+</qandaset>
+</part>

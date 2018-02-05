@@ -1,0 +1,79 @@
+ {oi_form}
+<br>
+<table width="750" border="1" cellpadding="2" cellspacing="0">
+  <tr> 
+    <td valign="top"> <form action="{action_url}" method=POST>
+<input type="hidden" name="order_number" value="{order_number}">
+<input type="submit" name="submit" value="Return to Array Order">
+</form><br>
+      <table width="100%" border="0" cellspacing="0" cellpadding="3">
+        <tr valign="top"> 
+          <td width="324"> 
+            <div align="right">Hybridization name</div>
+          </td>
+          <td width="10">&nbsp;</td>
+          <td width="408">{hybridization_name}</td>
+        </tr>
+        <tr valign="top"> 
+          <td width="324"> 
+            <div align="right">Background</div>
+          </td>
+          <td width="10">&nbsp;</td>
+          <td width="408">{background}</td>
+        </tr>
+        <tr valign="top"> 
+          <td width="324"> 
+            <div align="right">Noise</div>
+          </td>
+          <td width="10">&nbsp;</td>
+          <td width="408">{noise}</td>
+        </tr>
+        <tr valign="top"> 
+          <td width="324"> 
+            <div align="right">Scale Factor</div>
+          </td>
+          <td width="10">&nbsp;</td>
+          <td width="408">{scale_factor}</td>
+        </tr>
+        <tr valign="top"> 
+          <td width="324"> 
+            <div align="right">Percent Present</div>
+          </td>
+          <td width="10">&nbsp;</td>
+          <td width="408">{percent_present}</td>
+        </tr>
+        <tr valign="top"> 
+          <td width="324"> 
+            <div align="right">BioB 3'</div>
+          </td>
+          <td width="10">&nbsp;</td>
+          <td width="408">{biob_3_detection}</td>
+        </tr>
+        <tr valign="top"> 
+          <td width="324"> 
+            <div align="right">BioB 5'</div>
+          </td>
+          <td width="10">&nbsp;</td>
+          <td width="408">{biob_5_detection}</td>
+        </tr>
+        <tr valign="top"> 
+          <td width="324"> 
+            <div align="right">Lot Number</div>
+          </td>
+          <td width="10">&nbsp;</td>
+          <td width="408">{lot_number}</td>
+        </tr>
+<loop> 
+        <tr valign="top"> 
+          <td width="324"> 
+            <div align="right">{control_name}</div>
+          </td>
+          <td width="10">&nbsp;</td>
+          <td width="408">{control_value}</td>
+        </tr>
+</loop>
+      </table>
+      <br>
+    </td>
+  </tr>
+</table>

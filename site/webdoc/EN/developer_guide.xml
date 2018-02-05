@@ -1,0 +1,1777 @@
+<book id="developer_guide">
+<title>Developer Guide</title>
+
+<part id="development_components_explained">
+<title>Development Components Explained</title>
+<article id="directory_structure">
+  <title>Directory Structure</title>
+  <para>
+  The &product; directory structure attempts to group files together 
+  logically by function.  Sibling subdirectories of the top directory can 
+  have different build/install rules, but subdirectories of each sibling
+  should have the same rules as their parent.  
+  </para>
+  <variablelist>
+
+   <varlistentry> 
+     <term>
+       geoss
+     </term>
+     <listitem>
+       <para>
+         This is the top level directory.  It contains files pertaining to 
+         building &product; and the license file.  Typically, you should
+         not need to add files in this directory.
+       </para>
+     </listitem>
+   </varlistentry>
+
+   <varlistentry> 
+     <term>
+       geoss/bin
+     </term>
+     <listitem>
+       <para>
+         This directory contains scripts that are intended to be run by
+         from the command line by &product; <link linkend="administrator_user">
+         administrators</link>.  Names of scripts should begin with "geoss_" 
+         so that they are clearly identifiable as &product; scripts.  
+         Files in this directory are installed into the <link linkend=
+         "BIN_DIR">BIN_DIR</link> directory.  If a script is intended for 
+         use via the web interface, but not the command-line, then it 
+         should be in the appropriate subdirectory of geoss/site, not 
+         in the bin directory.
+       </para>
+     </listitem>
+   </varlistentry>
+
+   <varlistentry> 
+     <term>
+       geoss/database
+     </term>
+     <listitem>
+       <para>
+         This directory contains files for defining and initialing the 
+         database.  It is not anticipated that developers should need
+         to add files to this directory.  Changes to <filename>
+         geoss_schema.in</filename> should be coordinated with 
+         Jodi Kanter(
+         <email>jkanter@virginia.edu</email>).  The files in this directory
+         are used by <command>geoss_initialize</command> and thus need
+         to be installed.  They are installed in <link linkend="WEB_DIR">
+         WEBDIR</link>/database.
+       </para>
+     </listitem>
+   </varlistentry>
+
+
+   <varlistentry> 
+     <term>
+       geoss/devtools
+     </term>
+     <listitem>
+       <para>
+         This directory contains scripts and files that are useful to 
+         developers but are not necessary for installing &product;. 
+         For example, it includes the spec file for building the rpm
+         and a file for creating a .cvsignore file.  Files in this
+         directory should be code or pseudo-code and are not installed.
+       </para>
+     </listitem>
+   </varlistentry>
+
+
+   <varlistentry> 
+     <term>
+       geoss/doc
+     </term>
+     <listitem>
+       <para>
+         This directory contains documentation files that are not 
+         released to the end user.  This includes test documents and 
+         design documents.  New developers should review the contents
+         of this directory.  Files in this directory are text files 
+         and are not installed.
+       </para>
+     </listitem>
+   </varlistentry>
+
+
+   <varlistentry> 
+     <term>
+       geoss/lib
+     </term>
+     <listitem>
+       <para>
+         This directory contains files that have functions for use 
+         by multiple files.  Files in this directory are installed in 
+         the <link linkend="LIB_DIR">LIB_DIR</link> directory.
+       </para>
+     </listitem>
+   </varlistentry>
+
+
+   <varlistentry> 
+     <term>
+       geoss/site
+     </term>
+     <listitem>
+       <para>
+         This directory contains scripts and pages associated with the 
+         parts of &product; that can be accessed without logging 
+         in.  Files in site and its subdirectories will
+         be accessible via the web interface. To that end, they will 
+         be in the <link linkend="WEB_USER">WEB_USER</link>
+         group and are installed in <link linkend="WEB_DIR">WEB_DIR</link>.  
+       </para>
+       <para>
+          Files that are in subdirectories of site are all built and 
+          installed in the same fashion. They are separated into 
+          directories by project component in order to keep directory 
+          sizes reasonable and make things easy to find.  Components for
+          <link linkend="admin_gui">&admin_home;</link> are found in the 
+          <filename>admintools</filename> directory.  Components for 
+          <link linkend="user_gui">
+          &mem_home;</link> are found in the <filename>webtools</filename>
+          directory.  Components for <link 
+          linkend="special_center_gui">&center_home;
+          </link> are found in "orgtools". 
+          Components for <link linkend="array_center_staff_gui">
+          &array_home;</link> are found in the
+          <filename>curtools</filename> directory. Non-documentation
+          related graphics are in the <filename>graphics</filename> 
+          subdirectory.
+       </para>
+       <para>
+          Documentation files are found under the <filename>webdoc</filename>
+          subdirectory.  
+          Documentation related graphics are found in
+          <filename>webdoc/EN/graphics</filename>.
+       </para>
+     </listitem>
+   </varlistentry>
+
+  </variablelist>
+
+</article>
+
+<article id="schema">
+  <title>Schema</title>
+  <para>
+  The schema is represented by five images and is intended to serve as a
+  reference for programmers and database administrators.  This material
+  is not useful for general users.  
+  </para>
+  <para>
+
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="../graphics/schema_main.jpg"
+        format="JPG">
+        </imagedata>
+        <textobject>
+            Array Study Tables 
+        </textobject>
+        <caption>
+          <para>
+            This images depicts the tables which hold the conceptual
+            criteria for <link linkend="array_study">array studies</link> 
+            as well as the tables which hold
+            the derived Affymetrix spot values.
+          </para>
+        </caption>
+      </imageobject>
+    </mediaobject>
+  </para>
+
+  <para>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="../graphics/schema_order_billing.jpg"
+        format="JPG">
+        </imagedata>
+        <textobject>
+            Order and Billing Tables 
+        </textobject>
+        <caption>
+          <para>
+            These tables are associated with <link
+            linkend="array_order">array orders</link>, billing
+            information, and <link linkend="hybridization">hybridization
+            </link> information.
+          </para>
+        </caption>
+      </imageobject>
+    </mediaobject>
+  </para>
+
+  <para>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="../graphics/schema_layout.jpg"
+        format="JPG">
+        </imagedata>
+        <textobject>
+            Layout Tables 
+        </textobject>
+        <caption>
+          <para>
+            These tables contain data pertaining to a particular 
+            <link linkend="layout">layout</link>.  Related <link
+            linkend="hybridization">hybridization</link> and derived
+            spot value data can also be seen.
+          </para>
+        </caption>
+      </imageobject>
+    </mediaobject>
+  </para>
+  
+  <para>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="../graphics/schema_security.jpg"
+        format="JPG">
+        </imagedata>
+        <textobject>
+            Security Tables 
+        </textobject>
+        <caption>
+          <para>
+            These tables are part of the &product; security model.  
+            The system tracks
+            <link linkend="users">users</link>, <link
+            linkend="primary_investigators">PIs</link>, and <link
+            linkend="group">group membership</link> in order to control
+            read/write privileges at the record level. 
+          </para>
+        </caption>
+      </imageobject>
+    </mediaobject>
+  </para>
+
+  <para>
+    <mediaobject>
+      <imageobject>
+        <imagedata fileref="../graphics/schema_analysis.jpg"
+        format="JPG">
+        </imagedata>
+        <textobject>
+            Analysis Tables 
+        </textobject>
+        <caption>
+          <para>
+            This image shows the tables that support &product; <link
+            linkend="analysis_tree">analysis trees</link>.
+          </para>
+        </caption>
+      </imageobject>
+    </mediaobject>
+  </para>
+</article>
+
+<article id="installing_a_development_environment">
+  <title>Installing a Development Environment</title>
+  <para>
+    You can expect to spend some time installing a &product; development 
+    environment.  In a best case scenario, where all the dependencies 
+    have been installed, you could potentially install &product; in about 
+    an hour. However, if you also need to install and configure Apache, 
+    Postgres, and R, you should plan several days for the install.
+  </para>
+  <para>
+    To start developing on &product;:
+      <variablelist>
+        <varlistentry>
+          <term>
+            Get developer access to the source code 
+          </term>
+          <listitem>
+            <para>
+        This is necessary only if you will be checking changes into the 
+        &product; code base. To get access you must contact Dawn 
+        Adelsberger <email>dma9w@virginia.edu</email>. 
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>
+            Install dependencies 
+          </term>
+          <listitem>
+            <para>
+              If you are installing in a multi-developer environment and 
+              other systems are already configured, you can skip this step,
+              as dependency software will already be installed.  However,
+              if this is the first install on a system all dependencies 
+              will need to be installed as described in the <link linkend=
+              "install_guide">install guide.</link>          
+            </para>
+            <para>
+              When creating your <link linkend="postgres_database">
+              Postgres Database</link> ensure that you have a distinct 
+              database name.  If you have a multi-developer system,
+              all users can't have the "geoss" database (as in our 
+              install example).  On our multi-developer system, we
+              name the database for each developer after the 
+              developer's <link linkend="&product;_login_id">&product;
+              login id</link>.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>
+            Check out source code
+          </term>
+          <listitem>
+            <para>
+              <command>cd <replaceable>directory you wish to install in
+                 </replaceable></command>
+            </para>
+            <para>
+              <command>cvs co geoss</command>
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>
+             Configure the build-options file
+          </term>
+          <listitem>
+            <para>
+              <command>cd geoss</command>
+            </para>
+            <para>
+              <command>cp build-options.default build-options.mk</command>
+            </para>
+            <para>
+              Modify values as appropriate.  If you are installing on a 
+              single developer system where you have root access, the 
+              defaults are likely fine.  However, if you are installing on
+              a multi-developer system, you will need to change the defaults.
+              Values will vary depending on the configuration of your 
+              system.  See <link
+              linkend="can_you_give_me_an_example_of_the_build-options.mk_file_for_a_non-root_install">Install
+              FAQ</link> for a sample developer build-options.mk file.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>
+            Perform a make all 
+          </term>
+          <listitem>
+            <para>
+              <command>make all</command>
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>
+            Run the initialize script
+          </term>
+          <listitem>
+            <para>
+              <command>cd <replaceable><link linkend="BIN_DIR">BIN_DIR
+                </link></replaceable></command>
+            </para>
+            <para>
+              <command>./geoss_initialize --db_name=<replaceable>db_name
+                </replaceable> --db_user=<replaceable>db_user</replaceable>
+                </command>
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>
+            Finish configuration as described in the Install Guide
+          </term>
+          <listitem>
+            <para>
+              The final step is to configure the system as described 
+              in the <link linkend="install_guide">install guide</link>.
+              Note that if you have <link linkend="additional_path">
+              additional path</link> information, you will not be able
+              to navigate to all pages correctly until the additional
+              path information is configured.  To fix this, login as 
+              <link linkend="administrator_user">administrator</link>.
+              The web browser will return a Not Found error because it 
+              does not yet have the additional path information.  Manually
+              type in the correct url to <link linkend="admin_gui">
+              &admin_home;</link>.  
+            </para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+
+ </para>
+</article>
+
+<article id="&product;_makefiles">
+  <title>&product; Makefiles</title>
+   <para>
+     Conceptually there are two parts to "making" a file in the &product;
+     system. The first phase is the "build", the second is the "install".
+     The "build" stage does nothing to non-executable files like graphic
+     files or html files. Executable files, which currently include files
+     that have a .pl source file, are copied to a new file (typically a
+     .cgi, with the exception of files in the lib and bin dir) that contains
+     some global variables and has the executable bit set. Also, a syntax
+     check (perl -c) is performed on the resulting file. The second phase,
+     the "install" phase, installs all files, both executable and 
+     non-executable into the appropriate directories. Different make 
+     targets are discussed below:
+
+<variablelist>
+
+  <varlistentry>
+    <term>
+      make all
+    </term>
+    <listitem>
+      <para>
+        This command makes the entire system by performing a make 
+        directories, a make build, and a make install.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+      make install
+    </term>
+    <listitem>
+      <para>
+        This command will install the target file (EXEC_TARGETS and 
+        NONEXEC_TARGETS) in the current directory and below into their
+        install directory.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+      make directories
+    </term>
+    <listitem>
+      <para>
+        This command must be issued from the top level directory.  It makes 
+        the <link linkend="USER_DATA_DIR">USER_DATA_DIR</link> directory
+        and the <link linkend="WEB_DIR">WEB_DIR</link> directory,
+        and the public_data directory with appropriate permissions and 
+        ownership.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+      make build
+    </term>
+    <listitem>
+      <para>
+        This command makes all EXEC_TARGETS in the current directory and 
+        below.  It will perform a syntax check on the EXEC_TARGETS.  The
+        build target is the default target, so if no target is specified, 
+        a make build is performed.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+      make
+    </term>
+    <listitem>
+      <para>
+       This command can be used to build and target .cgi file  (note
+       that it also performs a syntax check on the file). It does not
+       install the target file. 
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+      make uninstall
+    </term>
+    <listitem>
+      <para>
+        This command removes files from the install directories.  
+        Essentially, it reverses the actions of the make install target.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+      make rmdirectories
+    </term>
+    <listitem>
+      <para>
+        This command must be issued from the top level directory.  It 
+        removes the directories created by a make directories (if the 
+        directories are empty).
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+      make unall
+    </term>
+    <listitem>
+      <para>
+        This command must be issued form the top level directory.  It 
+       performs a make uninstall and a make rmdirectories.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+      make clean
+    </term>
+    <listitem>
+      <para>
+        This command will remove EXEC_TARGETS.  Essentially, it cleans up
+        after a make build by removing the .cgi files that are created during
+        a make build.
+      </para>
+    </listitem>
+  </varlistentry>
+
+</variablelist>
+   </para>
+
+<formalpara>
+<title>Adding Files</title>
+<para>
+If you add a file, it needs to be added to the Makefile (in the 
+same directory that you have added the file in).  If the file is not 
+executable, like a graphic or an html file, it should be added to the 
+list of NONEXEC_TARGETS.  If it is an executable file, like a .pl, it 
+should be added to the list of EXEC_TARGETS.  If is a documentation file,
+it should be added to the DOC_TARGETS.
+</para>
+</formalpara>
+
+<formalpara>
+<title>Removing Files</title>
+<para>
+If you remove a file, it should be removed from the Makefile.
+</para>
+</formalpara>
+
+<formalpara>
+<title>Adding Subdirectories</title>
+<para>
+If you add a subdirectory, it needs to be added to the Makefile (in 
+the same directory that you have added the subdirectory to).  It should
+be added to the SUBDIRS line.
+</para>
+</formalpara>
+
+<formalpara>
+<title>Removing Subdirectories</title>
+<para>
+If you remove a subdirectory, it should be removed from the SUBDIRS
+link in the Makefile (in the parent directory of the subdirectory).
+</para>
+</formalpara>
+
+<formalpara>
+<title>&product; Makefiles Explained</title>
+There are three special files in the &product; directory that are used
+by the make process.  They are:
+<variablelist>
+
+  <varlistentry>
+  <term>
+    <filename>build-options.mk</filename>
+  </term>
+  <listitem>
+    <para>
+      This file contains build parameters.  They are set to the values in
+      build-options.default for the rpm build, but can be customized for 
+      users who build their own system from source.  These define what
+      directories the files are placed into, who owns the files, and 
+      what database &product; will connect to.  For a specific
+      definition of each of the parameters, see the <link
+      linkend="what_do_the_settings_in_build-options.mk_do">Install
+      FAQ</link>.
+    </para>
+  </listitem>
+  </varlistentry>
+
+  <varlistentry>
+  <term>
+    <filename>subdirs.mk</filename>
+  </term>
+  <listitem>
+    <para>
+      This file defines targets that should be available no matter 
+      what directory the developer is performing a make in (like
+      "install" and "clean").  This file is intended to be included by
+      all &product; makefiles.
+    </para>
+  </listitem>
+  </varlistentry>
+
+  <varlistentry>
+  <term>
+    <filename>rules.mk</filename>
+  </term>
+  <listitem>
+    <para>
+      This file contains build rules for building .pl files (to .cgi
+      and to no extension), the rule for building .html files from .xml
+      files and the rule for building the perl-header
+      file.  It is intended to be included by all &product; makefiles.
+    </para>
+  </listitem>
+  </varlistentry>
+</variablelist>
+</formalpara>
+</article>
+
+<part id="making_a_geoss_release">
+<title>Making a &product; release</title>
+<para>
+To make a release, do the the following:
+<orderedlist>
+  <listitem>
+    <para>
+    <link linkend="how_do_i_build_the_geoss_rpm">Build a test rpm</link>
+     and install it on the test box.  Perform all tests
+    outlined in geoss/doc/geoss_test.txt.  Test all bugs that have been
+    resolved in bugzilla since the last release.  Repeat until testing
+    is satisfactory.
+    </para>
+  </listitem>
+
+  <listitem>
+    <para>
+      Update the release notes.
+    </para>
+  </listitem>
+
+  <listitem>
+    <para>
+       Build a release rpm. 
+    </para>
+  </listitem>
+  
+  <listitem>
+    <para>
+       Upload the relevant files to our SourceForge release site.  The
+       following files should be uploaded:  the new release rpm, a tar
+       file of the code used in the release rpm, the layout tarball, the
+       annotations tarball, and our custom Perl modules.
+    </para>
+    <para>
+       To upload files to SourceForge, perform the following steps:
+    </para>
+    <para>
+      <command> ftp upload.sourceforge.net</command>
+    </para>
+    <para>
+      # login as usual for anonymous ftp
+    </para>
+    <para>
+      <command>cd /incoming</command>
+    </para>
+    <para>
+      <command>put geoss-X_Y_Z.tar.gz</command>
+      <command>put geoss-X_Y_Z-1.i386.rpm</command>
+      <command>put geoss_layouts.tar.gz</command>
+      <command>put geoss_perl_modules.tar.gz</command>
+      <command>put geoss_annotations.tar.gz</command>
+      <command>quit</command>
+    </para>
+  </listitem>
+  <listitem>
+    <para>Login to the &sourceforge_site;.
+    In the main menu, click "Admin", then click "File
+    Releases".  Scroll down to the bottom of the page.  Click "Add a
+    Release" for the &product; project.  The format of the release name is
+    &product; X.Y.Z.  Click the "Create This Release" button.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+    Provide brief download instructions and release notes and then
+    upload <filename>doc/release_notes.txt</filename>.  Next, click to
+    add all the files you uploaded. Submit changes as appropriate.
+    </para>
+  </listitem>
+  <listitem>
+    <para>
+    Verify that the new release is available from the "Files" section of
+    the project.
+    </para>
+  </listitem>
+</orderedlist>
+
+
+</para>
+</part>
+
+<article id="sessioning">
+  <title>Sessioning</title>
+  <para>
+  &product; sessioning is the technique by which &product; manages user
+  logins and controls interactions for a specific login session.  The
+  basic logic path for a session is as follows.  A user logins in.  If they 
+  supply a valid username and login, a record is inserted into the 
+  session table.  This record contains a randomly generated session id, 
+  the us_pk of the user associated with the login, and an expiration value.
+  Next, a cookie is set that contains the session id.  
+  </para>
+  <para>
+  For each subsequent interaction, the cookie containing the session id is 
+  retrieved.  The session table is then checked to ensure that the session
+  id is valid and has not expired.  If the session is valid, the 
+  expiration is pushed back (to facilitate inactivity logouts) and access
+  is granted.  If the session isn't valid, the user is redirected to 
+  the login screen.   
+  </para>
+  <para>
+   In addition to controlling the login process, the session table is 
+   linked to the key_value table to provide messaging functionality.  
+   The key_value table has the following structure:
+    <screen>
+geoss=# \d key_value;
+                                  Table "public.key_value"
+   Column   |          Type          |                       Modifiers                       
+------------+------------------------+-------------------------------------------------------
+ kv_pk      | integer                | not null default nextval('key_value_kv_pk_seq'::text)
+ session_fk | integer                | 
+ key        | character varying(128) | 
+ value      | text                   | 
+ type       | character varying(128) | 
+
+    </screen>
+  Note that each key value pair is associated with a session.  This allows
+  us to store value between requests for individual users.  The biggest
+  application of this is the mechanism that we use to return messages to 
+  the user.  Each page will check to see if there are any messages for 
+  the current session, and if so, will display the message near the 
+  header and footer.  
+  </para>
+  <para>
+  Note that the type field is used to designate a key value pair as a 
+  "message".  This allows us to retrieve messages for display in the 
+  header and footer, but to leave other key_value pairs to be retrieved
+  separately.
+  </para>
+  <para>
+   The following functions can be used in association with sessioning:
+ 
+     <variablelist>
+       <varlistentry>
+        <term>
+set_session_record
+        </term>
+        <listitem>
+          <para>
+           Will set multiple key_value records based on an input hash.
+          </para>
+        </listitem>
+       </varlistentry>
+       <varlistentry>
+        <term>
+get_sess_id
+        </term>
+        <listitem>
+          <para>
+          Determine which session id is associated with a us_fk.
+          </para>
+        </listitem>
+       </varlistentry>
+       <varlistentry>
+        <term>
+get_session_val
+        </term>
+        <listitem>
+          <para>
+          Used to retrieve values from the key_value table based on 
+          us_fk and type.
+          </para>
+        </listitem>
+       </varlistentry>
+       <varlistentry>
+        <term>
+set_session_val
+        </term>
+        <listitem>
+          <para>
+          Sets a message in the key_value table that is associated
+          with a specific session.  Note that it is important 
+          not to introduce a conflict in the "type" field.  Types
+          that are currently in use are documented in the code 
+          adjacent to the function.  If you add a new type, add it 
+          to the comments so that others don't use that type and
+          break your code!
+          </para>
+        </listitem>
+       </varlistentry>
+       <varlistentry>
+        <term>
+set_session_val_or_str
+        </term>
+        <listitem>
+          <para>
+          Like set_return_message.
+          </para>
+        </listitem>
+       </varlistentry>
+     </variablelist>
+  </para>
+  <para>
+   The following functions can be used in association with messaging:
+     <variablelist>
+       <varlistentry>
+        <term>
+get_message
+        </term>
+        <listitem>
+          <para>
+           Gets the message associated with a specific number.
+            The "message" is a structure that contains an html string 
+            and an associated color.  Error messages are red, success 
+            messages are green, and warning messages are yellow.  
+            This function will return an html string that formats
+            the message in the specified color. 
+          </para>
+        </listitem>
+       </varlistentry>
+       <varlistentry>
+        <term>
+set_return_message
+        </term>
+        <listitem>
+          <para>
+            Sets a message in the key_value table if there is a valid
+            us_fk.  Otherwise, if the us_fk is "command" (for a command
+            line utility), return the appropriate message as a string.
+            This is the best (most generic) function to use when setting
+            messages as it will allow the function to be called for 
+            both command line utilities and web utilities.
+          </para>
+        </listitem>
+       </varlistentry>
+       <varlistentry>
+        <term>
+get_message_text
+        </term>
+        <listitem>
+          <para>
+            Returns the message text, without the html formatting (use of
+            color).  This is used for command line utilities.
+          </para>
+        </listitem>
+       </varlistentry>
+       <varlistentry>
+        <term>
+messages
+        </term>
+        <listitem>
+          <para>
+           Returns the message hash associated with a specific number.
+           Note, there is no reason this
+           can't be a hash that allows association of a name with a 
+           descriptive word instead of a number.  When I get a chance,
+           I'd like to fix this.
+          </para>
+        </listitem>
+       </varlistentry>
+       <varlistentry>
+        <term>
+get_stored_messages
+        </term>
+        <listitem>
+          <para>
+          Gets all key_value records associated with a specific session
+          where the type is either "errmessage", "warnmessage", or
+          "goodmessage".
+          </para>
+        </listitem>
+       </varlistentry>
+     </variablelist>
+  </para>
+   
+  
+</article>
+
+<article id="&product;_security">
+<title>&product;_security</title>
+<para>
+  &product; has row level security implemented in Perl and supported by 
+  4 tables within the database. Some tables, especially the chip data tables
+  are secured indirectly since these tables can only be accessed via keys 
+  found in directly secured tables. There is an assumption here that the 
+  server running &product; is secure and has logins only from admins, and 
+  that the database is not accessible outside the &product; scripts, or to 
+  other servers. Http requests for data must be SSL encrypted. If a database 
+  server is used, local packets must not be allowed outside a secure subnet.
+</para>
+<para>
+  This 4 table security model is based on extensive discussions with Hilmar 
+  Lapp and Jason Stewart. (It is actually a 6 table model since it include 
+  the contact table, and we added primary investigator capability.)
+</para>
+
+<formalpara>
+  <title>
+      Salient points about the Security model
+  </title>
+<itemizedlist>
+<listitem>
+  <para>
+    There are two aspects to security: web interface and database records.
+  </para>
+</listitem>
+<listitem>
+  <para>
+Web security is currently based on sessioning code and SSL.
+  </para>
+</listitem>
+<listitem>
+  <para>
+&product; has row-level security for the database tables. The row level
+security is implemented in standard SQL, and is supported by a Perl
+API.
+  </para>
+</listitem>
+<listitem>
+  <para>
+ The security model has users, groups, and primary investigators. PIs 
+ are simply users distinguished by having them self as a PI. In a practical
+ sense, &product; only allows PIs to own data.
+  </para>
+</listitem>
+<listitem>
+  <para>
+ &product; has a full set of permissions, however, not all are used.
+ User permissions are controlled by the software, and indirectly by the
+ array center staff. 
+ Group permissions are under the user's control as usual. World
+ or 'other' permissions are not used. Execute and suid permissions are
+ not used.
+  </para>
+</listitem>
+<listitem>
+  <para>
+ Users may create their own groups, and control the group membership.
+  </para>
+</listitem>
+<listitem>
+  <para>
+ There isn't really a 'super-user'. In cases where the security system
+ needs to perform some super user action, the underlying Perl code simply
+ doesn't use the security API calls.
+  </para>
+</listitem>
+<listitem>
+  <para>
+ Security system permissions, etc. can be manipulated from the Postgres
+ command line (psql). For this and other reasons, only sysadmins are 
+ allowed logins to the &product; server. Array center staff
+  are generally not sysadmins. 
+  </para>
+</listitem>
+<listitem>
+  <para>
+  Database security tables are only joined to the rest of the &product; 
+  schema via a foreign key linked to the primary key of each secured table.
+  </para>
+</listitem>
+<listitem>
+  <para>
+ The security system foreign key occurs in the groupref table of the
+ security system.
+  </para>
+</listitem>
+<listitem>
+  <para>
+ Some tables are secured 'directly'. These tables share a foreign key 
+ with the groupref table in the security system.
+  </para>
+</listitem>
+<listitem>
+  <para>
+  Other tables are secured 'indirectly'. There is no access to these 
+  tables except via foreign keys from a directly secured table. 
+  </para>
+</listitem>
+<listitem>
+  <para>
+  A prime example of 'direct' is the arraymeasurement table (hybridization 
+  information). 
+  </para>
+</listitem>
+<listitem>
+  <para>
+  A prime example 'indirect' is the am_spots_mas5 table which contains 
+  the signal data.
+  </para>
+</listitem>
+<listitem>
+  <para>
+ Information in arraymeasurement must be accessed in order to get signal
+ data from am_spots_mas5. Records in am_spots_mas5 are meaningless unless
+ you have the data from arraymeasurement.
+  </para>
+</listitem>
+<listitem>
+  <para>
+  Selecting records from a given table with read or write permissions 
+  requires a SQL query with eight clauses. This doesn't create a bottleneck 
+  because the directly secured tables have small numbers of records. For 
+  instance, the arraymeasurement table has one record per gene chip. Contrast 
+  this with the am_spots_mas5 table that has 12,625 records for each HG95AV2 
+  gene chip.
+  </para>
+</listitem>
+<listitem>
+  <para>
+  All directly secured tables share a single sequence for their primary
+  key. This guarantees that any directly secured table's foreign key in
+  the groupref table is unique. Since there are 2 raised to the 32 power
+  available numbers in this set, we don't anticipate running out of primary
+  key values.
+  </para>
+</listitem>
+</itemizedlist>
+</formalpara>
+<formalpara>
+  <title>
+    Overview
+  </title>
+This document assumes that the reader has working familiarity with databases
+and operating system security models.
+</formalpara>
+<para>
+Please note that we distinguish between two major types of data: meta 
+data (usually just called 'data') and chip/array derived values referred
+to as 'chip data'. 'Chip data' is indirectly secured, and the reasons
+and methodologies are explained in detail below.
+</para>
+<para>
+We chose a security system with the following criteria:
+<itemizedlist>
+<listitem>
+  <para>
+      minimal impact on the &product; schema
+  </para>
+</listitem>
+
+<listitem>
+  <para>
+      row level granularity
+  </para>
+</listitem>
+
+<listitem>
+  <para>
+     Unix-like permissions for user (owner) and group
+  </para>
+</listitem>
+
+<listitem>
+  <para>
+      included some type of sessioning for use with a Web interface
+  </para>
+</listitem>
+</itemizedlist>
+</para>
+<para>
+When a user creates a new record (by creating a new study, or adding 
+an experimental condition, etc.) the new record is owned by the current
+user's primary investigator (PI). New records created have group read/write
+access by default. Group read and write are optional and are controlled
+by the owner (the PI). In many cases, the member of a research team who
+performs the wet bench work also interacts with &product; to create studies,
+experimental conditions, and to request orders and fill out orders. The 
+PI may only be involved when the gene chip data is ready. In a small lab,
+the PI often does everything. &product; has been designed to accommodate
+team members in any role.
+</para>
+
+<para>
+Since the security tables are independent of the &product; data tables,
+the security system can be modified with little or no impact on the rest 
+of &product;.
+</para>
+<para>
+The 4 main security system tables are: groupref, grouplink, groupsec, 
+usersec. The 2 ancillary tables are: contact, pi_sec. Contact contains 
+personal information, and a pi_sec contains PI information. Neither of
+these two latter tables are central players in the security system.
+</para>
+<para>
+The only requirement of a secured data table is that it shares a special 
+sequence to generate primary keys (the sequence is called pk_seq). The 
+data table's primary key is the foreign key which links the security system 
+to the data table rows. For example, when inserting a record into the 
+study table, the new study record's primary key is the next value from 
+pk_sec, and that same primary key is the linking value in groupref. We 
+know the ownership and permissions of the study record by linking to the 
+corresponding groupref record.
+</para>
+<para>
+Usersec and groupsec contain information about a user and that user's 
+group. These two tables share a primary key, and this same primary key
+is used by the &product; contact table. The numeric uid and gid are in
+usersec and groupsec, respectively. 
+</para>
+<para>
+Grouplink has a one to many relationship with groupsec. Group member's
+gids are stored in grouplink, thus grouplink contains the members of each
+of the groups.
+</para>
+<para>
+Groupref is the real heart of the security system. The primary key of
+a secured row of a data table is a foreign key in groupref. Table groupref 
+also contains the uid of the owner, the gid of the group, and an integer 
+bitfield for the permissions. Groupref has one row for every row of data
+directly secured in other tables. For instance, if you create a study
+with two experimental conditions, there will be three records in directly
+secured tables. There will be three corresponding records in groupref.
+</para>
+<para>
+This security system makes the assumption that the database is transactional.
+Since multiple sequential operations are required to insert data, each 
+transaction must be atomic, or race conditions would result in corrupting
+the primary keys used to link the data to the security tables.
+</para>
+<formalpara>
+<title>Details of Read Permissions</title>
+The following Perl string is a SQL WHERE clause 
+used to determine if a user has read permission to a given row. In this 
+string, $table is the name of the secured table, $pkey is the name of 
+that table's primary key, and $userid is the security system usersec primary 
+key (uid and gid) of the user REMOTE_USER.
+</formalpara>
+<para>
+<command>
+(groupref.ref_fk=$table.$pkey and
+((grouplink.us_fk=$userid and
+groupref.us_fk=grouplink.us_fk and
+grouplink.gs_fk=groupref.gs_fk and
+(groupref.permissions&amp;256)&gt;0) or 
+(groupref.gs_fk=grouplink.gs_fk and
+grouplink.us_fk=$userid and
+(groupref.permissions&amp;32)&gt;0 )))
+</command>
+</para>
+<para>
+The first stanza joins groupref to a data table $table with primary key 
+field $pkey.
+</para>
+<para>
+The second stanza checks to see if the owner of the record has read permissions
+(decimal 256 is octal 400).
+</para>
+<para>
+The third stanza check to see if the group has read permissions (decimal
+32 is octal 40).
+</para>
+<para> 
+The API assumes that the programmer will call the functions appropriately.
+In other words, the programmer will call read_where_clause
+when selecting data for read, and write_where_clause
+when updating a record.
+</para>
+<formalpara>
+<title>Details of Write Permissions.</title>
+<command>
+(groupref.ref_fk=$table.$pkey and
+      ((groupref.us_fk=$userid and
+      groupref.us_fk=grouplink.us_fk and
+      grouplink.gs_fk=groupref.gs_fk and
+      (groupref.permissions&amp;128)&gt;0) or
+      (groupref.gs_fk=grouplink.gs_fk and
+        grouplink.us_fk=$userid and
+        (groupref.permissions&amp;16)&gt;0 )))
+</command>
+</formalpara>
+<para>
+Once again, the first stanza joins groupref to a data table $table with
+primary key field $pkey.
+</para>
+<para>
+The second stanza checks to see if the owner of the record has write 
+permissions (decimal 128 is octal 200).
+</para>
+<para>
+The third stanza checks to see if the group has write permissions (decimal 
+16 is octal 20).
+</para>
+<para>
+In both the read and the write cases, only tables which contain meta
+data are secured. The actual data (usually signal values) can only be
+accessed after getting foreign keys from a directly secured table. The
+meta data tables (such as exp_condition and arraymeasurement) are fairly 
+small, so even a complex query will run quickly. The many thousands of 
+records for the actual chip data are referenced via foreign keys obtained 
+from meta data tables. Thus the final query which retrieves data is small 
+and efficient.
+</para>
+
+<formalpara>
+<title>
+ Advantages of the 4 Table System
+</title>
+From a programming standpoint, this system simplifies interaction between 
+the security tables and the rest of &product; . &product; data tables have 
+no security-related information in them. The only requirement for a table
+to be directly secured is that it use the unified primary key sequence
+(pk_seq). 
+</formalpara>
+<para>
+Inserting a new record is a two step process which is completed in a 
+single transaction (and must be a transaction to avoid trouble). First 
+the data row is inserted; the primary key is auto assigned, and and the
+sequence auto incremented (this is typical behavior for Postgres). Second,
+the security API is called, and retrieves the most recent primary key, 
+and creates a record in groupref with the most recent primary key as the 
+foreign key (groupref.ref_fk). Having completed both of these steps, the 
+transaction can be committed.
+</para>
+<para>
+The security system doesn't know what table is being secured, it only
+tracks the primary key. Retrieving data involves joining the data table 
+to groupref and grouplink.
+</para>
+<para>
+Updates are performed in the usual manner. The security system involvement 
+in an update happens prior to the update where the API is used to verify 
+that the record about to be updated is allowed.
+</para>
+<para>
+Reading records requires that any SELECT use 
+the additional FROM and WHERE clauses supplied by read_where_clause.
+</para>
+<para>
+The 4 table system has another theoretical advantage. More complex security 
+criteria can be implemented by updating the Perl code, and by adding fields 
+to the 4 security tables. This would have no effect on the rest of the
+&product; schema. Since the schema is complex, and the amount of data (especially
+chip data) can be immense, it is a big advantage to not change the &product;
+data tables when the security system gets new features.
+</para>
+<para>
+The 4 table system has enough tables that it is possible to implement
+ACLs with only an additional field or two. ACLs are nice for their increased 
+granularity and flexibility, however, the price is complexity for end
+users and admins.
+</para>
+<para>
+One aspect of this system is that it is not encapsulated by the database 
+manager (Postgres) at a low level. Rogue scripts can easily ignore the 
+security system. This is yet another reason why we limit command line
+access (and IP connections to the Postgres port) on the &product; server.
+</para>
+<para>
+Many thanks to Hilmar Lapp and Jason Stewart. It took several days of
+exchanged messages to work out the details of Hilmar's suggestion to use 
+4 tables and to use the single primary key sequence. I did not immediately
+see the elegance of this solution (nor did I initially understand some 
+key concepts) so I'm thankful for Hilmar and Jason's patience. Jason's 
+wisdom and advice have been instrumental in our progress on &product;.
+</para>
+</article>
+
+<article id="functions_of_note">
+  <title>Functions of Note</title>
+  <para>
+    There are a number of functions that are commonly reused within the system.
+    These are functions that all developers should be aware of and using 
+    within their code.  In some cases, there are newer functions that 
+    should be used in place of older versions.  When copying and modifying
+    code, ensure that you not propagating obsolete functions and are 
+    instead using the best option for the functionality.
+  </para>
+  <para>
+    Note that this section is incomplete and more documentation will be
+    available with the next release. 
+  </para>
+
+  <variablelist>
+    <varlistentry id="set_return_message">
+      <term>
+        set_return_message
+      </term>
+      <listitem>
+        <para>
+          This function is used to set a return message in a generic fashion.
+          If a $us_fk is passed in, the specified message is set in the 
+          key_value table and associated with a specific session.  i.e.
+          the error message is displayed in the &product; GUI.  However,
+          if $us_fk is set to "command", then the function returns the error
+          as a string formatted for the printing.  This function is useful 
+          in _generic functions, like create_acct_generic, that are used by 
+          command line utilities (geoss_adduser) and by the web interface 
+          (admintools, add a user). 
+        </para>
+        <para>
+        <code>
+          sub set_return_message
+          {
+            my ($dbh, $us_fk, $type, $key, $msgnum, $param, $param2) = @_;
+        </code>
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry id="get_allhtml">
+      <term>
+        get_allhtml
+      </term>
+      <listitem>
+        <para>
+        &product; has its own functions for reading html files and 
+        making substitutions.  It keys on words enclosed in {}, and 
+        substitutes them with values supplied via the $chref parameter.
+        The get_allhtml function can be used if there are no loops in 
+        the template.  The function will read in the specified htmlfile,
+        append the header and footer file, and substitute both specified
+        variables and global variables into the html.  It returns the 
+        html string with all the appropriate additions and substitutions 
+        made.
+        </para>
+        <para>
+          <code>
+sub get_allhtml      
+{
+  my ($dbh, $us_fk, $htmlfile, $headerfile, $footerfile, $chref) = @_;
+  my %ch = %{get_all_subs_vals($dbh, $us_fk, $chref)};
+  my $allhtml = readfile($htmlfile, $headerfile, $footerfile);
+
+  $allhtml =~ s/{(.*?)}/$ch{$1}/g;   
+  return $allhtml;
+}
+
+
+          </code>
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry id="readtemplate">
+      <term>
+        readtemplate
+      </term>
+      <listitem>
+        <para>
+          This function should be used instead of 
+          <link linkend="get_allhtml">get_allhtml</link> if there
+          is a loop inside the html template.  Note that if you  use
+          this function, you will have to manually perform all the 
+          substitutions that are typically performed by get_allhtml.
+        </para>
+        <para>
+          <code>
+ 
+          </code>
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry id="get_config_entry">
+      <term>
+        get_config_entry
+      </term>
+      <listitem>
+        <para>
+          <link linkend="administrator_user">Administrators</link> configure
+          a variety of settings for installations (via the <link 
+          linkend="configure_&product;">Configure &product;</link> link).
+          In order to retrieve these values, you can use the get_config_entry
+          function.
+        </para>
+        <para>
+          Example:
+          <code>
+my $cdp = get_config_entry($dbh, "chip_data_path");
+          </code>
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry id="get_all_config_enteries">
+      <term>
+        get_all_config_entries
+      </term>
+      <listitem>
+        <para>
+          This function retrieves all values from the configuration table.
+       
+        </para>
+        <para>
+          <code>
+            my $confref = get_all_config_entries($dbh);
+          </code>
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry id="fi_update">
+      <term>
+        fi_update
+      </term>
+      <listitem>
+        <para>
+          This function updates the entry for a file in the file_info 
+          table.  It can be used to create a file or to update an 
+          existing file.
+        </para>
+        <para>
+          <code>
+            my $fi_pk = fi_update($dbh,    # database handle 
+                          $us_pk,          # file owner us_pk
+                          $gs_pk,          # file group gs_pk
+                          $file_name,      # file_name (absolute path)
+                          $ch{comments},   # comments on file
+                          $conds,          # if analysis input file, the 
+                                           # number and grouping of conditions
+                          $cond_label1,    # if analysis input file, the
+                                           # labels of the conditions
+                          undef,           # if analysis output file, the 
+                                           # node_pk of the node that 
+                                           # generates the file
+                          $uai,            # if analysis, the node can 
+                                           # be an input file
+                          undef,           # if analysis, the pk to the 
+                                           # appropriate entry of the 
+                                           # filetypes table
+                          432,             # permissions
+                          $al_pk           # if data, the al_pk for the data
+          );
+          </code>
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry id="fixselect">
+      <term>
+        fixselect
+      </term>
+      <listitem>
+        <para>
+          This function can be used to modify the html for a 
+          select box so that a specific option in the select 
+          box is highlighted.
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry id="fixradioselect">
+      <term>
+        fixradioselect
+      </term>
+      <listitem>
+        <para>
+          This function can be used to modify the html for a
+          radio buttons so that a specific option is selected.
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>
+        is_org_curator, is_curator, is_administrator, is_public
+      </term>
+      <listitem>
+        <para>
+          These functions check the user type associated with a specific
+          user.  Returns 1 to indicate that the user has privileges 
+          associated with the specified type.
+        </para>
+        <para>
+          <code>
+            if (is_curator($dbh, $us_fk))
+          </code>
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry id="get_us_fk">
+      <term>
+        get_us_fk 
+      </term>
+      <listitem>
+        <para>
+          Determines the us_fk for a particular session.  The us_fk is 
+          determined by requesting the login cookie from the browser.
+          The login cookie stores the session id.  The session id is stored 
+          in the session table (along with expiration information), an 
+          linked to a us_fk.  Returns the us_fk if a valid us_fk exists
+          for the session.  If there is no valid us_fk, this function 
+          displays the login page (and does not return to the calling
+          code).
+        </para>
+        <para>
+          The second parameter is the calling location.  If there is no 
+          valid us_fk, this parameter is stored by the presented login 
+          page.  Thus, when the user logs in, they can be taken directly to 
+          the page they were trying to access. 
+        </para>
+        <para>
+          <code>
+    my $us_fk = get_us_fk($dbh, "webtools/files2.cgi"); 
+          </code>
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry id="get_session_val">
+      <term>
+        get_session_val
+      </term>
+      <listitem>
+        <para>
+        </para>
+        <para>
+          <code>
+sub get_session_val
+{
+  my ($dbh, $us_fk, $type, $key) = @_;
+          </code>
+        </para>
+        <para>
+          <code>
+my $messageref = get_session_val($dbh, $us_fk, "message", "");
+          </code>
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry id="set_session_val">
+      <term>
+        set_session_val
+      </term>
+      <listitem>
+        <para>
+        </para>
+        <para>
+          <code>
+sub set_session_val       
+{
+  my ($dbh, $us_fk, $type, $key, $value) = @_;
+          </code>
+        </para>
+        <para>
+          <code>
+       set_session_val($dbh, $us_fk, "message", "errmessage",    
+           get_message("7m", "Type"));
+          </code>
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>
+        set_help_url
+      </term>
+      <listitem>
+        <para>
+          This function is used to specify the id of the documentation
+          relating to a specific page.  This must be set if the "help"
+          link in the header and footer is to be set correctly.  The 
+          id must exist in the xml files in the <filename>
+          site/webdoc/EN</filename> directory. 
+        </para>
+        <para>
+          <code>
+ $ch{help} = set_help_url($dbh, "create_a_new_array_order");
+          </code>
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry id="new_connection">
+      <term>
+        new_connection
+      </term>
+      <listitem>
+        <para>
+          This function is used to connect to the database.  The 
+          connection parameters are specified at build time in 
+          the build-options.mk.  Note that a password is necessary
+          to connect to the database.  The webuser must have
+          access to the <link linkend="&product;_access_file">password
+          file</link> in order for the WEB GUI to function.  However,
+          command line utilities that call this function do not need
+          to be run by a user with access to the password file.  In such 
+          cases, the new_connection function will prompt the user for 
+          a password.
+        </para>
+        <para>
+           <code>
+             my $dbh = new_connection(); # session_lib
+           </code>
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry id="read_where_clause">
+      <term>
+        read_where_clause
+      </term>
+      <listitem>
+        <para>
+          This function can be used to get the where clause needed to
+          check if the specified user has read access to a specific 
+          record.
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry id="write_where_clause">
+      <term>
+        write_where_clause
+      </term>
+      <listitem>
+        <para>
+          This function can be used to get the where clause needed to
+          check if the specified user has write access to a specific 
+          record.
+        </para>
+      </listitem>
+    </varlistentry>
+
+
+    <varlistentry id="is_writable">
+      <term>
+        is_writable 
+      </term>
+      <listitem>
+        <para>
+          This function can be used when trying to determine is a user has
+          write permissions on a table.  
+        </para>
+        <para>
+        <code>
+sub is_writable
+{
+    (my $dbh, my $table, my $pkey, my $pk_value, my $us_fk) = @_;
+        </code>
+        </para>
+        <para>
+        <code>
+if (is_writable($dbh, "order_info", "oi_pk", $oi_pk, $us_fk))
+        </code>
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>
+        index_url
+      </term>
+      <listitem>
+        <para>
+        This function returns the url of the index page for the area
+        you are currently working in.  For instance, if the calling 
+        page is in &mem_home; (webtools), the returned url Will be 
+        for &mem_home;.  If you wish to switch directories, you 
+        can pass in an optional parameter for the new directory.
+        </para>
+        <para>
+        <code>
+           my $url = index_url($dbh); # see session_lib
+           print "Location: $url\n\n";
+        </code>
+       </para> 
+        <para>
+       <code>
+          my $approve_url = index_url($dbh, "orgtools") . 
+            "/org_approve.cgi?order_number=$order_number";
+       </code>
+       </para>
+
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>
+        sql2date, date2sql
+      </term>
+      <listitem>
+        <para>
+        These two functions can be used for converting date formats 
+        between human readable and sql formats.
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>
+        email_generic
+      </term>
+      <listitem>
+        <para>
+        This function emails the specified user from the &product; 
+        administrator.  The template file for the email is read from
+        the file passed in in the $e_file parameter.  Key value pairs
+        in the info hash will be substituted into the email template.
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>
+        write_log
+      </term>
+      <listitem>
+        <para>
+          This function writes to a logfile, <filename>error.log
+          </filename>, in the user directory.  The user cannot 
+          see the log, so it is a tool that the programmer can use
+          as a logging/debugging tool.  Do not write large 
+          volumes of data to this log.
+        </para>
+      </listitem>
+    </varlistentry>
+
+    <varlistentry>
+      <term>
+       _generic functions
+      </term>
+      <listitem>
+        <para>
+          _generic functions are intended for use by both command line 
+          utilities and the web interface.  This means that they are
+          written in such a way that a session entry is not required.
+          If applicable, functions should be written in this fashion 
+          to facilitate reuse.  Examples of _generic functions include
+          create_acct_generic, change_password_generic, and 
+          remove_org_generic.
+        </para>
+      </listitem>
+    </varlistentry>
+
+  </variablelist>
+
+</article>
+
+<article id="style_and_conventions">
+  <title>Style and Conventions</title>
+  <para>
+        
+  Documentation coming soon!
+  </para>
+</article>
+
+</part>
+
+&developer_faq;
+</book>

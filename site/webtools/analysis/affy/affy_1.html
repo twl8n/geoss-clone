@@ -1,0 +1,49 @@
+<html>
+<head><title>Affy Analysis Documentation</title></head>
+<body bgcolor="#FFFFFF">
+<p><b>Description</b><br>
+This analysis uses functions from the affy library to transform data.
+
+</p>
+<p><br>
+<b>Statistical Methods</b><br>
+The following computations are done on the inputted data:
+
+<p><br>
+  <b>Input files</b><br>
+Affy expects input in this form:<br>
+</p>
+<ul>
+  <li> a file containing a list of CEL files (absolute path)
+    <br>
+</ul>
+Analyses that create input in this format include:<br>
+<ul>
+<li>none</li>
+</ul>
+<p>&nbsp;</p>
+<p><b>Output files</b><br>
+  Affy creates the following output:<br>
+</p>
+<ul>
+  <li> A data file containing transformed data</li>
+    <br>
+</ul>
+ Analyses that accept affy output as input include:<br>
+<ul>
+  <li>qualityControl</li>
+</ul>
+<p>&nbsp;</p>
+<p><b>Parameters:</b><br>
+</p>
+<ul>
+  <li> Type of transformation - mas5, rma, liwong
+  <li> Log filename - name of the file containing log and error messages<br>
+  <li> Output filename - name of the file containing transformed data
+</ul>
+<p><br>
+  <br>
+</p>
+</body></html>
+
+

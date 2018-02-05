@@ -1,0 +1,1080 @@
+# functions defined in this code:
+#traditionalFoldChange <- function(notLogData, conditions, outFile, labels)
+#logFoldChange <- function(logData, conditions, outFile, labels)
+#func.ttest <- function(datamatrix, conditions, labels)
+#func.lpe <- function(datamatrix, conditions, labels, probe.set.name)
+#func.ndx.cols <- function(groups)
+#func.ndx.pairs.withingroups <- function(groups)
+#func.ndx.pairs.betweengroups <- function( groups )
+#t.test2 <- function(datavector , groups)
+#func.p.t.test <- function(xmat, ymat, mincol=2)
+#func.p.t.test2 <- function(xmat, ymat, var.equal=FALSE, mincol=2)
+### the following n functions from Jae 12may3
+#permute <- function(a)
+#am.trans <- function(y)
+#fixbounds.predict.smooth.spline  <- function(object, x, deriv = 0)
+#baseOlig.error <- function(y, q = 0.01)
+#lpe <- function(x, y, basevar.x, basevar.y, df = 10, array.type = "olig", probe.set.name = OLIG.probe.name, trim.percent = 5, adjp =c("BH", "BY"))
+#mt.rawp2adjp <-  function (rawp, proc = c("Bonferroni", "Holm", "Hochberg", "SidakSS", "SidakSD", "BH", "BY")) 
+#combinations <- function(n, k)
+
+
+
+
+
+
+
+
+
+
+# This function performs traditional fold change computation on
+# gene chip data.  The function is intended to handle data for
+# up to 20 chips.
+#
+# INPUT: dataframe on which no log transformation has not been done
+#	 outFile - output filename for text output
+#	 conditions - a vector describing experiment set
+#	       length is the number of conditions
+#	       vector[condition] is number of replicates for condition
+#
+# OUTPUT:
+# 	  outFile.out  - text analysis info
+#
+# FUNCTIONALITY:
+#
+#
+traditionalFoldChange <- function(notLogData, conditions, outFile, labels) {
+
+	numConditions <- length(conditions)
+	curCol <- 1
+	avgCols <- c()
+	colAvg <- c()
+	for (x in 1:numConditions)
+	{
+		hybrids <- conditions[x]
+		#mode must be numeric
+		# divide by num repliates
+
+#	sumCol <- as.array(apply(notLogData[,curCol:(hybrids + curCol -1)],1,sum)/hybrids)
+# Error in apply(notLogData[, curCol:(hybrids + curCol - 1)], 1, sum) :        dim(X) must have a positive length
+# occured when replicates within each group ==1
+sumCol <- as.array(apply( as.matrix( notLogData[,curCol:(hybrids + curCol -1)] ) ,1,sum) /hybrids)
+
+		curCol <- curCol + hybrids
+		colAvg <- rbind(colAvg, sumCol)
+	}
+
+	numAverages <- nrow(colAvg)
+	tradFC <- c()
+
+
+#MSS; for column labels
+tmp <- c()
+
+
+	i <- 1
+	for (y in 1:numAverages)
+	{
+		for (z in 1:numAverages)
+		{
+		   if (y < z)
+		   {
+
+#			tradFC <- cbind(tradFC, (colAvg[y,] / colAvg[z,]))
+			tradFC <- cbind(tradFC, logb( (colAvg[y,] / colAvg[z,]) , base=2)   )
+
+
+#MSS; for column labels
+tmp <- c(tmp, paste( 'TRADFOLD' , labels[y], labels[z], sep='-'))
+#dimnames(tradFC)[[2]][i] <- paste(labels[y], labels[z], sep='-')
+#Error: dimnames must be a list
+#colnames(tradFC[,i]) <- paste(labels[y], labels[z], sep='-')
+#Error in "colnames<-"(*tmp*, value = "min10-h4") :     dimnames applied to non-array
+
+
+			i <- i + 1
+		    }
+		}
+	}
+	
+	outCols <- ncol(tradFC)
+#  	write("Traditional Fold Change: ", outFile, append=TRUE)
+#  	write("Log 2 transformation of ratio of averages: ", outFile, append=TRUE)
+
+
+#MSS
+#Error: dimnames must be a list
+#        write(dimnames(tradFC)[[2]], outFile, ncolumns=outCols, append=TRUE)
+
+
+#  	write(t(tradFC), outFile, ncolumns=outCols, append=TRUE)
+#  	write("\n", outFile, append=TRUE)
+
+
+#MSS
+colnames(tradFC) <- tmp
+return(tradFC)
+
+		
+}
+
+
+
+
+
+
+
+
+
+
+
+logFoldChange <- function(logData, conditions, outFile, labels)
+{
+	numConditions <- length(conditions)
+	curCol <- 1
+	avgCols <- c()
+	colAvg <- c()
+	for (x in 1:numConditions)
+	{
+		hybrids <- conditions[x]
+		#mode must be numeric
+#		sumCol <- as.array(apply(logData[,curCol:(hybrids + curCol -1)],1,sum)/hybrids)
+# Error in apply(logData[, curCol:(hybrids + curCol - 1)], 1, sum) :        dim(X) must have a positive length
+sumCol <- as.array(apply( as.matrix( logData[,curCol:(hybrids + curCol -1)] ),1,sum)/hybrids)
+
+		curCol <- curCol + hybrids 
+		colAvg <- rbind(colAvg, sumCol)
+	}
+
+	numAverages <- nrow(colAvg)
+	logFC <- c()
+
+# MSS 29apr03
+# for column labels. (inserting into an initialized object is better than growing an object).
+tmp <- c()
+
+	i <- 1
+	for (y in 1:numAverages)
+	{
+		for (z in 1:numAverages)
+		{
+			if (y < z)
+			{
+				logFC <- cbind(logFC, (colAvg[y,] - colAvg[z,]))
+
+# MSS 29apr03
+#MSS; for column labels
+tmp <- c(tmp, paste( 'LOGFOLD' , labels[y], labels[z], sep='-'))
+
+
+# dimnames(logFC)[[2]][i] <- paste('LOGFOLD', labels[y], labels[z], sep='-')
+# when run on a condition={1,1,1}: Error: dimnames must be a list
+
+
+			i <- i + 1
+			}
+		}
+	}
+	
+	outCols <- ncol(logFC)
+#  	write("LogFoldChange: ", outFile, append=TRUE)
+#  	write("Average difference of log 2 transformation: ", outFile, append=TRUE)
+#        write(dimnames(logFC)[[2]], outFile, ncolumns=outCols, append=TRUE)
+#  	write(t(logFC), outFile, ncolumns=outCols, append=TRUE)
+#  	write("\n", outFile, append=TRUE)
+
+
+#MSS
+colnames(logFC) <- tmp
+return(logFC)
+
+
+}
+
+
+
+
+
+
+
+
+# FUNCTION NAME:
+# 	func.ttest
+# DESCRIPTION:
+# 	t test statistic and p value for all pairwise comparisons of groups.
+# USAGE:
+# 	func.ttest(datamatrix, conditions, labels)
+# ARGUMENTS:
+# 	datamatrix: columns are replicates for each of the conditions(groups). each row is an independent sample of groups to test.
+#	conditions: (=groups) a numeric vector, with length equal to number of groups, and each element is number of members of that specific group.
+#	lables: a character vector with length equal to number of conditions (not sum of replicates == ncol(datamatrix) ).
+# VALUE:
+# 	a matrix containing three columns for each possible pairwise comparison of conditions. column 1 = t statistic, column 2 = p value, col3=Bonferroni.
+# EXAMPLE:
+# 	func.ttest( data[,2:10] , c(2,4,3) , c('CONTROL' , 'DRUG1' , 'DRUG2') )
+# DEPENDENCIES:
+#	function func.ndx.pairs.betweengroups(), and hence func.ndx.cols() and func.ndx.pairs.withingroups() ,
+#	also function func.p.t.test(), and hence function t.test() from R library ctest.
+# AUTHOR:
+# 	mir drdresearch@yahoo.com
+# 	last updated 30apr03
+#
+func.ttest <- function(datamatrix, conditions, labels) {
+	# get column indexes of all between-group pairwise comparisons.
+	ndx <- func.ndx.pairs.betweengroups( conditions )
+
+	# initiate result matrix.
+	results <- matrix(NA, nrow(datamatrix), ncol=nrow(ndx) * 3)
+
+	# initiate column names.
+	tmpnames <- c()
+
+	# call parallel t test
+	for (jj in 1:nrow(ndx) ) {
+		tmp <- func.p.t.test( datamatrix[ ndx[jj, 1]:ndx[jj, 2] ] , datamatrix[ ndx[jj, 3]:ndx[jj, 4] ] )
+
+		# get column index in the result matrix to save the t test result.
+		colndx <- (jj*3 -2) : (jj*3)
+		results[, colndx] <- tmp
+
+		# make column headings.
+		# get group indexes of all between-group pairwise comparisons.
+		ndxgrp <- func.ndx.pairs.withingroups( length(conditions) )
+		nms <- paste( labels[ ndxgrp[jj,1] ] , 'VS', labels[ ndxgrp[jj,2] ] )
+		tmpnames <- c(tmpnames , paste( 'T-statistic-', nms) )
+		tmpnames <- c(tmpnames , paste( 'T.p.value-', nms) )
+		tmpnames <- c(tmpnames , paste( 'Bonferroni-', nms) )
+		}
+	colnames(results) <- tmpnames
+	return(results)
+	} # end func.ttest
+
+
+
+
+
+
+
+
+
+
+
+
+# FUNCTION NAME:
+# 	func.lpe
+# DESCRIPTION:
+# 	LPE test for all pairwise comparisons of groups.
+# USAGE:
+#	func.lpe(datamatrix, conditions, labels, probe.set.name)
+# ARGUMENTS:
+# 	datamatrix: columns are replicates for each of the conditions(groups). each row is an independent sample of groups to test.
+#	conditions: (=groups) a numeric vector, with length equal to number of groups, and each element is number of members of that specific group.
+#	lables: a character vector with length equal to number of conditions (not sum of replicates == ncol(datamatrix) ).
+#	probe.set.name: the row labels.
+# VALUE:
+# 	a matrix containing three columns for each possible pairwise comparison of conditions. column 1 = raw p val, column 2 = BH p value, col3= BY p val.
+# EXAMPLE:
+# 	func.lpe( data[,2:10] , c(2,4,3) , c('CONTROL' , 'DRUG1' , 'DRUG2'), probe.set.name=probename )
+# DEPENDENCIES:
+#	function func.ndx.pairs.betweengroups(), and hence func.ndx.cols() and func.ndx.pairs.withingroups() ,
+#	also function lpe(), and hence ... .
+# AUTHOR:
+# 	mir drdresearch@yahoo.com
+# 	last updated 30apr03
+#
+func.lpe <- function(datamatrix, conditions, labels, probe.set.name) {
+
+	# get column indexes of all between-group pairwise comparisons.
+	ndx <- func.ndx.pairs.betweengroups( conditions )
+	# get group indexes of all between-group pairwise comparisons.
+	ndxgrp <- func.ndx.pairs.withingroups( length(conditions) )
+
+	# initiate result matrix.
+	results <- matrix(NA, nrow(datamatrix), ncol=nrow(ndx) * 3)
+	# initiate column names.
+	tmpnames <- NULL
+
+	# call lpe
+	for (jj in 1:nrow(ndx) ) {
+
+		# check if a condition has only one replicate
+		if ( ndx[jj, 1] == ndx[jj, 2] | ndx[jj, 3] == ndx[jj, 4] ) {
+
+			# make column headings.
+			# generic part.
+			nms <- paste( 'LPE',labels[ ndxgrp[jj,1] ] , 'VS', labels[ ndxgrp[jj,2] ] )
+			nms2 <- paste(rep(nms, 3))
+			#
+			tmpnames <- c(tmpnames , nms2)
+			# skip the rest of the current loop.
+			next
+			}
+
+		# extract relevant columns of data for the 2 groups of pairwise comparison.
+		xdata <- datamatrix[ ndx[jj, 1]:ndx[jj, 2] ] 
+		ydata <- datamatrix[ ndx[jj, 3]:ndx[jj, 4] ] 
+
+		# calculate baseline vars
+# changed from .05 to .01 may3, requested by Jae
+		var.xdata <- baseOlig.error(xdata, q=0.01)
+		var.ydata <- baseOlig.error(ydata, q=0.01)
+
+		# call lpe()
+		lpe.rslts <- lpe(xdata, ydata, var.xdata, var.ydata, probe.set.name=probe.set.name)
+
+#MSS 12may3, this change because of Jae's lpe change
+#		lpe.rslts.xcrpt <- lpe.rslts$adjp$adjp
+		lpe.rslts.xcrpt <- cbind(lpe.rslts$adjp.rawp, lpe.rslts$adjp.BH, lpe.rslts$adjp.BY)
+
+		# get column index in the result matrix to save the lpe result.
+		colndx <- (jj*3 -2) : (jj*3)
+		results[, colndx] <- lpe.rslts.xcrpt
+
+		# make column headings.
+		# generic part.
+		nms <- paste( 'LPE', labels[ ndxgrp[jj,1] ] , 'VS', labels[ ndxgrp[jj,2] ] )
+
+#MSS 12may3, this change because of Jae's lpe change
+#		nms2 <- paste(nms , colnames(lpe.rslts.xcrpt))
+		nms2 <- paste(nms , c('raw', 'BH', 'BY') )
+
+		#
+		tmpnames <- c(tmpnames , nms2)
+
+		}
+
+	colnames(results) <- tmpnames
+	return(results)
+	} # end func.lpe
+
+
+
+
+
+
+# FUNCTION NAME:
+# 	func.ndx.cols
+# DESCRIPTION:
+# 	to find starting and ending columns
+# USAGE:
+# 	func.ndx.cols( groups )
+# ARGUMENTS:
+# 	groups: a numeric vector, with length equal to number of groups, and each element is number of members of that specific group.
+# VALUE:
+# 	a matrix of two columns, with # rows = length(groups)
+# 	each row shows starting an ending column number for a data frame that contains the information with the structure described in the 'groups'.
+# EXAMPLE:
+#	# the data frame has 3+2+4 columns.
+#	> func.ndx.cols( c(3,2,4) )
+#	     [,1] [,2]
+#	[1,]    1    3
+#	[2,]    4    5
+#	[3,]    6    9
+#
+# AUTHOR:
+# 	mir drdresearch@yahoo.com
+# 	last updated 30apr03
+#
+func.ndx.cols <- function(groups) {
+	# number of groups of chips (all similar replicates form one group)
+	groups.length <- length(groups)
+	# initializing an indexing matrix
+	indx <- matrix(data=NA, nrow=groups.length, ncol=2)
+	# initializing counters
+	begin <- 1
+	end <- 0
+	#
+	for (i in 1:groups.length) {
+		end <- end + groups[i]
+		indx[i,1] <- begin
+		indx[i,2] <- end
+		begin <- end + 1
+		}
+	return(index.beginend=indx)
+	} # end func.ndx.cols
+
+
+
+
+
+
+
+
+# FUNCTION NAME:
+# 	func.ndx.pairs.withingroups
+# DESCRIPTION:
+# 	column index for pairwise comparisons within each group.
+# USAGE:
+# 	func.ndx.pairs.withingroups( groups )
+# ARGUMENTS:
+# 	groups: a numeric vector, with length equal to number of groups, and each element is number of members of that specific group.
+# VALUE:
+# 	a matrix of two columns, with # rows = all possible pairwise combinations whithin each group (order does not matter).
+# EXAMPLE:
+#	> func.ndx.pairs.withingroups( c(3,2,4) )
+#	      [,1] [,2]
+#	 [1,]    1    2
+#	 [2,]    1    3
+#	 [3,]    2    3
+#	 [4,]    4    5
+#	 [5,]    6    7
+#	 [6,]    6    8
+#	 [7,]    6    9
+#	 [8,]    7    8
+#	 [9,]    7    9
+#	[10,]    8    9
+#
+# DEPENDENCIES:
+#	function func.ndx.cols() .
+# AUTHOR:
+# 	mir drdresearch@yahoo.com
+# 	last updated 30apr03
+#
+func.ndx.pairs.withingroups <- function(groups) {
+	# call function func.ndx.cols
+	index.beginend <- func.ndx.cols(groups)
+	# number of groups of chips (all similar replicates form one group)
+	groups.length <- length(groups)
+	# initialize matrix for all within-group pair-wise comparisons
+	indx2.rows <- 0
+	for (group in 1:groups.length) {
+		indx2.rows <- indx2.rows + choose(groups[group], 2)
+		}
+	indx2 <- matrix(NA,indx2.rows,2)
+	#
+	row.counter <- 1
+	for (group in 1:groups.length) {
+		for (column1 in index.beginend[group,1]:(index.beginend[group,2]-1) ) {
+			for (column2 in (column1+1):index.beginend[group,2] ) {
+				indx2[row.counter,1] <- column1
+				indx2[row.counter,2] <- column2
+				row.counter <- row.counter + 1
+				}
+			}
+		}
+	return(index.pairs.withingroups=indx2)
+	} # end func.ndx.pairs.withingroups
+
+
+
+
+
+
+
+# FUNCTION NAME:
+# 	func.ndx.pairs.betweengroups
+# DESCRIPTION:
+# 	column index for pairwise comparisons between groups.
+# USAGE:
+# 	func.ndx.pairs.withingroups( groups )
+# ARGUMENTS:
+# 	groups: a numeric vector, with length equal to number of groups, and each element is number of members of that specific group.
+# VALUE:
+# 	a matrix of four columns, with # rows = all possible pairwise combinations between groups (order does not matter).
+#	columns 1 and 2 show the starting and ending column indexes for the first group in a between-groups pariwise comparisons.
+#	and columns 3 and 4 show the same for the second group in the comparison.
+# EXAMPLE:
+#	> func.ndx.pairs.betweengroups( c(3,2,4) )
+#	     G1begin G1end G2begin G2end
+#	[1,]       1     3       4     5
+#	[2,]       1     3       6     9
+#	[3,]       4     5       6     9
+#
+# DEPENDENCIES:
+#	functions func.ndx.cols() and func.ndx.pairs.withingroups() .
+# AUTHOR:
+# 	mir drdresearch@yahoo.com
+# 	last updated 30apr03
+#
+func.ndx.pairs.betweengroups <- function( groups ) {
+	grps.lngth <- length(groups)
+	tmp1 <- func.ndx.cols( grps.lngth )
+	tmp2 <- func.ndx.pairs.withingroups( grps.lngth )
+
+	# initializing an indexing matrix
+	ndx <- matrix(data=NA, nrow= nrow(tmp2), ncol=4) #5)
+	tmp3 <- func.ndx.cols( groups )
+	for (i in 1:nrow(tmp2) ) {
+		ndx[i,] <- c( tmp3[ tmp2[i,1] ,] , tmp3[ tmp2[i,2] ,] )
+		}
+	colnames(ndx) <- c('G1begin', 'G1end', 'G2begin', 'G2end')
+	return(ndx)
+	} # end func.ndx.pairs.betweengroups
+
+
+
+
+
+
+
+
+# FUNCTION NAME:
+# 	t.test2
+# DESCRIPTION:
+# 	a modifed t.test() that is suitable for apply().
+# USAGE:
+# 	t.test2(datavector, groups)
+# ARGUMENTS:
+#	datavector: a numeric vector containing both the groups.
+#	groups: a numeric vector of length 4, containing the start and end element numbers of the two groups in the datavector.
+# VALUE:
+# 	a numeric vector of two elements, one is the t statistic, 2 is the p-value.
+# DETAILS:
+#	it uses the t.test() function with var.equal defaulting to FALSE, hence a Welch t test.
+# EXAMPLE:
+#	#dt is a matrix of 10 rows and 9 columns, columns 1:3 form the first group, column 4:9 form the second group.
+#	tmp <- t(apply(dt , 1 , t.test2 , groups=c(1,3,4,9) ))
+# DEPENDENCIES:
+#	function t.test2(), and hence function t.test() from R library ctest.
+# AUTHOR:
+# 	mir drdresearch@yahoo.com
+# 	last updated 1may03
+#
+t.test2 <- function(datavector , groups) {
+	xdat <- datavector[ groups[1]:groups[2] ]
+	ydat <- datavector[ groups[3]:groups[4] ]
+	tmp <- t.test(xdat, ydat)
+	tmp2 <- c(tmp$statistic, tmp$p.value)
+	return(tmp2)
+	} # end t.test2()
+
+
+
+
+
+
+
+# FUNCTION NAME:
+# 	func.p.t.test
+# DESCRIPTION:
+# 	a parallel t-test function (for matrix data), using function t.test from package ctest.
+# USAGE:
+# 	func.p.t.test(xmat, ymat, mincol=2)
+# ARGUMENTS:
+# 	xmat and ymat: each row of xmat and ymat are separate but related groups of data to be tested against each other. xmat and ymat should have same number of rows, but can have different number of columns (>=mincol).
+#	mincol: if either of the two inputted matrixes have columns less than mincol, the function returns NAs (due to inability of calculate within-group variance).
+# VALUE:
+# 	a matrix of three columns, with # rows = nrows(xmat)=nrows(ymat) . column one is the t statistic, column 2 is the p-value, and column 3 is Bonferroni-adjusted pval.
+# DETAILS:
+#	it uses the t.test() function with var.equal defaulting to FALSE, hence a Welch t test.
+# EXAMPLE:
+# 	func.p.t.test( data[,1:4] , data[5:12] )
+# DEPENDENCIES:
+#	function t.test2(), and hence function t.test() from R library ctest.
+# AUTHOR:
+# 	mir drdresearch@yahoo.com
+# 	last updated 1may03
+#
+func.p.t.test <- function(xmat, ymat, mincol=2) {
+
+	# initiate result object
+	results <- matrix(NA, nrow=nrow(xmat), ncol=3)
+
+	# check for sufficient number of columns for each of the two groups.
+	if ( ncol(xmat)<mincol | ncol(ymat)<mincol) return(results)
+	# if data points of one group are exactly the same (=> 0 variance), t.test() returns c(-Inf, NaN) and goes on, hence no error trapping.
+
+	# prepare to call t.test2().
+	dt <- cbind(xmat, ymat)
+	groups <- c( 1, ncol(xmat),   ncol(xmat)+1, ncol(xmat)+ncol(ymat) )
+	tmp <-  t( apply(dt , 1 , t.test2 , groups=groups) )
+
+	# save results
+	results <- cbind(tmp , pmin(1, tmp[,2]*nrow(results) ))
+	colnames(results) <- c('tstat', 'tpval', 'Bonferroni')
+	return(results)
+	} # end func.p.t.test
+
+
+
+
+
+
+
+
+# FUNCTION NAME:
+# 	func.p.t.test2
+# DESCRIPTION:
+# 	a parallel t-test function (for matrix data), using function t.test from package ctest.
+#	another method is to modify t.test() to return single value, then use apply() or tapply or mApply.
+# USAGE:
+# 	func.p.t.test2(xmat, ymat, var.equal=FALSE, mincol=2)
+# ARGUMENTS:
+# 	xmat and ymat: each row of xmat and ymat are separate but related groups of data to be tested against each other. xmat and ymat should have same number of rows, but can have different number of columns (>=mincol).
+#	var.equal: defaults to FALSE, hence a Welch t test.
+#	mincol: if either of the two inputted matrixes have columns less than mincol, the function returns NAs (due to inability of calculate within-group variance).
+# VALUE:
+# 	a matrix of three columns, with # rows = nrows(xmat)=nrows(ymat) . column one is the t statistic, column 2 is the p-value, and column 3 is Bonferroni-adjusted pval.
+# EXAMPLE:
+# 	func.p.t.test2( data[,1:4] , data[5:12] )
+# DEPENDENCIES:
+#	function t.test() from R library ctest.
+# AUTHOR:
+# 	mir drdresearch@yahoo.com
+# 	last updated 30apr03
+#
+func.p.t.test2 <- function(xmat, ymat, var.equal=FALSE, mincol=2) {
+
+results <- matrix(NA, nrow=nrow(xmat), ncol=3)
+
+# check for sufficient number of columns for each of the two groups.
+if ( ncol(xmat)<mincol | ncol(ymat)<mincol) return(results)
+
+for (i in 1:nrow(xmat)) {
+tmp <- t.test(xmat[i,], ymat[i,], var.equal=var.equal)
+results[i,] <- c(tmp$statistic, tmp$p.value, pmin(1, tmp$p.value* nrow(results) )   )
+}
+tmp1 <- as.character(var.equal)
+tmp <- paste('tstatvareq', tmp1, sep='')
+#colnames(results) <- c(tmp, 'tpval', 'Bonferroni')
+return(results)
+} # end func.p.t.test2
+
+
+
+
+
+
+
+
+
+
+
+
+### the following n functions from Jae 12may3
+
+library(modreg)
+
+# In new version R-1.7, library modreg is 
+# automatically called, as soon as you invoke
+# R, - used for smooth.spline function
+
+permute <- function (a) {
+  aa <- matrix(NA, length(a)-1, length(a))
+  for (i in 1:(length(a)-1)) {
+    aa[i,] <- a[c((i+1):length(a), 1:i)]
+  }
+  return(aa)
+}
+
+# The above function computes the all possible 
+# combinations of a vector a. For example,
+# for a <- 1:3, the result will be a matrix
+# of 2*3:
+# 2 3 1
+# 3 1 2
+
+
+am.trans <- function(y) {
+  n <- ncol(y)
+  if (n < 2) {
+    stop("There are no replicated arrays!")
+  } 
+  A <- c()
+  M <- c()
+  cc <- permute(1:n)
+  for (i in 1:(n-1)) {
+    A <- c(A, c((y + y[,cc[i,]])/2), recursive=T)
+    M <- c(M, c(y - y[,cc[i,]]), recursive=T)
+  }
+  return(cbind(A,M))
+}
+
+# The above function transforms the replicated arrays
+# in the (A,M) format and duplicates the data
+# eg: (Y1+Y2, Y1-Y2) and (Y2+Y1, Y2-Y1) are the 
+# four columns returned for input column Y1 and Y2
+# i.e. duplicate arrays
+
+fixbounds.predict.smooth.spline  <- function(object, x, deriv = 0) {
+  if(missing(x)) {
+    if(deriv == 0) {
+      return(object[c("x", "y")])
+    } else {
+      x <- object$x
+    }
+  }
+  # fit <- object$fit
+  if(is.null(object)) {
+    stop("not a valid smooth.spline object")
+  } else {
+    out <- predict(object, x, deriv)
+    maxpredY <- object$y[object$x == max(object$x)]
+    # maxpredY <- predict(fit, max(object$x), deriv)
+    out$y[out$x > max(object$x)] <- maxpredY
+    minpredY <- object$y[object$x == min(object$x)]
+    out$y[out$x < min(object$x)] <- minpredY
+    invisible(out)
+  }
+}
+
+# Above function is called by lpe function and makes sure
+# that predicted values don't go negative.
+
+baseOlig.error <- function(y, q = 0.01) {
+  # MOC 2/03: 
+  # (a) changed cutoff from <4; now genes are thresholded if all values for an 
+  #      experimental condition == 0 (enforced by A!=0)
+  # (b) line up A and var.M output better by using median of A's within each quantile
+  #      to line up with var.M calculated from interval around that median_A
+  # (c) return values of A (median of quantile.A) and var.M; not smooths of these
+  #     try even harsher thresholding ie remove any row where a single y==0
+  #     from variance function calculation
+	
+  # NJ (May 08):
+  # (a) We don't need to remove the row genes having 0 values, as
+  #     MAS5.0 output never has negative or 0 values and also the data
+  #     is log transformed => intensity values can be equal or less than
+  #     1, resulting in zero or negative log transformed values.
+  # (b) Instead of cutoff.point and na.point, using na.exclude
+
+	
+  y <- na.exclude(y)
+  AM <- am.trans(y)
+  A <- AM[, 1]
+  M <- AM[, 2]
+	
+  # y.0 <- apply(y, 1, function(x) all(x != 0))
+  # y <- y[y.0,  ]
+  # na.point <- (1:nrow(AM))[!is.na(AM[, 1]) & !is.na(AM[, 2])]
+  # cut off spots if A == 0 ie expression == 0  for all reps
+  # cutoff.point <- (1:nrow(AM))[AM[, 1] != 0]
+  # point <- intersect(na.point, cutoff.point)
+  # A <- AM[point, 1]
+  # M <- AM[point, 2]
+
+	
+  quantile.A <- quantile(A, probs = seq(0, 1, q), na.rm = T)
+  quan.n <- length(quantile.A) - 1
+  var.M <- rep(NA, length = quan.n)
+  medianAs <- rep(NA, length = quan.n)
+  # Need to check for low-end of data
+  # make sure all data equal in one quantile
+  
+  # If minimum expression value(s) is more than q percentage of total
+  # data, then exclude those minimum numbers for
+  # calculating quantiles
+
+  if(sum(A == min(A)) > (q * length(A))) {
+    tmpA <- A[!(A == min(A))]
+    quantile.A <- c(min(A), quantile(tmpA, probs = seq(q, 1, q), na.rm = T))
+  }
+
+  for(i in 2:(quan.n + 1)) {
+    n.i <- length(!is.na(M[A > quantile.A[i - 1] & A <= quantile.A[i]]))
+    mult.factor <- 0.5*((n.i - 0.5)/(n.i -1))
+    var.M[i - 1] <- mult.factor * var(M[A > quantile.A[i - 1] & A <= quantile.A[i]], na.rm=T) 
+    medianAs[i - 1] <- median(A[A > quantile.A[i - 1] & A <= quantile.A[i]], na.rm = T)
+  }
+  return(cbind(A = medianAs, var.M = var.M))
+}
+# The above function evaluates baseline distribution of M at percentile intervals of A.
+# y is (log transformed intensity) of replicated Oligo arrays after normalization and
+# q = quantile width 
+
+lpe <- function(x, y, basevar.x, basevar.y, df = 10, array.type = "olig",
+                probe.set.name = OLIG.probe.name, trim.percent = 5, 
+		adjp =c("BH", "BY")) {
+
+  # LPE significance evaluation with replicates
+  # x and y are two array samples with n1 and n2 replicates
+  # basevar.x (basevar.y): n.quantile x 2 matrix of LPE baseline error of x (y)
+  # array.type: "olig" for Affymetrix oligo array and "cDNA" for cDNA array
+  # subset rows, removing rows with any na's
+  # future: get more aggressive in removing rows
+  # eg remove rows where apply(express.df,1,max) < user specified value
+  # or remove rows where apply(express.df,1,max) < max(negative controls)
+  ## trim variances
+  
+  # NJ (May 8) 
+  # (a) setting tim size as 5% may not be the best solution as what if
+  #     there are more than 5% points at lower bound with artifact
+  # (b) Instead of predict.smooth.spline function, which
+  #     no longer works in R-1.7 (only "predict" does the job),
+  #     use fixbounds.smooth.spline function (defined at the begining)
+  #     to take care of negative predicted values
+  #	
+
+  trim.size <- round((trim.percent/100) * nrow(basevar.x), digits=0)
+  basevar.x <- basevar.x[(trim.size + 1): nrow(basevar.x),  ]
+  basevar.y <- basevar.y[(trim.size + 1): nrow(basevar.y),  ]
+  express.df <- cbind(x, y)
+  express.df <- na.exclude(express.df)
+  
+  x <- as.matrix(express.df[, 1:ncol(x)])
+  y <- as.matrix(express.df[, (ncol(x) + 1):ncol(express.df)] )
+
+  # If some rows containing NAs were removed then, remove corresponding IDs too
+ 
+  pickoff <- attr(express.df, "na.action")
+  if(!is.null(pickoff)) {
+    probe.set.name <- probe.set.name[-pickoff]
+  }
+  
+  n1 <- ncol(x)
+  n2 <- ncol(y)
+  ngenes <- nrow(x)
+
+# MSS 12 may3
+#  if (n1 < 2 | n2 < 1) {
+  if (n1 < 2 | n2 < 2) {
+    stop("No replicated arrays!")
+  }
+  if (n1 > 2 |n2 >2) {
+    median.x <- apply(x, 1, median)
+    median.y <- apply(y, 1, median)
+    # removed the option na.rm=T, as x and y don't contain NA values at this stage
+    diff <- median.x - median.y
+    sf.x <- smooth.spline(basevar.x[, 1], basevar.x[, 2], df = df)
+    var.x <- fixbounds.predict.smooth.spline(sf.x, median.x)$y
+    # var.x <- predict.smooth.spline(sf.x, median.x)$y
+    # Above function is no longer functional in R-1.7.0
+    var.x[var.x <= 0] <- min(var.x[var.x > 0])
+    sf.y <- smooth.spline(basevar.y[, 1], basevar.y[, 2], df = df)
+    var.y <- fixbounds.predict.smooth.spline(sf.y, median.y)$y
+    # var.y <- predict.smooth.spline(sf.y, median.y)$y
+    var.y[var.y <= 0] <- min(var.y[var.y > 0])
+    # Since we already took care of factor 2 in baseOlig.error
+    # we don't need to re-divide by 2.
+    std.diff <- sqrt(1.57 * ((var.x/n1) + (var.y/n2)))
+    # std.diff <- sqrt(1.57 * (var.x/(2 * n1) + var.y/(2 * n2)))
+    pnorm.diff <- pnorm(diff, mean = 0, sd = std.diff)
+    p.out <- 2 * apply(cbind(pnorm.diff, 1 - pnorm.diff), 1, min)
+    p.adj <- mt.rawp2adjp(p.out, proc=adjp)
+    data.out <- data.frame(x, median.1 = median.x, y, median.2 = median.y, 
+       		           median.diff = diff, diff.std = std.diff, p.adj)
+    row.names(data.out) <- probe.set.name
+    
+    return(data.out)
+  } 
+  if (n1 ==2 & n2 ==2) {
+    median.x <- (x[, 1] + x[, 2])/2
+    median.y <- (y[, 1] + y[, 2])/2
+    diff <- median.x- median.y
+
+    sf.x <- smooth.spline(basevar.x[, 1], basevar.x[, 2], df = df)
+    var.x <- fixbounds.predict.smooth.spline(sf.x, median.x)$y
+    var.x[var.x <= 0] <- min(var.x[var.x > 0])
+    sf.y <- smooth.spline(basevar.y[, 1], basevar.y[, 2], df = df)
+    var.y <- fixbounds.predict.smooth.spline(sf.y, median.y)$y
+    var.y[var.y <= 0] <- min(var.y[var.y > 0])
+
+    # Since we already took care of factor 2 in baseOlig.error
+    # we don't need to re-divide by 2.
+    std.diff <- sqrt(1.57 * ((var.x/n1) + (var.y/n2)))
+    # std.diff <- sqrt((var.x/(2 * n1) + var.y/(2 * n2)))
+    # Note that now we don't need factor of 1.57 
+    pnorm.diff <- pnorm(diff, mean = 0, sd = std.diff)
+    p.out <- 2 * apply(cbind(pnorm.diff, 1 - pnorm.diff), 1, min)
+    
+    # Outlier checking 
+    var.xo <- var.yo <- matrix(NA, ngenes, 2)
+    for(i in 1:2) {
+      # prediction of variance for each x[,i] and each y[,i]
+      # rather than for the median/mean of these
+      sf.xi <- smooth.spline(basevar.x[, 1], basevar.x[, 2], df = df)
+      var.xo[, i] <- fixbounds.predict.smooth.spline(sf.xi, x[, i])$y
+      # var.xo[, i] <- predict.smooth.spline(sf.xi, x[, i])$y
+      var.xo[var.xo[,i] <= 0,i] <- min(var.xo[var.xo[,i]>0,i])
+      sf.yi <- smooth.spline(basevar.y[, 1], basevar.y[, 2], df = df)
+      var.yo[, i] <- fixbounds.predict.smooth.spline(sf.yi, y[, i])$y
+      # var.yo[, i] <- predict.smooth.spline(sf.yi, y[, i])$y
+      var.yo[var.yo[,i] <= 0,i] <- min(var.yo[var.yo[,i]>0,i])
+    }
+	
+    p.val <- matrix(NA, ngenes, 2)
+    var.diff <- var.xo[, 1] + var.xo[, 2] + var.yo[, 1] + var.yo[, 2]
+    diff.xy <- x - y
+    diff.xy <- diff.xy[, 1] - diff.xy[, 2]
+    ### 
+    p.val[, 1] <- pnorm(diff.xy, mean = 0, sd = sqrt(var.diff))
+    p.val[, 1] <- apply(cbind(p.val[, 1], 1 - p.val[, 1]), 1, min)
+	
+    diff.xy <- x - y[, 2:1]
+    diff.xy <- diff.xy[, 1] - diff.xy[, 2]
+
+    p.val[, 2] <- pnorm(diff.xy, mean = 0, sd = sqrt(var.diff))
+    p.val[, 2] <- apply(cbind(p.val[, 2], 1 - p.val[, 2]), 1, min)
+
+    p.outlier <- apply(p.val, 1, min)
+    flag <- rep(".", ngenes)
+    flag[p.outlier < 0.05] <- "*"
+    flag[p.outlier < 0.01] <- "**"
+    flag[p.outlier < 0.001] <- "***"
+
+    p.adj <- mt.rawp2adjp(p.out, proc=adjp)
+    data.out <- data.frame(x, median.1=median.x, y, median.1=median.y, 
+        	           median.diff = diff, std.diff, p.adj,
+			   flag, p.outlier)
+    row.names(data.out) <- probe.set.name
+ 
+    return(data.out)
+  }
+}
+
+mt.rawp2adjp <-  function (rawp, proc = c("Bonferroni", "Holm", 
+            		   "Hochberg", "SidakSS", "SidakSD", "BH", "BY")) {
+  m <- length(rawp)
+  n <- length(proc)
+
+  index <- order(rawp)
+  spval <- rawp[index]
+
+  adjp <- matrix(0, m, n + 1)
+  dimnames(adjp) <- list(NULL, c("rawp", proc))
+  adjp[, 1] <- spval
+  if (is.element("Bonferroni", proc)) {
+    tmp <- m * spval
+    tmp[tmp > 1] <- 1
+    adjp[, "Bonferroni"] <- tmp
+  }
+  if (is.element("Holm", proc)) {
+    tmp <- spval
+    tmp[1] <- min(m * spval[1], 1)
+    for (i in 2:m) {
+      tmp[i] <- max(tmp[i - 1], min((m - i + 1) * spval[i], 1))
+    } 
+    adjp[, "Holm"] <- tmp
+  }
+  if (is.element("Hochberg", proc)) {
+    tmp <- spval
+    for (i in (m - 1):1) {
+      tmp[i] <- min(tmp[i + 1], min((m - i + 1) * spval[i], 1))
+    }
+    adjp[, "Hochberg"] <- tmp
+  }
+  if (is.element("SidakSS", proc)) {
+    adjp[, "SidakSS"] <- 1 - (1 - spval)^m
+  }
+  if (is.element("SidakSD", proc)) {
+    tmp <- spval
+    tmp[1] <- 1 - (1 - spval[1])^m
+    for (i in 2:m) {
+      tmp[i] <- max(tmp[i - 1], 1 - (1 - spval[i])^(m - i + 1))
+    }
+    adjp[, "SidakSD"] <- tmp
+  }
+  if (is.element("BH", proc)) {
+    tmp <- spval
+    for (i in (m - 1):1) {
+      tmp[i] <- min(tmp[i + 1], min((m/i) * spval[i], 1))
+    }
+    adjp[, "BH"] <- tmp
+  }
+  if (is.element("BY", proc)) {
+    tmp <- spval
+    a <- sum(1/(1:m))
+    tmp[m] <- min(a * spval[m], 1)
+    for (i in (m - 1):1) {
+      tmp[i] <- min(tmp[i + 1], min((m * a/i) * spval[i], 1))
+    }
+    adjp[, "BY"] <- tmp
+  }
+
+  # inversing the sort
+  ndx <- order(index) 
+  adjp <- adjp[ndx,]
+  
+  list(adjp = adjp, index = index)
+}
+
+# The above function was taken from Bioconductor (Dudoit et al)
+
+
+## The function below 'combinations' is no longer being used.
+
+combinations <- function(n, k) {
+  # Compute all n choose k combinations of size k from 1:n
+  # Return matrix with k rows and choose(n,k) columns.
+  if(!is.numeric(n) || length(n) != 1 || n %% 1) stop("'n' must be an integer")
+  if(!is.numeric(k) || length(k) != 1 || k %% 1) stop("'k' must be an integer")
+
+  if(k > n || k <= 0) return(numeric(0))
+
+  rowMatrix <- function(n) {
+    structure(1:n, dim = c(1, n))
+  }
+  colMatrix <- function(n) {
+    structure(1:n, dim = c(n, 1))
+  }
+   
+  if(k == n) return(colMatrix(n))
+  if(k == 1) return(rowMatrix(n))
+
+  L <- vector("list", k)
+  # L[[j]] will contain combinations(N, j) for N = 2:n
+  L[[1]] <- rowMatrix(2)
+  L[[2]] <- colMatrix(2)
+
+  Diff <- (n - k)
+  for(N in seq(3, n, by = 1)) {
+    # loop over j in reverse order, to avoid overwriting
+    for(j in seq(pmin(k, N - 1), pmax(2, N - Diff), by = -1)) {
+      L[[j]] <- cbind(L[[j]], rbind(L[[j - 1]], N, deparse.level = 1))
+    }
+    if(N <= Diff + 1) {
+      L[[1]] <- rowMatrix(N)
+    } else { 
+      L[[N - (Diff + 1)]] <- numeric(0)
+    }
+    if(N <= k) {
+      L[[N]] <- colMatrix(N)
+    }
+  }
+
+  #  L[[k]]
+  matrix( L[[k]] , k)
+}
+
+
+
+
+
+
+
+
+
+
+### MAIN ###
+### REPLACE infile
+geneSigs.N <- read.table("infile", header=TRUE)
+
+
+### REPLACE conds
+conditions <- c(conds)
+### REPLACE outfile
+outFile <- "outfile"
+### REPLACE condLabels
+labels <- c(condLabels)
+
+# strip the 1st column of probe.set
+probename <-  geneSigs.N[,1] 
+#tmp <- 2:ncol(geneSigs.N)
+#probename <-  geneSigs.N[,-tmp] 
+probename <- as.matrix(probename)
+
+
+geneSigs.N <- geneSigs.N[,-1] 
+
+# analyses
+results.tfc <- traditionalFoldChange(geneSigs.N, conditions, outFile, labels)
+geneSigs.N.log2 <- logb(geneSigs.N,base=2)
+results.lfc <- logFoldChange(geneSigs.N.log2, conditions, outFile, labels)
+results.tt <- func.ttest(geneSigs.N.log2, conditions, labels)
+# calling required R library
+#library(modreg)
+results.lpe <- func.lpe(geneSigs.N.log2, conditions, labels, probe.set.name=probename)
+
+
+#
+report <- cbind(Probe.Set=probename,
+round(geneSigs.N, digits=1), 
+round(results.tfc, digits=2),
+round(results.lfc, digits=2),
+results.tt,
+results.lpe
+)
+
+# writes a tab-delimited file, 1st column=ProbeSet, #ofRows=#ofChipProbes
+write.table( report, file=outFile , row.names=F, sep='\t')
+

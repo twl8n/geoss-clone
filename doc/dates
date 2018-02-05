@@ -1,0 +1,51 @@
+Dates that will be removed:
+---------------------------
+order_info:
+  Field:  order_date 
+  Usage: used by edit_am1
+  Where set: Set to the date the order was created by the curator
+  Reason for removal:  It will be replaced by date_last_revised.
+
+  Field:  date_experiment_completed
+  Usage:  not used
+  Where set: set to the current date everytime a curator updates an order
+  Reason for removal: Not used.
+
+  Field:  date_analysis_complete
+  Usage:  not used
+  Where set: set to the current date everytime a curator updates an order
+  Reason for removal: Not used.
+
+
+Dates to be added/kept:
+----------------------
+order_info:
+ Field: date_samples_received 
+ Usage: will be displayed in reports 
+ Where set: set by curator in edit_order_curator
+
+ Field: date_report_completed
+ Usage: will be displayed in reports
+ Where set: set by curator in edit_order_curator
+
+ Field: date_last_revised
+ Usage: will be displayed in reports and in edit_am1
+ Where set: automatically updated when changes are made to an order by user (not curator)
+
+billing:
+ Field: isolation_bill_date
+ Usage: will be displayed in reports
+ Where set: set by curator in edit_order_curator
+
+ Field: preps_bill_date
+ Usage: will be displayed in reports
+ Where set: set by curator in edit_order_curator
+
+ Field: chips_bill_date
+ Usage: will be displayed in reports
+ Where set: set by curator in edit_order_curator
+
+arraymeasurement:
+ Field: date_loaded
+ Usage: used to determine date when all experiment data has been loaded
+ Where set: is set to current date when data is loaded

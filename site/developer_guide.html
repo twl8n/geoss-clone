@@ -1,0 +1,576 @@
+<html>
+<head>
+  <title>GEOSS Developer Guide</title>
+</head>
+
+<body bgcolor="#FFFFFF" marginheight="0" marginwidth="0" topmargin="0"
+  leftmargin="0" link="#006633" vlink="#666633">
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <!-- Answers to the aforementioned questions -->
+  <tr valign="top"> 
+    <td width="10" bgcolor="#1660b2" valign="bottom"><img src="graphics/white.gif" width="10" height="10"></td>
+    <td width="10" valign="bottom"><img src="graphics/white.gif" width="10" height="10"></td>
+    <td width="580"> 
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td width="36%"><a href="./index.cgi"><img src="graphics/geoss_logo.jpg" width="216" height="96" border="0" alt="GEOSS Gene Expression Open Source System"></a></td>
+          <td width="64%" valign="top"><font face="Verdana, Arial, Helvetica, sans-serif" size="+1">GEOSS 
+            Developer Guide</font></td>
+        </tr>
+      </table>
+      <p>
+       <a href="install_guide.html">Install Guide</a>&nbsp; 
+       <a href="admin_guide.html">Admin Guide</a>&nbsp; 
+       <a href="user_guide.html">User Guide</a>&nbsp; 
+       <!--   <a href="curator_guide.html">Curator Guide</a>&nbsp;-->
+       <a href="org_curator_guide.html">Org Curator Guide</a></p>
+       <a href="developer_guide.html">Developer Guide</a> </p>
+      <hr noshade color="990066">
+      <p>This documentation is designed for developers who are modifying or adding 
+        to the GEOSS code base. This documentation is not all current and developers 
+        should verify the accuracy of all information.  There may be some information specific to UVA's biostat server, as it is the main development environment for several GEOSS developers.</p>
+      <hr noshade>
+      <p><b><font size="+1">Developer Guide Table of Contents</font></b></p>
+      <ul>
+        <li> 
+          <p><a name="__TOC1.0"></a><a href="#__BODY1.0">1.0</a>&nbsp;Installing 
+            a Development environment
+        </li>
+        <li> 
+          <p><a name="__TOC2.0"></a><a href="#__BODY2.0">2.0</a>&nbsp;Development 
+            Components Explained
+        </li>
+        <ul>
+          <li> 
+            <p><a name="__TOC2.1"></a><a href="./schema.html">2.1 GEOSS Schema</a></p>
+          </li>
+          <li> 
+            <p><a name="__TOC2.2"></a><a href="./security.html">2.2 GEOSS Security</a></p>
+          </li>
+          <li> 
+            <p><a name="__TOC2.3"></a><a href="#__BODY2.3">2.3 GEOSS Directory 
+              Structure</a></p>
+          </li>
+          <li> 
+            <p><a name="__TOC2.4"></a><a href="#__BODY2.4">2.4 GEOSS Make System</a></p>
+          </li>
+        </ul>
+        <li> 
+          <p><a name="__TOC3.0"></a><a href="#__BODY3.0">3.0</a>&nbsp;FAQ
+        </li>
+        <ul>
+          <li> 
+            <p><a name="__TOC3.1"></a><a href="#__BODY3.1">3.1 How do I build 
+              the GEOSS rpm?</a>
+          </li>
+          <li> 
+            <p><a name="__TOC3.2"></a><a href="#__BODY3.2">3.2 How do I build 
+              the rpms for AppConfig and PDF-API2?</a>
+          </li>
+          <li> 
+            <p><a name="__TOC3.3"></a><a href="#__BODY3.3">3.3 Where should 
+              I look for error messages and debugging statements?</a>
+          </li>
+          <li> 
+            <p><a name="__TOC3.4"></a><a href="#__BODY3.4">3.4 
+              How do readfile and readtemplate work?</a>
+          </li>
+        </ul>
+        <hr noshade>
+      </ul>
+      <h1>&nbsp;</h1>
+      <p><b>Developer's Guide: Contents</b></p>
+      <b> 
+      <p><a name="__BODY1.0">1.0</a>&nbsp;Installing a Development Environment</p>
+      </b> 
+      <p> You can expect to spend some time installing a GEOSS development environment. 
+        In a best case scenario, where all the dependencies have been installed, 
+        you could potentially install GEOSS in about an hour. However, if you 
+        also need to install and configure Apache, Postgres, and R, you should 
+        plan several days for the install.</p>
+      To start developing on GEOSS:<br>
+      <ul>
+        <li>Get developer access to the project on SourceForge. This is necessary 
+          only if you will be checking changes into the GEOSS code base. To get 
+          access you must first create an account at <a href="http://sourceforge.net"> 
+          Source Forge</a>. Then you need to contact <a href="mailto:twl8n@virginia.edu"> 
+          Tom Laudeman</a> to get added to the SourceForge project.</li>
+        <li> Perform all steps of an install as described in the installation guide, 
+          until you reach the "Install GEOSS" stage. If there are multiple installations 
+          of GEOSS on the machine, make sure to choose a different database name 
+          and user than the default ("geoss"). Also, make sure none of your install 
+          paths conflict with other installations. </li>
+        <li> If you will be checking changes into SourceForge, you will need to 
+          get the code from the repository. Otherwise you can install from the 
+          tarball as described in the Install Guide.</li>
+        <li> <b> cd geoss </b></li>
+        <li> Copy build.options-default to build-options.mk</li>
+        <li> If you are the only user with GEOSS installed on this system, and 
+          you have root access, the default options are fine. If not, you will 
+          need to set these appropriate according to where you have write access, 
+          how your files will be served, and how you will be connecting to the 
+          database. If you will be installing in your public_html directory, see 
+          sample options in <a href="./install_guide.html#__BODY3.2.4"> Section 
+          3.2.4 of the Install Guide</a>.</li>
+        <li> <b>make all</b> </li>
+        <li> <b> cd &lt;BIN_DIR&gt; </b>(as set in your build-options.mk) </li>
+        <li> <b>./geoss_initialize --db_name=&lt;your db&gt; --db_user=&lt;your 
+          db user&gt; </b></li>
+        <li> Finish configuration as described in the Install Guide </li>
+      </ul>
+      <a href="#__TOC1.0">Back to TOC</a> 
+      <p><b><a name="__BODY2.0">2.0</a>&nbsp;Development Components Explained</b> 
+        <br>
+        <a href="#__TOC2.0">Back to TOC</a> 
+      <ul>
+        <li> 
+          <p> <b><a name="__BODY2.3">2.3</a>&nbsp;GEOSS Directory Structure</b><br>
+            The GEOSS directory structure attempts to group files together logically 
+            by function. Sibling subdirectories of the top directory can have 
+            different build/install rules, but subdirectories of each sibling 
+            should have the same rules as their parent. Where I use CAPS (except 
+            for the product name) , I am describing a value that is set in build-options.mk 
+            prior to building the system. 
+          <ul>
+            <li><i>geoss:<br>
+              </i> This is the top level directory. It contains files pertaining 
+              to building GEOSS, and the license file. Try not to clutter up this 
+              directory. </li>
+            <li><i>geoss/bin:<br>
+              </i> This directory contains scripts that are intended to be run 
+              by GEOSS administrators from the command line, and scripts that 
+              are intended for use by other command line scripts. Scripts in this 
+              directory are intended to be installed in a directory in the user's 
+              path, so we have tried to prefix these scripts with geoss_. Files 
+              in this directory are installed into the BIN_DIR directory. If a 
+              script is intended for use via the web interface, but not the command-line, 
+              then put it in the appropriate subdirectory of site, not in bin. 
+            </li>
+            <li><i>geoss/database:<br>
+              </i> This directory contains files for defining and initializing 
+              the database. It is not anticipated that developers should need 
+              to add files to this directory. Changes to geoss_schema.in should 
+              be coordinated with <a href="mailto:jkanter@virginia.edu">Jodi Kanter</a>. 
+              The files in this directory are used by geoss_initialize and thus 
+              need to be installed. They are installed in WEB_DIR/database. </li>
+            <li><i>geoss/devtools:<br>
+              </i> This directory contains scripts and files that are useful to 
+              developers but are not necessary for installing GEOSS. Examples 
+              include the spec file for building the rpm and a script that searches 
+              through our directory tree substituting one string with another. 
+              Files in this directory should be code or pseudo-code and are not 
+              installed. </li>
+            <li><i>geoss/doc:<br>
+              </i> This directory contains documentation files that don't need 
+              to be released to end users. This includes our test document and 
+              coding guidelines. New developers should review the contents of 
+              this directory. Files in this directory should be text files and 
+              are not installed. </li>
+            <li><i>geoss/lib:<br>
+              </i> This directory contains files that have collections of functions 
+              for use by multiple files. Files in this directory are installed 
+              into the LIB_DIR directory. </li>
+            <li><i>geoss/site:<br>
+              </i> 
+              <p>This directory contains scripts and pages associated the parts 
+                of the GEOSS product that can be accessed without logging in. 
+                These include the main project page and a publicly accessible 
+                documentation pages. Files in site and its subdirectories will 
+                be accessible via the web interface. To that end, they will be 
+                in the WEB_USER group and are installed in WEB_DIR.</p>
+              <p> Files that are in subdirectories of site are all built and installed 
+                in the same fashion. They are separated into directories by project 
+                component in order to keep directory sizes reasonable and make 
+                things easy to find. </p>
+            </li>
+            <li><i>geoss/site/admintools:<br>
+              </i> This directory contains pages associated with administrator 
+              use. These pages comprise the "Admin Home" component of the project. 
+            </li>
+            <li><i>geoss/site/graphics:<br>
+              </i> This directory contains all graphics files for the site. </li>
+            <li><i>geoss/site/public_data:<br>
+              </i> This directory contains pages associated with the display of 
+              public data. </li>
+            <li><i>geoss/site/webtools:<br>
+              </i> This directory contains pages associated with general use for 
+              users who are logged in. These pages comprise the "Member Home" 
+              component of the project. </li>
+            <li><i>geoss/site/webtools/analysis:<br>
+              </i> This directory and its subdirectories contain the code for 
+              individual analyses. </li>
+          </ul>
+          <p></p>
+          <a href="#__TOC2.3">Back to TOC</a> </li>
+        <li> 
+          <p> <b><a name="__BODY2.4">2.4</a>&nbsp;GEOSS Make System</b><br>
+          <p>Conceptually there are two parts to "making" a file in the GEOSS 
+            system. The first phase is the "build", the second is the "install". 
+            The "build" stage does nothing to non-executable files like graphic 
+            files or html files. Executable files, which currently include files 
+            that have a .pl source file, are copied to a new file (typically a 
+            .cgi, with the exception of files in the lib and bin dir) that contains 
+            some global variables and has the executable bit set. Also, a syntax 
+            check (perl -c) is performed on the resulting file. The second phase, 
+            the "install" phase, installs all files, both executable and non-executable 
+            into the appropriate directories. Different make targets are discussed 
+            below:</p>
+          <b>How To Use The Makefiles:</b><br>
+          <ul>
+            <li><b>make all</b> 
+              <p> This command makes the entire system by performing a make directories, 
+                a make build, and a make install. </p>
+            </li>
+            <li><b>make install</b><br>
+              <p> This command will install the target files (EXEC_TARGETS and 
+                NONEXEC_TARGETS) in the current directory and below into their 
+                install directory. </p>
+            </li>
+            <li><b>make directories</b> 
+              <p> This command must be issued from the top level directory. It 
+                makes the USER_DATA_DIR directory, the WEB_DIR directory, and 
+                the public_data directory with appropriate permissions and ownership. 
+              </p>
+            </li>
+            <li><b>make build</b> 
+              <p> This command makes all EXEC_TARGETS in the current directory 
+                and below. It will perform a syntax check on the EXEC_TARGETS. 
+                The build target is the default target, so if no target is specified, 
+                a make build is performed. </p>
+            </li>
+            <li><b>make <target_file></b> 
+              <p> This command can be used to build and target .cgi file (note 
+                that it also performs a syntax check on the file). It does not 
+                install the target file. </p>
+            </li>
+            <li><b>make uninstall</b> 
+              <p> This command removes files from the install directories. Essentially, 
+                it reverses the actions of the make install target. </p>
+            </li>
+            <li><b>make rmdirectories</b> 
+              <p> This command must be issued from the top level directory. It 
+                removes the directories created by a make directories (if the 
+                directories are empty). </p>
+            </li>
+            <li><b>make unall</b> 
+              <p> This command must be issued from the top level directory. It 
+                performs a make uninstall and a make rmdirectories. </p>
+            </li>
+            <li><b>make clean</b> 
+              <p> This command will remove EXEC_TARGETS. Essentially, it cleans 
+                up after a make build by removing the .cgi files that are created 
+                during a make build. </p>
+            </li>
+          </ul>
+          <b>Adding Files</b><br>
+          <p>If you add a file, it needs to be added to the Makefile (in the same 
+            directory that you have added the file in). If the file is not executable, 
+            like a graphic or an html file, it should be added to the list of 
+            NONEXEC_TARGETS. If it is an executable file, like a .pl, it should 
+            be added to the list of EXEC_TARGETS.</p>
+          <b>Removing Files</b><br>
+          <p>If you remove a file, it should be removed from the Makefile.</p>
+          <b>Adding Subdirectories</b><br>
+          <p>If you add a subdirectory, it needs to be added to the Makefile (in 
+            the same directory that you have added the file in). It should be 
+            added to the SUBDIRS line.</p>
+          <b>Removing Subdirectories</b><br>
+          <p>If you remove a subdirectory, it should be removed from the SUBDIRS 
+            line in the Makefile (in the parent directory of the subdirectory).</p>
+          <br>
+          <br>
+          <br>
+          <b>GEOSS Makefiles Explained:</b><br>
+          There are three special files in the geoss directory that are used by 
+          the make process. They are: 
+          <ul>
+            <li><i> build-options.mk</i><br>
+              This file contains build parameters. They are set to build-options.default 
+              for the rpm build, but can be customized for users who build their 
+              own system from source. These define what directories the files 
+              are placed into, who owns the files, and what database GEOSS will 
+              connect to. </li>
+            <li><i> subdirs.mk</i><br>
+              This file defines targets that should be available no matter what 
+              directory the developer is performing a make in (like "install" 
+              and "clean"). This file is intended to be included by all GEOSS 
+              makefiles. </li>
+            <li><i> rules.mk</i><br>
+              This file contains build rules for building .pl files (to .cgi and 
+              to no extension) and the rule for building the perl-header file. 
+              It is intended to be included by all GEOSS makefiles. </li>
+          </ul>
+          <p> The GEOSS Makefiles were redesigned when we decided to build rpms 
+            to facilitate the install process. Many of the redesign decisions were 
+            based on making a build sequence that worked well with rpm. Several 
+            other decisions were based on common design principles and on knowledge 
+            of issues with our previous make sequence. The following paragraphs 
+            outline these principles, so that developers can adhere to them. They 
+            should be reviewed if you are altering or modifying the makefiles 
+            in a significant way, but it is not necessary to review them if you 
+            aren't changing the makefile structure.</p>
+          The GEOSS Makefiles have been defined to adhere to the following principles: 
+          <ul>
+            <li>Make syntax should be portable<br>
+              Where possible, we have tried to use syntax that will work with 
+              all versions of make. The exception to this is the "X : X" style 
+              rules in rules.mk, which are gnu-specific. These were implemented 
+              this way due to time constraints, and will need to be modified if 
+              the product is ported to a different make implementation. However, 
+              we would like to move towards generic syntax, so keep code portable 
+              where possible. </li>
+            <li>The build process should follow the standard compile/install sequence.<br>
+              Our build procedure has two phases, a "compile" phase and an "install" 
+              phase. Strictly speaking, "compile" is a misnomer as we are using 
+              perl scripts, which don't need to be compiled. In our product, the 
+              compile phase parses global variables into the the input scripts, 
+              and performs a syntax check. The "install" phase copies the "compiled" 
+              files to the appropriate directories and sets permissions. Technically, 
+              we could have done both the install and compile in one step, but 
+              it works better to have two separate steps for several reasons. 
+              Primarily, it fits very nicely into the desired sequence for building 
+              rpms. It also is useful if there are people (other than you) using 
+              the system you are working on: the two step sequence prevents you 
+              from installing a file with a syntax error that could interrupt 
+              the user using the system (doesn't help with logical errors, of 
+              course, but at least we've addressed one level). Finally, it is 
+              useful to have a sequence that mimics a standard build procedure 
+              as it should be easier for new developers to understand. </li>
+            <li>Each Makefile should be similar in structure and design to the 
+              other GEOSS Makefiles<br>
+              With all the build rules and targets extracted into rules.mk and 
+              subdirs.mk, the Makefile in each directory essentially includes 
+              a list of files in that directory that should be built/installed. 
+              The similar format of all Makefiles makes it easy to write scripts 
+              to change all of them (should changes to their format be required), 
+              rather than having to modify each of them on an individual basis.</li>
+            <li>Common elements should be extracted from individual Makefiles 
+              into one file and that file should be included<br>
+              This is just a basic coding principal--reuse is good. Therefore, 
+              rather than add something to every makefile, add it to rules.mk 
+              or subdirs.mk. </li>
+            <li>Creating links are avoided<br>
+              Links are problematic when building rpms--particularly when you 
+              want to make a relocatable rpm (which we do). Thus, we have eliminated 
+              links from GEOSS. </li>
+            <li>Build parameters are provided to the scripts by parsing them into 
+              the script files<br>
+              This is probably the least elegant part of the GEOSS make. The developer 
+              sets their build parameters in build-options.mk (or they can be 
+              overridden as command-line parameters to make). These parameters 
+              are used by the Makefiles in determining where to put files. So 
+              far so good. However, our perl scripts need to know where those 
+              files have been put. To that end, make creates a file called "perl-header" 
+              that is added onto each perl file. There is, of course, a bit of 
+              wasted space/processing time in this approach, but that is largely 
+              negligible. The nasty part is that when you add/remove/modify a 
+              build parameter, you must change it in the build-options.mk and 
+              the rules.mk file. The nice aspect of this approach is that it does 
+              not involve links (bad for rpm). Potentially, we could have put 
+              these values in a single file, and included it in all scripts. However, 
+              the directories that scripts are put in is variable and would have 
+              needed to be determined on the fly. This would also have required 
+              parsing all the scripts to set the correct relative path and would 
+              have had the extra complication of determining the relative path. 
+              A variation on this is to include multiple copies of the build parameters 
+              file, one in each directory. This removed the issue of determining 
+              the relative path and parsing the files, but introduces new issues. 
+              This approach introduces the potential for copies of the file to 
+              get out of sync, and requires careful attention to be paid to setting 
+              up dependencies so all copies of the files are updated if the base 
+              file changes. Thus, we decided to go with the approach that prepends 
+              the values into each file. It is robust, conceptually simple, and 
+              easy-to-implement. </li>
+          </ul>
+          <a href="#__TOC2.4">Back to TOC</a> </li>
+      </ul>
+      <p><b><a name="__BODY3.0">3.0</a>&nbsp;FAQ</b> <br>
+        <a href="#__TOC3.0">Back to TOC</a> 
+      <ul>
+        <li> <b> 
+          <p><a name="__BODY3.1">3.1</a>&nbsp;How do I build the GEOSS rpm 
+          </b> 
+          <p> The best reference I found for building an rpm was "Maximum RPM" 
+            by Edward Bailey. It is very complete and largely accurate. Check 
+            there if you have questions. </p>
+          <p> As for building the GEOSS rpm, here are the main steps: 
+          <ul>
+            <li> Create a place to build the rpm. It is best not to build the 
+              rpm as root, so you need to mimic the root rpm-building directory 
+              structure. 
+              <ul>
+                <b> 
+                <li> cd </li>
+                <li> mkdir buildroot </li>
+                <li> cat > .rpmmacros <br>
+                  %_topdir /home/&lt;yourid$gt;/.rpm<br>
+                </li>
+                <li> mkdir .rpm </li>
+                <li> mkdir .rpm/SOURCES </li>
+                <li> mkdir .rpm/SPECS </li>
+                <li> mkdir .rpm/BUILD </li>
+                <li> mkdir .rpm/RPMS </li>
+                <li> mkdir .rpm/SRPMS </li>
+                <li> mkdir .rpm/RPMS/i386 </li>
+                </b> 
+              </ul>
+              You are now have a build structure.</li>
+             <br>
+            <li>Next, you need to correctly tag the version and get an appropriate copy of the code:
+              <ul>
+                 <li><b>cd ~/geoss</b></li>
+                 <li>cvs up -d</li>
+                 <li>modify build-options.default to the new version number</li>
+                 <li><b>cd devtools</b></li>
+                 <li><b>cp geoss-X.X.spec geoss-X.Y.Z.spec</b></li>
+                 <li>modify geoss-X.Y.Z.spec to have new version number</li>
+                 <li><b>cp geoss-X.Y.Z.spec ~/.rpm/SPECS</b></li>
+                 <li><b>cd ..</li>
+                 <li>cvs commit -m "Updated version numbers"</li>
+                 <li>cvs tag Test-X_Y_Z</b> (use Rel-X_Y_Z for release, Test-X_Y_Z for Test candidates)</li>
+                 <li><b>cd ..</li>
+                 <li>cvs export -r Test-X_Y_Z -d geoss-X.Y.Z geoss</b></li>
+              </ul></li>
+            <li> You now have a good copy of the source, ready for building an rpm. To do this:<br>
+              <ul>
+                <b> 
+                <li>cd geoss-X.Y.Z</li>
+                <li>cp build-options.default build-options.mk</li>
+                <li>cd ..</li>
+                <li>tar cvf geoss-X.Y.Z.tar geoss-X.Y.Z</li>
+                <li>gzip geoss-X.Y.Ztar</li>
+                </b> 
+              </ul>
+            <li><b>cp geoss-X.Y.Z.tar.gz .rpm/SOURCES</b></li>
+            <li> <b> cd .rpm/SPECS</b></li>
+            <li> Build the rpm:<br>
+              <b>rpmbuild -ba --buildroot /home/&lt;yourid&gt;/buildroot geoss-X.Y.Z.spec 
+              </b></li>
+          </ul>
+          <p> The resulting rpm, assuming everything went well, is in .rpm/RPM/i386. 
+            Note that this is the simplified version of building an rpm, which 
+            assumes that we don't need to apply any patches to get the system 
+            to build (which we currently don't). </p>
+          <p> The code in the tarfile needs to be in the geoss-X.X directory, 
+            so I currently copy the contents of my checkout to a directory of 
+            that name before tarring it up. </p>
+          <p> Also, when making an official release of an rpm, it is important 
+            to increment the version numbers (as described in "Maximum RPM"). 
+          <p> 
+          <p> We don't currently sign our rpm, but hopefully we'll do that in 
+            the future. </p>
+          <br>
+          <a href="#__TOC3.1">Back to TOC</a> </li>
+        <li> 
+          <p><a name="__BODY3.2">3.2</a>&nbsp;<b>How do I build rpms for AppConfig 
+            and PDF-API2<br>
+            </b> These two Perl modules are not part of the Fedora release, and 
+            are not correctly built for Fedora a rpmpan.org<br>
+            cpan2rpm Sourceforge project:<br>
+            http://sourceforge.net/projects/cpan2rpm/ <br>
+            <br>
+            cpan2rpm home page:<br>
+            http://perl.arix.com/cpan2rpm/ <br>
+            <br>
+            Download cpan2rpm:<br>
+            http://unc.dl.sourceforge.net/sourceforge/cpan2rpm/cpan2rpm-2.026-1.noarch.rpm
+        </li>
+        <pre>&nbsp;
+         </pre>
+        <br>
+        # modifies ~/.rpmmacros<br>
+        <pre>cpan2rpm --mk-rpm-dirs=~/tmp/rpm</pre>
+        # If you've already done this one, you'll have to --force<br>
+        <pre>cpan2rpm --force --no-requires=&quot;Win32\|the&quot; ~/packages/PDF-API2-0.40_18b.tar.gz</pre>
+        <br>
+        # Check dependencies<br>
+        <pre>rpm -i --test -vv rpm/RPMS/noarch/perl-PDF-API2-0.40_18b-1.noarch.rpm
+rpm -i --test rpm/RPMS/noarch/perl-PDF-API2-0.40_18b-1.noarch.rpm
+           </pre>
+        <a href="#__TOC3.2">Back to TOC</a></li>
+        <li> 
+         <b> 
+          <p><a name="__BODY3.3">3.3</a>&nbsp;
+Where should I look for error messages and debugging statements?
+</b>
+<p>
+There are several areas where a developer may find error messages.  Each 
+is described below:
+<ul>
+<li><i>/var/log/httpd/error_log</i></li>
+<p> If you get an "Internal Server Error" message in your browser, and you
+are using http to communicate, you should find more information about your
+error here.  Additionally, this log will contain messages written to STDERR.</p>
+<li><i>/var/log/httpd/ssl_error_log</i></li>
+<p> If you get an "Internal Server Error" message in your browser, and you
+are using https to communicate, you should find more information about your
+error here.  Additionally, this log will contain messages written to STDERR.</p>
+<li><i>$USER_DATA_DIR/<userid>/error.txt</i></li>
+<p>Non-fatal errors and debugging messages are written to these files on a 
+per-user basis.  You can write to this file using the "write_log" 
+function.</p>
+<li><i>$USER_DATA_DIR/<userid>/child_error.txt</i></li>
+<p>
+Occasionally, like when an analysis is running, a process will be forked, 
+and a child process executes.  If that code contains write_log statements,
+they will be written to child_error.txt.
+</p>
+</ul>
+          </b> 
+            <br><a href="#__TOC3.3">Back to TOC</a> 
+        </li>
+          <li> 
+         <b> 
+          <p><a name="__BODY3.4">3.4</a>&nbsp;
+              How should I read in html files?  
+</b>
+<p>
+  The get_allhtml, readfile and readtemplate functions are found in
+ geoss_session_lib.pl.  They are used to read in an html file.  Typically
+some variable substitution is executed on the html file, and then the page
+is ready to be displayed.  All three functions expect an input html file.  
+Optionally, a header html file and footer file can be specified, and 
+their contents will be prepended/appended to the specified html file.  The 
+header and footer file we use contains the GEOSS logo and navigation bar.  
+</p>
+<p>
+The readfile function essentially returns the html string of 
+header + input file + footer.  No variable substitutions are made and it 
+is the programmer's responsibility to ensure that the html string is 
+appropriate for display.
+</p><p>
+The get_allhtml file expects extra parameters: the database handle, the 
+user key, and a hash reference.  It uses this information to perform
+substitutions for the programmer.  Theoretically, it returns a display
+ready html string.  The hash reference should contain all values necessary 
+for substitution into the htmlfile (usually you will need to specify 
+"htmltitle" and "htmldescription" at the very least).  The function will 
+determine configuration variables necessary for substitution by using the 
+supplied database handle.  This function can be used if there is no
+loop in the input html file.
+</p><p>
+The read_template function is intended for use when there is one or two
+loops in the input html file.  A loop is delimited in the html file by 
+&lt;loop&gt;.  A loop within a loop would be delimited by &lt;loop2&gt;.
+The programmer manually substitutes in loop data by copying the returned 
+loop template and substituting in values.  If you use readtemplate, you 
+will also need to manually substitute all non-loop variables.
+
+ 
+</p>
+<p>
+
+</p>  
+          </b> 
+            <br><a href="#__TOC3.4">Back to TOC</a> 
+          </li>
+      </ul>
+    </td>
+  
+</table>
+
+<br>
+</body>
+</html>
+
+

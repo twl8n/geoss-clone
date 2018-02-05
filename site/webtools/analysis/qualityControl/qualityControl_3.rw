@@ -1,0 +1,206 @@
+#####################################################################################
+# This function performs quality control and normalization on gene chip data.
+#
+# Last updated on 2005-06-17, HyungJun Cho (hcho@virginia.edu)
+#
+#
+# geneData: dataframe with Probe.Set.Name in the first column, and signals for all chips.
+# lwss is a logical variable, whether to do lowess normalization; defaults to FALSE.
+#
+#	 outdata, outtxt, outgph - output filenames
+#	 conditions - a numeric vector describing experiment set
+#
+# OUTPUT: sensitivity and specificity
+#      outdata - data file that can be read by subsequent analyses
+# 	 outtxt  - text analysis info 
+#	 outgph - graphical analysis
+#
+######################################################################################
+qualityControl <- function(geneData, outdata, outtxt, outgph, conditions, lwss=0)
+{
+
+  
+  #Remove control spots
+  geneData <- geneData[substring(geneData[,1],1,4)!='AFFX',]
+
+  #Remove genes with missing values
+  geneData <- na.exclude(geneData)
+  labels <- as.character(geneData[,1])
+
+  #Check if there are the same chips
+  tmp.raw.cor <- cor(geneData[,-1],use="complete.obs")
+
+  #Check if log2-transformation was taken or not #H Cho, 2005-06-20
+  if(quantile(geneData[,-1], probs = .99, na.rm = TRUE) < 30) geneData[,-1] <- 2^(geneData[,-1])
+    
+  #Normalization
+  if(lwss==0) lowess <- FALSE
+  if(lwss==1) lowess <- TRUE
+  geneSigs.nor <- geoss.preproc(geneData[,-1], LOWESS=lowess)
+
+  #Writes a tab-delimited file with column headers, and with the first column=Probe.Set
+  tmp <- cbind(Probe.Set=labels , 2^geneSigs.nor)
+  write.table(tmp, outdata, sep='\t', row.names=FALSE);
+
+
+  #Threshold and log adjusted avg difference
+  geneSigs.nor <- data.frame(geneSigs.nor)
+
+  # output graph data
+  if(ncol(geneSigs.nor) <= 25) {
+     #Paul Williams, 2007-02-23
+     if (gphFormat == "jpg") bitmap(file=outgph, type="jpeg",res=144)
+     if (gphFormat == "pdf") pdf(file=outgph)
+     m <- quantile(geneSigs.nor, probs = c(0.001, 0.999), na.rm = TRUE)
+     pairs(geneSigs.nor,pch=".", lower.panel = NULL, xlim=c(m[1], m[2]), ylim=c(m[1], m[2]))
+     graphics.off()
+  }
+
+  if(ncol(geneSigs.nor) > 25) { #H Cho, 2005-06-20
+     #P Williams, 2007-02-19
+     #Changing from pdf only output to jpg or pdf output
+     #Paul Williams, 2007-02-23
+     if (gphFormat =="jpg") bitmap(file=outgph,type="jpeg",res=144)
+     if (gphFormat =="pdf") pdf(file=outgph)
+     m <- quantile(geneSigs.nor, probs = c(0.001, 0.999), na.rm = TRUE)
+     n <- ncol(geneSigs.nor)
+     n2 <- round(n/25+.4999)
+     n3 <- round(n/n2)    
+     k1 <- 1
+     for(i in 1:n2) {
+         k2 <- min(k1+n3, n)  
+         pairs(geneSigs.nor[,k1:k2],pch=".", lower.panel = NULL, xlim=c(m[1], m[2]), ylim=c(m[1], m[2]))
+         k1 <- k2
+     } 
+     graphics.off()
+  }
+  
+
+  
+  #calculate and save correlations
+  tmp.cor <- cor(geneSigs.nor,use="complete.obs")
+  write("Chip-by-chip correlation: ", outtxt, append=FALSE)
+
+  tmp2 <- as.data.frame(tmp.cor)
+  tmp3 <- cbind(rownames(tmp.cor))
+  tmp4 <- cbind('Correlation'=tmp3, tmp2)
+  write.table( tmp4 , outtxt, sep='\t', row.names=FALSE, append=TRUE);
+  write("\n", outtxt, append=TRUE)
+
+
+  #Compute sensitivity and specificity
+  numConditions <- length(conditions)
+  meanList <- c()
+  x <- 1
+  rowbase <- 1
+  while (x <= numConditions)
+  {
+	replicates <- conditions[x]
+	rowIdx <- rowbase
+	rowLess <- rowbase + replicates - 1
+        colLess <- rowbase + replicates
+	while (rowIdx < rowLess)
+        {
+	  colIdx <- rowIdx + 1
+	  while (colIdx < colLess)
+          {
+		meanList <- c(meanList, tmp.cor[rowIdx,colIdx])
+		colIdx <- colIdx + 1
+   	  }
+ 	  rowIdx <- rowIdx + 1
+	} 	
+        rowbase <- rowIdx+1
+ 	x <- x + 1
+  }
+
+  specificity <- mean(meanList)
+  sensitivity <- specificity - mean( 
+	setdiff(tmp.cor[lower.tri(tmp.cor)], meanList))
+ 
+  #output sensitivity and specificity values
+  write("Specificity (reproducibility): ", outtxt, append=TRUE)
+  write(specificity, outtxt, append=TRUE)
+  write("\n", outtxt, append=TRUE)
+
+  write("Sensitivity: ", outtxt, append=TRUE)
+  write(sensitivity, outtxt, append=TRUE)
+  write("\n", outtxt, append=TRUE)
+
+  #Stop if there are the same chips
+  if(length(which(tmp.raw.cor >= 0.9999)) > nrow(tmp.raw.cor)) {
+     whyerr <- "Your data set has the same hybridizations."
+     write(whyerr, file=2)
+     quit(status = 1)
+  }
+
+  
+  return(tmp)
+
+}
+
+
+######################################################################################
+#
+# Pre-processing  
+#
+######################################################################################
+
+library(LPE)
+
+geoss.preproc <- function(x, data.type = "MAS5", threshold=1, LOWESS=FALSE) {
+
+  # Removing NA values
+  x <- as.matrix(na.exclude(x))
+  
+  # IQR normalization
+  if (data.type =="MAS4" || data.type == "MAS5") {
+    x <- quartile.normalize(x, percent=50) 
+  }
+
+  # Thresholding to 'threshold' (default = 1)
+  if (data.type == "MAS4" || data.type =="MAS5"|| data.type == "dChip") {
+    if (length(x[x < threshold]) !=0) {
+      x[x < threshold] <- threshold 
+    }
+  } 
+
+  # Log based 2 transformation
+  x <- logb(x,2)
+
+  # Give random numbers to thresholds
+  if (length(x[x < 1]) != 0) {
+      n <- length(x[x <= 0])
+      x[x <= 0] <- runif(n, -1, 0)
+  }
+
+  # Loess normalization of all the chips w.r.t. first one
+  if (LOWESS) {
+      y <- matrix(NA, nrow=nrow(x), ncol=ncol(x))
+      y[,1] <- x[,1]
+      for (i in 2:ncol(x)) {
+           y[,i] <- lowess.normalize(x[,1],x[,i])
+      }
+      x <- y
+  }
+
+  return(x) 
+}
+
+
+
+### MAIN ###
+### REPLACE infile ###
+geneData <- read.delim("infile", header=TRUE)
+### REPLACE conds
+conditions <- c(conds)
+### REPLACE graphFormat
+gphFormat <- "graphFormat"
+### REPLACE outfile ###
+suppressWarnings(qualityControl(geneData, "outfile",
+### REPLACE outtxt ###
+"outtxt",
+### REPLACE outgph ###
+"outgph", conditions,
+### REPLACE lowess ###
+lowess))
+

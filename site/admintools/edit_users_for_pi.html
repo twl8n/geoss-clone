@@ -1,0 +1,20 @@
+<form action="edit_user_pi3.cgi" method="post">
+  <p>
+    You are editing users associated with the PI {user_login}.
+    <p>
+    Current users with PI {user_login} designated as their PI are:
+    {user_list}
+    <p>
+    <input type="submit" rows="5" name="RemoveUser" value="Remove selected user from PI's list">
+    <p>
+    <hr>
+    <p>
+    Potential users for PI {user_login} are:
+    {user_not_list}
+    <p>
+    <input type="submit" rows="5" name="AddUser" value="Add selected user to the PI's list">
+    <p>
+    <br>
+  </p>
+</form>
+</p>

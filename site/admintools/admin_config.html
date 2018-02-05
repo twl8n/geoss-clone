@@ -1,0 +1,240 @@
+<form method="POST" action="admin_config.cgi">
+<input type="submit" value="Submit"><input type="reset" value="Reset">
+<input type=hidden name=step value=3>
+<p>
+<b>General</b>
+<table width="600" border="0" cellpadding="3" cellspacing="0">
+  <tr>
+    <td bgcolor="#7c0000"> 
+      <table width="100%" border="0" cellpadding="3" cellspacing="0">
+        <tr>
+          <td bgcolor="#FFFFFF">
+
+ <table>
+ <tr>
+ <td>WWW Host (domain name):</td>
+ <td><input type="text" name="conf_wwwhost" size=40 value="{conf_wwwhost}"></td>
+ </tr>
+ <tr>
+ <td>Additional Path Information to get from DocumentRoot to site directory:</td>
+ <td><input type="text" name="conf_additional_path" size=40 value="{conf_additional_path}"></td>
+ </tr>
+ <tr>
+ <td>Chip Data Path:</td>
+ <td><input type="text" name="conf_chip_data_path" size=30 value="{conf_chip_data_path}"></td>
+ </tr>
+ <tr>
+ <td>Administrator Email:</td>
+ <td><input type="text" name="conf_admin_email" size=30 value="{conf_admin_email}"></td>
+ </tr>
+ <tr>
+ <td>Alternate Email:</td>
+ <td><input type="text" name="conf_contact_email" size=30 value="{conf_contact_email}"></td>
+ </tr>
+ <td>URL for companion geoss system (include "http" for URLs on a different host):</td>
+ <td><input type="text" name="conf_companion_geoss" size=30 value="{conf_companion_geoss}"></td>
+ </tr>
+ <tr>
+ <td>Bug Report URL:</td>
+ <td><input type="text" name="conf_bug_report_url" size=30 value="{conf_bug_report_url}"></td>
+ </tr>
+ </table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<br>
+<b>User</b>
+<table width="600" border="0" cellpadding="3" cellspacing="0">
+  <tr>
+    <td bgcolor="#7c0000"> 
+      <table width="100%" border="0" cellpadding="3" cellspacing="0">
+        <tr>
+          <td bgcolor="#FFFFFF">
+
+ <input type=hidden name=step value=3>
+ <table>
+ <tr>
+  <td>Allow new public users on the system:</td>
+  <td><input type="checkbox" name="conf_allow_public_users" value="1"></td>
+ </tr>
+ <tr>
+  <td>Allow new member users on the system:</td>
+  <td><input type="checkbox" name="conf_allow_member_users" value="1"></td>
+ </tr>
+ <tr>
+ <td>General Inactivity Logout (minutes):</td>
+ <td><input type="text" name="conf_inact_logout_general" size=6 value="{conf_inact_logout_general}"></td>
+ </tr>
+ <tr>
+ <td>Administrator Inactivity Logout (minutes):</td>
+ <td><input type="text" name="conf_inact_logout_administrator" size=6 value="{conf_inact_logout_administrator}"></td>
+ </tr>
+ <tr>
+ <td>Number of days a new public user has to confirm their account:</td>
+ <td><input type="text" name="conf_days_to_confirm" size=6 value="{conf_days_to_confirm}"></td>
+ </tr>
+ <tr>
+  <td>Allow all users to load data:</td>
+  <td><input type="checkbox" name="conf_user_data_load" value="1"></td>
+ </tr>
+ <!-- <tr> -->
+  <!-- <td>Show all users in selects:</td> -->
+  <!-- <td><input type="checkbox" name="conf_show_all_users" value="1"></td> -->
+ <!-- <tr> -->
+ </table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<br>
+<b>Array Center</b>
+<table width="600" border="0" cellpadding="3" cellspacing="0">
+  <tr>
+    <td bgcolor="#7c0000"> 
+      <table width="100%" border="0" cellpadding="3" cellspacing="0">
+        <tr>
+          <td bgcolor="#FFFFFF">
+
+ <table>
+ <tr>
+  <td>Enable Array Center Processing:</td>
+  <td><input type="checkbox" name="conf_array_center" value="1"></td>
+ </tr>
+ <tr>
+ <td>Array Center Staff Email:</td>
+ <td><input type="text" name="conf_curator_email" size=30 value="{conf_curator_email}"></td>
+ </tr>
+ <tr>
+ <td>Array Center Staff Inactivity Logout (minutes):</td>
+ <td><input type="text" name="conf_inact_logout_curator" size=6 value="{conf_inact_logout_curator}"></td>
+ </tr>
+ <tr>
+  <td>Add array center staff to all groups by default:</td>
+  <td><input type="checkbox" name="conf_add_curator_to_groups" value="1"></td>
+ </tr>
+ <tr>
+  <td>Order Number Format:</td>
+ </tr>
+ <tr>
+  <td>&nbsp;&nbsp;Year Sequential<input type="radio" name="conf_ord_num_format"
+  value="year_seq"></td>
+  </tr>
+  <tr>
+  <td>&nbsp;&nbsp;Sequential<input type="radio" name="conf_ord_num_format"
+  value="seq"></td>
+  </tr>
+  <tr>
+  <td>&nbsp;&nbsp;User Configurable:<input type="radio" name="conf_ord_num_format"
+  value="user_conf"></td>
+ </tr>
+ </table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<br>
+<b>Data Publishing</b>
+<table width="600" border="0" cellpadding="3" cellspacing="0">
+  <tr>
+    <td bgcolor="#7c0000"> 
+      <table width="100%" border="0" cellpadding="3" cellspacing="0">
+        <tr>
+          <td bgcolor="#FFFFFF">
+
+ <table>
+ <tr>
+  <td>Enable Data Publishing:</td>
+  <td><input type="checkbox" name="conf_data_publishing" value="1"></td>
+ </tr>
+ <tr>
+ <td>Public Data Admin Email:</td>
+ <td><input type="text" name="conf_pub_data_email" size=30 value="{conf_pub_data_email}"></td>
+ </tr>
+ </table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<br>
+<b>Analysis</b>
+<table width="600" border="0" cellpadding="3" cellspacing="0">
+  <tr>
+    <td bgcolor="#7c0000"> 
+      <table width="100%" border="0" cellpadding="3" cellspacing="0">
+        <tr>
+          <td bgcolor="#FFFFFF">
+
+ <table>
+ <tr>
+  <td>Enable Analysis Package:</td>
+  <td><input type="checkbox" name="conf_analysis" value="1"></td>
+ </tr>
+ </table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<br>
+<b>Configurable Text</b>
+<table width="600" border="0" cellpadding="3" cellspacing="0">
+  <tr>
+    <td bgcolor="#7c0000"> 
+      <table width="100%" border="0" cellpadding="3" cellspacing="0">
+        <tr>
+          <td bgcolor="#FFFFFF">
+
+ <input type=hidden name=step value=3>
+ <table>
+ <td>Organization Name:</td>
+ <td><input type="text" name="conf_orgname" size=40 value="{conf_orgname}"></td>
+ </tr>
+ <tr>
+ <td>Header/Footer Link Text:</td>
+ <td><input type="text" name="conf_linktext1" size=30 value="{conf_linktext1}"></td>
+ </tr>
+ <tr>
+ <td>Header/Footer Link URL:</td>
+ <td><input type="text" name="conf_linkurl1" size="30" value="{conf_linkurl1}"></td>
+ </tr>
+ <tr>
+ <td>Custom Home Page Description:</td><td>&nbsp;</td>
+ </tr>
+ <tr>
+ <td colspan=2><textarea name="conf_custom_desc1" rows=5 cols=60>{custom_desc1}</textarea></td>
+ <td>&nbsp;</td>
+ </tr>
+ <tr>
+ <td>Custom News Item #1:</td><td>&nbsp;</td>
+ </tr>
+ <tr>
+ <td colspan=2><textarea name="conf_custom_news1" rows=3 cols=60>{custom_news1}</textarea></td>
+ <td>&nbsp;</td>
+ </tr>
+ <tr>
+ <td>Custom News Item #2:</td><td>&nbsp;</td>
+ </tr>
+ <tr>
+ <td colspan=2><textarea name="conf_custom_news2" rows=3 cols=60>{custom_news2}</textarea></td>
+ <td>&nbsp;</td>
+ </tr>
+ </table>
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+<br>
+<input type="submit" value="Submit"><input type="reset" value="Reset">
+</form>

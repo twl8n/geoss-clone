@@ -1,0 +1,64 @@
+<html>
+<head><title>MultFilter Documentation</title></head>
+<body bgcolor="#FFFFFF">
+<p><b>Description</b><br>
+The module 'Multi-condition Filter' allows one to triage genes for further analysis, such as
+clustering and functional analysis, based on a combination of several statistical criteria. 
+In addition, genes related to some key words can be selected based on gene symbol, gene name, and gene ontology (GO) databases.
+This module also allows one to add annotations such gene symbol, gene names, unigene ID, locus ID, chromosome location, and GO information.
+The order of conditions can be changed in this module.
+MultFilter version 2 uses R 2.4.0.  
+</p>
+
+<p><br>
+<b>Input files</b><br>
+  Multi-condition Filter expects input in this form:<br>
+</p>
+<ul>
+  <li> A file containing multi-condition differential discovery results. The file should have row and column labels.<br>
+</ul>
+Analyses that create input in this format include:<br>
+<ul>
+  <li>Multi-condition Differential Discovery<br>
+</ul>
+<p>&nbsp;</p>
+<p><b>Output files</b><br>
+  MultFilter creates the following output:<br>
+</p>
+<ul>
+  <li> A filtered intermediate data file containing a subset of input rows
+  <li> A filtered output file containing a subset of input rows and statistics
+</ul>
+Analyses that accept filter output as input include:<br>
+<ul>
+  <li>Cluster<br>
+</ul>
+<p>&nbsp;</p>
+<p><b>Parameters:</b><br>
+</p>
+<ul>
+  <li> Two conditions to compare: vector levels of two conditions for comparison<br>
+  <li> First Statistical Filtering: choice of statistic for primary filtering<br>
+  <li> Second Statistical Filtering: choice of statistic for additional filtering<br>
+  <li> Cutoff values: cutoff values for filtering by the selected statistic  <br>
+  <li> Functional Filtering: key words for gene symbol, gene name, or GO-based filtering<br>
+  <li> Maximum number of rows to return: maximum number of genes<br>
+  <li> Preselected Gene Filtering: filtering based on a list of genes that an user provides<br>
+  <li> Condition order: re-order conditions <br>
+</ul>
+<p>
+
+<p>&nbsp;</p>
+<p><b>Note:</b><br>
+</p>
+<ul>
+  <li> If no statistics are selected in 'Multi-condition Filter', the HEM H-statistic will be used to select the maximum number of genes.  <br>
+  <li> If a statistic that was not computed in 'Multi-condition Differential Discovery is selected in 'MultFilter', 
+the HEM H-statistic will be used to select the maximum number of genes.
+  <li> If 1900 genes are kept, the files generated with 'Cluster' will not be viewable with Acrobat Reader. <br>
+</ul>
+</p>
+
+</body></html>
+
+

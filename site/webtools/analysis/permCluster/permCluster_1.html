@@ -1,0 +1,73 @@
+<html>
+<head><title>Permutation Cluster Documentation</title></head>
+<body bgcolor="#FFFFFF">
+<p><b>Description</b><br>
+The permCluster analysis performs hierarchical clustering analysis for
+microarray data (it is recommended to apply this module for an array data
+set with less than 2,000 genes for optimal performance).  One can choose
+different combinations of one of the distance metrics (e.g., Euclidean,
+Pearson correlation [default], Spearman correlation) and one of clustering
+algorithms (e.g., "single", "complete", "average" [default]).<br>
+See also the help pages at <a
+href="http://geoss.ncgr.org/cgi-bin/geoss/rcluster/index.cgi">Rcluster
+help</a><br>
+</p>
+<p><br>
+  <b>Input files</b><br>
+  PermCluster expects input in this form:<br>
+</p>
+<ul>
+  <li> a file containing an analysis criteria.  The file should have row and
+column labels. Note that we won't process more than 7000 rows.<br>
+    <br>
+</ul>
+Analyses that create input in this format include:<br>
+<ul>
+  <li> filter <br>
+  <li> diffDiscover (likely too many rows - run through filter first) <br>
+</ul>
+<p>&nbsp;</p>
+<p><b>Output files</b><br>
+  PermCluster creates the following output:<br>
+</p>
+<ul>
+  <li> A file containing data necessary to draw a graph
+  <li> A file containing user data
+  <li> A file containing stat data
+  <li> A file linking the graph file and a data file (needed for input to
+treedraw)
+    <br>
+</ul>
+Analyses that accept permCluster output as input include:<br>
+<ul>
+  <li>treedraw<br>
+</ul>
+<p>&nbsp;</p>
+<p><b>Parameters:</b><br>
+</p>
+<ul>
+  <li> Need of log 2 transformation (T, F) - The filter analysis provides log
+transformed data, so this should be set to 'F' if data is received from
+filter. <br>
+  <li> Euclidean distance measure (euc, cor, spearman) - the
+distance/dissimilarity metric.  One of the following: <br>
+	"euclidean" - standard euclidean distance<br>
+	"cor" - the Pearson correlation coefficient<br>
+	"spearman" - the Spearman correlation coefficient<br>
+  <li> Average agglomeration method (average, complete, single) -  <br>
+  <li> Levels of bifurcations -  <br>
+  <li> Number of permutations - default 0 <br>
+  <li> Confidence Level -  <br>
+  <li> Intermediate data filename - name of the data file to pass to other
+analyses <br>
+  <li> Log filename - name of the data file containing log and error messages<br>
+  <li> Statistical graph output filename -  <br>
+  <li> Statistical user output filename -  <br>
+  <li> Tstat output filename -  <br>
+</ul>
+<p><br>
+  <br>
+</p>
+</body></html>
+
+

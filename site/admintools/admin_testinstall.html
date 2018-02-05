@@ -1,0 +1,140 @@
+
+<table width="600" border="0" cellpadding="3" cellspacing="0">
+  <tr>
+    <td bgcolor="#7c0000"> 
+      <table width="100%" border="0" cellpadding="3" cellspacing="0">
+        <tr>
+          <td bgcolor="#FFFFFF"> 
+	  Build Parameters:<br>
+	  <ul>
+            <li>GEOSS_DIR={geoss_dir}</li>
+            <li>HTML_DIR={html_dir}</li>
+            <li>WEB_DIR={web_dir}</li>
+            <li>USER_DATA_DIR={user_data_dir}</li>
+            <li>BIN_DIR={bin_dir}</li>
+            <li>LIB_DIR={lib_dir}</li>
+            <li>GEOSS_DBMS={geoss_dbms}</li>
+            <li>DB_NAME={db_name}</li>
+            <li>GEOSS_HOST={geoss_host}</li>
+            <li>GEOSS_PORT={geoss_port}</li>
+            <li>GEOSS_SU_USER={geoss_su_user}</li>
+            <li>PERL_LOCATION={perl_location}</li>
+            <li>COOKIE_NAME={cookie_name}</li>
+            <li>VERSION={version}</li>
+          </ul>
+          </td>
+        </tr>
+        <tr>
+          <td bgcolor="#FFFFFF"> 
+             These options were set at build time in build-options.mk.  If these options are changed, the system will need to be rebuilt for changes to take effect.  Changes to these options make require simultaneous changes to the database and web server configuration.
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<br>
+<table width="600" border="0" cellpadding="3" cellspacing="0">
+  <tr>
+    <td bgcolor="#7c0000"> 
+      <table width="100%" border="0" cellpadding="3" cellspacing="0">
+        <tr>
+          <td bgcolor="#FFFFFF"> 
+	  Installed Versions for Required Software: 
+          <ul>
+            <li>Web Server: {web_server}</li>
+            <li>Database: {database}</li>
+            <li>R Programming Language:</li>
+              <ul>
+                <li>Version 1.9 (optional): {rlang}</li>
+                <li>Version 2.1: {rlang2.1}</li>
+              </ul>
+          </ul>
+          </td>
+        </tr>
+        <tr>
+          <td bgcolor="#FFFFFF">
+          Above applications are required for complete functionality.  GEOSS will run without R, but most analyses will not function.
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<br>
+<table width="600" border="0" cellpadding="3" cellspacing="0">
+  <tr>
+    <td bgcolor="#7c0000"> 
+      <table width="100%" border="0" cellpadding="3" cellspacing="0">
+        <tr>
+          <td bgcolor="#FFFFFF"> 
+	  Directory Access:
+          <ul>
+            <li>Read Access User Data Dir ({USER_DATA_DIR}): {r_user_data_dir} </li>
+            <li>Write Access User Data Dir ({USER_DATA_DIR}): {w_user_data_dir} </li>
+            <li>Read Access to Chip Data Dir ({CHIP_DATA_PATH}): {r_chip_data_dir}</li>
+          </ul></td>
+        </tr>
+        <tr>
+          <td bgcolor="#FFFFFF">
+           For complete GEOSS functionality, it is necessary for the user running the GEOSS scripts to have the designated permissions on the above directories.  If any of the directories have a permission failure, it should be investigated immediately.<br>
+          </td>
+        </tr>
+        <tr><td bgcolor="#FFFFFF">&nbsp;</td></tr>
+        <tr>
+          <td bgcolor="#FFFFFF"> 
+	  <p>Database Security:</p>
+          <ul>
+            <li>Permissions for {db_config_file}: {db_config_pass} </li>
+          </ul></td>
+        </tr>
+        <tr>
+          <td bgcolor="#FFFFFF">
+          The database configuration file should have read/write permissions for the {web_user} user only.  It is a security issue if other users can access this file.  Permissions for all other users should be revoked.
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<br>
+<table width="600" border="0" cellpadding="3" cellspacing="0">
+  <tr>
+    <td bgcolor="#7c0000"> 
+      <table width="100%" border="0" cellpadding="3" cellspacing="0">
+        <tr>
+          <td bgcolor="#FFFFFF"> 
+          Layouts Loaded:
+          {installed_layouts}
+          </td>
+        </tr>
+        <tr>
+          <td bgcolor="#FFFFFF">
+          Array Center Staff will only be able to load data for chips that have a layout loaded.
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<br>
+<table width="600" border="0" cellpadding="3" cellspacing="0">
+  <tr>
+    <td bgcolor="#7c0000"> 
+      <table width="100%" border="0" cellpadding="3" cellspacing="0">
+        <tr>
+          <td bgcolor="#FFFFFF"> 
+          Analyses Loaded:
+          {installed_analyses}
+          </td>
+        </tr>
+        <tr>
+          <td bgcolor="#FFFFFF">
+          Analysis tree functionality will only be available if one or more analyses are loaded.
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+

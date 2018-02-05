@@ -1,0 +1,371 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>Step by Step Instructions</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="keywords" content="gene, chip, expression, affymetrix, genechip, oligo, two, color, spotted, array, dna, rna, oligonucleotide, cdna, analysis, analytical, copy, copy dna, spotted array, hybridization, mrna, messenger, messenger rna, cy3, cy5, probe, reverse transcriptase, reverse transcription, glass, slide, sage, serial, serial analysis of gene expression, photo dimerization, genotype, genotypes, genotyping, fold change, over expression, under expression, up regulation, down regulation, photo lithography, linux, open source, apache, postgres, postgresql, database, secure, curate, curation, curator, perfect match, westfa, young, stat analysis, clustering, perm cluster, r-cluster, r cluster, tree view, go, gene ontology, flurochroms, patrick brown, t-test, anova, function prediction">
+<meta name="description" content="GEOSS is an Open Source Gene Expression Database supporting storage and analysis of Affymetrix&reg; GeneChip&reg; technology, with planned support for two color spotted arrays and other gene expression measurement technologies. GEOSS is designed to serve as an secure repository and archive for many researchers' data. ">
+</head>
+
+<body bgcolor="#FFFFFF" link="#006633" vlink="#666633" leftmargin="0" topmargin="0">
+<table width="600" border="0" cellpadding="0" cellspacing="0">
+  <tr> 
+    <td valign="bottom" width="10" bgcolor="#c9dfae"><img src="graphics/white.gif" width="10" height="10"></td>
+    <td valign="bottom"><img src="graphics/white.gif" width="10" height="10"></td>
+    <td>
+      <div align="center"></div>
+      <table width="600" border="0" cellspacing="0" cellpadding="0">
+        <tr valign="top"> 
+          <td width="100"><font face="Verdana, Arial, Helvetica, sans-serif" size="+1"><a href="./index.cgi"><img src="graphics/geoss_logo.jpg" width="216" height="96" border="0"></a></font></td>
+          <td width="8">&nbsp;&nbsp;</td>
+          <td width="490"><font size="+1" face="Verdana, Arial, Helvetica, sans-serif">Step-By-Step 
+            Guide to GEOSS Virginia</font></td>
+        </tr>
+      </table>
+      <p align=left><a href="install_guide.html">Install Guide</a>&nbsp; <a href="admin_guide.html">Admin 
+        Guide</a>&nbsp; <a href="user_guide.html">User Guide</a>&nbsp; 
+        <!--   <a href="curator_guide.html">Curator Guide</a>&nbsp;-->
+        <a href="developer_guide.html">Developer Guide</a></p>
+      <p align=left><font face="Arial, Helvetica, sans-serif">The purpose of this 
+        document is to guide you through GEOSS. You will be able to add information 
+        pertaining to your studies, experimental conditions, orders, samples, 
+        and hybridizations. This data will then be viewed and processed accordingly 
+        by the Biomolecular Research Facility (BRF).</font></p>
+      <hr noshade>
+      <p><font face="Arial, Helvetica, sans-serif"><br>
+        The main GEOSS page can be reached by visiting <a
+href="http://genes.med.virginia.edu/">http://genes.med.virginia.edu/</a>. There 
+        are a number of links to various kinds of documentation as well as a link 
+        to the public data area. </font></p>
+      <p><font face="Arial, Helvetica, sans-serif">When you are ready to enter 
+        data simply sign in using the &quot;Member Login&quot; on the left of 
+        the screen. </font><font face="Arial, Helvetica, sans-serif">If you need 
+        an account or have questions about the one you are currently using please 
+        contact the GEOSS Database Administrator via email at: <a href="mailto:geoss-help@virginia.edu">geoss-help@virginia.edu</a>.<br>
+        <br>
+        <br>
+        <img src="graphics/homepage.jpg" width="606" height="508" border="1"> 
+        </font></p>
+      <hr noshade>
+      <p><font face="Arial, Helvetica, sans-serif">Once you have signed on to 
+        the system you will be brought to the GEOSS Member Home Page.<br>
+        <br>
+        <img src="graphics/geosshome.jpg" width="624" height="672" border="1"> 
+        <br>
+        </font></p>
+      <hr noshade>
+      <p> <font face="Arial, Helvetica, sans-serif"> <br>
+        The system requires that you enter data pertaining to each of your studies. 
+        Please click on the link to "Create new study" when you are ready to begin 
+        entering data.<br>
+        </font><br>
+        <font face="Arial, Helvetica, sans-serif">The system will first prompt 
+        you for the PI/PI group that will own the stud</font>y. <font face="Arial, Helvetica, sans-serif">If 
+        you are the PI then your name and the name of your group(s) should appear 
+        in the drop down list. Likewise, if you are not the PI then the list will 
+        reflect your PI's name and the name of his/her studies. Choose the appropriate 
+        one for the data that you are entering.</font></p>
+      <p><font face="Arial, Helvetica, sans-serif">(**NOTE: If you do not see 
+        anything in the drop down list the reason is most likely due to your not 
+        being a member of your PI's group. He/she will have to sign on and add 
+        you to their group via the &quot;Manage membership of my groups link.&quot;</font>) 
+      </p>
+      <p><img src="graphics/PI_for_study.jpg" width="443" height="353" border="1"></p>
+      <hr noshade>
+      <p> <font face="Arial, Helvetica, sans-serif">Once past the PI ownership 
+        screen you will be prompted to enter your data. Enter the <i>Study Name, 
+        Study Start Date, </i>and any <i>Comments</i> regarding the study that 
+        you may find useful at a later time. </font></p>
+      <p><font face="Arial, Helvetica, sans-serif"> * Study names must be unique.<br>
+        <br>
+        <br>
+        <img src="graphics/addcondition.jpg" width="602" height="297" border="1"> 
+        </font></p>
+      <hr noshade>
+      <p><font face="Arial, Helvetica, sans-serif"><br>
+        The next step is to add data pertaining to the experimental conditions 
+        of your study. This data is the conceptual criteria for your experiments 
+        and can be added in one of two ways. </font></p>
+      <p><font face="Arial, Helvetica, sans-serif"> You can click the "Add a blank 
+        empty experimental condition" button or you can choose to copy data you 
+        submitted from a previous experimental condition. To copy from a previous 
+        condition simply choose that condition from the drop down list and click 
+        "Paste." Repeat this process again for each experimental condition that 
+        you intend to add. You will see the <i>No. of Experimental Conditions</i> 
+        incrementing as you proceed.</font></p>
+      <ol>
+        <li><font face="Arial, Helvetica, sans-serif"> Enter the <i>Experimental 
+          Condition Name </i>as defined by the Investigator. Experimental Condition 
+          names should be unique. You will receive a warning if you attempt to 
+          reuse an experimental condition name within the same study.</font></li>
+        <li><font face="Arial, Helvetica, sans-serif"> Enter a <i>Short name </i>as 
+          an abbreviated version of your Experimental Condition Name. This short 
+          name should be no more than 6 characters in length and will be used 
+          by the BRF and system only.</font></li>
+        <li><font face="Arial, Helvetica, sans-serif">The <i>Notes</i> field can 
+          be used to record any extra details pertaining to the experiment.</font></li>
+        <li><font face="Arial, Helvetica, sans-serif"> Choose a <i>Species</i> 
+          from the list. If you do not see your species listed please contact 
+          the GEOSS Database Administrator via email at GEOSS-help@virginia.edu.</font></li>
+        <li><font face="Arial, Helvetica, sans-serif"> Make a selection from the 
+          list of <i>Sample Types.</i></font></li>
+        <li><font face="Arial, Helvetica, sans-serif"> Fill in <i>Cell Line/Cell 
+          Type</i> or <i>Tissue Type</i> depending on which Sample Type was chosen.</font></li>
+        <li><font face="Arial, Helvetica, sans-serif"> The <i>Description </i>field 
+          should be used to record any details about the sample.</font></li>
+      </ol>
+      <p><font face="Arial, Helvetica, sans-serif"> If you find that you have 
+        added too many experimental condition entries you can simply click the 
+        <i>Delete</i> checkbox and that condition will be deleted upon submission 
+        of entries.<br>
+        <br>
+        Click the FINISH button at the bottom of the page when complete.<br>
+        <br>
+        <img src="graphics/addcondition1.jpg" width="600" height="564" border="1"> 
+        </font></p>
+      <hr noshade>
+      <p> <font face="Arial, Helvetica, sans-serif">You can edit your studies 
+        and experimental conditions by clicking on the "Edit/Delete an existing 
+        study" link located on the GEOSS Member Home Page. </font></p>
+      <p><font face="Arial, Helvetica, sans-serif"> Once the BRF (microarray center) 
+        begins to process your order the experimental conditions will be locked. 
+        You can still add conditions at this point but you will not be allowed 
+        to edit the conditions that existed when the BRF reviewed and locked the 
+        order.</font></p>
+      <p> <font face="Arial, Helvetica, sans-serif"><img src="graphics/editstudy.jpg" width="596" height="197" border="1"><br>
+        </font></p>
+      <hr noshade>
+      <p> <font face="Arial, Helvetica, sans-serif"> You can change the group 
+        ownership and/or group read-write permissions for the studies you own 
+        by clicking on the "Change study group ownership and read/write permissions" 
+        link located on the GEOSS Member Home Page. The experimental conditions 
+        for each study will be changed to reflect study permissions (as appropriate). 
+        </font></p>
+      <p><font face="Arial, Helvetica, sans-serif"> Any individual who is a member 
+        of your group will be affected by the settings here. Read privileges allow 
+        the members of a particular group to read data pertaining to the specific 
+        study. Write privileges will allow those same users to modify (and delete 
+        where appropriate) this data. If you have individuals who will only be 
+        allowed to read or write to <u>some</u> of your data then you need to 
+        create a specific group for those individuals (see the section below addressing 
+        creation of new groups). </font></p>
+      <p><font face="Arial, Helvetica, sans-serif">*Note: those individuals who 
+        have access to ALL of your data will need to be listed as members in all 
+        of your groups.</font></p>
+      <p><font face="Arial, Helvetica, sans-serif"><img border=1 width=631 height=112
+src="graphics/image014.jpg" v:shapes="_x0000_i1031"> <br>
+        <br>
+        </font></p>
+      <hr noshade>
+      <br>
+      <font face="Arial, Helvetica, sans-serif">Once you have entered all your 
+      study and experimental condition information you can request an order from 
+      the BRF by clicking on the &quot;Request a new order&quot; link. You will 
+      need to again choose the PI/PI group that will own the order. This ownership 
+      should match the ownership chosen for the study/experimental conditions 
+      to which this order will be related.<br>
+      <br>
+      Once the BRF receives your request an order will be generated in the system. 
+      The BRF will contact you to let you know that the order has been created. 
+      You can then sign back on to the GEOSS system to enter your sample and hybridization 
+      information.</font><br>
+      <p><font face="Arial, Helvetica, sans-serif"><img src="graphics/PI_for_order.jpg" width="431" height="342" border="1"> 
+        </font></p>
+      <hr noshade>
+      <p><font face="Arial, Helvetica, sans-serif"> To enter data for the order 
+        that has been generated by the BRF c</font><font face="Arial, Helvetica, sans-serif">lick 
+        on the "Edit/Delete an existing order" link. </font></p>
+      <p><font face="Arial, Helvetica, sans-serif">To add samples simply click 
+        on the &quot;Add Sample&quot; button one time for each sample that you'd 
+        like to add.</font></p>
+      <p><font face="Arial, Helvetica, sans-serif">Describe the samples that you 
+        will deliver to the chip lab and enter hybridization information:</font></p>
+      <ol>
+        <li> 
+          <p><font face="Arial, Helvetica, sans-serif">The first space provided 
+            will be for your billing code. This value is typically a PTAO and 
+            is used by the BRF.</font></p>
+        </li>
+        <li> 
+          <p><font face="Arial, Helvetica, sans-serif">Identify your <i>Study+Experimental 
+            Condition/Protocol</i> by choosing from the drop down list. </font></p>
+        </li>
+        <li><font face="Arial, Helvetica, sans-serif">We have a <i>Sample name.</i> 
+          Please enter a unique name for your sample in this field. The sample 
+          name will be displayed in other parts of GEOSS were you need to choose 
+          samples for statistical analysis, data export, etc. This field is very 
+          important, however, it is not required.<br>
+          </font></li>
+        <li><font face="Arial, Helvetica, sans-serif">Enter the <em>Lab Notebook 
+          ID</em> if available<i>.<br>
+          </i></font></li>
+        <li><font face="Arial, Helvetica, sans-serif">Enter the <i>Lab Notebook 
+          owner</i>.</font><br>
+        </li>
+        <li><font face="Arial, Helvetica, sans-serif">Enter information pertaining 
+          to the <em>Sample origin</em>. This information is collected in support 
+          of MIAME standards and may be needed when submitting for publication.<br>
+          </font></li>
+        <li><font face="Arial, Helvetica, sans-serif">Enter information pertaining 
+          to <em>Sample manipulation</em>. This information is collected in support 
+          of MIAME standards and may be needed when submitting for publication.</font></li>
+      </ol>
+      <p><font face="Arial, Helvetica, sans-serif">When you are ready to enter 
+        your hybridization information click on the "Next (Hybridization Info)" 
+        button.<br>
+        <br>
+        <br>
+        <img border=1 width=632 height=692 src="graphics/image016.jpg" > </font></p>
+      <hr noshade>
+      <p><font face="Arial, Helvetica, sans-serif">The Hybridization entry form 
+        will allow you to identify which chip you would like each of your sample(s) 
+        hybridized to. </font></p>
+      <ol>
+        <li><font face="Arial, Helvetica, sans-serif">First click the &quot;Add 
+          hybridization&quot; button for each sample listed. </font><font face="Arial, Helvetica, sans-serif">If 
+          you require more than one hybridization for a particular sample please 
+          click on the "Add Hybridization" button as many times as necessary.</font><br>
+        </li>
+        <li><font face="Arial, Helvetica, sans-serif">Choose an Affymetrix chip 
+          from the drop down list for each sample listed. If all of your samples 
+          will be hybridized to the same type of chip, click the &quot;All samples 
+          use this chip (layout)&quot; button. This will set this chip as the 
+          choice for all samples.<br>
+          <br>
+          If you need to add an Affymetrix chip to the list please contact the 
+          GEOSS Database Administrator via email at GEOSS-help@virginia.edu.<br>
+          </font></li>
+        <li><font face="Arial, Helvetica, sans-serif"> Insert any <i>comments</i> 
+          you may find useful at a later date.</font><br>
+          <br>
+          <font face="Arial, Helvetica, sans-serif"><img border=1 width=616 height=581
+src="graphics/image018.jpg" v:shapes="_x0000_i1033"></font> </li>
+      </ol>
+      <hr noshade>
+      <p> <font face="Arial, Helvetica, sans-serif"> You can edit your order up 
+        until the time that the BRF has reviewed your order and placed it in a 
+        locked status. This status is necessary to preserve data integrity. If 
+        you need to have an order unlocked please contact the BRF or the GEOSS 
+        Database Administrator(GEOSS-help@virginia.edu).</font></p>
+      <p><font face="Arial, Helvetica, sans-serif"><img src="graphics/editview.jpg" width="575" height="294" border="1"><br>
+        <br>
+        </font></p>
+      <hr noshade>
+      <br>
+      <font face="Arial, Helvetica, sans-serif">The &quot;View all orders&quot; 
+      link will allow you to see a summary of all the orders you have sent to 
+      the BRF. You will also see orders of other individuals as long as you are 
+      a member of their group.</font><br>
+      <br>
+      <p><img src="graphics/view_all_orders.jpg" width="502" height="216" border="1"><font face="Arial, Helvetica, sans-serif"> 
+        </font></p>
+      <hr noshade>
+      <p><font face="Arial, Helvetica, sans-serif"> You can change the group and/or 
+        read-write permissions of your orders by clicking on the "Change order 
+        group ownership and read/write permissions" link located on the GEOSS 
+        Va Member Home Page. </font></p>
+      <p><font face="Arial, Helvetica, sans-serif"> Samples and hybridizations 
+        within a given order will be given the same permissions as the order. 
+        </font></p>
+      <p> <font face="Arial, Helvetica, sans-serif"><img border=1 width=674 height=184
+src="graphics/image022.jpg" v:shapes="_x0000_i1035"> <br>
+        </font></p>
+      <hr noshade>
+      <p><font face="Arial, Helvetica, sans-serif"> At your GEOSS Home Page you 
+        can view a listing of your files by following the "View my files" link.  
+        This list includes all files that are currently in your personal repository 
+        and should include all raw, processed, and Affymetrix generated files. 
+        Each file can be viewed by clicking on the associated link.<br>
+        <br>
+        Box 1 shows filtering. Enter typical wildcards to limit the number of 
+        files displayed. Click the Refresh button (Box 2) to update the page.<br>
+        <br>
+        GEOSS has subdirectories. Your main directory is the same as your GEOSS 
+        ID. Click a directory button (Box 3) to open that directory. The + will 
+        change to a -, and the directory contents will be displayed. In the screen 
+        shot, the main directory is open.<br>
+        <br>
+        You can delete files, but we don't have a directory delete yet. Click 
+        the trash can to delete a file (Box 4). You'll get an "are you sure" page 
+        to confirm the delete.<br>
+        Raw chip data files are locked and cannot be deleted. Files that other 
+        people own, which you are allowed to view due to group permissions cannot 
+        be deleted by you. <br>
+        <br>
+        <img border=1 width=574 height=573 src="graphics/image024.jpg"> <br>
+        </font></p>
+      <hr noshade>
+      <p><font face="Arial, Helvetica, sans-serif">You can change the group ownership 
+        and/or group read-write permissions of your files by clicking on the "Change 
+        file group ownership and read/write permissions" link located on the GEOSS 
+        Va Member Home Page.  File permissions for the owner of the data are determined 
+        by the system. We do not allow users to remove read/write permissions 
+        for themselves.<br>
+        <br>
+        <img src="graphics/changeowner.jpg" width="600" height="101" border="1"><br>
+        </font></p>
+      <hr noshade>
+      <p><font face="Arial, Helvetica, sans-serif">The &quot;Extract data into 
+        a file&quot; link allows you to export your data into a text file that 
+        can be used as input to the GEOSS analysis routines or as input into your 
+        third party analysis program(s). Please refer to the analysis documents 
+        for further instruction. The links can be found on the GEOSS home page 
+        just below the link to this step-by-step document.</font></p>
+      <p><img src="graphics/extract_data.jpg" width="719" height="670"></p>
+      <p>&nbsp;</p>
+      <hr noshade>
+      <p><font face="Arial, Helvetica, sans-serif">To view the quality control 
+        data for a particular hybridization follow the &quot;View Quality Control 
+        records&quot; link located on your member home page. Simply choose the 
+        appropriate hybridization from the drop down list before clicking on the 
+        &quot;View QC&quot; button. </font></p>
+      <p><font face="Arial, Helvetica, sans-serif">This information is available 
+        once the derived values have been loaded by the BRF.</font></p>
+      <p><img src="graphics/choose_QC.jpg" width="436" height="295"></p>
+      <p>&nbsp;</p>
+      <hr noshade>
+      <p><font face="Arial, Helvetica, sans-serif">The &quot;Edit/Delete/Run an 
+        existing Analysis Tree&quot; link as well as the &quot;Create/Run a new 
+        Analysis Tree&quot; link allow you to manage new and existing Analysis 
+        Trees. Please refer to the analysis documents for further instruction. 
+        The links can be found on the GEOSS home page just below the link to this 
+        step-by-step document.</font></p>
+      <p><font face="Arial, Helvetica, sans-serif"><img src="graphics/analysis_links.jpg" width="620" height="202"></font></p>
+      <hr noshade>
+      <p><font face="Arial, Helvetica, sans-serif">To verify that your contact 
+        information is accurate follow the "Update my info" link at the bottom 
+        of your GEOSS Home Page.  You can modify this information as needed.<br>
+        <br>
+        <br>
+        <img src="graphics/changeinfo.jpg" width="448" height="503" border="1"></font></p>
+      <hr noshade>
+      <p><font face="Arial, Helvetica, sans-serif"> You can add and remove members 
+        from your group by clicking on the "Manage membership of my groups" link. 
+        All members of your group will be able to read your data. If you need 
+        to break your data up such that groups of individuals have access to certain 
+        subsets of your data then you will need to set up groups (see next screen 
+        shot).<br>
+        <br>
+        <img border=1 width=318 height=355
+src="graphics/image030.jpg" v:shapes="_x0000_i1039"> </font></p>
+      <hr noshade>
+      <p><font face="Arial, Helvetica, sans-serif"> To create groups click on 
+        the link to "Create a new group" on the bottom of the main GEOSS web page. 
+        </font></p>
+      <p><font face="Arial, Helvetica, sans-serif"> Enter <i>Group name</i> of 
+        your preference. Please do not use hyphens in your group names.<br>
+        <br>
+        <img border=1 width=409 height=260
+src="graphics/image032.jpg" v:shapes="_x0000_i1040"> <br>
+        </font></p>
+      <hr noshade>
+      <p><font face="Arial, Helvetica, sans-serif">If you have any questions or 
+        concerns regarding the instructions listed above please contact the GEOSS 
+        Va Database Administrator via email at <a href="mailto:geoss-help@virginia.edu">geoss-help@virginia.edu</a>. 
+        </font></p>
+      <p>&nbsp; </p>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

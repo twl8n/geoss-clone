@@ -1,0 +1,10 @@
+To: {email}
+Cc: {ccMail}
+From: {fromMail}
+Subject: GEOSS Array Order Submitted
+
+Configuration of array order {oi_pk} is complete and the array order 
+has been submitted.  Please assign an order number and process the 
+order.  If you are logged into GEOSS, you can assign the order number via the
+following link:
+{order_assign_url}

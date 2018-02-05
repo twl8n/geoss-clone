@@ -1,0 +1,32 @@
+<form action="edit_study.cgi" method=POST>
+  <b>Array Order Summary</b>
+  <table border=1>
+    <tr>
+      <th>Sample Name</th>
+      <th>Chip Type</th>
+      <th>Number of Chips</th>
+      <th>Order Status</th>
+    </tr>
+    <loop>
+    <tr>
+      <td>{name}</td>
+      <td>{layout}</td>
+      <td>{chip_count}</td>
+      <td>{order_status}</td>
+    </tr>
+    </loop>
+  </table>
+  <hr>
+  <br>
+  PI/PI group: {user_pi}<br>
+  <br>
+  Special Center Affiliation: {select_org}<br>
+  <br>
+  Billing code:
+   <input type="text" maxlength="128" size="50" name="billing_code" value="{billing_code}">
+  <br>
+  <input type=hidden name="pk" value="{pk}">
+  <hr>
+  <input type=submit name="submit" value="Submit Order">
+  <input type=submit name="submit" value="Return to Edit Study">
+</form>

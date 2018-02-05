@@ -1,0 +1,21 @@
+<form action="add_an_cond_to_an_set.cgi" method="post">
+<input type=hidden name="an_set_pk" value="{an_set_pk}">
+
+<b>Instructions:</b><br>
+Add conditions to the set from existing sources:  analysis conditions, studies, experimental conditions.  You can also add conditions from a criteria file.  Choose the source of conditions and click Choose Condition Source.  Select appropriate condition(s) and click Add to Set<br><br>
+
+Set Name:  {an_set_name}  &nbsp;&nbsp; <input type="image" border="0"
+name="edit_an_set_{an_set_pk}" src="../graphics/pencil.gif" width="25" height="25"><br>
+Creation Time: {an_set_created}<br>
+Set Description: {an_set_desc}<br>
+<br>
+
+Choose Source of Conditions:<br>
+<input type=radio name=source value="an_cond" {an_cond_checked}>Analysis Conditions &nbsp; &nbsp;
+<input type=radio name=source value="study" {study_checked}>Studies &nbsp; &nbsp;
+<input type=radio name=source value="exp_condition" {exp_condition_checked}>Experimental Conditions &nbsp; &nbsp;
+<input type=radio name=source value="criteria_file" {criteria_file_checked}>From Criteria File<br>
+<input type=submit name="submit" value="Choose Condition Source"><br>
+<br>
+{criteria_file_html}
+{source_html}

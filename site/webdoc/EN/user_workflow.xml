@@ -1,0 +1,921 @@
+<part id="user_workflow">
+<title>Overviews: Workflows for Member Users and Public Users</title>
+<para>
+Upon logging in, <link linkend="users">users</link> are taken to the
+appropriate home page for their user type.  From that location, a
+variety of different actions are available.  The role of the user 
+dictates the type of &product; activities that they will
+need to understand.  This section contains overviews of the main kinds
+of activities that users undertake.  <link linkend="public_user">Public
+users</link> should note that only a subset of functions are available
+to them and they will not be able to define 
+<link linkend="array_study">array studies</link> or place 
+<link linkend="array_order">array orders</link> with the 
+<link linkend="array_center">array center.</link>
+</para>
+
+<article id="placing_an_order_with_the_array_center">
+<title>Placing an Order with the Array Center</title>
+<para>
+The first activity for many <link linkend="member_user">member users
+</link> is to place an <link linkend="array_order">array order</link>
+with the <link linkend="array_center">array center</link>.  This 
+process will ultimately result in the array center processing the 
+<link linkend="chip">gene chips</link> for your experiment.  There
+are several steps:
+<orderedlist>
+<listitem>
+Create An Array Study
+</listitem>
+<listitem>
+Set Experimental Condition and Sample Defaults
+</listitem>
+<listitem>
+Define Experimental Conditions
+</listitem>
+<listitem>
+Define Samples
+</listitem>
+<listitem>
+Define Hybridizations
+</listitem>
+<listitem>
+Submit Order
+</listitem>
+</orderedlist>
+</para>
+
+<formalpara>
+<title>Defining an Array Study</title>
+An <link linkend="array_study">array study</link> represents the 
+unifying concept behind an experiment.  It is defined via
+the <link linkend="create_new_array_study">Create New Array Study
+</link> link. The information collected at this stage provides 
+context for the gene chip data that is essential for maintaining
+a useful data repository.  Furthermore, information entered in 
+this preparatory stage is re-used if you publish your study data or 
+analyze data at a later stage.
+</formalpara>
+<para>
+Study definition does not need to be completed in one session.  
+You can always return to edit a study using the <link linkend=
+"edit_or_delete_an_existing_array_study">Edit/Delete an 
+Existing Array Study</link> link.  You will not be able to 
+edit an <link linkend="experiment_condition">experimental 
+condition</link> after data has been loaded that is 
+associated with that experimental condition.  However, you can
+still add new experimental conditions to an array study. 
+</para>
+<para>
+The first step in defining an array study is to give the array study a
+unique name.  Be specific, but don't make the name too long (more than
+about half a screen length) as it may make the formatting of screens
+look strange on certain pages.  At this stage, you also need to specify
+the owner<link linkend="primary_investigator">(PI)</link> and <link
+linkend="group">group</link> for the study.  If you have only one PI and
+are in only one group, then you will have only one option.  However, if
+your PI has multiple groups and you are in more than one or if you have
+multiple PIs, then you will have multiple options.  As groups define who
+can see the study data, make sure you associate the study with the
+correct group.  
+</para>
+<para>
+Next, set the study start date.  Then select the classifiction, which is
+used later as a search/sort possibility when organizing data.  You may
+also enter comments on the study--keep this comment brief as it will
+show up on other screens and is used to clarify study information not
+included in the study name.  Although you may have only a few array 
+studies, the <link linkend="array_center_staff_user">array center staff</link>
+ work with many array studies, so comments are very useful to them.</para>
+<formalpara>
+<title>Set Experimental Condition and Sample Defaults</title>
+You may now proceed with defining the specifics of your study.  Studies
+consist of <link linkend="experiment_condition">experimental
+conditions</link>, <link linkend="sample">samples</link>, and <link
+linkend="hybridization">hybridizations</link>.  As most of the data for
+these components is the same (i.e. typically the same species applies
+for the whole study), setting default values for these components will
+save time.  If the default values are incorrect, they can be changed at
+any time.
+</formalpara>
+<para>
+For most of the defaults, the value will probably apply to all <link
+linkend="experiment_condition">experimental conditions</link> and <link
+linkend="sample">samples</link>.  However, if your study uses more than
+one value for a specific default, specify the most common value.
+</para>
+
+<formalpara>
+<title>Defining an Experimental Condition</title>
+Defining <link linkend="experiment_condition"> experimental
+conditions</link> is important for two reasons.  Experimental 
+conditions are a logical component of an experiment 
+and provide a partial explanation of the intent of the study.
+If you choose to publish your study data, this information
+is critical for others to understand your study.  These
+definitions are further used if you choose to analyze your
+experiment data using <link linkend="analysis_tree">
+analysis trees</link>.  Many <link linkend="analysis">
+analyses</link> compare experimental conditions, checking for
+significant differences.   
+</formalpara>
+<para>
+To add experimental conditions, simply specify the number of conditions
+in your study and hit the 'Add Experimental Conditions' button.
+The new experimental conditions are displayed.  Note that each experimental
+condition has one or more (depending on default values) associated
+samples.  Each associated sample represents a biological replicate for
+the experimental condition.  You also specify the # of chips associated
+with each sample--these represent the technical replicates for that
+sample.
+See <link
+linkend="edit_or_delete_an_existing_array_study">Edit/Delete An Existing
+Array Study</link> for a detailed description of each of the fields.
+</para>
+
+<formalpara>
+<title>Define Samples</title>
+When you define <link linkend="sample">samples</link>, you are
+communicating information to the <link linkend="array_center">array
+center.</link>  Specifically, you are stating how many samples you
+intend to deliver, how you want them processed, and what chips will be
+necessary for the order.  The number of samples associated with each
+experimental condition is initially set to the default number, but you
+can remove samples by checking the associated 'Delete' checkbox or add
+additional samples by specifying the number of additional samples in the
+'Number of samples to add to this experimental condition' field
+and then click 'Update Study Components'.  If your study includes
+<link linkend="biological_replicate">biological replicates</link>, you
+will need to specify a sample for each replicate.  Note that each
+replicate will correspond to the same <link
+linkend="experiment_condition">experimental condition</link>.
+<link linkend="miame">MIAME</link> information (sample origin and 
+sample manipulation) is not
+required, but should be filled out if you intend to publish the array
+study data with &product; at a later date.
+</formalpara>
+
+<formalpara>
+<title>Define Hybridizations</title>
+Once you have the appropriate number of samples, verify that the "Chip
+Type" and "# of Chips" are set correctly for each sample.  The "# of
+Chips" indicate the <link linkend="chip_replicate">chip
+replicates</link> for that sample.
+</formalpara>
+
+<para>
+When you have finished defining the experimental conditions and samples 
+associated with the array study, select "Save Study".  
+You have just finished describing your experiment to &product;.  If the
+description is complete, the Status field at the top of the screen will
+display a "COMPLETE" status and you can now
+place your order with the array center. 
+</para>
+
+<formalpara>
+<title>Submit Order</title>
+To place an <link linkend="array_order">array order</link>, select the
+"Order Chips From Array Center" button from the <link
+linkend="edit_or_delete_an_existing_array_study">Edit/Delete An Existing
+Array Study</link> page.  
+The subsequent page summarizes the number and type of chips to
+include in the order.  Again, you will need to specify the appropriate <link
+linkend="primary_investigator">PI</link> and <link
+linkend="group">group</link>.  If you are a member of one or more <link
+linkend="special_center">special centers</link> you will have the option
+of associating the requested array order with one of those special
+centers.  If you associate the array order with a special center, the
+order will be subject to approval by the <link
+linkend="special_center_administrator_user">special center
+administrator</link> and will receive any billing discounts associated
+with the special center.  Next, click "Submit Order".  
+</formalpara>
+
+<para>The processing of an array order varies depending on whether or
+not the array order is associated with a special center.  If the array
+order is associated with a special center, the <link
+linkend="special_center_administrator_user">special center administrator
+</link> is alerted to the fact that the array order is ready for
+processing.</para>  When the special center administrator approves the
+order, it is sent to the <link linkend="array_center_staff_user">array center
+staff</link>.  Array orders that are not associated with a special
+center (or if the special center applies automatic approval) are sent
+directly to the array center staff.  Once the array center staff
+receives notification, they will begin ordering necessary <link
+linkend="chip">chips</link> and preparing to receive the <link
+linkend="sample">samples</link>.  Your final step is to deliver the
+samples to the array center.
+</article>
+
+<article id="getting_your_experiment_data">
+<title>Getting your Experiment Data</title>
+<para>
+Once the array center has loaded your experiment data, it is 
+available for download.  You will receive an email informing you when
+data has been loaded to your account. Chip data files can be downloaded 
+via the <link linkend="view_my_files">View My Files</link>
+link. A summary file containing signal values for all chips
+associated with a specific <link linkend="array_study">
+array study</link> can be generated via the <link 
+linkend="create_a_data_file_containing_all_data_for_one_study">
+Create a data file containing all data for one study</link> link. 
+</para>
+<formalpara>
+<title>Chip Data Files</title>
+The <link linkend="chip_data_files">chip data files</link>
+are generated by the Affymetrix software when the 
+<link linkend="array_center_staff_user">
+array center staff</link> run the array experiment.
+Currently, available data files may include an assortment of 
+CAB, CEL, EXP, DAT, CHP, RPT, and TXT files.  CAB files 
+are an archive of several of the other file types and may be
+extracted using <link linkend="gcos">GCOS</link>.  If you use
+Linux, there is a utility called cabextract that can be used 
+to extract the files.
+</formalpara>
+
+<formalpara>
+<title>Creating a Data File</title>
+You can create a study data file via <link
+linkend="create_a_data_file_containing_all_data_for_one_study">Create a
+data file containing all data for one study</link>.
+This option compiles a selection of data from the chip data files into
+a text file that contains signal intensity values for all chips 
+that are part of single array study.  This format is often 
+useful for analysis of data and a variation of the format is 
+also used by the &product; analysis trees.
+</formalpara>
+<para>
+The first line of the file contains a comma separated list of numbers.
+These values explain the grouping associated with the data as defined in
+&product;.  The total number of comma separated values is the number of
+<link linkend="experiment_condition">experimental conditions</link> in
+the <link linkend="array_study">array study</link>.  Each individual
+number indicates the number of <link linkend="chip">chips</link> within 
+the condition.  Thus, the line "3,4" indicates that there are two
+experimental conditions.  The first has three chips associated with it
+and the second has four chips associated with.  Note that the order of
+the columns is significant.  The first three columns in the file belong
+to the first condition, while the last four belong to the second
+condition.  
+</para>
+<para>
+The next row provides column headers for the data, allowing you to
+identify which column of signal intensities corresponds to which chip.
+Following this row are the data rows.  Each row contains the probe set
+name followed by the signal values for each chip.
+</para>
+</article>
+
+<article id="publishing_your_data">
+<title>Publishing your Data</title>
+<para>
+When an experiment is complete and you wish to share the results, you
+may publish the data on &product;.  Publishing the data can benefit you
+if you wish to have a url you can use to reference your data.
+Additionally, publishing the data makes it available for others to
+use and learn from.
+</para>
+
+<para>
+Publishing functionality is available from the <link
+linkend="create_publishing_information">Create Publishing
+Information</link> link and the <link
+linkend="edit_or_delete_or_submit_publishing_information">Edit/Delete/Submit
+publishing information</link> link which are available from <link
+linkend="user_gui">&mem_home;</link>.  To publish results, first use the
+"Create" link.  This will initiate the publishing process.  You will be
+required to enter a variety of data, primarily <link
+linkend="miame">MIAME</link> data, that describes your experiment.  This
+is to ensure the published results are meaningful to others.
+</para>
+
+<para>
+Note that you can publish information for studies that are not stored in
+&product;, however you will need to communicate directly with the <link
+linkend="administrator_user">administrator</link> to make the data files
+available.  If the study is stored in &product;, some of the MIAME
+information will be automatically filled in from already stored data.
+You can modify the values as needed prior to publication.
+</para>
+<para>
+When the specification of associated data is complete, you can submit it
+for publication.  At that point, the summary becomes available via the
+<link linkend="view_public_data">View Public Data</link> link on the
+<link linkend="home_page">&product; home page</link>.  It may take
+several days for the data to become available. 
+</para>
+</article>
+
+<article id="uploading_external_experiment_data">
+<title>Uploading External Experiment Data</title>
+<para>
+It is possible for <link linkend="users">users</link> to upload data
+files in a number of ways.  This intended for installations with no associated
+array center and for users who do not have access to the array center.
+Uploaded data can be used for archiving, for <link linkend="analysis">
+analysis</link>, for <link linkend="publishing_your_data">publishing
+</link> or simply for data sharing.
+</para>
+
+<para>
+This functionality is accessed via the <link
+linkend="upload_a_file">Upload a file</link> link accessible via
+<link linkend="user_gui">&mem_home;</link>.  Users can upload affymetrix data
+for a complete study ('data'), affymetrix data for an individual chip
+  ('mas5'), or an analysis input data file ('analysis input'). 
+</para>
+
+<formalpara>
+<title>data</title>
+This option faciliates loading data for an entire study if users are
+allowed to load studies on your installation.  Data files should be 
+in <link linkend="single_data_file">Single Data File</link> format.
+</formalpara>
+
+<formalpara>
+<title>mas5</title>
+mas5 data allows data for specific chips to be uploaded.  Uploading a 
+file of this type will create a
+hybridization in the system that corresponds to the uploaded data file.
+This hybridization can then be grouped with other hybridizations to form
+analysis sets and analysis conditions and used for analysis.  The upload 
+file is expected to be <link linkend="affymetrix_txt_file">affymetrix
+.txt file</link> generated by mas5 or GCOS that contains chip data. 
+ The user must
+also specify a <link linkend="hybridization">hybridization</link> name.
+This name will be used to uniquely identify the uploaded data.
+Additionally, the chip type must be identified by specifying the <link
+linkend="layout">layout</link>.   
+</formalpara>
+
+<formalpara>
+  <title>analysis input</title>
+Alternatively, if users wish to upload data that is not mas5 data, they
+may upload a file containing data already formatted for analysis and
+specify the correct grouping for analysis.  This is done using the
+"analysis input" upload option.  The uploaded file may then be used as
+input to an analysis tree.
+</formalpara>
+
+<example>
+<title>
+Sample portion of a txt file suitable for analysis input upload.
+</title>
+<para id="analysis_input_example">
+There are several pieces of information needed for the upload of an
+analysis input file:  the condition grouping, the condition labels, and
+the data file.  The condition grouping describes which groups of chip
+data should be compared to each other.  The grouping is a comma
+separated list, where the number of elements in the list corresponds to
+the number of conditions and the numbers in the list correspond to the
+number of chips (replicates) in each condition.  For example,
+<emphasis>1,2,4</emphasis>
+indicates that there are three conditions (number of elements in the
+list) and that the first condition has 1 chip, the second condition has
+2 chips and the third condition has 4 chips.  Condition labels, also a
+comma separated list, are used to provide names for the conditions.
+So <emphasis>a,b,c</emphasis> could specify condition names for the above
+example.  Note that you must have the same number of condition labels as
+you have conditions.
+</para>
+<para>
+The analysis input file contains rows of tab separated data.  The first
+row is a header and labels the columns.  The first column must be probe
+set names and subsequent columns contain chip data (signal values).
+Note that the order of the columns is significant.  Replicates must be
+grouped together in the order specified by the condition grouping.  The
+first few rows of a sample text file corresponding to the above example
+are provided below:
+</para>
+<computeroutput>
+
+<table frame='none'><title>File Format</title>
+<tgroup cols='8' align='left' colsep='1' rowsep='1'>
+<colspec colname='1'/>
+<colspec colname='2'/>
+<colspec colname='3'/>
+<colspec colname='4'/>
+<colspec colname='5'/>
+<colspec colname='6'/>
+<colspec colname='7'/>
+<colspec colname='8'/>
+<tbody>
+<row>
+  <entry>probe_set_name</entry>
+  <entry>A_1</entry>
+  <entry>B_1</entry>
+  <entry>B_2</entry>
+  <entry>C_1</entry>
+  <entry>C_2</entry>
+  <entry>C_3</entry>
+  <entry>C_4</entry>
+</row>
+<row>
+  <entry>102364_at | J04509</entry>
+  <entry>7307.9</entry>
+  <entry>7165.2</entry>
+  <entry>11526.5</entry>
+  <entry>9056.1</entry>
+  <entry>1002.2</entry>
+  <entry>1982.3</entry>
+  <entry>9832.1</entry>
+</row>
+<row>
+  <entry>160869_at | AI849490</entry>
+  <entry>62.9</entry>
+  <entry>75.3</entry>
+  <entry>96.3</entry>
+  <entry>98.4</entry>
+  <entry>88.3</entry>
+  <entry>34.5</entry>
+  <entry>83.2</entry>
+</row>
+<row>
+  <entry>92746_at | U37249</entry>
+  <entry>52.9</entry>
+  <entry>61.4</entry>
+  <entry>107.7</entry>
+  <entry>96.8</entry>
+  <entry>34.5</entry>
+  <entry>78.3</entry>
+  <entry>22.3</entry>
+</row>
+<row>
+  <entry>92731_at | X83601</entry>
+  <entry>31.5</entry>
+  <entry>7.1</entry>
+  <entry>12.6</entry>
+  <entry>29.3</entry>
+  <entry>4.9</entry>
+  <entry>50.1</entry>
+  <entry>34.5</entry>
+</row>
+<row>
+  <entry>103264_at | AF073997</entry>
+  <entry>92.1</entry>
+  <entry>86</entry>
+  <entry>42.8</entry>
+  <entry>50</entry>
+  <entry>18.2</entry>
+  <entry>98.5</entry>
+  <entry>67.1</entry>
+</row>
+<row>
+  <entry>93358_at | AI836451</entry>
+  <entry>1651</entry>
+  <entry>1449.3</entry>
+  <entry>430.4</entry>
+  <entry>474.1</entry>
+  <entry>100</entry>
+  <entry>345.2</entry>
+  <entry>12.9</entry>
+</row>
+<row>
+  <entry>92205_at | AF090738</entry>
+  <entry>56.1</entry>
+  <entry>83.3</entry>
+  <entry>214.6</entry>
+  <entry>178.3</entry>
+  <entry>45.8</entry>
+  <entry>99.2</entry>
+  <entry>321.9</entry>
+</row>
+<row>
+  <entry>96125_at | AF110520	</entry>
+  <entry>234.4</entry>
+  <entry>277.1</entry>
+  <entry>509</entry>
+  <entry>555.4</entry>
+  <entry>444.2</entry>
+  <entry>384.5</entry>
+  <entry>121.8</entry>
+</row>
+</tbody>
+</tgroup>
+</table>
+
+</computeroutput>
+</example>
+
+<para>
+When data is uploaded, the uploaded file can be viewed via the <link
+linkend="view_my_files">View My Files</link> link.
+</para>
+</article>
+
+<article id="analyzing_data_using_analysis_trees">
+<title>Analyzing Data Using Analysis Trees</title>
+<para>
+<link linkend="analysis_tree">Analysis trees</link> provide <link
+linkend="users">users</link> with a mechanism for analyzing chip data.
+The trees provide a very customizable interface for analyzing data and
+provide both beginner and advanced usage options.  In the simplest
+case, a user can specify an <link linkend="array_study">array
+study</link> that they wish to analyze and run the default tree
+structure with the default parameters.  More complicated scenarios allow
+the users to customize parameters, change the composition of the data
+being analyzed, and modify which analyses are performed.  There are
+essentially three stages involved in analyzing data: specifying input,
+configuring and running the tree, and viewing the results.  The
+following sections discuss each of these components in detail.  The
+final section, <link linkend="analysis_tutorial">Analysis
+Tutorial</link> provides a full example of an analysis tree.
+</para>
+
+<sect1 id="determining_tree_input">
+<title>Determining Tree Input</title>
+<para>
+A variety of sources can provide input to analysis trees.
+Data can come from an <link linkend="array_study">array study</link> 
+defined in &product;, from public data, from uploaded
+data, or from any combination of those sources.  Descriptions of 
+each source are provided:
+</para>
+<variablelist>
+
+  <varlistentry>
+   <term>
+     &product; Array Studies
+   </term>
+   <listitem>
+     <para>
+       You can analyze data from any array study which you have
+       privileges to read. Note that all data must be loaded for all
+       <link linkend="experiment_condition">experimental conditions</link> 
+       in the array study before you can analyze it.  
+     </para>
+     <para>
+       To specify this type of input source when you are creating an
+       analysis tree, click the "Array Study" radio button, then "Choose
+       Source".  A table containing all loaded array studies that you
+       can read is displayed.  Click on the radio button corresponding
+       to the study that you wish to analyze to designate that study as
+       the data source.
+     </para>
+   </listitem>
+  </varlistentry>
+
+  <varlistentry>
+   <term>
+     Public Data
+   </term>
+   <listitem>
+     <para>
+       Many <link linkend="users">users</link> make their experiment
+       data available to everyone by <link
+       linkend="publishing_your_data">publishing their data</link>.  If
+       you wish, you can analyze public data sets.  
+     </para>
+     <para>
+       To specify this type of input source when you are creating an
+       analysis tree, click the "Public Data" radio button, then "Choose
+       Source".  A table containing available public studies is
+       displayed.  Click on the radio button corresponding to the public
+       data set
+       that you wish to analyze to designate that public data set as the
+       data source.
+     </para>
+   </listitem>
+  </varlistentry>
+
+  <varlistentry>
+   <term>
+     Uploaded Data
+   </term>
+   <listitem>
+     <para>
+       There are two kinds of uploaded data that can be used for
+       analysis.  Data for a complete study can be uploaded as an 
+       analysis input file or data for individual chips can be uploaded
+       and then grouped for analysis.  Uploading data for 
+       a complete study allows users to analyze data that is not
+       Affymetrix data, which is currently the only chip type that
+       &product; supports.  For example, uploading an analysis input
+       file allows users to analyze <link
+       linkend="cdna">cDNA</link> data.  Please note that a highly 
+       specialized format is required for analysis input files.  See
+       <link linkend="analysis_input_example"> the analysis input example
+       </link> for details.
+     </para>
+     <para>
+       To specify this type of input source when you are creating an
+       analysis tree, click the "Analysis Input File" radio button,
+        then "Choose
+       Source".  A table containing all the analysis input files
+        that you
+       can read is displayed.  Click on the radio button corresponding
+       to the analysis input file 
+       that you wish to analyze to designate as the data source.
+     </para>
+     <para>
+       If you wish to analyze external mas5 data, you may upload the
+       data either as an analysis input file (all chips in one file) or
+       upload the data for each chip individually.  Uploading data for
+       each chip individually will allow you to group the chips into
+       different sets and to compare them with other chips in the
+       systems.  Additionally, the formatting requirements are less
+       stringent.  However, you will need to do more prepartory steps
+       prior to creating the tree than you have to do with an analysis
+       input file, array study, or public data source. 
+       Most <link
+       linkend="analysis">analyses</link> compare <link
+       linkend="experiment_condition">experimental conditions</link> to
+       each other.  Array studies and public data already have their
+       conditions defined, but uploaded data is not automatically
+       grouped into appropriate conditions.  This grouping must be
+       manually defined before the analysis tree is created.  
+     </para>
+     <para>
+       Ultimately, data is grouped into an <link
+       linkend="analysis_set">analysis set</link>, which can be used as
+       input to an analysis tree.  Analysis sets consist of <link
+       linkend="analysis_condition">analysis conditions</link>.  Analysis
+       conditions consist of <link
+       linkend="hybridization">hybridizations</link>.  Essentially, you
+       must first upload all hybridizations that you wish to analyze
+       using the <link
+       linkend="upload_a_file">Upload a file</link> link.  Then
+       you use the <link linkend="create_new_analysis_condition">Create
+       new analysis condition</link> link to group the uploaded
+       hybridizations into analysis conditions.  Analysis conditions
+       should contain <link linkend="replicate">replicate</link>
+       hybridizations.  Next, use the <link
+       linkend="create_new_set_of_conditions">Create new set of
+       conditions</link> link to group the analysis conditions that you
+       wish to compare in your analysis.  This set can be used as input
+       to the analysis tree.
+     </para>
+     <para>
+       To specify this type of input source when you are creating an
+       analysis tree, click the "Analysis Set" radio button, then "Choose
+       Source".  A table containing all the analysis sets that you
+       can read is displayed.  Click on the radio button corresponding
+       to the analysis set that you wish to analyze to designate that
+       analysis set as the data source.
+     </para>
+   </listitem>
+  </varlistentry>
+
+  <varlistentry>
+   <term>
+     Combining Data
+   </term>
+   <listitem>
+     <para>
+       Combining data allows a great amount of flexibility in analyzing
+       data.  For example, you may have two array studies that have an
+       identical control condition.  To improve the quality of the data,
+       you would like to include data from both control chips when you
+       analyze the data from one study.  &product; allows you to regroup
+       the data, so that the extra data is included in the analysis.
+     </para>
+     <para>
+       As with the upload data source described above, this process
+       requires the user to specify the grouping of data, which means
+       creating an analysis set that contains analysis conditions.  For
+       the example given above, you would <link
+       linkend="create_new_analysis_condition">Create a new analysis
+       condition</link> that includes the control chips from both of the
+       studies.  You would then group this new analysis condition with
+       the non-control <link linkend="experiment_condition">experimental
+       conditions</link> from the study you wish to analyze in an
+       analysis set.  That analysis set can then be used as input into a
+       tree.
+     </para>
+     <para>
+       To specify this type of input source when you are creating an
+       analysis tree, click the "Analysis Set" radio button, then "Choose
+       Source".  A table containing all the analysis sets that you
+       can read is displayed.  Click on the radio button corresponding
+       to the analysis set that you wish to analyze to designate that
+       analysis set as the data source.
+     </para>
+   </listitem>
+  </varlistentry>
+</variablelist>
+
+</sect1>
+
+<sect1 id="using_criteria_files">
+<title>Using criteria files</title>
+<para>
+<link linkend="criteria_file">Criteria files</link> provide a
+convenient mechanism for creating <link linkend="analysis_set">analysis
+sets</link> and <link linkend="analysis_condition">analysis
+conditions</link> based on characteristics of the data.  For instance,
+you may wish to create an analysis condition for all samples taken from
+females for a given study.  Or you may wish to create an analysis
+condition based on the age.  Essentially, a criteria file links
+&product; <link linkend="hybridization">hybridization</link> names with
+specific criteria like gender and age.  The criteria file is then
+uploaded using the <link
+linkend="upload_a_file">Upload a file</link> link so that the
+associations are made available to &product;.  </para>
+<para>
+The format of the criteria file is highly specific.  The first line is a
+header line, and all subsequent lines are data lines.  Columns should be
+separated by tabs.  The first column links the criteria to existing
+hybridizations.  Hybridizations must already have been loaded into
+&product; prior to uploading a criteria file. Subsequent
+columns specify criteria associated with the hybridizations.
+</para>
+<para>
+The general format of a column header is
+ View[::Categorical|::Continuous].
+<variablelist>
+  <varlistentry>
+    <term>
+      View
+    </term>
+    <listitem>
+      <para>
+      This is the only part of the header that is mandatory for all
+      columns.  It specifies the label that the user will see for the
+      column when they are creating columns based on criteria.  
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+    [::Categorical|::Continuous]
+    </term>
+    <listitem>
+      <para>
+      All columns but the first (which identifies the hybridization)
+      designate criteria that the user can use to group their
+      hybridizations.  This part of the header specifies the type of
+      criteria, which can be either <link
+      linkend="categorical_parameter">categorical</link> or <link
+      linkend="continuous_parameter">continuous</link>.
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+<example>
+<title>Sample Criteria File - <filename>criteria.txt</filename></title>
+<screen>
+Name              Gender::Categorical Age::Continuous Infection::Categorical
+05-01_48hour_A_1  Female              10              Yes
+05-01_naive_A_1   Male                45              No
+05-01_clone_A_1   Female              41              No
+05-01_inf_A_1     Male                78              Yes
+</screen>
+<note>All data should be tab delimited.  Extra spacing has been added
+for readability.</note>
+<para>
+This file loads metadata for four chips into &product;.  The file
+consists of four tab delimited columns: Name, Gender, Age, and
+Infection. 
+</para>
+</example>
+<para>
+Once uploaded, this data could be used to facilitate adding <link
+linkend="hybridization">hybridizations</link> to analysis conditions.
+If you selected criteria file as the source for hybridizations and
+choose this criteria file, the resulting select screen would appear as
+in the screen shot below.
+</para>
+<example>
+<title>Parameters displayed for <filename>criteria.txt</filename></title>
+<imageobject>
+  <imagedata fileref="../graphics/criteria.gif"
+  format="GIF"></imagedata>
+</imageobject>
+</example>
+</para>
+<formalpara>
+  <title>Advanced Criteria Files</title>
+  Advanced criteria files allow users to automatically create analysis
+  sets and analysis conditions when criteria files are uploaded, based
+  on categorical columns.  This functionality involves a slightly
+  different column header format:
+</formalpara>
+<para>
+  View[::Categorical[::Condition][::Set]|::Continuous]
+</para>
+<variablelist>
+  <varlistentry>
+    <term>
+      [::Condition]
+    </term>
+    <listitem>
+      <para>
+      Adding this to a categorical criteria column header will cause 
+      analysis conditions to be created automatically for each value in
+      the column.  For instance, if the column is gender, then female
+      and male analysis conditions would be created automatically.  Note
+      that conditions are only created automatically if the name (View)
+      of the column is unique.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+    [::Set]
+    </term>
+    <listitem>
+      <para>
+      Adding this to a categorical criteria column header will cause 
+      an analysis set that includes all conditions in the column to be 
+      created automatically.  It is named after the column header and
+      the criteria file that it is created from.  Using the example
+      above, a gender set would be created that includes the female and
+      male analysis conditions.  Again, the set is only automatically
+      created if there are no naming conflicts for any of the
+      components.
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist> 
+<para>
+This concept can be illustrated by modifying the above example:
+<example>
+<title>Sample Advanced Criteria File - <filename>adv.txt</filename></title>
+<screen>
+Name              Gender::Categorical::Condition Infection::Categorical::Set
+05-01_48hour_A_1  Female                         Yes
+05-01_naive_A_1   Male                           No
+05-01_clone_A_1   Female                         No
+05-01_inf_A_1     Male                           Yes
+</screen>
+<note>All data should be tab delimited.  Extra spacing has been added
+for readability.</note>
+</example>
+The use of the Condition tag in the Gender
+column will result in the automatic creation of 
+two analysis conditions, Female and Male.  The
+Set tag associated with the Infection column will result in the
+creation of two analysis conditions, Yes and No, and creation of 
+an Infection analysis set that contains those two conditions.
+</para>
+</sect1>
+
+
+<sect1 id="configuring_and_running_trees">
+<title>Configuring and Running Trees</title>
+Once a tree has been created, it can be configured and/or run using the
+<link
+linkend="edit_or_delete_or_run_an_existing_analysis_tree">Edit/Delete/Run
+an existing analysis tree</link> link.  This allows <link
+linkend="users">users</link> to customize the nodes in a tree and to
+specify parameter options for the node.  Selecting nodes requires a
+solid understanding of statistical methods.  Some assistance is provided
+in the <link linkend="analysis_tutorial">
+analysis tutorial</link> example at the conclusion of this
+section.  Additional assistance is available from the help files for 
+specific analyses and from the references they cite.
+
+</sect1>
+ 
+<sect1 id="viewing_tree_results">
+<title>Viewing Tree Results</title>
+<para>
+<link linkend="analysis_tree">Tree</link> results may be viewed via the
+<link linkend="view_my_files">View My Files</link> interface.  To view
+results for a specific tree, you may use the "View Analysis Tree Result
+Files" shortcut.  Simply select the name of the tree from the drop-down
+box and click on "Go".  Note that result files will vary based on the
+configuration of the tree.  See the help files for individual analyses
+to assist in determining the content of each file.  
+</para>
+</sect1>
+
+
+<sect1 id="troubleshooting_tree_failures">
+<title>Troubleshooting Tree Failures</title>
+<para>
+Occasionally analysis trees will fail. In such instances, you will 
+typically receive an email from &product; stating that the analysis tree 
+has failed.  
+</para>
+<para>
+There are a few things you can do to attempt to understand the
+problem.  First, determine which node in the analysis tree failed.  This
+can be determined through looking at the "Error Log" files (each node
+will have a log file) and through examining the results email (which
+will show the failed node along with its error log).  You can also
+examine the output files from the node prior to the failed node; check
+these files to determine whether the input looks appropriate (if it is
+empty, for example, that is a problem).  Note that the majority of
+difficulties result from poorly formed input.  Occasionally there is a
+bug in the analysis that is somehow triggered by your data.  Usually
+this is resolved by <link linkend="&product;_developers">
+&product; developers</link>.
+</para>
+<para>
+We are working on creating rigorous checks on input data
+quality.   However, that code is not yet complete, so for now you need
+to ensure that your data is in the expected form.  
+<tip>
+If the problem occurred when running the Filter module, ensure that you
+have selected two, and only two, conditions to compare.
+</tip>
+</para>
+</sect1>
+
+</article>
+&user_article_analysis_tutorial;
+</part>

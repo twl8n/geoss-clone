@@ -1,0 +1,513 @@
+Implementation Plan - Generic Grouping of Data for Analysis
+
+Overview
+
+This document provides a description of the implementation plan for
+building the new analysis grouping component of geoss.  This new
+functionality will allow users to prepare data from many sources
+for analysis.  The preparations steps will be as similar as possible
+given the different forms and origins of the data.   We need to allow
+the following kinds of data to be prepared:
+
+- data that was loaded into the database by the BRF
+- data (cDNA and mas5) uploaded by the user 
+- GEOSS public data
+
+We need to allow data to be grouped in the following ways: 
+  - study down
+  - hybridization up 
+  - based on advanced criteria 
+  - detailed definition 
+  - single click definition
+
+Each of the above scenarios is described at the conclusion of this
+document, and it is illustrated how the described implementation addresses
+each requirement.
+
+Implementation Overview:
+
+1.Add new database tables: an_set, an_cond, an_set_cond_link,
+  an_cond_am_link 
+
+2.Modify Upload data to support different types of file
+  upload (cDNA, mas5, criteria file).  
+
+3.Modify the publish data process.  A criteria file needs to be generated,
+  and data and grouping should be made available to all users.  
+
+4.Create new grouping links (from webtools/index).  They will include the 
+  following files: create_set.html, create_set.pl, choose_set.html 
+  choose_set.pl, edit_set.html, edit_set.pl, add_an_cond_to_set.pl 
+  add_an_cond_to_set.html,  create_an_cond.html, create_an_cond.pl, 
+  choose_an_cond.pl, choose_an_cond.html, edit_an_cond.pl, 
+  edit_an_cond.html,  add_am_to_an_cond.html add_am_to_an_cond.html 
+
+5.Create a new link to "Create an analysis input file" (from webtools/index).
+  This link allows an analysis input file to be created from an_set or from 
+  public data.  
+
+6.Modify insert_tree.pl to include link to "Create an analysis input file".
+
+
+Detailed Implementation:
+
+1   Add new database tables: an_set, an_cond, an_set_cond_link,
+an_cond_am_link
+
+1.1  Add the following tables:
+
+Table: an_set 
+Fields: 
+an_set_pk 
+an_set_name
+an_set_desc 
+ans_created
+
+Table: an_cond
+Fields: 
+an_cond_pk 
+an_cond_name 
+an_cond_desc 
+anc_created
+
+Table: an_set_cond_link
+Fields:
+an_set_fk
+an_cond_fk
+
+Table: 
+Fields:
+an_cond_am_link
+an_cond_fk 
+an_hyb_fk
+
+Add the following constraints: 
+-  hybridization_name in arraymeasurement must be unique 
+-  the combination of an_set_name and ans_created must be unique 
+-  the combination of an_cond_name and anc_created must be unique
+
+1.2 Due to the multiple ways that we define sets of conditions, it is
+allowable to have sets of conditions with no conditions and conditions
+with no hybridizations in the database.  However, when you create an
+input file for an analysis, if you specify such a set as input, an error
+will be generated.
+
+Discussion:
+
+We need to provide a mechanism to store uploaded chip data and a mechanism
+to store new condition groupings.  We decided to put uploaded data into
+the existing arraymeasurement and am_spots_* tables and to put groupings
+in new an_* tables.  This section explains why we choose that method.
+
+Uploaded Data - We basically saw three options for storing this data:
+leave it in the uploaded file, created a new table, or use the existing
+hybridization tables.  Although we could have left it in the uploaded file
+and extracted it from the file instead of the database when we needed
+the information, that opens us up to problems if the file is somehow
+deleted when our reference to it is not.  Also, we lose the convenience of
+using the database to enforce uniqueness, etc.  Alternatively, we could
+have created new tables to load the hybridization information into.
+This was deemed unnecessary, as we have an existining infrastructure
+to store the data.  The two concerns with this approach are that we
+might not be able to tell which data was loaded by users and which data
+was loaded by the BRF and that we might not have enough information to
+satisfy required fields.  However, we can tell where the data came from
+by checking the "smp_fk" field.  BRF data will have a non-null smp_fk.
+As for satisifying fields, currently the only NOT NULL field is am_pk,
+so we shouldn't run into problems there.  The nice thing about having
+the data loaded into the existing tables is that we then have an easy
+way to check for uniqueness among hybridization names.
+
+Analysis Groupings - We also want to store various groupings.  We group
+hybridizations into analysis conditions and analysis conditions into
+sets of conditions.  As these concepts are analagous to studies and
+experimental conditions, we considered trying to store these groupings
+in those tables.  However, the relationship between hybridizations and
+experimental conditions is many-to-one, as is the relationship between
+experimental condtions and studies.  This contrasts with the relationship
+between hybridizations and analysis conditions which is many-to-many
+(as is the relationship between analysis conditions and sets of analysis
+conditions).  For that reason, analysis conditions and sets of conditions
+are stored in separate tables and linked by link tables.
+
+
+
+2   Modify Upload data to support different types of file upload (cDNA,
+mas5, criteria file).
+
+2.1 Users can upload files via the "Upload" link.  This page will
+be modified so that users can specify the type of file to upload.
+The options will include "dChip data file", "mas5 data file", "criteria
+file", and "other".
+
+2.2 Other files are uploaded to USER_DATA_DIR/upload/other.
+
+2.3 dChip data files are uploaded to USER_DATA_DIR/upload/dchip.  As part
+of the upload, the data is placed in the database.
+
+2.4 mas5 data files are uploaded to USER_DATA_DIR/upload/mas5.  As part
+of the upload, the data is placed in the database.
+
+2.5 criteria files are uploaded to USER_DATA_DIR/upload/criteria.
+As part of the upload, automatic analysis conditions and sets of
+conditions are created.
+
+2.6 The file upload page will be accessible from webtools/index.
+Additionally, when a user adds hybridizations to an analysis condition
+or adds analysis conditions to a set of conditions, they will have the
+option to add from a file.  That option will also access this link.
+In addition to providing regular upload functionality, when accessed in
+this fashion additional records will be inserted into an_set_cond_link
+and/or an an_cond_am_link.  This is described in more detail in the
+section on the new grouping links.
+
+2.7  The procedure for loading dChip data files into dChip tables should
+be further defined.
+
+2.8 The procedure for loading mas5 data files into mas5 tables should
+be further defined.
+
+2.9  A criteria file defines information necessary for grouping
+hybridizations.  It links according to hybridization name or analysis
+condition name.  Referenced hybridizations must already exist in GEOSS
+tables (arraymeasurement).
+
+2.10  The header row is the first line of the criteria file.  Each column
+header has the following form:
+
+[tablename::columnname],View[::Categorical][::Continuous][::Condition]
+
+Table Name::Field Name - references the geoss database.  Could be
+  arraymeasurement::hybridization_name or an_cond::an_cond_name.
+
+View Name - The name of the value you want the user to see.  For example,
+  the view name for arraymeasurement::hybridization_name might be "Name".
+
+Continuous - The user will have the ability to group based on the value in
+  this column.  They will see the View Name and be able to set an
+  associated comparison operator and a value.  An example of a continuous
+  parameter is "age".
+
+Categorical - The user will have the ability to group based on the
+  value in this column.  They will see the View Name and be able to select as
+  associated values. An example of a continuous parameter is "gender".
+
+Condition - build a condition in an_cond for each distinct value in the
+  column.  The condition will be named after the filename/study name and
+  view_name and column value.  The file must contain hybridization_names
+  for inclusion in the condition.
+
+Set - build a set of conditions in an_set for each distinct value in the
+  column.   The set will be named after the filename and view_name and
+  column value.  The file must contain condition_names for inclusion in
+  the set.
+
+When data is created from a file, the timestamp field is also set.
+
+If the file contains several sets, the an_cond_desc should
+read "Created from <filename> as part of set <set>" and the
+an_set_desc should read "Created from <filename>.  If the file contains no
+set information the an_cond_desc should read "Created from filename".
+
+Example
+teela_exp1.txt - uploaded on 07-14-2004 12:28:30
+~ ~ ~
+aBrraymeasurement::hybridization,Name::Continuous       ,Age::Continuous
+,Gender::Categorical::Condition
+hyb_1   23      Female
+hyb_2   45      Male
+hyb_3   75      Female
+hyb_4   21      Male
+hyb_5   7       Male
+~ ~ ~
+Creates the following an_conds records:
+an_cond_name       anc_created            an_cond_desc
+Female             07-14-2004 12:28:30    "Created from teela_exp1.txt"
+Male               07-14-2004 12:28:31    "Created from teela_exp1.txt"
+
+***
+Example
+teela_exp1_r2.txt - uploaded on 07-14-2004 12:28:30
+~ ~ ~
+arraymeasurement::hybridization,Name::Continuous ,Age::Continuous
+,Gender::Categorical::Condition
+an_set::an_set_name,Set
+hyb_1   23      Female   First Run
+hyb_2   45      Male    First Run
+hyb_3   75      Female  Second Run
+hyb_4   21      Male    Second Run
+hyb_5   7       Male    Second Run
+~ ~ ~
+Creates the following an_set records:
+an_set_name        ans_created             an_set_desc
+First_Run          07-12-2004 12:28:30     "Created from teela_exp2.txt"
+Second_Run         07-12-2004 12:28:31     "Created from teela_exp2.txt"
+
+Creates the following an_cond records:
+an_cond_name    anc_created                an_cond_desc Male
+07-12-200B4 12:28:30        "Created from teela_exp2.txt as part of set
+'First Run'"
+Female          07-12-2004 12:28:31        "Created from teela_exp2.txt as
+part of set 'Second Run'"
+Male            07-12-2004 12:28:32        "Created from teela_exp2.txt as
+part of set 'Second Run'"
+Female          07-12-2004 12:28:33        "Created from teela_exp2.txt as
+part of set 'First Run'"
+
+
+Note that the condtion names and descriptions can be modified by the user if
+they choose.  These are the default values.  If the user specifically sets
+the *_desc field in the upload file, that description will be used.
+
+
+2.11 Criteria files can be used to automatically define analysis
+conditions and sets of conditions.  This will occur automatically
+when you upload a criteria file.  If the hybridizations does not exist
+when the criteria file is uploaded, a warning will be generatedand that
+hybridization will not be included in the grouping.  Using the sample file
+above (teela_exp1_r2.txt), if hyb_1 was not already in arraymeasurement,
+a warning is displayed and no record is inserted into an_cond_am_link
+for that hybridiziation..
+
+2.12. If conditions already exist, a warning will be generated.
+Conditions will not be overwritten.  Conditions are unique based on 
+name and timestamp.
+
+2.13 Criteria files may also be used to support advanced grouping.
+Advanced grouping options are displayed based on continuous and
+categorical columns.
+
+2.14 View names must be unique.
+
+3   Modify the publish data process.  A criteria file needs to be
+generated, and data and grouping should be made available to all users.
+
+3.1 Modify the publish data process to write a criteria file that contains
+default grouping.
+
+3.2 Write a function to select public data that will be accessible
+from create_set and from the create input file for analysis link.
+This function displays all public data files on the system.  If selected,
+it will transfer the appropriate information into the users analysis
+grouping tables.
+
+
+4   Create new grouping links (from webtools/index).  They will include
+the following files: create_set.html, create_set.pl, choose_set.html
+choose_set.pl, edit_set.html, edit_set.pl, add_an_cond_to_set.pl
+add_an_cond_to_set.html,  create_an_cond.html, create_an_cond.pl,
+choose_an_cond.pl, choose_an_cond.html, edit_an_cond.pl,
+edit_an_cond.html,  add_am_to_an_cond.html add_am_to_an_cond.html
+
+4.1 A new section for the preparation of analysis data will be added
+to member home.  It will include the following links: 
+  - create new set of conditions 
+  - edit existing set of conditions 
+  - create new analysis conditions 
+  - edit existing analysis conditions 
+  - create an analysis input file
+
+The current links "Upload a file for analysis", "Edit/Delete/Run an
+existing Analysis Tree" and "Create/Run a new Analysis Tree" will also
+be included in this section.  The upload link should be renamed to
+"Upload a data file".
+
+4.2. Edit Existing X links will take you to a page that allows you to
+select which existing set of conditions/analysis conditions you would
+like to edit.  Unlike our other choose_* files, we will need to provide
+navigational/search options beyond scrolling so that users can quickly
+choose the component they would like to edit.  (It is quite possible for
+users to have very large numbers of conditions.)  After the component
+is selected, the user is taken to the edit_* page for that component.
+
+4.3. Creating new analysis conditions/set of conditions will get the name
+and description for the new component.	Then the user will be taken to
+the corresponding edit_* page for that component.  Optionally, the user
+can create based on a study/exp_condition that is already defined in
+the database.  If they choose that option, the grouping is copied from
+the study/exp_condition tables.
+
+4.2 edit_set: This page allows the user to specify the following: 
+ - Name: (writes to an_set_name) 
+ - Description: (writes to an_set_desc) 
+ - a list of an_conditions
+    - each condition has an edit button and a delete button associated
+    with it
+
+4.2.1 Removing a condition removes a record from an_set_cond_link
+
+4.2.2 Editing a condition takes you to "edit_condition" for that condition
+
+4.2.3 There is a button to add condition(s) to the set.  It takes the
+user to add_an_conds_to_set.
+
+4.2.3.1 Each condition that is added results in a new entry in the
+an_set_cond_link table.
+
+4.2.3.2 Conditions can be added in the following ways:
+   - choosing individual pre-existing analysis conditions (already defined
+   in an_cond) 
+   - choosing individual pre-existing experimental conditions
+   (already defined in exp_cond) 
+   - choosing a set of pre-existing conditions based on criteria (advanced grouping).  By default,we should support choosing by name or by study.  By name allows a pattern match on a name.  By study will choose all exp_conditions with the same sty_fk, or all an_conds associated with a specific an_set.  Users should
+also have the option of uploading a criteria file.
+   - choosing conditions from a file.  This takes the user to a version of
+the upload page that allows uploading data files (mas5 or dChip) and an
+associated criteria file (grouping). Data is loaded and grouped based
+on the files.  Because we are accessing this from add conditions to a
+set of conditions all conditions in the file are associated with the
+set of conditions that is currently being editted regardless of ::set
+and ::condition values.
+
+4.3 edit_an_cond: This page allows the user to specify the following: 
+  - Name: (writes to an_cond_name) 
+  - Description: (writes to an_cond_desc)
+  - a list of hybridizations
+
+4.3.1  Each hybridization has a delete button associated with it
+
+4.3.2  Removing a hybridization removes a record from an_cond_am_link
+
+4.3.3 There is a button to add hybridization(s) to the set.
+  - each hybridization that is added results in a new entry in the
+  an_cond_am_link table.
+  - hybridizations can be added in the following ways:
+  - choosing individual pre-existing analysis hybridizations (already
+  defined in arraymeasurement) 
+  - choosing a set of pre-existing hybridizations based on criteria 
+    (advanced grouping).  By default, we should support choosing by 
+    name or by study or by condition.  By name allows a pattern  
+    match on a name.  By study will choose all arraymeasurement 
+    records associated  with the same sty_fk or set of conditions.  
+    By condition will choose all arraymeasurement records associated 
+    with a specific an_cond or exp_condition. Users should also have 
+    the option of uploading a criteria file for additional criteria.
+   - choosing hybridizations from a file.  This takes the user to a
+   version of the upload page that allows uploading data files 
+   (mas5 or dChip) and an associated criteria file (grouping). Data 
+   is loaded and grouped based on the files.  Because we are accessing 
+   this from add hybridizations to a condition all hybridizations in the 
+   file are associated with the conditions that is currently being 
+   editted regardless of ::set and ::condition values.
+
+5.  Create a new link to "Create an analysis input file" (from
+webtools/index).  This link allows an analysis input file to be created
+from an_set or from public data.
+
+5.1 Add a new link from webtools/index to create_an_fi.pl.
+
+5.2 Create create_an_fi.pl and create_an_fi.html.  This page allows the
+user to specify the following: 
+ - filename
+ -  comments 
+ - Data Source - an_set, study, public_study
+
+5.3 If the data source is an_set, data is written to the file as described
+in the set definition.	A record describing the file is inserted into
+fileinfo.  use_as_input is set to true.  The conditions and condsLabels
+are set according to set definition.
+
+5.4 If the data source is a study, corresponding an_set and an_cond
+records are created.  Data is then extracted as above.
+
+5.5 If the data source is a public study, the appropriate files can be
+"uploaded" from the public data directory.  The default grouping can
+be created and the records can be inserted into the analysis tables for
+that user.  Then the data can be pulled out into a file.  This involves
+considerable data duplication.	Eventually we would like to modify this
+so data is stored only once and each user can create their own grouping.
+That is scheduled for later development.
+
+5.6 If the user chooses a filename that is already in use, a warning will
+be generate.  They may be given an option to overwrite the file (if it
+is not currently in use) or they will be asked to choose a new name.
+
+5.7 A warning should be generated if we are unable to determine that
+all chips have the same chip type.
+
+5.8 An error should occur if any of the the user tries to create a
+file with a grouping that contains 0 conditions or a condition with
+0 hybridizations.
+
+5.9 When a file is created based on an an_set, timestamps are not included in
+the condsLabels.  If this means this results in duplicate condition names,
+the file is still created, but a warning will be returned.
+
+5.10 Individual analyses should return an error prior to running if duplicate
+conditions names are a problem (Bug 343).
+
+5.11 When a file is created, a log file is also created (similar to the current
+extract) that contains unambiguous information regarding which condition was
+used.
+
+
+
+6    Modify insert_tree.pl to include link to "Create an analysis
+input file".
+
+6.1 Insert_tree will now allow the user to specify an input file (current
+functionality) or alternatively to create a new analysis input file.
+If they choose to create a new file, at the completion of creating the
+file, they will be returned to insert_tree and the new file they have
+just created will be set as the input for the tree are creating.
+
+
+Summary - How this Implementation Satisfies Requirements
+
+Data that was loaded into the database by the BRF User can go straight to
+"Create an Analysis Input File" and select the appropriate study.
+
+data (cDNA and mas5) uploaded by the user Users go to the upload link.
+They specify the necessary files and data type.  If they specify an
+associated criteria file, analysis conditions and sets of conditions can
+be created automatically when the files are uploaded.  Alternatively,
+they can manually specify the grouping using the grouping links.
+
+GEOSS public data The "Create an Analysis Input File" link will allow the
+user to choose their own data or one of the public data sets to create
+the input file from.  If they choose a public data set, they will get the
+default grouping of the public data.  If they wish to change the default
+grouping, they can create their own grouping, using the grouping links
+and then extract to a file.
+
+study down Study down grouping implies that the user thinks of defining
+their groupin in the following order: set of conditions, conditions,
+hybridizations.  This can be accomplished via the grouping links.
+Users can first create a set of conditions, click on add conditions,
+add each condition and then click on add hybridizations (which can be
+added by uploading data at this point if required) within each condition.
+
+hybridization up Hybridization up grouping implies that the user thinks
+of defining their grouping in the following order: hybridizations,
+conditions, set of conditions.	This can be accomplished via the grouping
+links.	First the user can create hybridizations (via the upload link).
+Then they can create conditions and add the existing hybridizations.
+Then they can create a set of conditions and add the existing analysis
+conditions.
+
+based on advanced criteria Advanced criteria means the user wants to
+group hybridizations in conditions or sets of conditions into conditions
+based on certain data associated hybridizations (or analysis conditions).
+That data may be criteria such as age or gender.  To do this, users must
+supply a criteria file that links the data with existing hybridizations.
+They can then select "Advanced Grouping" when adding components, which
+will allow them to add components based on the criteria file.
+
+detailed definition Detailed definition means that certain researchers
+require the ability to fine tune their grouping to the point of removing
+hybridizations from one analysis condition and adding them to a different
+one.  This functionality is provided via the grouping links.
+
+single click definition Single click definition means that researchers
+shouldn't have to define their grouping in a detailed fashion if the
+grouping is already defined in the database or in a file.  They should
+be able to basically say "use this grouping" and create the analysis
+file.  Traditionally, this requirement has conflicted with the detailed
+definition requirement.  With this implementation, researchers will be
+able to get database initiated grouping in one click, because the grouping
+can be transferred to the analysis tables at the study or exp_condition
+level with a single click.  Public data grouping will also be single
+click as we will now export the grouping along with the public data.
+For users who upload data from a file, they can specify the grouping
+in their criteria file if they choose, so they do not have to group via
+the grouping links.

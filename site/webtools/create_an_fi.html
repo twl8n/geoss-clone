@@ -1,0 +1,19 @@
+<form action="create_an_fi.cgi" method="post">
+
+ 
+<b>Instructions:</b><br>
+First, choose a source of analysis data (sets of conditions, studies or public data) and click on Choose Source.  Second, name your analysis file and provide comments.  Then select a specific sources and click on the Create Analysis Input File button.<br>  
+<br>
+
+*Filename: <input type=text name=file_name value="{file_name}" size="45" maxlength="30"><br>
+Comments: <input type=text name=fi_comments value="{fi_comments}" size="60" maxlength="80"><br><br>
+
+Choose source of data:<br>
+<input type=radio name=source value="study" {study_checked}>Study &nbsp; &nbsp;
+<input type=radio name=source value="an_set" {an_set_checked}>Analysis Set &nbsp; &nbsp;
+<input type=radio name=source value="public" {public_checked}>Public Data<br>
+<input type=submit name="submit" value="Choose Source"><br>
+<br>
+{source_html}
+{submit_html}
+

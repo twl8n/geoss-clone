@@ -1,0 +1,81 @@
+<form action="edit_an_cond.cgi" method="post">
+ <table>
+   <tr>
+     <td>
+       <table>
+         <tr>
+           <td>
+             Analysis Condition Name:  
+             <input type=text name=an_cond_name value="{an_cond_name}" 
+               size="55" maxlength="30"> 
+           </td>
+         </tr>
+         <tr>
+           <td>
+             Analysis Condition Description:  
+             <input type=text name=an_cond_desc value="{an_cond_desc}" 
+               size="50" maxlength="80">
+           </td>
+         </tr>
+         <tr>
+           <td>
+             Chip Type: {chiptype}
+           </td>
+         </tr>
+         <tr>
+           <td>
+             Creation Time: {an_cond_created}
+           </td>
+         </tr>
+       </table>
+     </td>
+     <td>
+       <table>
+         <tr>
+           <td>
+             <a href="choose_an_cond.cgi">Edit another condition</a> 
+           </td>
+         </tr>
+         <tr>
+           <td>
+             <a href="create_an_cond.cgi">Create another condition</a> 
+           </td>
+         </tr>
+         <tr>
+           <td>
+             <input type="submit" name="submit" value="Add Hybridizations">
+           </td>
+         </tr>     
+       </table>
+     </td>
+   </tr>
+ </table>
+ 
+<hr>
+
+<table border="1" cellspacing="0" cellpadding="4">
+<tr><td colspan=5>Current Hybridizations In Condition</td></tr>
+<tr valign="top">
+  <td>Delete</td>
+  <td>Name <input type=image src="../graphics/sort_ascending.jpg" name=order_by value=hybridization_name::asc> <input type=image src="../graphics/sort_descending.jpg" name=order_by value=hybridization_name::desc></td>
+  <td>Sample <input type=image src="../graphics/sort_ascending.jpg" name=order_by value=smp_name::asc> <input type=image src="../graphics/sort_descending.jpg" name=order_by value=smp_name::desc></td>
+  <td>Owner <input type=image src="../graphics/sort_ascending.jpg" name=order_by value=login::asc> <input type=image src="../graphics/sort_descending.jpg" name=order_by value=login::desc></td>
+  <td>Group <input type=image src="../graphics/sort_ascending.jpg" name=order_by value=gs_name::asc> <input type=image src="../graphics/sort_descending.jpg" name=order_by value=gs_name::desc></td>
+</tr>
+
+<loop>
+<tr>
+  <td><input type=checkbox name="am_pk" value="{am_pk}"></td>
+  <td>{hybridization_name}</td>
+  <td>{smp_name}</td>
+  <td>{login}</td>
+  <td>{gs_name}</td>
+</tr>
+</loop>
+
+</table>
+
+<input type="hidden" name="an_cond_pk" value="{an_cond_pk}">
+<input type="submit" name="submit" value="Update">&nbsp; 
+</form>
+

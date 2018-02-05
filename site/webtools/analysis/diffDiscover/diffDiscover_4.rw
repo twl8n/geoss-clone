@@ -1,0 +1,2782 @@
+
+######################################################################################
+#
+#
+# This file discovers differentially expressed genes for pairs of conditions,
+# using traditional/log fold changes, two-sample t-test, LPE, and SAM
+#
+# Last updated on 05/11/05, HyungJun Cho (hcho@virginia.edu)
+#      Modified for R 2.1.0 
+#
+# Functions defined:
+# (0) Functions used commonly:
+#     func.ndx.cols <- function(groups)
+#     func.ndx.pairs.withingroups <- function(groups)
+#     func.ndx.pairs.betweengroups <- function( groups )
+# (1) Traditional Fold Chnage: traditionalFoldChange <- function(notLogData, conditions, outFile, labels)
+# (2) Log Fold Change: logFoldChange <- function(logData, conditions, outFile, labels)
+# (3) Two sample t-test: func.ttest <- function(datamatrix, conditions, labels)
+# (4) LPE: func.lpe <- function(datamatrix, conditions, labels, probe.set.name)
+# (5) SAM: func.sam <- function(datamatrix, conditions, labels, probe.set.name) 
+#
+######################################################################################
+
+	
+######################################################################################
+# FUNCTION NAME:
+# 	func.ndx.cols
+# DESCRIPTION:
+# 	to find starting and ending columns
+# USAGE:
+# 	func.ndx.cols( groups )
+# ARGUMENTS:
+# 	groups: a numeric vector, with length equal to number of groups, and each element is number of members of that specific group.
+# VALUE:
+# 	a matrix of two columns, with # rows = length(groups)
+# 	each row shows starting an ending column number for a data frame that contains the information with the structure described in the 'groups'.
+# EXAMPLE:
+#	# the data frame has 3+2+4 columns.
+#	> func.ndx.cols( c(3,2,4) )
+#	     [,1] [,2]
+#	[1,]    1    3
+#	[2,]    4    5
+#	[3,]    6    9
+#
+# AUTHOR:
+# 	mir drdresearch@yahoo.com
+# 	last updated 30apr03
+#
+######################################################################################
+func.ndx.cols <- function(groups) {
+	# number of groups of chips (all similar replicates form one group)
+	groups.length <- length(groups)
+	# initializing an indexing matrix
+	indx <- matrix(data=NA, nrow=groups.length, ncol=2)
+	# initializing counters
+	begin <- 1
+	end <- 0
+	#
+	for (i in 1:groups.length) {
+		end <- end + groups[i]
+		indx[i,1] <- begin
+		indx[i,2] <- end
+		begin <- end + 1
+		}
+	return(index.beginend=indx)
+	} # end func.ndx.cols
+
+
+######################################################################################
+# FUNCTION NAME:
+# 	func.ndx.pairs.withingroups
+# DESCRIPTION:
+# 	column index for pairwise comparisons within each group.
+# USAGE:
+# 	func.ndx.pairs.withingroups( groups )
+# ARGUMENTS:
+# 	groups: a numeric vector, with length equal to number of groups, and each element is number of members of that specific group.
+# VALUE:
+# 	a matrix of two columns, with # rows = all possible pairwise combinations whithin each group (order does not matter).
+# EXAMPLE:
+#	> func.ndx.pairs.withingroups( c(3,2,4) )
+#	      [,1] [,2]
+#	 [1,]    1    2
+#	 [2,]    1    3
+#	 [3,]    2    3
+#	 [4,]    4    5
+#	 [5,]    6    7
+#	 [6,]    6    8
+#	 [7,]    6    9
+#	 [8,]    7    8
+#	 [9,]    7    9
+#	[10,]    8    9
+#
+# DEPENDENCIES:
+#	function func.ndx.cols() .
+# AUTHOR:
+# 	mir drdresearch@yahoo.com
+# 	last updated 30apr03
+#
+######################################################################################
+func.ndx.pairs.withingroups <- function(groups) {
+	# call function func.ndx.cols
+	index.beginend <- func.ndx.cols(groups)
+	# number of groups of chips (all similar replicates form one group)
+	groups.length <- length(groups)
+	# initialize matrix for all within-group pair-wise comparisons
+	indx2.rows <- 0
+	for (group in 1:groups.length) {
+		indx2.rows <- indx2.rows + choose(groups[group], 2)
+		}
+	indx2 <- matrix(NA,indx2.rows,2)
+	#
+	row.counter <- 1
+	for (group in 1:groups.length) {
+		for (column1 in index.beginend[group,1]:(index.beginend[group,2]-1) ) {
+			for (column2 in (column1+1):index.beginend[group,2] ) {
+				indx2[row.counter,1] <- column1
+				indx2[row.counter,2] <- column2
+				row.counter <- row.counter + 1
+				}
+			}
+		}
+	return(index.pairs.withingroups=indx2)
+	} # end func.ndx.pairs.withingroups
+
+
+######################################################################################
+# FUNCTION NAME:
+# 	func.ndx.pairs.betweengroups
+# DESCRIPTION:
+# 	column index for pairwise comparisons between groups.
+# USAGE:
+# 	func.ndx.pairs.withingroups( groups )
+# ARGUMENTS:
+# 	groups: a numeric vector, with length equal to number of groups, and each element is number of members of that specific group.
+# VALUE:
+# 	a matrix of four columns, with # rows = all possible pairwise combinations between groups (order does not matter).
+#	columns 1 and 2 show the starting and ending column indexes for the first group in a between-groups pariwise comparisons.
+#	and columns 3 and 4 show the same for the second group in the comparison.
+# EXAMPLE:
+#	> func.ndx.pairs.betweengroups( c(3,2,4) )
+#	     G1begin G1end G2begin G2end
+#	[1,]       1     3       4     5
+#	[2,]       1     3       6     9
+#	[3,]       4     5       6     9
+#
+# DEPENDENCIES:
+#	functions func.ndx.cols() and func.ndx.pairs.withingroups() .
+# AUTHOR:
+# 	mir drdresearch@yahoo.com
+# 	last updated 30apr03
+#
+######################################################################################
+func.ndx.pairs.betweengroups <- function( groups ) {
+	grps.lngth <- length(groups)
+	tmp1 <- func.ndx.cols( grps.lngth )
+	tmp2 <- func.ndx.pairs.withingroups( grps.lngth )
+
+	# initializing an indexing matrix
+	ndx <- matrix(data=NA, nrow= nrow(tmp2), ncol=4) #5)
+	tmp3 <- func.ndx.cols( groups )
+	for (i in 1:nrow(tmp2) ) {
+		ndx[i,] <- c( tmp3[ tmp2[i,1] ,] , tmp3[ tmp2[i,2] ,] )
+		}
+	colnames(ndx) <- c('G1begin', 'G1end', 'G2begin', 'G2end')
+	return(ndx)
+	} # end func.ndx.pairs.betweengroups
+
+
+######################################################################################
+# This function performs traditional fold change computation on
+# gene chip data.  The function is intended to handle data for
+# up to 20 chips.
+#
+# INPUT: dataframe on which no log transformation has not been done
+#	 outFile - output filename for text output
+#	 conditions - a vector describing experiment set
+#	       length is the number of conditions
+#	       vector[condition] is number of replicates for condition
+#
+# OUTPUT:
+# 	  outFile.out  - text analysis info
+#
+# FUNCTIONALITY:
+#
+#
+######################################################################################
+traditionalFoldChange <- function(notLogData, conditions, outFile, labels) {
+
+	numConditions <- length(conditions)
+	curCol <- 1
+	avgCols <- c()
+	colAvg <- c()
+	for (x in 1:numConditions)
+	{
+		hybrids <- conditions[x]
+		#mode must be numeric
+		# divide by num repliates
+
+#	sumCol <- as.array(apply(notLogData[,curCol:(hybrids + curCol -1)],1,sum)/hybrids)
+# Error in apply(notLogData[, curCol:(hybrids + curCol - 1)], 1, sum) :        dim(X) must have a positive length
+# occured when replicates within each group ==1
+sumCol <- as.array(apply( as.matrix( notLogData[,curCol:(hybrids + curCol -1)] ) ,1,sum) /hybrids)
+
+		curCol <- curCol + hybrids
+		colAvg <- rbind(colAvg, sumCol)
+	}
+
+	numAverages <- nrow(colAvg)
+	tradFC <- c()
+
+
+#MSS; for column labels
+tmp <- c()
+
+
+	i <- 1
+	for (y in 1:numAverages)
+	{
+		for (z in 1:numAverages)
+		{
+		   if (y < z)
+		   {
+
+#			tradFC <- cbind(tradFC, (colAvg[y,] / colAvg[z,]))
+			tradFC <- cbind(tradFC, logb( (colAvg[y,] / colAvg[z,]) , base=2)   )
+
+
+#MSS; for column labels
+tmp <- c(tmp, paste( 'TRADFOLD' , labels[y], labels[z], sep='-'))
+#dimnames(tradFC)[[2]][i] <- paste(labels[y], labels[z], sep='-')
+#Error: dimnames must be a list
+#colnames(tradFC[,i]) <- paste(labels[y], labels[z], sep='-')
+#Error in "colnames<-"(*tmp*, value = "min10-h4") :     dimnames applied to non-array
+
+
+			i <- i + 1
+		    }
+		}
+	}
+	
+	outCols <- ncol(tradFC)
+#  	write("Traditional Fold Change: ", outFile, append=TRUE)
+#  	write("Log 2 transformation of ratio of averages: ", outFile, append=TRUE)
+
+
+#MSS
+#Error: dimnames must be a list
+#        write(dimnames(tradFC)[[2]], outFile, ncolumns=outCols, append=TRUE)
+
+
+#  	write(t(tradFC), outFile, ncolumns=outCols, append=TRUE)
+#  	write("\n", outFile, append=TRUE)
+
+
+#MSS
+colnames(tradFC) <- tmp
+return(tradFC)
+
+		
+}
+
+
+######################################################################################
+#
+# This function performs log fold change computation on
+# gene chip data. 
+#
+######################################################################################
+logFoldChange <- function(logData, conditions, outFile, labels)
+{
+	numConditions <- length(conditions)
+	curCol <- 1
+	avgCols <- c()
+	colAvg <- c()
+	for (x in 1:numConditions)
+	{
+		hybrids <- conditions[x]
+		#mode must be numeric
+#		sumCol <- as.array(apply(logData[,curCol:(hybrids + curCol -1)],1,sum)/hybrids)
+# Error in apply(logData[, curCol:(hybrids + curCol - 1)], 1, sum) :        dim(X) must have a positive length
+sumCol <- as.array(apply( as.matrix( logData[,curCol:(hybrids + curCol -1)] ),1,sum)/hybrids)
+
+		curCol <- curCol + hybrids 
+		colAvg <- rbind(colAvg, sumCol)
+	}
+
+	numAverages <- nrow(colAvg)
+	logFC <- c()
+
+# MSS 29apr03
+# for column labels. (inserting into an initialized object is better than growing an object).
+tmp <- c()
+
+	i <- 1
+	for (y in 1:numAverages)
+	{
+		for (z in 1:numAverages)
+		{
+			if (y < z)
+			{
+				logFC <- cbind(logFC, (colAvg[y,] - colAvg[z,]))
+
+# MSS 29apr03
+#MSS; for column labels
+tmp <- c(tmp, paste( 'LOGFOLD' , labels[y], labels[z], sep='-'))
+
+
+# dimnames(logFC)[[2]][i] <- paste('LOGFOLD', labels[y], labels[z], sep='-')
+# when run on a condition={1,1,1}: Error: dimnames must be a list
+
+
+			i <- i + 1
+			}
+		}
+	}
+	
+	outCols <- ncol(logFC)
+#  	write("LogFoldChange: ", outFile, append=TRUE)
+#  	write("Average difference of log 2 transformation: ", outFile, append=TRUE)
+#        write(dimnames(logFC)[[2]], outFile, ncolumns=outCols, append=TRUE)
+#  	write(t(logFC), outFile, ncolumns=outCols, append=TRUE)
+#  	write("\n", outFile, append=TRUE)
+
+
+#MSS
+colnames(logFC) <- tmp
+return(logFC)
+
+
+}
+
+
+######################################################################################
+# FUNCTION NAME:
+# 	func.ttest
+# DESCRIPTION:
+# 	t test statistic and p value for all pairwise comparisons of groups.
+# USAGE:
+# 	func.ttest(datamatrix, conditions, labels)
+# ARGUMENTS:
+# 	datamatrix: columns are replicates for each of the conditions(groups). each row is an independent sample of groups to test.
+#	conditions: (=groups) a numeric vector, with length equal to number of groups, and each element is number of members of that specific group.
+#	lables: a character vector with length equal to number of conditions (not sum of replicates == ncol(datamatrix) ).
+# VALUE:
+# 	a matrix containing three columns for each possible pairwise comparison of conditions. column 1 = t statistic, column 2 = p value, col3=Bonferroni.
+# EXAMPLE:
+# 	func.ttest( data[,2:10] , c(2,4,3) , c('CONTROL' , 'DRUG1' , 'DRUG2') )
+# DEPENDENCIES:
+#	function func.ndx.pairs.betweengroups(), and hence func.ndx.cols() and func.ndx.pairs.withingroups() ,
+#	also function func.p.t.test(), and hence function t.test() from R library ctest.
+# AUTHOR:
+# 	mir drdresearch@yahoo.com
+# 	last updated 25Aug04, H. Cho
+#
+######################################################################################
+library(multtest)
+func.ttest <- function(datamatrix, conditions, labels) {
+	# get column indexes of all between-group pairwise comparisons.
+	ndx <- func.ndx.pairs.betweengroups( conditions )
+
+	# initiate result matrix.
+	results <- matrix(NA, nrow(datamatrix), ncol=nrow(ndx) * 4)
+
+	# initiate column names.
+	tmpnames <- c()
+
+	# call parallel t test
+	for (jj in 1:nrow(ndx) ) {
+	
+	    x1 <- datamatrix[ ndx[jj, 1]:ndx[jj, 2] ] 
+	    x2 <- datamatrix[ ndx[jj, 3]:ndx[jj, 4] ]
+	    n.x1 <- ncol(x1); n.x2 <- ncol(x2)
+	    class.label <- c(rep(1,n.x1), rep(0,n.x2))
+	    
+		tmp <- func.p.t.test(x1, x2) #t-statistic, raw p-value, Bonf p-value
+                tmp2 <- mt.maxT(cbind(x1,x2), class.label, test="t") #Westfall&Young adj p-value
+                i <- sort.list(tmp2$index); tmp2 <- tmp2[i,]
+		
+        
+		# get column index in the result matrix to save the t test result.
+		colndx <- (jj*4-3) : (jj*4)
+		results[, colndx] <- cbind(tmp, tmp2[,4])
+
+		# make column headings.
+		# get group indexes of all between-group pairwise comparisons.
+		ndxgrp <- func.ndx.pairs.withingroups( length(conditions) )
+		nms <- paste( labels[ ndxgrp[jj,1] ] , 'VS', labels[ ndxgrp[jj,2] ] )
+		tmpnames <- c(tmpnames , paste( 'T-statistic-', nms) )
+		tmpnames <- c(tmpnames , paste( 'T.p.value-', nms) )
+		tmpnames <- c(tmpnames , paste( 'Bonferroni.p-', nms) )
+		tmpnames <- c(tmpnames , paste( 'Permutation.p-', nms) )
+		}
+	colnames(results) <- tmpnames
+	return(results)
+	} # end func.ttest
+
+
+
+######################################################################################
+# FUNCTION NAME:
+# 	func.p.t.test
+# DESCRIPTION:
+# 	a parallel t-test function (for matrix data), using function t.test from package ctest.
+# USAGE:
+# 	func.p.t.test(xmat, ymat, mincol=2)
+# ARGUMENTS:
+# 	xmat and ymat: each row of xmat and ymat are separate but related groups of data to be tested against each other. xmat and ymat should have same number of rows, but can have different number of columns (>=mincol).
+#	mincol: if either of the two inputted matrixes have columns less than mincol, the function returns NAs (due to inability of calculate within-group variance).
+# VALUE:
+# 	a matrix of three columns, with # rows = nrows(xmat)=nrows(ymat) . column one is the t statistic, column 2 is the p-value, and column 3 is Bonferroni-adjusted pval.
+# DETAILS:
+#	it uses the t.test() function with var.equal defaulting to FALSE, hence a Welch t test.
+# EXAMPLE:
+# 	func.p.t.test( data[,1:4] , data[5:12] )
+# DEPENDENCIES:
+#	function t.test2(), and hence function t.test() from R library ctest.
+# AUTHOR:
+# 	mir drdresearch@yahoo.com
+# 	last updated 1may03
+#
+######################################################################################
+func.p.t.test <- function(xmat, ymat, mincol=2) {
+
+	# initiate result object
+	results <- matrix(NA, nrow=nrow(xmat), ncol=3)
+
+	# check for sufficient number of columns for each of the two groups.
+	if ( ncol(xmat)<mincol | ncol(ymat)<mincol) return(results)
+	# if data points of one group are exactly the same (=> 0 variance), t.test() returns c(-Inf, NaN) and goes on, hence no error trapping.
+
+	# prepare to call t.test2().
+	dt <- cbind(xmat, ymat)
+	groups <- c( 1, ncol(xmat),   ncol(xmat)+1, ncol(xmat)+ncol(ymat) )
+	tmp <-  t( apply(dt , 1 , t.test2 , groups=groups) )
+
+	# save results
+	results <- cbind(tmp , pmin(1, tmp[,2]*nrow(results) ))
+	colnames(results) <- c('tstat', 'tpval', 'Bonferroni')
+	return(results)
+	} # end func.p.t.test
+
+	
+######################################################################################
+# FUNCTION NAME:
+# 	t.test2
+# DESCRIPTION:
+# 	a modifed t.test() that is suitable for apply().
+# USAGE:
+# 	t.test2(datavector, groups)
+# ARGUMENTS:
+#	datavector: a numeric vector containing both the groups.
+#	groups: a numeric vector of length 4, containing the start and end element numbers of the two groups in the datavector.
+# VALUE:
+# 	a numeric vector of two elements, one is the t statistic, 2 is the p-value.
+# DETAILS:
+#	it uses the t.test() function with var.equal defaulting to FALSE, hence a Welch t test.
+# EXAMPLE:
+#	#dt is a matrix of 10 rows and 9 columns, columns 1:3 form the first group, column 4:9 form the second group.
+#	tmp <- t(apply(dt , 1 , t.test2 , groups=c(1,3,4,9) ))
+# DEPENDENCIES:
+#	function t.test2(), and hence function t.test() from R library ctest.
+# AUTHOR:
+# 	mir drdresearch@yahoo.com
+# 	last updated 1may03
+#
+######################################################################################
+t.test2 <- function(datavector , groups) {
+	xdat <- datavector[ groups[1]:groups[2] ]
+	ydat <- datavector[ groups[3]:groups[4] ]
+	tmp <- t.test(xdat, ydat)
+	tmp2 <- c(tmp$statistic, tmp$p.value)
+	return(tmp2)
+	} # end t.test2()
+
+
+
+
+######################################################################################
+# FUNCTION NAME:
+# 	func.lpe
+# 	func.lpe.FDR
+# DESCRIPTION:
+# 	LPE test for all pairwise comparisons of groups.
+# 	(func.lpe.FDR computes additonal FDR)
+# USAGE:
+#	func.lpe(datamatrix, conditions, labels, probe.set.name)
+# ARGUMENTS:
+# 	datamatrix: columns are replicates for each of the conditions(groups). each row is an independent sample of groups to test.
+#	conditions: (=groups) a numeric vector, with length equal to number of groups, and each element is number of members of that specific group.
+#	lables: a character vector with length equal to number of conditions (not sum of replicates == ncol(datamatrix) ).
+#	probe.set.name: the row labels.
+# VALUE:
+# 	a matrix containing three columns for each possible pairwise comparison of conditions. column 1 = raw p val, column 2 = BH p value, col3= BY p val.
+# EXAMPLE:
+# 	func.lpe( data[,2:10] , c(2,4,3) , c('CONTROL' , 'DRUG1' , 'DRUG2'), probe.set.name=probename )
+# DEPENDENCIES:
+#	function func.ndx.pairs.betweengroups(), and hence func.ndx.cols() and func.ndx.pairs.withingroups() ,
+#	also LPE package (v1.1.4)
+# AUTHOR:
+#   Cho, hcho@virginia.edu (last updated on Sep 27, 2004)
+#
+#####################################################################################
+
+
+library(LPE) #required library
+
+
+am.trans <- function (y) #H Cho, 2005-06-20
+{
+
+    n <- ncol(y)
+    if (n < 2) stop("There are no replicated arrays!")
+
+    if(n > 5) {
+       y <- y[,sample(1:n, size=5)]
+       n <- ncol(y)
+    }   
+    
+    
+    A <- c()
+    M <- c()
+    cc <- permute(1:n)
+    for (i in 1:(n - 1)) {
+        A <- c(A, c((y + y[, cc[i, ]])/2), recursive = TRUE)
+        M <- c(M, c(y - y[, cc[i, ]]), recursive = TRUE)
+    }
+    return(cbind(A, M))
+}
+
+
+
+#Revised orgianl LPE
+fdr.adjust <- function (lpe.result, iterations = 5) 
+{
+        x.location <- grep("^x", names(lpe.result))
+        y.location <- grep("^y", names(lpe.result))
+        x <- lpe.result[, x.location]
+        y <- lpe.result[, y.location]
+        z.null.resamp <- resamp.adj(x, y, q = 0.01, iterations = iterations)
+        z.null.iterations <- abs(z.null.resamp)
+        num.genes <- nrow(x)
+        #z.real <- sort(abs(lpe.result$z.stats), decreasing = TRUE)
+        z.real <- abs(lpe.result$z.stats)
+
+        num.all <- length(z.null.iterations)
+        min.fdr <- 1/num.all
+        pi0 <- length(which(z.real <= quantile(z.null.iterations, 
+            0.9)))/(length(z.real) * 0.9)
+        pi0 <- min(1, pi0)
+
+        FDR <- rep(NA, num.genes)
+        cat("Computing FDR...\n")
+        n.col.iterations <- ncol(z.null.iterations)
+        for (i in 1:num.genes) {
+            n.false.pos <- length(which(z.null.iterations >= z.real[i]))
+            avg.n.false.pos <- n.false.pos/n.col.iterations
+            n.total.pos <- length(which(z.real >= z.real[i]))
+            temp <- avg.n.false.pos/n.total.pos
+            FDR[i] <- max(min(pi0 * temp, 1), min.fdr)
+        }
+
+        for (j in num.genes:1) {
+            FDR[j] <- min(FDR[j:num.genes])
+        }
+       
+        data.out <- cbind(FDR, z.real)
+        return(data.out)
+}
+
+
+
+
+#######################################################
+func.lpe <- function(datamatrix, conditions, labels, probe.set.name) {
+
+	# get column indexes of all between-group pairwise comparisons.
+	ndx <- func.ndx.pairs.betweengroups( conditions )
+	# get group indexes of all between-group pairwise comparisons.
+	ndxgrp <- func.ndx.pairs.withingroups( length(conditions) )
+
+	# initiate result matrix.
+	results <- matrix(NA, nrow(datamatrix), ncol=nrow(ndx) * 2)
+	# initiate column names.
+	tmpnames <- NULL
+	
+	# call lpe
+	for (jj in 1:nrow(ndx) ) {
+	
+		# check if a condition has only one replicate
+		if ( ndx[jj, 1] == ndx[jj, 2] | ndx[jj, 3] == ndx[jj, 4] ) {
+
+			# make column headings.
+			# generic part.
+			nms <- paste( 'LPE',labels[ ndxgrp[jj,1] ] , 'VS', labels[ ndxgrp[jj,2] ] )
+			nms2 <- paste(rep(nms, 3))
+			#
+			tmpnames <- c(tmpnames , nms2)
+			# skip the rest of the current loop.
+			next
+		}
+
+		# extract relevant columns of data for the 2 groups of pairwise comparison.
+		xdata <- datamatrix[ ndx[jj, 1]:ndx[jj, 2] ] 
+		ydata <- datamatrix[ ndx[jj, 3]:ndx[jj, 4] ] 
+
+		# calculate baseline vars
+		var.xdata <- baseOlig.error(xdata, q=0.01)
+		var.ydata <- baseOlig.error(ydata, q=0.01)
+
+		# call lpe() to get z-stats, raw p-values, and FDR
+		lpe.rslts <- lpe(xdata, ydata, var.xdata, var.ydata, probe.set.name=probe.set.name)
+        raw.p <- 2*(1-pnorm(abs(lpe.rslts$z.stats)))
+ 		lpe.rslts.xcrpt <- c(lpe.rslts$z.stats, raw.p)
+
+ 
+		# get column index in the result matrix to save the lpe result.
+		colndx <- (jj*2-1) : (jj*2)
+		results[, colndx] <- lpe.rslts.xcrpt
+
+		# make column headings; generic part.
+  	    nms <- paste( labels[ ndxgrp[jj,1] ] , 'VS', labels[ ndxgrp[jj,2] ] )
+		tmpnames <- c(tmpnames , paste( 'LPE.z.statistic-', nms) )
+		tmpnames <- c(tmpnames , paste( 'LPE.p.value-', nms) )
+    }
+
+	colnames(results) <- tmpnames
+	return(results)
+} # end func.lpe
+
+
+
+func.lpe.FDR <- function(datamatrix, conditions, labels, probe.set.name) {
+
+	# get column indexes of all between-group pairwise comparisons.
+	ndx <- func.ndx.pairs.betweengroups( conditions )
+	# get group indexes of all between-group pairwise comparisons.
+	ndxgrp <- func.ndx.pairs.withingroups( length(conditions) )
+
+	# initiate result matrix.
+	results <- matrix(NA, nrow(datamatrix), ncol=nrow(ndx) * 3)
+	# initiate column names.
+	tmpnames <- NULL
+	
+	# call lpe
+	for (jj in 1:nrow(ndx) ) {
+	
+		# check if a condition has only one replicate
+		if ( ndx[jj, 1] == ndx[jj, 2] | ndx[jj, 3] == ndx[jj, 4] ) {
+
+			# make column headings.
+			# generic part.
+			nms <- paste( 'LPE',labels[ ndxgrp[jj,1] ] , 'VS', labels[ ndxgrp[jj,2] ] )
+			nms2 <- paste(rep(nms, 3))
+			#
+			tmpnames <- c(tmpnames , nms2)
+			# skip the rest of the current loop.
+			next
+			}
+
+		# extract relevant columns of data for the 2 groups of pairwise comparison.
+		xdata <- datamatrix[ ndx[jj, 1]:ndx[jj, 2] ] 
+		ydata <- datamatrix[ ndx[jj, 3]:ndx[jj, 4] ] 
+
+		# calculate baseline vars
+		var.xdata <- baseOlig.error(xdata, q=0.01)
+		var.ydata <- baseOlig.error(ydata, q=0.01)
+
+		# call lpe() to get z-stats, raw p-values, and FDR
+		lpe.rslts <- lpe(xdata, ydata, var.xdata, var.ydata, probe.set.name=probe.set.name)
+        raw.p <- 2*(1-pnorm(abs(lpe.rslts$z.stats)))
+        #fdr.rslts <- fdr.adjust(lpe.rslts, adjp="resamp", iterations=1, ALL=TRUE) #change parameter
+        fdr.rslts <- fdr.adjust(lpe.rslts, iterations=1) #change parameter
+
+        # sorting by original order  
+ 		lpe.rslts.xcrpt <- c(lpe.rslts$z.stats, raw.p, fdr.rslts[,1])
+
+ 
+		# get column index in the result matrix to save the lpe result.
+		colndx <- (jj*3-2) : (jj*3)
+		results[, colndx] <- lpe.rslts.xcrpt
+
+		# make column headings; generic part.
+	    nms <- paste( labels[ ndxgrp[jj,1] ] , 'VS', labels[ ndxgrp[jj,2] ] )
+		tmpnames <- c(tmpnames , paste( 'LPE.z.statistic-', nms) )
+		tmpnames <- c(tmpnames , paste( 'LPE.p.value-', nms) )
+		tmpnames <- c(tmpnames , paste( 'LPE.FDR-', nms) )
+
+    }
+
+	colnames(results) <- tmpnames
+	return(results)
+} # end func.lpe.FDR
+
+
+
+######################################################################################
+#
+#
+#  The following functions are used for SAM analysis
+#
+#
+######################################################################################
+func.sam <- function(datamatrix, conditions, labels, probe.set.name) {
+
+	# get column indexes of all between-group pairwise comparisons.
+	ndx <- func.ndx.pairs.betweengroups( conditions )
+	# get group indexes of all between-group pairwise comparisons.
+	ndxgrp <- func.ndx.pairs.withingroups( length(conditions) )
+
+	# initiate result matrix.
+	results <- matrix(NA, nrow(datamatrix), ncol=nrow(ndx))
+
+	# initiate column names.
+	tmpnames <- NULL
+	
+	# call sam
+	for (jj in 1:nrow(ndx) ) {
+	
+		# check if a condition has only one replicate
+		if ( ndx[jj, 1] == ndx[jj, 2] | ndx[jj, 3] == ndx[jj, 4] ) {
+
+			# make column headings.
+			# generic part.
+			nms <- paste( 'SAM',labels[ ndxgrp[jj,1] ] , 'VS', labels[ ndxgrp[jj,2] ] )
+			nms2 <- paste(rep(nms, 3))
+			#
+			tmpnames <- c(tmpnames , nms2)
+			# skip the rest of the current loop.
+			next
+			}
+
+	    # extract relevant columns of data for the 2 groups of pairwise comparison.
+            xdata <- datamatrix[ ndx[jj, 1]:ndx[jj, 2] ] 
+            ydata <- datamatrix[ ndx[jj, 3]:ndx[jj, 4] ] 
+ 	    xydata   <- data.frame(xdata,ydata)
+ 	    cl <- c(rep(0, ncol(xdata)), rep(1, ncol(ydata))) #class 0 or 1
+  
+            sam.output <- sam(xydata,cl, med.fdr=FALSE,rand=123)    
+ 	    sam.rslts.xcrpt <- as.matrix(sam.output$d)
+
+            # get column index in the result matrix to save the SAM result.
+            colndx <- jj 	     
+	    results[, colndx] <- sam.rslts.xcrpt
+		
+	    # make column headings; generic part.
+            nms <- paste( labels[ ndxgrp[jj,1] ] , 'VS', labels[ ndxgrp[jj,2] ] )
+            tmpnames <- c(tmpnames , paste( 'SAM.d.statistic-', nms) )
+    }
+
+	colnames(results) <- tmpnames
+	return(results)
+} # end func.sam
+######################################################################################
+#
+#
+#  The following functions are used for SAM analysis with q-value
+#
+#
+######################################################################################
+func.sam.qvalue <- function(datamatrix, conditions, labels, probe.set.name) {
+
+	# get column indexes of all between-group pairwise comparisons.
+	ndx <- func.ndx.pairs.betweengroups( conditions )
+	# get group indexes of all between-group pairwise comparisons.
+	ndxgrp <- func.ndx.pairs.withingroups( length(conditions) )
+
+	# initiate result matrix.
+	results <- matrix(NA, nrow(datamatrix), ncol=nrow(ndx) * 2)
+
+	# initiate column names.
+	tmpnames <- NULL
+	
+	# call sam
+	for (jj in 1:nrow(ndx) ) {
+	
+		# check if a condition has only one replicate
+		if ( ndx[jj, 1] == ndx[jj, 2] | ndx[jj, 3] == ndx[jj, 4] ) {
+
+			# make column headings.
+			# generic part.
+			nms <- paste( 'SAM',labels[ ndxgrp[jj,1] ] , 'VS', labels[ ndxgrp[jj,2] ] )
+			nms2 <- paste(rep(nms, 3))
+			#
+			tmpnames <- c(tmpnames , nms2)
+			# skip the rest of the current loop.
+			next
+			}
+
+	    # extract relevant columns of data for the 2 groups of pairwise comparison.
+            xdata <- datamatrix[ ndx[jj, 1]:ndx[jj, 2] ] 
+            ydata <- datamatrix[ ndx[jj, 3]:ndx[jj, 4] ] 
+ 	    xydata   <- data.frame(xdata,ydata)
+ 	    cl <- c(rep(0, ncol(xdata)), rep(1, ncol(ydata))) #class 0 or 1
+  
+            #get d and q-value
+            sam.output <- sam(xydata,cl, med.fdr=FALSE,rand=123)    
+            sam.q <- sam.plot(sam.output, dat=xydata, delta=-1, q.value=TRUE, R.fold=FALSE, R.unlog=FALSE,
+                              na.rm=FALSE, file.out=NA, gene.names=NULL)
+            i <- sort.list(sam.q$sam.output$ID)
+            sam.out <- sam.q$sam.output[i,]
+            i <- which(duplicated(sam.out$ID)==FALSE)
+            sam.out <- sam.out[i,] #remove duplicated IDs
+ 	    sam.rslts.xcrpt <- as.matrix(sam.out[,c(2,4)])
+
+            # get column index in the result matrix to save the SAM result.
+            colndx <- (jj*2-1) : (jj*2) 	     
+	    results[, colndx] <- sam.rslts.xcrpt
+		
+	    # make column headings; generic part.
+            nms <- paste( labels[ ndxgrp[jj,1] ] , 'VS', labels[ ndxgrp[jj,2] ] )
+            tmpnames <- c(tmpnames , paste( 'SAM.d.statistic-', nms) )
+	    tmpnames <- c(tmpnames , paste( 'SAM.q.value-', nms) )
+    }
+
+	colnames(results) <- tmpnames
+	return(results)
+} # end func.sam
+######################################################################################
+#
+#
+#  The following functions are used for SAM analysis with FDR
+#
+#
+######################################################################################
+func.sam.FDR <- function(datamatrix, conditions, labels, probe.set.name) {
+
+	# get column indexes of all between-group pairwise comparisons.
+	ndx <- func.ndx.pairs.betweengroups( conditions )
+	# get group indexes of all between-group pairwise comparisons.
+	ndxgrp <- func.ndx.pairs.withingroups( length(conditions) )
+
+	# initiate result matrix.
+	results <- matrix(NA, nrow(datamatrix), ncol=nrow(ndx) * 3)
+
+	# initiate column names.
+	tmpnames <- NULL
+	
+	# call sam
+	for (jj in 1:nrow(ndx) ) {
+	
+		# check if a condition has only one replicate
+		if ( ndx[jj, 1] == ndx[jj, 2] | ndx[jj, 3] == ndx[jj, 4] ) {
+
+			# make column headings.
+			# generic part.
+			nms <- paste( 'SAM',labels[ ndxgrp[jj,1] ] , 'VS', labels[ ndxgrp[jj,2] ] )
+			nms2 <- paste(rep(nms, 3))
+			#
+			tmpnames <- c(tmpnames , nms2)
+			# skip the rest of the current loop.
+			next
+			}
+
+		# extract relevant columns of data for the 2 groups of pairwise comparison.
+		xdata <- datamatrix[ ndx[jj, 1]:ndx[jj, 2] ] 
+		ydata <- datamatrix[ ndx[jj, 3]:ndx[jj, 4] ] 
+ 	    xydata   <- data.frame(xdata,ydata)
+ 	    cl    <- c(rep(0, ncol(xdata)), rep(1, ncol(ydata))) #class 0 or 1
+  
+ 	    #get FDR    
+        sam.output <- sam(xydata,cl, med.fdr=FALSE,rand=123)    
+        d <- round(50*(max(abs(sam.output$d))))
+        sam.output <- sam(xydata,cl,delta=(1:d)/50, med.fdr=FALSE,rand=123)
+  	   
+        fdr.up <- cbind(sam.output$FDR[,7], sam.output$FDR[,5])
+        fdr.dn <- cbind(sam.output$FDR[,6], sam.output$FDR[,5])
+        fdr <- rbind(fdr.up, fdr.dn); colnames(fdr) <- c("d","FDR")
+        i <- sort.list(fdr[,1]); fdr <- fdr[i,]
+        i <- which(fdr[,1] > max(sam.output$d)); fdr <- fdr[-i,]
+        i <- which(fdr[,1] < min(sam.output$d)); fdr <- fdr[-i,]
+
+        #get d and q-value
+        sam.q <- sam.plot(sam.output, dat=xydata, delta=-1, q.value=TRUE, R.fold=FALSE, R.unlog=FALSE,
+                          na.rm=FALSE, file.out=NA, gene.names=NULL)
+        i <- sort.list(sam.q$sam.output$ID); sam.out <- sam.q$sam.output[i,]
+        i <- which(duplicated(sam.out$ID)==FALSE); sam.out <- sam.out[i,] #remove duplicated IDs
+        
+ 	    #match d, q,and FDR
+        d.fdr <- rep(min(fdr[,2]), nrow(sam.out))
+        min.d <- min(fdr[,1])
+        for(i in 1:nrow(sam.out)){
+            if(sam.out[i,2] >= min.d) { 
+               j <- max(which(fdr[,1] <= sam.out[i,2])) 
+               d.fdr[i] <- fdr[j,2]
+            } 
+        }
+        sam.out <- cbind(sam.out,d.fdr)
+ 	    sam.rslts.xcrpt <- as.matrix(sam.out[,c(2,4,5)])
+
+		# get column index in the result matrix to save the SAM result.
+		colndx <- (jj*3-2) : (jj*3) 	     
+		results[, colndx] <- sam.rslts.xcrpt
+		
+		# make column headings; generic part.
+	    nms <- paste( labels[ ndxgrp[jj,1] ] , 'VS', labels[ ndxgrp[jj,2] ] )
+		tmpnames <- c(tmpnames , paste( 'SAM.d.statistic-', nms) )
+		tmpnames <- c(tmpnames , paste( 'SAM.q.value-', nms) )
+		tmpnames <- c(tmpnames , paste( 'SAM.FDR-', nms) )
+
+    }
+
+	colnames(results) <- tmpnames
+	return(results)
+} # end func.sam.FDR
+#################################################################################
+
+
+
+
+# Copyright (c) 2002 Holger Schwender
+
+# This function computes the fold change. Here the R-fold criterion is only used as an additional criterion.
+# The fold change is reported but a gene will not be called not-significant if this gene does not fullfil
+# the criterion that |mean(x_i1)/mean(x_i2)|>=t or <=t for some t, where x_i1 and x_i2, respectively, are
+# the average expression levels of gene i under two different conditions.
+
+# The fold change for a gene i will be set to NA, if either mean(x_i1) or mean(x_i2) is less or equal to 0
+# because such fold changes cannot be unambiguously computed.
+
+# data: the used data set; this data set must be the same data set as in sam(), but it could be, e.g.,
+#        the unnormalized version of the data set used in sam() if this data set was normalized
+# x: the vector of columns which belong to the cases (unpaired) or "after treatment"-measurements (paired)
+# y: the vector which contains the columns that belong to the controls (unpaired) or to the "before
+#    treatment"-measurements (paired)
+# na.rm: if na.rm=FALSE, the d-values of genes with one or more missing values will be set to NA. If na.rm=TRUE, the
+#        missing values will be removed during the computation of the d-values.
+
+
+R.fold.cal<-function(data,x,y,na.rm=FALSE){
+    X<-as.matrix(data[,c(x,y)])  # for easier calculation
+    mode(X)<-"numeric"
+    mean.x <- rowMeans(X[,1:length(x)],na.rm=na.rm)   # compute the genewise mean of the first group
+    mean.y <- rowMeans(X[,(length(x)+1):ncol(X)], na.rm=na.rm)  # compute the genewise mean of the second group
+    vec.R.fold<-mean.x/mean.y  # compute the fold changes
+    vec.R.fold[which(mean.x<=0 | mean.y<=0)]<-NA   # set the fold changes to 0 which have at least
+                                                            # one non-positive group mean
+    mat.R.fold<-cbind(mean.x=mean.x,mean.y=mean.y,R.fold=vec.R.fold)  # for output
+    mat.R.fold
+}
+# Copyright (C) 2003 Holger Schwender
+
+ebam<-function(a0.out,a0=NA,p0=NA,delta=NA,local.bin=.1,gene.names=NULL,q.values=TRUE,
+		R.fold=TRUE,R.unlog=TRUE,na.rm=FALSE,file.out=NA){
+	data<-eval(a0.out$X.name)
+	if(R.unlog) 
+		data<-2^data
+	if(!is.null(gene.names))
+		data<-cbind(data,gene.names)
+	cgn<-ifelse(is.null(gene.names),NA,ncol(data))
+	tmp<-ebam.old(a0.out,data,a0=a0,p0=p0,delta=delta,local.bin=.1,col.gene.name=cgn,
+		q.values=q.values,R.fold=R.fold,R.dataset=data,na.rm=na.rm,file.out=file.out)
+	invisible(structure(list(mat.repeat=tmp$mat.repeat,optim.out=tmp$optim.out,
+		mat.post.Z=tmp$mat.post.Z,ebam.out=tmp$ebam.out,FDR=tmp$FDR,a0=tmp$a0,
+		mat.Z.unsorted=tmp$mat.Z.unsorted,row.sig.genes=tmp$row.sig.genes,p0=tmp$p0)))
+}# Copyright (C) 2002 Holger schwender
+
+# After finding the optimal a0, this function can be used to do the Empirical Bayes Analysis of Microarray
+# Experiments as proposed in Efron et al.(2001). This analyis is done for the original, untransformed data.
+
+# a0.out: The output of find.a0
+# data: the used data set; every column of this data set must correspond to one gene
+# a0: if NA, the in find.a0() suggested a0 is used. Another a0 can be specified.
+# p0: prior; probability that a gene is unaffected. If NA, a simple estimate of p0 will be used 
+#     (min(f(Z)/f0(Z))). A better estimate for p0 can be found by using the method proposed in 
+#     Efron et al.(2001) in Remark F.
+# delta: if NA, the same delta will be used as in the previous analysis with find.a0(). A observation Z
+#        will be called significant, if p1(Z) > delta.
+# stable: if TRUE, p0 is computed by the algorithm of Storey and Tibshirani (2003a). If FALSE, the simple estimator
+#         of Efron et al. (2001b) is used.
+# number.int: the number of equally spaced intervals which is used in the logistic regression for the
+#             calculation of the ratio f0/f. The intervals are equally spaced between min(Z) and max(Z).
+# local.bin: to estimate the local FDR for Z, the proportion of the Z which fall in [Z-local.bin, Z+local.bin]
+#            and the proportion of z which fall in the same interval are calculated.
+# col.accession: if col.accession is a positive integer, this column of data is interpreted as the accession
+#                number of the gene and it is added to the output. To avoid this, set col.accession=NA
+# col.gene.name: if col.gene.name is a positive integer, this column of data is interpreted as the name of
+#                the gene and is added to the output. To avoid this, set col.gene.name=NA
+# q.values: if TRUE, for each gene its q-value is computed                                                
+# R.fold: if TRUE, the fold change of each significant gene is calculated and added to the output
+# R.dataset: the data set that is used in the computation of the R.fold. By default the data set used in the
+#            other computations
+# na.rm: if na.rm=FALSE, the R.fold of genes with one or more missing values will be set on NA. 
+# file.out: results are stored in this file. If NA, no results will be stored in a file. 
+
+
+ebam.old<-function(a0.out,data,a0=NA,p0=NA,delta=NA,stable=TRUE,number.int=139,local.bin=.1,col.accession=NA,
+		col.gene.name=NA,q.values=TRUE,R.fold=TRUE,R.dataset=data,na.rm=FALSE,file.out=NA){
+	r<-a0.out$r          # for faster calculation some of the results from previous analysis will be used
+	s<-a0.out$s
+	r.perm<-a0.out$r.perm
+	s.perm<-a0.out$s.perm
+	paired<-a0.out$paired
+	if(is.na(delta))     
+		delta<-a0.out$delta
+	if(is.na(a0))
+		a0<-a0.out$a0
+	if(a0<0)             # checks if a0 is non-negative  
+		stop("a0 must be larger or equal to 0.")
+	if(delta>=1 || delta<=0)  # checks if delta is a probability
+		stop("delta must be between 0 and 1.")
+	B<-length(r.perm)/length(r)     # calculation of the number of permutations
+	Z.unsorted<-r/(s+a0)         # calculation of the observed Z-values
+	Z<-sort(Z.unsorted)
+	z.unsorted<-as.vector(r.perm/(s.perm+a0))
+	z<-sort(z.unsorted)  # calculation of the permuted z-values
+	z[which(z<min(Z))]<-min(Z)    # to avoid that the logistic regression estimates will be screwed up,
+	z[which(z>max(Z))]<-max(Z)    # some adjustments are made
+	ratio.out<-ratio.est(Z,z,p0=p0,stable=stable,number.int=number.int)  # calculation of the posterior of the Z-values
+	mat.post<-ratio.out$mat.post
+	mat.repeat<-ratio.out$mat.repeat
+	p0<-ratio.out$p0
+	optim.out<-ratio.out$optim.out
+	sig.center<-which(mat.post[,"posterior"]>=delta)    # index of the "significant" centerpoints 
+	nsig<-sum(mat.post[sig.center,"success"])          # calculation of the number of significant genes and...
+	false<-sum(mat.repeat[sig.center,"n"]-mat.repeat[sig.center,"success"])/B # ... of the number of falsely
+	                                                                          # called genes
+	fdr<-p0*false/max(nsig,1)   # calculation of the FDR
+	posterior<-rep(mat.post[,"posterior"],mat.post[,"success"])  # calculation of the posterior for each
+	mat.post.Z<-cbind(Z,posterior)                               # significant gene
+	sig.genes<-which(mat.post.Z[,"posterior"]>=delta)     # index of the significant (sorted) genes
+	index <- (1:length(Z))
+    	row.sig.genes <- index[order(Z.unsorted)][sig.genes]
+	FDR<-c(p0=p0,nsig=nsig,false=false,fdr=fdr)   # for output
+	local2<-NULL            # estimation of the local FDR by binning the observations into small intervals
+	for(i in 1:length(sig.genes)){
+		local2[i]<-p0*sum(z>=Z[sig.genes[i]]-local.bin & z<=Z[sig.genes[i]]+local.bin)/
+			(B*sum(Z>=Z[sig.genes[i]]-local.bin & Z<=Z[sig.genes[i]]+local.bin))
+	}
+	# output is made
+	mat.ebam<-cbind("Z"=round(mat.post.Z[sig.genes,1],4),"p1(Z)"=round(mat.post.Z[sig.genes,2],4),
+		"local1"=round(1-mat.post.Z[sig.genes,2],4),"local2"=round(local2,4))
+	if(!is.na(col.accession))
+		mat.ebam<-cbind("access"=data[row.sig.genes,col.accession],mat.ebam)
+	if(q.values){
+		mat.qvalue<-q.value.cal(Z.unsorted,z.unsorted,p0)$mat.qvalue
+		q.value<-mat.qvalue[order(mat.qvalue[,1]),3]
+		mat.ebam<-cbind(mat.ebam,"q-value"=round(q.value[sig.genes],5))
+	}
+	if(R.fold){
+		fold.change<-R.fold.cal(R.dataset[row.sig.genes,],a0.out$x,a0.out$y,na.rm=na.rm)
+		mat.ebam<-cbind(mat.ebam,"R-fold"=round(fold.change[,3],4))
+	}
+	if(!is.na(col.gene.name))
+		mat.ebam<-cbind(mat.ebam,"gene"=substring(data[row.sig.genes,col.gene.name],1,50))
+	mat.ebam<-cbind("ID"=row.sig.genes,mat.ebam)
+	ebam.out<-as.data.frame(mat.ebam)    
+	cat("Using a0 =",round(a0,4),"and the original Z values, there are",nsig,"significant genes and",false,
+		"falsely called genes.","\n","For p0 =",round(p0,4),", the FDR is",round(fdr,4),".","\n","\n")
+	if(!is.na(file.out)){   # output is stored in a file
+		cat("Results of the Empirical Bayes Analysis of Microarray Experiments","\n","\n","\n",
+			"Significance criterion: p1(Z) >=",delta,"\n","\n","a0:",round(a0,4),"\n","p0:",round(p0,4),"\n",
+			"significant genes:",nsig,"\n","falsely called genes:",round(false,4),"\n","FDR:",round(fdr,4),
+			"\n","\n","\n","Genes called significant:","\n","\n",file=file.out)
+		write.table(t(dimnames(ebam.out)[[2]]),file=file.out,sep="\t",append=TRUE,row.names=FALSE,col.names=FALSE,quote=FALSE)
+		write.table(ebam.out,file=file.out,sep="\t",append=TRUE,row.names=FALSE,col.names=FALSE,quote=FALSE)
+		cat("\n","\n","local1: estimation of local FDR using the logistic regression estimates",
+			"\n","local2: local FDR is estimated by binning the observations into small intervals",
+			file=file.out,append=TRUE)
+		cat("Output is stored in",file.out,"\n")
+	}
+	else
+		#print(ebam.out)
+	
+    # H.Cho 11aug04	
+	#plot(mat.post.Z[,"Z"],mat.post.Z[,"posterior"],main="Posterior probability for Z values",
+	#	xlab="Z values",ylab="p1(Z)")     # the posterior of the genes is plotted
+	#abline(h=delta,lty=2)
+	
+	# mark the significant genes with green color
+	points(mat.post.Z[which(mat.post.Z[,2]>=delta),1],mat.post.Z[which(mat.post.Z[,2]>=delta),2],col=3)
+	mat.Z.unsorted<-cbind(Z.unsorted,mat.post.Z[rank(Z.unsorted),2])
+	invisible(structure(list(mat.repeat=mat.repeat,optim.out=optim.out,mat.post.Z=mat.post.Z,
+		ebam.out=ebam.out,FDR=FDR,a0=a0,mat.Z.unsorted=mat.Z.unsorted,Z.unsorted=Z.unsorted,
+		row.sig.genes=row.sig.genes,p0=p0)))
+}# Copyright (C) 2003 Holger Schwender
+
+ebam.wilc<-function(data,cl,delta=.9,p0=NA,ties.rand=TRUE,zero.rand=TRUE,gene.names=NULL,
+		R.fold=TRUE,R.unlog=TRUE,file.out=NA,na.rm=FALSE,rand=NA){
+	xy.out<-xy.cal(cl,TRUE,TRUE)
+	x<-xy.out$x
+	y<-xy.out$y
+	paired<-xy.out$paired
+	data2<-if(R.unlog) 2^data else data
+	if(!is.null(gene.names))
+		data<-cbind(data,gene.names)
+	cgn<-ifelse(is.null(gene.names),NA,ncol(data))
+	tmp<-ebam.wilc.old(data,x,y,paired=paired,delta=delta,p0=p0,ties.rand=ties.rand,zero.rand=zero.rand,
+		col.gene.name=cgn,R.fold=R.fold,R.dataset=data2,file.out=file.out,rand=rand,
+		na.rm=na.rm)
+	invisible(structure(list(nsig=tmp$nsig,false=tmp$false,fdr=tmp$fdr,ebam.out=tmp$ebam.out,
+		mat.out=tmp$mat.out,p0=tmp$p0,glm.out=tmp$glm.out,f.x=tmp$f.x,f.null=tmp$f.null,
+		y.wilc=tmp$y.wilk,ebam.output=tmp$ebam.output,row.sig.genes=tmp$row.sig.genes)))
+}
+# Copyright (C) 2002 Holger Schwender
+
+# This program does an Empirical Bayes Analysis of Microarray Experiments using Wilcoxon Scores as described
+# in Efron et al.(2001a), "Microarrays, Empirical Bayes Methods, and False Discovery Rate"
+
+# data: the used data set; condition: every row of the data set must represent a gene
+# x: the columns which belong to the cases (unpaired) or to the "after treatment"-measurement (unpaired)
+# y: the columns which belong to the controls (unpaired) or to the "before treatment"-measurements (paired)
+#    In the paired case x and y must have the same length; (x[i], y[i]) belong to each other
+# delta: a gene Z will be called significant if the posterior probability p1(Z) >= delta. Default is 0.9, the
+#        value Efron et al. used in their analysis
+# p0: prior; probability that a gene is unaffected. If NA, a simple or a more stable estimation of p0 will be
+#     calculated (see stable.p0)
+# stable.p0: If TRUE, the algorithm of Storey and Tishirani (2003a) is used. If FALSE, the estimate of pi0 is computed
+#            that ensures that the posterior probability of being differenntially expressed is always positive.
+# use.offset: if TRUE, a Poisson regression with offset will be done. If FALSE, a Poisson regression without offset
+#             is performed.
+# use.weights: if TRUE, weights will be used in the computation of p0 (for details see documentation of the
+#              estimation of p0)
+# ties.rand: A problem of ranking is that there could be ties. If there are ties, the Wilcon test statistic W
+#            could be a non-integer. If ties.rand=T, then such a statistic will be randomly assigned to either
+#            floor(W) or ceiling(W). If F, the statistic is treated in a conservative way, i.e. it will be
+#            assigned to ceiling(W) if W < mean of the Null and to floor(W) if W > mean of the Null.
+#            To use non-integer Ws in further analysis would totally screw up the density estimation of the
+#            observed Wilcoxon test statistics.
+# zero.rand: Using paired data it could happen that x[i]=y[i]. If zero.rand=T, the sign of such a pair will be
+#            randomly assigned for the Wilcoxon Sign-Rank Test. If F, the method of Lehmann (1975) is used.
+# ns.df: the number of df for the natural splines. If ns.df is n, n-1 knots will be used in the calculation
+#        of the natural splines. Default is 5, which is used by Efron et al.(2001a).
+# col.accession: if col.accession is a positive integer, this column of data is interpreted as the accession
+#                number of the gene and it is added to the output. To avoid this, set col.accession=NA
+# col.gene.name: if col.gene.name is a positive integer, this column of data is interpreted as the name of
+#                the gene and is added to the output. To avoid this, set col.gene.name=NA
+# R.fold: if TRUE, the fold change of each significant gene is calculated and added to the output
+# R.dataset: the data set that is used in the computation of the R.fold. By default the data set used in the
+#            other computations
+# file.out: some results are stored in this file. If NA, no such storage will happen
+# rand: the set.seed. If NA, no set.seed will be used
+# na.rm: if na.rm=FALSE, the R-fold of genes with one or more missing values will be set to NA. If na.rm=T, the
+#        missing values will be removed during the computation of the R-fold.
+
+
+ebam.wilc.old<-function(data,x,y,paired=FALSE,delta=.9,p0=NA,stable.p0=TRUE,use.offset=TRUE,use.weights=TRUE,ties.rand=TRUE,
+		zero.rand=TRUE,ns.df=5,col.accession=NA,col.gene.name=NA,R.fold=TRUE,R.dataset=data,file.out=NA,rand=NA,na.rm=FALSE){
+	library(splines)  # necessary for ns()
+	if(!is.na(rand))
+		set.seed(rand)
+	Y<-as.matrix(data[,c(x,y)])   # for easier calculations a matrix of the data is made
+	mode(Y)<-"numeric"
+	n.genes<-nrow(Y)          # number of genes
+	if(!paired){    # unpaired case
+		n.x<-length(x)
+		n.y<-length(y)
+		W.mean<-n.x*(n.x+n.y+1)/2    # some statistics of the null density are calculated
+		W.min<-n.x*(n.x+1)/2
+		W.max<-n.x*(2*n.y+n.x+1)/2
+		Y.rank<-t(apply(Y,1,rank))         # rank the observations for each gene
+		y.wilk <- rowSums(Y.rank[,1:n.x])  # calculation of the Wilcoxon test statistic
+		f.null<-dwilcox(0:(n.x*n.y),n.x,n.y) # calculation of the null density
+	}
+	if(paired){  # paired case
+		n<-length(x)
+		Y<-Y[,1:n]-Y[,(n+1):(2*n)]    # calculation of x[i]-y[i]
+		W.max<-n*(n+1)/2        # some statistics of the null density; W.min is always 0
+		W.mean<-n*(n+1)/4
+		if(sum(Y==0)>0 & zero.rand){    # if zero.rand=TRUE, any zero (i.e. any x[i]-y[i]) will be set to
+			cat("zeros:",sum(Y==0),"\n")   # a very small positive or negative value. Our way of randomly
+			Y[which(Y==0)]<-sample(c(1e-008,-1e-008),sum(Y==0),replace=TRUE)  # assigning a sign to zeros
+		}
+		y.wilk<-NULL
+		for(i in 1:n.genes)   # here the null density of a Wilcoxon Sign-Rank Test is calculated
+			y.wilk[i]<-sum(rank(abs(Y[i,]))[Y[i,]>0])
+		f.null<-dsignrank(0:W.max,n)
+	}
+	if(sum(y.wilk!=round(y.wilk))>0){   # are there any ties?
+		cat("tied Wilcoxon scores:", sum(y.wilk!=round(y.wilk)),"\n","\n")
+		if(!ties.rand){  # a conservative way is used to get rid of non-integer test statistics
+			y.wilk[which(y.wilk!=round(y.wilk) & y.wilk>W.mean)]<-floor(y.wilk[which(y.wilk!=round(y.wilk) & y.wilk>W.mean)])
+			y.wilk[which(y.wilk!=round(y.wilk) & y.wilk<W.mean)]<-ceiling(y.wilk[which(y.wilk!=round(y.wilk) & y.wilk<W.mean)])
+		}
+		if(ties.rand){ # non-integer teststatistics are randomly assigned to either the next lower or upper
+			y.rand<-sample(c(-0.5,0.5),length(which(y.wilk!=round(y.wilk))),replace=TRUE)            # integer
+			y.wilk[which(y.wilk!=round(y.wilk))]<-y.wilk[which(y.wilk!=round(y.wilk))]+y.rand
+	}}
+	W<-as.numeric(names(table(y.wilk)))
+
+	if(length(W)!=length(f.null)){
+		if(!paired)
+			f.null<-dwilcox(W-W.min,n.x,n.y)
+		if(paired)
+			f.null<-f.null[W+1]
+	}
+	count<-as.numeric(table(y.wilk))   # number of observations for each possible test statistic value
+	if(!ties.rand & W.mean!=round(W.mean)){  # in the conservative way of tie-breaking it could happen that
+		m<-which(W==W.mean)                     # there are still ties - if W.mean is a non-integer
+		tie.count<-count[m]/2                  # to get rid of these non-integer values, they will be equally
+		count[m-1]<-count[m-1]+tie.count        # distributed to either the next lower or upper integer
+		count[m+1]<-count[m+1]+tie.count
+		W<-W[-m]
+		count<-count[-m]
+	}
+	offset.value<-if(use.offset) log(f.null) else rep(0,length(count))
+	glm.out<-glm(count~ns(W,ns.df)+offset(offset.value),family=poisson)  # a poisson regression with natural splines
+																	             # and offset is used
+	f.x<-glm.out$fitted/n.genes   # to estimate the density of the observed Ws
+
+	#H.Cho 11aug04 
+	#plot(W,n.genes*f.null,type="l",xlab="Wilcoxon score",ylab="number of genes",main="Null and mixture density")
+	#lines(W,n.genes*glm.out$fitted,lty=4)      # a plot of the null and the mixture density
+	#points(W,count)       # with the observed tie-breaked counts for each possible value of W
+	#legend(min(W)-1,n.genes*max(f.null,f.x),bty="n",c("null","mixture","observed"),cex=.8,lty=c(1,2,0),pch=c(-1,-1,1))
+
+	if(is.na(p0)){
+		vec.lambda<-NULL
+		vec.p0 <- NULL
+		spline.out<-NULL
+		if(stable.p0){  # p0 is estimated in a more stable way using our interpretation of the suggestion
+			  # of Remark F in Efron et al.(2001)
+
+			for(i in 1:(floor(length(f.null-1)/2)+1)){
+				vec.p0[i]<-sum(f.x[i:(length(f.null)-i+1)])/sum(f.null[i:(length(f.null)-i+1)])
+				vec.lambda[i]<-1-sum(f.null[i:(length(f.null)-i+1)])
+			}
+			weights<-if(!use.weights) rep(1,length(vec.lambda)) else 1-vec.lambda
+			spline.out<-smooth.spline(vec.lambda,vec.p0,w=weights,df=3)
+			p0<-min(predict(spline.out,1)$y,1)
+		}
+		if(!stable.p0)     # the simple p0-estimation
+			p0<-min(f.x/f.null)
+	}
+
+	cat("p0:",round(p0,4),"\n")
+	p1<-1-p0*f.null/f.x      # calculation of the posterior
+	
+	#Remarked by H. Cho 11Aug04 
+	#x11()   # plot of the posterior
+	#plot(W,p1,type="b",xlab="Wilcoxon score",ylab="Pr(gene significant|W score)",main="Posterior probabilities")
+	#abline(h=delta,lty=4)
+	#points(W[which(p1>=delta)],p1[which(p1>=delta)],col=3)  # mark the "significant" W scores
+	
+	tab.sig<-table(y.wilk)[which(p1>=delta)]  # table of the "significant" W scores
+	nsig<-sum(tab.sig)      # number of the significant genes
+	false<-sum(f.null[which(p1>=delta)])*length(y.wilk)  # number of falsely called genes
+	fdr<-p0*false/max(nsig,1)  # FDR
+	cat("Number of significant genes:",nsig,"\n")  # some output
+	ebam.out<-NULL
+
+	if(nsig>0){
+		cat("falsely called genes:",round(false,2),"\n","FDR:",round(fdr,4),"\n")
+		p1.sig<-p1[which(p1>=delta)]
+		local<-1-p1.sig      # local FDR for the significant genes
+		q.value<-q.value.wilc(y.wilk,p0,n.x,n.y,paired=paired)$q.value
+		row.sig.genes<-NULL
+		for(i in 1:length(tab.sig))
+			row.sig.genes<-c(row.sig.genes,which(y.wilk==names(tab.sig)[i])) # make some output
+		ebam.output<-cbind("W"=y.wilk[row.sig.genes],"q-value"=round(q.value[row.sig.genes],4))
+		if(R.fold){
+			fold.change<-R.fold.cal(R.dataset[row.sig.genes,],x,y,na.rm=na.rm)
+			ebam.output<-cbind(ebam.output,"R-fold"=round(fold.change[,3],4))
+		}
+		if(!is.na(col.gene.name))
+			ebam.output<-cbind(ebam.output,"gene"=substring(data[row.sig.genes,col.gene.name],1,50))
+		if(!is.na(col.accession))
+			ebam.output<-cbind("access"=data[row.sig.genes,col.accession],ebam.output)
+		ebam.output<-cbind("ID"=row.sig.genes,ebam.output)
+		ebam.out<-as.data.frame(rbind(tab.sig,round(p1.sig,4),round(local,4)))
+		ebam.out<-cbind(c("genes","p1","local"),ebam.out)
+		names(ebam.out)<-c(" ",names(tab.sig))
+
+		cat("\n","Wilcoxon test statistics of significant genes:","\n")
+		#print(ebam.out)
+		if(!is.na(file.out)){  # store some output in a file
+			cat("Results of the empirical Bayes Analysis of Microarrays using Wilcoxon Rank Statistics","\n","\n",
+			"\n","Significance criterion: p1 >=",delta,"\n","\n","p0:",round(p0,4),"\n","significant genes:",nsig,
+			"\n","falsely called genes:",round(false,4),"\n","FDR:",round(fdr,4),"\n","\n","Wilcoxon Rank Sums of significant genes:","\n","\n",file=file.out)
+			write.table(t(dimnames(ebam.out)[[2]]),file=file.out,sep="\t",append=TRUE,col.names=FALSE,row.names=FALSE,quote=FALSE)
+			write.table(ebam.out,file=file.out,sep="\t",append=TRUE,col.names=FALSE,row.names=FALSE,quote=FALSE)
+			cat("\n","\n","\n","Genes called significant:","\n","\n",file=file.out,append=TRUE)
+			write.table(t(dimnames(ebam.output)[[2]]),file=file.out,sep="\t",append=TRUE,row.names=FALSE,col.names=FALSE,quote=FALSE)
+			write.table(ebam.output,file=file.out,sep="\t",append=TRUE,row.names=FALSE,col.names=FALSE,quote=FALSE)
+			cat("\n","\n","Output is stored in",file.out,"\n")
+		}
+	}
+	mat.out<-cbind(W,count,f.null,f.x,p1)
+	structure(list(nsig=nsig,false=false,fdr=fdr,ebam.out=ebam.out,mat.out=mat.out,p0=p0,
+		glm.out=glm.out,f.x=f.x,f.null=f.null,vec.p0=vec.p0,vec.lambda=vec.lambda,
+		y.wilk=y.wilk,spline.out=spline.out,ebam.output=ebam.output,row.sig.genes=row.sig.genes))
+}
+# Copyright (C) 2003 Holger Schwender
+
+
+find.a0<-function(data,cl,B=100,balanced=FALSE,mat.samp=NULL,delta=0.9,alpha=(0:9)/10,
+		include.0=TRUE,p0=NA,plot.legend=TRUE,na.rm=FALSE,rand=TRUE){
+	X.name<-match.call()$data
+	xy.out<-xy.cal(cl,FALSE,TRUE)
+	x<-xy.out$x
+	y<-xy.out$y
+	paired<-xy.out$paired
+	tmp<-find.a0.old(data,x,y,paired=paired,mat.samp=mat.samp,B=B,balanced=balanced,na.rm=na.rm,
+		delta=delta,alpha=alpha,include.0=include.0,p0=p0,rand=rand,plot.legend=plot.legend)
+	invisible(structure(list(X.name=X.name,r=tmp$r,s=tmp$s,r.perm=tmp$r.perm,s.perm=tmp$s.perm,mat.samp=tmp$mat.samp,
+		sig.a0=tmp$sig.a0,a0=tmp$a0,delta=tmp$delta,vec.a0=tmp$vec.a0,x=x,y=y)))
+}
+# Copyright (C) 2002 Holger Schwender
+
+# This function is looking for the optimal fudge factor a0. Efron et al.(2001) defines that the optimal choice
+# is the a0 which leads to the most significant genes, i.e. most genes with a posterior probability p1(Z)>0.9.
+# a0 is either set to 0 or to a quantile of the s-values, i.e. the standard deviations of the genes.
+
+# find.a0 suggest a choice of a0 for further analysis based on the above optimalization criterion. But one
+# can choose another value of a0 in further analysis. For confirmation the logit of the posterior probabilities
+# is plotted.
+
+# data: the data set; there is only one condition: every row of this data set must represent a gene
+# x: the columns of the data set which belong to the cases (in the unpaired case) or the "after treatment"- 
+#    values (in the paired case) 
+# y: the columns of the data set which belong to the control group (in the unpaired case) or to the "before
+#    treatment"-measurements
+# paired: paired or unpaired data
+# mat.samp: the permutation matrix. If specified and correct, this matrix will be used, even if rand and B are
+#           specified.
+# B: number of permutations used in the calculation of the Null. Will not be used, if mat.samp is specified.
+# balanced: if TRUE, balanced permutations will be used
+# na.rm: if na.rm=FALSE, the d-values of genes with one or more missing values will be set to NA. If na.rm=TRUE, the
+#        missing values will be removed during the computation of the d-values.
+# delta: each observation with posterior probability p1(Z) >= delta is called significant. Default is 0.9 which
+#        is used in Efron et al.(2001)
+# alpha: these alpha quantiles of the s-values will be used to find the optimal a0
+# include.0: if TRUE, a0 = 0 is also considered in the search for an optimal a0
+# p0: prior; the probability that a gene is unaffected. If not specified, only a very simple estimation for
+#     p0 is used, i.e. p0 = min(f(z)/f0(z))  
+# stable: if TRUE, p0 is computed by the algorithm of Storey and Tibshirani (2003a). If FALSE, the simple estimator
+#         of Efron et al. (2001b) is used.
+# number.int: number of equally spaced intervals (between min(Z) and max(Z), where Z are the observed values
+#             of the genes) which are used in the logistic regression estimate of the ratio f0/f.
+#             Default is 139, which is used in Efron et al.(2001)
+# rand: specifies the set.seed for the calculation of the permutation matrix. Will not be used, if mat.samp
+#       is specified
+# plot.legend: if TRUE, there will be a legend in the logit(posterior)-plot. It is highly recommended to set
+#              plot.legend to FALSE, if length(alpha) exceeds 10. 
+
+
+
+
+find.a0.old<-function(data,x,y,paired=FALSE,mat.samp=NULL,B=100,balanced=FALSE,na.rm=FALSE,delta=0.9,alpha=(0:9)/10,include.0=TRUE,p0=NA,stable=TRUE,number.int=139,rand=NA,plot.legend=TRUE){
+    rs.cal(data,x,y,paired=paired,mat.samp=mat.samp,bal=balanced,B=B,na.rm=na.rm,rand=rand)->rs.out
+    r<-rs.out$r        # The r- and s-values for the numerator and the denominator, respectively, are calculated
+    s<-rs.out$s        # for both the observed and the permuted observations.
+    r.perm<-rs.out$r.perm
+    s.perm<-rs.out$s.perm
+    mat.samp<-rs.out$mat.samp
+    vec.a0<-quantile(s,alpha,na.rm=TRUE) # The vector with the values of a0, which are used to find the optimal a0, is built
+    if(include.0)
+        vec.a0<-c(0,vec.a0)
+    n.genes<-length(na.exclude(r))      # number of genes with non-missing values
+    sig.a0<-NULL
+    mat.post<-NULL
+    Z.norm<-qnorm(((1:n.genes)-3/8)/(n.genes+0.25))  # normal score transformation using Blom normal scores
+    for(i in 1:length(vec.a0)){     # calculation of the posterior for the different a0
+        Z<-sort(r/(s+vec.a0[i]))         # calculation of the observed Z-values
+        z<-sort(as.vector(r.perm/(s.perm+vec.a0[i])))  # calculation of the permuted z-values
+        z.norm<-approx(Z,Z.norm,z,rule=2)$y   # use linear interpolation to do the transformation for the
+                            # z-values which was used to transform the Z-values
+                            # rule=2 means that every z which is smaller than min(Z) is set to min(Z.norm)
+                            # and every z which is larger than max(Z) is set to max(Z.norm)
+        mat.ratio<-ratio.est(Z.norm,z.norm,p0=p0,number.int=number.int)$mat.post  # posterior is calculated
+        mat.post<-rbind(mat.post,cbind(a0=rep(vec.a0[i],nrow(mat.ratio)),mat.ratio))  
+        sig.a0[i]<-sum(mat.ratio[which(mat.ratio[,"posterior"]>=delta),"success"]) # number of significant genes
+                                                   # using the current a0 is calculated
+    }
+    logit.post<-log(mat.post[,"posterior"]/(1-mat.post[,"posterior"]))   
+                # logit(posterior) will be used in the plot to emphasize the differences in the tails
+                
+    #H.Cho 11aug04            
+    #plot(mat.post[which(mat.post[,"a0"]==vec.a0[1]),"center"],logit.post[which(mat.post[,"a0"]==vec.a0[1])],
+    #    main="Transformed Z values vs. Logit of the Posterior",xlab="transformed Z values",
+    #    ylab="logit(posterior)",type="l",xlim=c(-4,4),ylim=c(0,max(logit.post[which(logit.post!=Inf)])+0.5))
+    if(any(logit.post==Inf))
+	cat("Warning: Some of the logit posterior probabilities are Inf. These probabilities are not plotted.",
+		"\n","\n")
+	#H.Cho 11aug04	
+    #for(i in 2:length(vec.a0))       # logit posterior is plotted
+    #    lines(mat.post[which(mat.post[,"a0"]==vec.a0[i]),"center"],logit.post[which(mat.post[,"a0"]==vec.a0[i])],
+    #        col=i)
+    #abline(h=log(delta/(1-delta)),lty=4)    # this line corresponds to 0.9 in p1(Z) >= 0.9
+    vec.a0.names<-NULL
+    vec.a0.name<-NULL
+    for(i in 1:length(alpha)){     # "nice" names for the a0 are made
+        vec.a0.name[i]<-paste(c("a0=",round(vec.a0[i+1],4)," (alpha=",alpha[i],")"),collapse="")
+        vec.a0.names[i]<-paste(c("alpha=",alpha[i]," (",sig.a0[ifelse(include.0,i+1,i)],")"),collapse="")
+    }
+    if(include.0){
+        vec.a0.name<-c("a0=0",vec.a0.name)
+        vec.a0.names<-c(paste(c("a0=0 (",sig.a0[1],")"),collapse=""),vec.a0.names)
+    }
+    if(plot.legend)      # a legend is plotted; highly recommended: set to FALSE, if length(alpha)>10
+        legend(-1.1,max(logit.post)+.6,legend=vec.a0.names,lty=1,cex=0.8,col=1:length(vec.a0),bty="n")
+    names(sig.a0)<-vec.a0.name
+    cat("\n","Number of significant genes for some a0:","\n")   # the most important information is displayed
+    #print(sig.a0)
+    a0<-vec.a0[which(sig.a0==max(sig.a0))][1]
+    #cat("\n","Suggested choice for a0:",round(a0,4))         # a choice for a0 is suggested
+    if(a0!=0)
+        #cat("   (the",names(a0),"quantile of the s-values)")  
+    #cat("\n")
+    structure(list(r=r,s=s,r.perm=r.perm,s.perm=s.perm,mat.samp=mat.samp,sig.a0=sig.a0,a0=a0,
+		delta=delta,vec.a0=vec.a0,x=x,y=y))
+}
+        
+# Copyright (c) 2002 Holger Schwender
+
+# This program finds the cutup and the cutlow in the SAM Analysis. It also calculates the FDR.
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Please note that
+# 1. SAM was introduced in Tsuher, V., Tibshirani, R., and Chu, G. (2001), Significance analysis
+#    of microarrays applied to the ionizing radiation response, PNAS,98, 5116-5121,
+# 2. there is a patent pending for the SAM technology at Stanford University,
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# delta: for this value of delta the cutup and cutlow will be computed
+# d.sort: the vector of the sorted observed d-values
+# d.diff: the vector of the difference of the d-values and the d.bar-values where the d.bar-vector contains
+#         the expected d-values and the d-vector consists of the observed d-values
+# d.perm: matrix of permuted d-values. The rowwise average of d.perm is d.bar. In the sam.wilc() case d.perm
+#         is a matrix with 2 columns with the possible values for W in the first and the corresponing 
+#         expected number of W-values in the second column
+# p0: probability that a gene is unaffected
+# j0: the index of the d.bar value which is closest to 0
+# med: if med=TRUE, the median number of falsely called genes will be used in the calculation of the FDR. 
+#      Otherwise the expected number will be used
+# wilc: if TRUE, the computation will be done for sam.wilc(). If FALSE, it will be done for sam().
+
+find.cuts<-function(delta,d.sort,d.diff,d.perm,p0,j0,med,wilc=FALSE){
+    m<-length(na.exclude(d.sort))  # number of genes
+    # the index j1 > j0 of the gene is computed which is the first gene starting from the origin and going
+    # to the right for which d.diff > delta  
+    j1<-ifelse(any(d.diff[j0:m]>=delta),j0-1+min(which(d.diff[j0:m]>=delta)),m+1)
+    # cutup is calculated; if there is no j1 so that d.diff[j1] > delta, cutup will be set to Inf
+    cutup<-ifelse(j1!=m+1,d.sort[j1],Inf) 
+    # the index j2 < j0 of the gene is computed which is the first gene starting from the origin and going
+    # to the left for which d.diff < -delta 
+    j2<-ifelse(any(d.diff[1:j0]<= -delta),max(which(d.diff[1:j0]<= -delta)),0)
+    # cutlow is calculated; if there is no j2 so that d.diff[j2] < -delta, cutlow will be set to -Inf
+    cutlow<-ifelse(j2!=0,d.sort[j2],-Inf)
+    nsig<-m-j1+1+j2 # number of significant genes
+    if(!wilc){
+        if(!med)
+            false<-sum(d.perm>=cutup | d.perm<=cutlow,na.rm=TRUE)/ncol(d.perm)  # expected number of falsely called genes
+        if(med){
+            vec.false<-NULL
+            for(i in 1:ncol(d.perm))
+                vec.false[i]<-sum(d.perm[,i]>=cutup | d.perm[,i]<=cutlow,na.rm=TRUE)
+            false<-median(vec.false)   # median number of falsely called genes
+    }}
+    if(wilc)
+        false<-sum(d.perm[which(d.perm[,1]>=cutup | d.perm[,1]<=cutlow),2])
+    fdr<-p0*false/max(nsig,1)    # FDR
+    cut.out<-c(delta=delta,p0=p0,false=false,nsig=nsig,fdr=fdr,cutlow=cutlow,cutup=cutup,j1=j1,j2=j2)
+    cut.out
+}
+# Copyright (c) 2002 Holger Schwender
+
+# This program calculates the fudge factor s0 for further use in calculation of the d-values. Adding s0 to
+# rhe denominator of the d-values ensures that the variance of d(i) is independent of gene expressions.
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Please note that
+# 1. SAM was introduced in Tsuher, V., Tibshirani, R., and Chu, G. (2001), Significance analysis
+#    of microarrays applied to the ionizing radiation response, PNAS,98, 5116-5121,
+# 2. there is a patent pending for the SAM technology at Stanford University,
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# r: a vector of r-values. For example, for the two class unpaired data r(i) = mean(expression value of
+#    gene i in class 1) - mean(value of gene i in class 2). r(i) is the numerator of d(i)
+# s: a vector of s-values. s(i) is the standard deviation of gene i. s(i)+s0 is the denominator of d(i)
+# alpha: these alpha quantiles will be used (as values for s0) to find the optimal s0
+# include.zero: if TRUE, s0=0 is also considered in the search for an optimal a0
+# factor: number with which the median of the absolute values is multiplied. The MAD is used in the 
+#         calculation of the coefficient of variance of d(i) as a function of s(i) in this analysis.
+#         The default value makes the estimate consistent for the standard deviation at the Gaussian model.
+
+
+fudge<-function(r,s,alpha=seq(0,1,0.05),include.zero=TRUE,factor=1.4826){
+	if(max(alpha)>1 || min(alpha)<0)
+    		stop("alpha has to be between 0 and 1") 
+	if(any(round(100*alpha,10)!=round(100*alpha,0)))    # alpha has to be a percentile   
+    		cat("Warning: At least one alpha is not a percentile. Only the first two decimal digits are retained.","\n")
+            		alpha<-signif(alpha,2)
+	quan<-quantile(s,seq(0,1,0.01),na.rm=TRUE)   # the percentiles of s are calculated
+	cv<-NULL
+	for(i in 1:length(alpha)){  # for the alpha quantile of the s-values the coefficient of variation is calculated
+    		v<-NULL
+    		for(j in 1:100){       # compute the MAD of the d(i) as a function of the s(i)
+        		d.alpha<-r[which(s>=quan[j] & s<quan[j+1])]/(s[which(s>=quan[j] & s<quan[j+1])]+quan[100*alpha[i]+1])
+        		v[j]<-mad(d.alpha,constant=factor) 
+    		}   
+    		cv[i]<-sqrt(var(v))/mean(v)  # compute the coefficient of variation of these MAD values
+	}
+	if(include.zero){  # the same for s0=0
+    		v<-NULL
+    		for(j in 1:100){
+        	d.alpha<-r[which(s>=quan[j] & s<quan[j+1])]/s[which(s>=quan[j] & s<quan[j+1])]
+        	v[j]<-mad(d.alpha,constant=factor)
+		}
+    		cv.zero<-sqrt(var(v))/mean(v)
+    		if(cv.zero<min(cv)){  # is s0=0 the best choice?
+        		#cat("s0 =",0,"\n","\n")  # some output things
+        		s.zero<-0
+        		alpha.hat<-NA
+		}
+	}
+	if(!include.zero || cv.zero>=min(cv)){  # again some output
+    		alpha.hat<-alpha[which(cv==min(cv))]     # which alpha quantile of the s-values is the best choice for s0?
+    		s.zero<-quan[100*alpha.hat+1]
+    		#cat("s0 =",round(s.zero,4)," (The",100*alpha.hat,"% quantile of the s values.)","\n","\n")
+	}
+	if(!include.zero)
+    		cv.zero<-NA
+	structure(list(alpha.hat=alpha.hat,s.zero=s.zero,cv=cv,cv.zero=cv.zero))
+}
+# Copyright (c) 2002 Holger Schwender
+
+# If there are missing values, this function will replace these with the rowwise mean.
+
+# X: a matrix
+
+na.replace<-function(X){
+    for(i in 1:nrow(X))
+        X[i,  ] <- replace(X[i,  ], which(is.na(X[i,  ])), mean(X[i,  ], na.rm = TRUE))
+    return(X)
+}
+# Copyright (c) 2002 Holger Schwender
+
+# This program is required for maximize the likelihood of the logistic regression with 
+# repeated observations as described in Neter et al. (1996).
+
+# Caution: 1. This function contains the negative likelihood. 
+#          2. This function only contains the for the maximization of the likelihood 
+#	      important terms of the likelihood, i.e. the log(binomial coefficient) was omitted 
+
+# b: vector of parameters for which we like to get ML-estimations
+
+
+neglogLik.repeat<-function(b){sum(-success*(b[1]+b[2]*x1+b[3]*x2+b[4]*x3+b[5]*x4+b[6]*x5)
+	+n*log(1+exp(b[1]+b[2]*x1+b[3]*x2+b[4]*x3+b[5]*x4+b[6]*x5)))}# Copyright (c) 2002 Holger Schwender
+
+# This function estimates p0, the probability of an unaffected gene, as described in Storey (2002)
+# "False Discovery Rates and Q-values for Inference in DNA Microarray Experiments"
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Please note that
+# 1. SAM was introduced in Tsuher, V., Tibshirani, R., and Chu, G. (2001), Significance analysis
+#    of microarrays applied to the ionizing radiation response, PNAS,98, 5116-5121,
+# 2. there is a patent pending for the SAM technology at Stanford University,
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+# d: the observed d-values
+# d.perm: matrix of the permuted d-values
+# lambda: number between 0 and 1. p0 is computed as a function of lambda. If lambda=1, p0(1) is computed
+#         using natural cubic splines. This computation leads to an optimal estimation of p0.
+# vec.lambda: if lambda=1, a natural cubic spline with 3 df of p0(vec.lambda[i]) on vec.lambda[i] is fitted
+
+
+p0.est<-function(d,d.perm,lambda=1,vec.lambda=(0:95)/100){
+	if(lambda>1 || lambda<0)   # limitation of lambda
+		stop("lambda has to be between 0 and 1.")
+	if(lambda!=1)       # if lambda!=1, one is only interested in p0(lambda)
+		vec.lambda<-lambda
+	vec.p0<-NULL
+	d<-na.exclude(d)
+	m<-length(d)
+	quan<-quantiles(na.exclude(d.perm),c(vec.lambda/2,1-rev(vec.lambda)/2))  # calculation of the null quantiles
+	for(i in 1:length(vec.lambda))
+		vec.p0[i]<-sum(d>quan[i] & d<quan[length(quan)-i+1])/((1-vec.lambda[i])*m)   # calculation of p0(lambda)
+	if(lambda!=1){
+		p0<-min(vec.p0,1)      # if lambda!=1, one is only interested in p0(lambda); truncate p0 at 1
+		return(p0,vec.p0)
+	}
+	spline.out<-smooth.spline(vec.lambda,vec.p0,w=1-vec.lambda,df=3)   # smooth natural cubic splines with 3 df
+	p0<-min(predict(spline.out,1)$y,1)   # compute p0(1) which is the estimation of p0
+	structure(list(p0=p0,spline.out=spline.out,vec.p0=vec.p0))
+}
+# Copyright (c) 2002 Holger Schwender
+
+# This function computes the q-values which were introduced by John Storey. Q-values can be 
+# interpreted as a p-value in a multiple testing analysis.
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Please note that
+# 1. SAM was introduced in Tsuher, V., Tibshirani, R., and Chu, G. (2001), Significance analysis
+#    of microarrays applied to the ionizing radiation response, PNAS,98, 5116-5121,
+# 2. there is a patent pending for the SAM technology at Stanford University,
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# d: vector of the observed d-values
+# d.perm: matrix of the permuted d-values
+# p0: the probability that a gene is unaffected
+
+q.value.cal<-function(d,d.perm,p0){
+	n.with.NA<-length(d)  # number of genes
+	d<-na.exclude(d)            # remove the NAs 
+	d.perm<-na.exclude(d.perm)
+	m<-length(d)        # number of genes
+	B<-length(d.perm)/length(d)     # number of permutations
+	mat.addup<-matrix(c(abs(d),abs(d.perm),rep(1,m),rep(0,m*B),sign(d),sign(d.perm)),m*(B+1),3)
+	mat.addup<-mat.addup[order(mat.addup[,1]),1:3]  # a matrix is build with the absolut sorted
+	                                                # observed and permuted d-values
+	vec.false<-m-(which(mat.addup[,2]==1)-(1:m))/B  # the number of falsely called genes is computed
+	                                       # instead of the p-values which were suggested by Storey (Nov 2002)
+	q.value<-p0*vec.false[1]/m  # calculation of the q-value
+	for(i in 2:m)
+		q.value[i]<-min(p0*vec.false[i]/(m-i+1),q.value[i-1])
+	mat.qvalue<-cbind(d=d[order(abs(d))],false=vec.false,q.value=q.value) # for further calculation and output
+	if(n.with.NA!=m)  # every gene with a missing d-value gets a q-value which is NA
+		mat.qvalue<-rbind(mat.qvalue,matrix(NA,n.with.NA-m,3))
+	structure(list(mat.addup=mat.addup,vec.false=vec.false,q.value=q.value,mat.qvalue=mat.qvalue))
+}
+	# Copyright (c) 2002 Holger Schwender
+
+# This function computes the p-values for the Wilcoxon (Sign) Rank Statistics which were calculated in 
+# sam.wilc().
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Please note that
+# 1. SAM was introduced in Tsuher, V., Tibshirani, R., and Chu, G. (2001), Significance analysis
+#    of microarrays applied to the ionizing radiation response, PNAS,98, 5116-5121,
+# 2. there is a patent pending for the SAM technology at Stanford University,
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# W: the observed unsorted W-values
+# p0: the probability that a gene is unaffected
+# n.x: length of x (see sam.wilc())
+# n.y: length of y (see sam.wilc())
+# paired: paired or unpaired data
+
+q.value.wilc<-function(W,p0,n.x,n.y,paired=FALSE){
+    m<-length(na.exclude(W))   # number of genes with non missing W-value  
+    n<-ifelse(paired,n.x,n.x+n.y)  # number of independent observations
+    W.mean<-ifelse(paired,n*(n+1)/4,n.x*(n+1)/2)   # mean of W-values under the null
+    W.min<-ifelse(paired,0,n.x*(n.x+1)/2)  # minimum of W-values under the null
+    W.max<-ifelse(paired,n*(n+1)/2,n.x*(2*n.y+n.x+1)/2)  # max of W-values under the null
+    p.value<-numeric(W.max-W.min+1)  # vector of p-values
+    nsig<-numeric(W.max-W.min+1)     # vector of significant genes
+    for(i in W.min:floor(W.mean)){  # calculation of the p-values and the corresponding number of significant genes
+        nsig[i-W.min+1]<-sum(W<=i | W>=W.max+W.min-i,na.rm=TRUE)
+        nsig[length(nsig)+W.min-i]<-sum(W<=i | W>=W.max+W.min-i,na.rm=TRUE)
+        p.value[i-W.min+1]<-min(1,2*ifelse(paired,psignrank(i,n),pwilcox(i-W.min,n.x,n.y)))
+        p.value[length(p.value)+W.min-i]<-min(1,2*ifelse(paired,psignrank(i,n),pwilcox(i-W.min,n.x,n.y)))
+    }
+        
+    numeric(W.max-W.min+1)->vec.q.value      # vector of possible q-values
+    vec.q.value[floor(W.mean-W.min+1)]<-p0*p.value[floor(W.mean-W.min+1)]  # initial setting for the q-values
+    for(i in (floor(W.mean)-1):W.min)   # computation of the q-values
+        vec.q.value[i-W.min+1]<-min(p0*p.value[i-W.min+1]/(nsig[i-W.min+1]/m),vec.q.value[i-W.min+2])
+    vec.q.value[(ceiling(W.mean):W.max)-W.min+1]<-rev(vec.q.value[(W.min:floor(W.mean))-W.min+1])
+    q.value<-numeric(length(W))  # vector of gene-specific q-values 
+    for(i in W.min:W.max)
+        q.value[which(W==i)]<-vec.q.value[i-W.min+1]
+    mat.qvalue<-cbind(W,q.value)[order(abs(W-W.mean),na.last=TRUE),]   # matrix of ordered W- and corresponding q-values
+    structure(list(mat.qvalue=mat.qvalue,p.value=p.value,nsig=nsig,q.value=q.value,
+		vec.q.value=vec.q.value,W.min=W.min,W.max=W.max,W.mean=W.mean))
+}
+# Copyright (c) 2003 Holger Schwender
+
+# Computes the empirical quantiles of a sample. Does not interpolate.
+
+# x: vector of data
+# prob: vector of desired probability levels. Probabilities must be between 0 and 1 inclusive.
+
+
+quantiles<-function(x,prob){
+    if(any(prob>1 | prob<0))
+        stop("Probabilities must be between 0 and 1")
+    x.sort<-sort(x)
+    prob.exclude<-which(prob>0 & prob<1)
+    nprob<-length(x)*prob[prob.exclude]
+    quan<-numeric(length(prob))
+    if(any(prob==0))
+        quan[which(prob==0)]<-min(x)
+    if(any(prob==1))
+        quan[which(prob==1)]<-max(x)
+    int<-which(nprob==round(nprob))
+    not.int<-which(nprob!=round(nprob))
+    if(length(not.int)>0)
+        quan[prob.exclude][not.int]<-x.sort[ceiling(nprob[not.int])]
+    if(length(int)>0)
+        quan[prob.exclude][int]<-.5*(x.sort[nprob[int]]+x.sort[nprob[int]+1])
+    return(quan)
+    }
+
+    
+# Copyright (C) 2002 Holger schwender
+
+# This program calculates the logistic regression estimates of the ratio f0/f as suggested
+# by Efron et al. (2001).
+
+# This program is be used by ebam().
+
+# Required libraries/functions: library(splines), logLik.repeat
+
+# Z.norm: the vector of the normal score transformed observed Z-values, i.e. f(Z.norm) is a nearly perfect
+#     N(0,1) density.
+# z.norm: the vector of the transformed null scores z, using the same transformation as above.
+# p0: prior; probability that a gene is unaffected. If not specified the usual estimation (see below) will
+#     be done.
+# stable: if TRUE, p0 is estimated by the algorithm of Storey an Tibshirani (2003a). If FALSE, the simple estimate
+#         of Efron et al. (2001b) is used.
+# number.int: The number of intervals intervals which should be used to aggregate the data. Default is 139,
+#             the number of intervals Efron et al. (2001) used.
+       
+
+
+ratio.est<-function(Z.norm,z.norm,p0=NA,stable=TRUE,number.int=139){
+    library(splines)   # needed for ns()
+    min.int<-floor(100*min(Z.norm))/100     # lower limit for the first interval
+    max.int<-ceiling(100*max(Z.norm))/100   # upper bound for the last interval
+    #if(method=="e")      # method of equal intervals
+        interval<-seq(min.int,max.int,length=number.int+1)      # calculation of the intervals
+    #if(method=="n"){     # method of equal number of genes per interval
+    #   index<-intervaller(length(Z.norm),number.int)    # genes whose values are the limits of the intervals
+    #   interval<-c(min.int,Z.norm[index])      # calculation of the interval borders
+    #   interval[length(interval)]<-max.int     # set the upper bound for the last interval to max.int
+    #}
+    # calculation of the centerpoints
+    center<-(interval[2]-interval[1])/2+interval[-length(interval)]
+    bin.Z<-cut(Z.norm,interval,include.lowest=TRUE)       # bin the Z values into the intervals
+    bin.z<-cut(z.norm,interval,include.lowest=TRUE)       # bin the z values into the intervals
+    success<-tabulate(bin.Z,length(levels(bin.Z)))     # for each interval get the number of Z and z values
+    failure<-tabulate(bin.z,length(levels(bin.z)))     # which belong to this interval. Z is a success, z is
+                                                       # a failure
+    n<-success+failure     # number of values for each interval
+    p<-success/n           # proportion of Z values for each interval
+    log.bino<-lgamma(n+1)-(lgamma(success+1)+lgamma(n-success+1)) # calculation of the logarithm of the binomial
+                                                # coefficient in the loglikelihood; no further use
+    ns.out<-ns(center,5)        # get the natural splines matrix for the centerpoints
+    
+    # make a data frame which will be used by ms(); exclude rows with NA, i.e. rows which belong to intervals
+    # with neither a Z nor a z value
+    mat.repeat<-na.exclude(cbind(log.bino,ns.out,n,success,p,center))  
+    mat.repeat<-as.data.frame(mat.repeat)                              
+    names(mat.repeat)<-c("log.bino","x1","x2","x3","x4","x5","n","success","p","center")
+    
+    # minimize the negative loglikelihood; set the start values of the parameters to 0
+    attach(mat.repeat)        # method="BFGS" seems to do the best job and seems to lead to
+                  # almost the same results as in S-plus 
+    optim.out<-optim(rep(0,6),neglogLik.repeat,method="BFGS")
+    b<-as.vector(optim.out$par)        # get the estimated parameters
+    mat.model<-as.matrix(cbind(1,mat.repeat[,2:6]))  # get the model matrix
+    pi.Z<-exp(mat.model%*%b)/(1+exp(mat.model%*%b))    # calculate pi(Z); the probability of a success in an
+                                                       # interval
+    B<-length(z.norm)/length(Z.norm)     # calculation of the number of permutation used to estimate the Null
+    
+    if(is.na(p0)){
+        if(stable)
+            p0<-p0.est(Z.norm,z.norm)$p0
+        else
+            p0<-min((B*pi.Z)/(1-pi.Z))
+        }
+    posterior<-1-p0*(1-pi.Z)/(B*pi.Z)     # calculate the posterior probability 
+    posterior[which(posterior<0)]<-0      # truncate posterior at 0
+    mat.post<-cbind(mat.repeat[,c("center","success")],posterior)
+    structure(list(mat.repeat=mat.repeat,optim.out=optim.out,p0=p0,mat.post=mat.post))
+}
+# Copyright (c) 2002 Holger Schwender
+
+# This function generates the so called Roller Coaster Plots, i.e. the plot of delta vs. FDR and the plot
+# of delta vs. #significant genes.
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Please note that
+# 1. SAM was introduced in Tsuher, V., Tibshirani, R., and Chu, G. (2001), Significance analysis
+#    of microarrays applied to the ionizing radiation response, PNAS,98, 5116-5121,
+# 2. there is a patent pending for the SAM technology at Stanford University,
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# mat.fdr: a matrix with the interesting statistics (i.e. delta, #number of significant genes and FDR)
+#          which is, e.g., provided by sam.fdr()
+# helplines: if TRUE, helplines are produced in the plots for an easier evaluation
+
+
+
+roller.coaster<-function(mat.fdr,helplines=TRUE){
+    #par(mfrow=c(1,2),lab=c(10,8,7))  # two plots on one graphsheet
+    invisible() 
+    #H.Cho 11aug04
+    #plot(mat.fdr[,"delta"],100*mat.fdr[,"fdr"],main="Delta vs. FDR",xlab="delta",ylab="FDR (in %)",
+    #    type="b")   # delta vs.FDR
+    #if(helplines){  # helplines are plotted
+    #    segments(0,100*mat.fdr[,"fdr"],mat.fdr[,"delta"],100*mat.fdr[,"fdr"],lty=2)
+    #    segments(mat.fdr[,"delta"],100*mat.fdr[,"fdr"],mat.fdr[,"delta"],-100*max(mat.fdr[,"fdr"]),lty=2)
+    #}
+    #H.Cho 11aug04
+    #plot(mat.fdr[,"delta"],mat.fdr[,"nsig"],main="Delta vs. Significant Genes",xlab="delta",
+    #    ylab="number of significant genes",type="b")  # delta vs. #significant genes
+    #if(helplines){ # helplines are plotted
+    #    segments(0,mat.fdr[,"nsig"],mat.fdr[,"delta"],mat.fdr[,"nsig"],lty=2)
+    #    segments(mat.fdr[,"delta"],mat.fdr[,"nsig"],mat.fdr[,"delta"],-max(mat.fdr[,"nsig"]),lty=2)
+    #}
+    #par(mfrow=c(1,1))
+}
+# Copyright (C) 2002 Holger Schwender, University of Dortmund, Germany
+
+# This program calculates the r- and s-values in the computation of the observed test statistics d
+# and of the expected d, respectively. This statistics are used in the empBayes-Analysis following
+# Efron et al. and in the SAM-Analysis.
+
+# This function could handle missing values and variance zero genes. But we recommend to use some previous
+# analysis for a maybe better handling of NAs and variance zero genes. NAs are replaced by the mean of the
+# gene. The d-value of genes with variance zero is set to NA.
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Please note that
+# 1. SAM was introduced in Tsuher, V., Tibshirani, R., and Chu, G. (2001), Significance analysis
+#    of microarrays applied to the ionizing radiation response, PNAS,98, 5116-5121,
+# 2. there is a patent pending for the SAM technology at Stanford University,
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# data: the used data set 
+# x: the columns of the data set which belong to the cases (in the unpaired case) or the "after treatment"- 
+#    values (in the paired case) 
+# y: the columns of the data set which belong to the control group (in the unpaired case) or to the "before
+#    treatment"-measurements
+# paired: paired or unpaired data
+# mat.samp: The permutation matrix. If specified and correct, this matrix will be used, even if rand and B are
+#           specified.
+# B: number of permutations used in the calculation of the Null. Will not be used, if mat.samp is specified.
+# bal: if TRUE, balanced permutations will be used.
+# na.rm: if na.rm=FALSE, the d-values of genes with one or more missing values will be set to NA. If na.rm=TRUE, the
+#        missing values will be removed during the computation of the d-values.
+# rand: specifies the set.seed for the calculation of the permutation matrix. Will not be used, if mat.samp
+#       is specified.
+
+
+rs.cal<-function(data,x,y=NULL,paired=FALSE,mat.samp=NULL,B=100,bal=FALSE,na.rm=FALSE,rand=NA){
+    X<-as.matrix(data[,c(x,y)])  # some adjustments for easier calculations
+    mode(X)<-"numeric"
+    paired<-ifelse(is.null(y),TRUE,paired)   # new
+    NA.genes<-NULL
+    if(any(is.na(X))){   # checks if there are NAs
+        NA.genes<-unique(ceiling(which(is.na(t(X)))/ncol(X)))   
+        cat("Warning: There are",length(NA.genes),"genes with at least one missing value.")
+        if(na.rm)
+            X[NA.genes,]<-na.replace(X[NA.genes,]) # replace missing values with the gene mean
+        if(!na.rm)
+            cat(" The d-value of these genes is set to NA.")
+        cat("\n","\n")
+    }
+    if(!paired){      # unpaired case
+        n.x<-length(x)    
+        n.y<-length(y)
+        n<-n.x+n.y
+        x.mat<-rep(1,n.x)
+        y.mat<-rep(1,n.y)
+        mean.x<-as.vector(1/n.x*X[,1:n.x]%*%x.mat)        # computation of the r-values (nominator of d)
+        mean.y<-as.vector(1/n.y*X[,(n.x+1):n]%*%y.mat)
+        r<-mean.x-mean.y  # r=mean(x)-mean(y)
+        center.x<-(X[,1:n.x]-mean.x)^2          # calculation of the s-values (part of the denumerator of d)
+        center.y<-(X[,(n.x+1):n]-mean.y)^2
+        s<-as.vector(sqrt(((1/n.x+1/n.y)/(n-2))*(center.x%*%x.mat+center.y%*%y.mat)))  
+        if(is.null(mat.samp))  # checks if mat.samp is specified
+            mat.samp<-sam.sampler(n.x,n.y,B,paired=FALSE,rand=rand,balanced=bal,file.out=NA)   # get the permutation matrix
+        if(ncol(mat.samp)!=n)  # checks if mat.samp has the correct number of columns. If not, the function is stopped
+            stop("mat.samp has not the correct number of columns.")
+        if(!all(mat.samp==1 | mat.samp==0)) # checks if the values of mat.samp are correct. If not, function is stopped
+            stop("The values of mat.samp must be 0 or 1.")
+        B<-nrow(mat.samp)
+        r.perm<-matrix(0,length(r),B)
+        s.perm<-matrix(0,length(r),B)
+        for(i in 1:B){
+            perm<-which(mat.samp[i,]==1)       
+            n.perm<-length(perm)      # necessary if balanced permutations are used
+            mean.perm.x<-as.vector(1/n.perm*X[,perm]%*%x.mat)      # computation of the r-values for the i-th permutation
+            mean.perm.y<-as.vector(1/(n-n.perm)*X[,-perm]%*%y.mat)   # to get the Null    
+            r.perm[,i]<-mean.perm.x-mean.perm.y
+            center.perm.x<-(X[,perm]-mean.perm.x)^2    # calculation of the s-values for the i-th permutation
+            center.perm.y<-(X[,-perm]-mean.perm.y)^2
+            s.perm[,i]<-as.vector(sqrt(((1/n.perm+1/(n-n.perm))/(n-2))*(center.perm.x%*%rep(1,n.perm)+center.perm.y%*%rep(1,n-n.perm))))
+        Z<-NULL
+	}}
+    if(paired){  #paired case
+        if(!is.null(y) & length(x)!=length(y))  # new # x[i] and y[i] are paired observations. So x and y must have the same length.
+            stop("x and y must have the same length.")
+        n<-length(x)
+        x.mat<-rep(1,n)
+        Z<-if(!is.null(y)) X[,1:n]-X[,(n+1):(2*n)]  else X # new # calculation of the r-values of the observed d  (r=mean(x-y))
+        r<-as.vector(1/n*Z%*%x.mat)
+        center<-(Z-r)^2
+        s<-as.vector(sqrt(1/(n*(n-1))*center%*%x.mat))     # calculation of the s-values of the observed d
+        if(is.null(mat.samp))       # the same checkings as in the unpaired case
+            mat.samp<-sam.sampler(n,n,B,paired=TRUE,rand=rand,balanced=bal,file.out=NA)   #get the permutation matrix
+        if(ncol(mat.samp)!=n)
+            stop("mat.samp has not the correct number of columns.")
+        if(!all(abs(mat.samp)==1))
+            stop("The values of mat.samp must be -1 or 1.")
+        B<-nrow(mat.samp)
+        r.perm<-matrix(0,length(r),B)
+        s.perm<-matrix(0,length(r),B)
+        for(i in 1:B){
+            Z.perm<-t(t(Z)*mat.samp[i,])              # and the same calculations as before for the i-th permutation
+            r.perm[,i]<-as.vector(1/n*Z.perm%*%x.mat)
+            center.perm<-(Z.perm-r.perm[,i])^2
+            s.perm[,i]<-as.vector(sqrt(1/(n*(n-1))*center.perm%*%x.mat))
+        }}
+    var.0.genes<-NULL
+    if(any(s==0,na.rm=TRUE)){    # sets the values of r and s of each gene with variance 0 to NA
+        cat("Warning: There are",sum(s==0,na.rm=TRUE),"genes which have variance Zero or no non-missing values.","\n",
+            "        The d-value of these genes is set to NA.","\n","\n")
+        var.0.genes<-which(s==0)
+        r[var.0.genes]<-NA
+        s[var.0.genes]<-NA
+        r.perm[var.0.genes,]<-NA
+        s.perm[var.0.genes,]<-NA
+    }
+
+    structure(list(r=r,s=s,r.perm=r.perm,s.perm=s.perm,Z=Z,mat.samp=mat.samp,var.0.genes=var.0.genes,
+		NA.genes=NA.genes))
+}
+# Copyright (C) 2003 Holger Schwender
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Please note that
+# 1. SAM was introduced in Tsuher, V., Tibshirani, R., and Chu, G. (2001), Significance analysis
+#    of microarrays applied to the ionizing radiation response, PNAS,98, 5116-5121,
+# 2. there is a patent pending for the SAM technology at Stanford University,
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+sam<-function(data,cl,B=100,balanced=FALSE,mat.samp=NULL,delta=(1:10)/5,med.fdr=TRUE,
+		s0=NA,alpha.s0=seq(0,1,.05),include.s0=TRUE,p0=NA,lambda.p0=1,vec.lambda.p0=(0:95)/100,
+		na.rm=FALSE,graphic.fdr=TRUE,thres.fdr=seq(0.5,2,0.5),ngenes=NA,iteration=3,
+		initial.delta=c(.1,seq(.2,2,.2),4),rand=NA){
+	if(any(delta<=0))
+		stop("Delta must be larger than 0.")
+	X.name<-match.call()$data
+	xy.out<-xy.cal(cl)
+	x<-xy.out$x
+	y<-xy.out$y
+	paired<-xy.out$paired
+	tmp<-sam.old(data,x,y=y,paired=paired,mat.samp=mat.samp,B=B,balanced=balanced,
+		na.rm=na.rm,s0=s0,alpha.s0=alpha.s0,include.s0=include.s0,p0=p0,lambda.p0=lambda.p0,
+		vec.lambda.p0=vec.lambda.p0,delta.fdr=delta,med.fdr=med.fdr,graphic.fdr=graphic.fdr,
+		thres.fdr=thres.fdr,ngenes=ngenes,iteration=iteration,initial.delta=initial.delta,
+		rand=rand)
+	invisible(structure(list(X.name=X.name,d=tmp$d,d.sort=tmp$d.sort,s=tmp$s,d.bar=tmp$d.bar,d.perm=tmp$d.perm,
+		mat.samp=tmp$mat.samp,s0=tmp$s0,p0=tmp$p0,FDR=tmp$FDR,fdr.ngenes=tmp$fdr.ngenes,
+		delta.ngenes=tmp$delta.ngenes,med.fdr=tmp$med.fdr,x=x,y=y,paired=paired)))
+}# Copyright (c) 2003 Holger Schwender
+
+# If the output of a previous analysis with SAM was assigned to an object, this function can
+# be used to compute the number of significant genes and the FDR for another set of thresholds
+# delta.
+
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Please note that
+# 1. SAM was introduced in Tsuher, V., Tibshirani, R., and Chu, G. (2001), Significance analysis
+#    of microarrays applied to the ionizing radiation response, PNAS,98, 5116-5121,
+# 2. there is a patent pending for the SAM technology at Stanford University,
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# sam.out: the object to which a previous analysis with sam() was assigned
+# delta: a vector containing values for the threshold delta
+
+sam.delta<-function(sam.out,delta){
+	sam.fdr(sam.out$d.sort,sam.out$d.bar,sam.out$d.perm,sam.out$p0,delta=delta,med=sam.out$med.fdr,graphic=FALSE)$tab.fdr
+}# Copyright (c) 2002 Holger Schwender
+
+# This function computes the FDR for several delta. The output of this program is a table with some
+# statistics (p0, number of significant genes, number of falsely called genes, FDR) for these delta
+# and a SAM plot of the expected vs. the observed d-values for some delta (not necessary the same delta
+# as in the table). There will also be a plot of delta vs. FDR and delta vs. #significant genes in the
+# output. This table and these plots should help to choose delta.
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Please note that
+# 1. SAM was introduced in Tsuher, V., Tibshirani, R., and Chu, G. (2001), Significance analysis
+#    of microarrays applied to the ionizing radiation response, PNAS,98, 5116-5121,
+# 2. there is a patent pending for the SAM technology at Stanford University,
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+# d.sort: vector of sorted observed d-values
+# d.bar: vector of sorted expected d-values
+# d.perm: matrix of sorted permuted d-values. The rowwise mean of this matrix is d.bar
+# p0: the (prior) probability that a gene is unaffected
+# delta: vector of values for delta for which the statistics (see above) should be computed
+# med: if TRUE, the median number of falsely called genes will be computed. If FALSE, the expected number will
+#      be calculated
+# graphic: if TRUE, a SAM plot of the expected vs. the observed d-values for some delta (see thres) will be made
+#          as well as a plot of delta vs. FDR and delta vs. #significant genes 
+# thres: vector of the delta for which the SAM Plot is made
+# pty.square: if TRUE, a square SAM Plot is generated with x- and y-axes having the same range
+# helplines: if TRUE, helplines are plotted in both the plot of delta vs. FDR and the plot of
+#            delta vs. #significant genes
+# wilc: if TRUE, an analysis is done for sam.wilc(). Otherwise (default) for sam().
+
+
+sam.fdr<-function(d.sort,d.bar,d.perm,p0,delta=(1:10)/5,med=TRUE,graphic=TRUE,thres=seq(.5,2,.5),
+        pty.square=TRUE,helplines=TRUE,wilc=FALSE){
+    d.diff<-d.sort-d.bar  # calculation of the difference of the observed and the corresponding expected
+                               # d-values
+    j0<-ifelse(!wilc,which(abs(d.bar)==min(abs(d.bar),na.rm=TRUE)),floor(length(na.exclude(d.bar))/2)) 
+             # interpretation of Tushers "start at the origin", the index of
+    mat.fdr<-NULL                           # the expected d-value which is closest to 0 is computed
+    for(i in 1:length(delta)){
+        cuts.out<-find.cuts(delta[i],d.sort,d.diff,d.perm,p0,j0,med,wilc=wilc)    # calculation of cutlow, #significant genes,
+        mat.fdr<-rbind(mat.fdr,cuts.out[-1])           # #falsely called genes, FDR
+    }
+    if(length(delta)==1){  # distinction is necessary for further analysis
+        mat.fdr<-matrix(c(delta,mat.fdr),1)
+        tab.fdr<-as.vector(round(mat.fdr[,1:5],3))
+    }
+    if(length(delta)>1){
+        mat.fdr<-cbind(delta,mat.fdr)
+        tab.fdr<-as.data.frame(round(mat.fdr[,1:5],3))
+    }
+    names(tab.fdr)<-c("delta","p0","false","called","FDR")
+    
+    #Remarked by H. Cho 11Aug04
+    #if(graphic){      # SAM Plot
+    #    sam.plotter(d.sort,d.bar,thres,pty.square=pty.square, main="SAM Plot for some delta",
+    #        color=2:(length(thres)+1),make.legend=TRUE)  # SAM Plot
+    #    X11()   
+    #    roller.coaster(mat.fdr,helplines=helplines) # Delta vs. FDR and vs. #significant
+    #                            # genes, respectively
+    #}
+    structure(list(tab.fdr=tab.fdr,mat.fdr=mat.fdr,p0=p0))
+}
+# Copyright (c) 2002 Holger Schwender
+
+# This function computes for a given number or proportion of genes a delta so that about that number or
+# proportion of genes fall outside this thresholds cutlow and cutup, i.e. are called significant. 
+# Sometimes it is not possible that exactly this number or proportion of genes fall outside delta. If such
+# a situation occurs, a lower and upper bound will be given.
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Please note that
+# 1. SAM was introduced in Tsuher, V., Tibshirani, R., and Chu, G. (2001), Significance analysis
+#    of microarrays applied to the ionizing radiation response, PNAS,98, 5116-5121,
+# 2. there is a patent pending for the SAM technology at Stanford University,
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# d.sort: vector of sorted observed d-values
+# d.bar: vector of sorted expected d-values
+# d.perm: matrix of sorted permuted d-values. The rowwise mean of d.perm is d.bar
+# ngenes: number or percentage of genes which should fall outside delta, i.e. which should be called significant
+# iteration: number of iterations which will be used in the search for delta. Default is 3. This should usually
+#            work.
+# initial.delta: a vector of initial guesses for delta. Default is (.2, .4, .6, ..., 1.8, 2)
+# med: if TRUE, the median number of falsely called genes will be computed. If FALSE, the expected number will
+#      be calculated
+# p0: the (prior) probability that a gene is unaffected
+
+
+sam.ngenes<-function(d.sort,d.bar,d.perm,ngenes=0.05,iteration=3,initial.delta=seq(.2,2,.2),med=TRUE,p0=NA){
+    if(ngenes!=round(ngenes)){
+        if(ngenes<=0 || ngenes>=1)
+            stop("ngenes must be an positive integer or between 0 and 1")
+        ngenes<-floor(ngenes*length(d.sort))  # the proportion of genes is transformed to the number of genes
+    }
+    if(ngenes<=0)
+        stop("ngenes must be an positive integer")
+    cat("SAM Analysis for",ngenes,"genes:","\n")
+    delta.ngenes<-initial.delta
+    for(i in 1:iteration){     # for a vector of delta some statistics (e.g. #significant genes) is computed
+        fdr.ngenes<-sam.fdr(d.sort,d.bar,d.perm,p0,delta=delta.ngenes,med=med,graphic=FALSE)$mat.fdr
+        if(any(fdr.ngenes[,4]==ngenes)){    # if a delta is found which leads to ngenes significant genes
+            fdr.ngenes<-as.vector(fdr.ngenes[min(which(fdr.ngenes[,4]==ngenes)),1:5])   # the search is done
+            delta.ngenes<-fdr.ngenes[1]                                      # and some output is made
+            names(fdr.ngenes)<-c("delta","p0","false","called","FDR")
+            cat("Set delta =",round(delta.ngenes,4),"to get",ngenes,"significant genes.","\n","\n")
+            #print(fdr.ngenes)
+            invisible(return(fdr.ngenes,delta.ngenes,p0))
+        }
+        # if no such delta was found, a new vector of deltas is been computed. The minimum delta is that
+        # delta which leads to the nearest smaller number of significant genes of the previous vector of delta.
+        # The max delta is that delta that leads to the nearest higher number of significant genes. 
+        delta.ngenes<-seq(fdr.ngenes[max(which(fdr.ngenes[,4]>ngenes)),1],fdr.ngenes[min(which(fdr.ngenes[,4]<ngenes)),1],
+            length=20)
+    }
+    # Sometimes it is not possible to find such a delta. Then a lower and upper bound are given.
+    cat("It is not possible to determine a delta for exactly",ngenes,"genes.","\n","\n",
+        "Lower and upper bound:","\n")
+    fdr.ngenes<-as.data.frame(rbind(lower=fdr.ngenes[max(which(fdr.ngenes[,4]>ngenes)),],
+        upper=fdr.ngenes[min(which(fdr.ngenes[,4]<ngenes)),]))
+    #print(fdr.ngenes)
+    delta.ngenes<-NULL
+    structure(list(fdr.ngenes=fdr.ngenes,delta.ngenes=delta.ngenes,p0=p0))
+}
+    
+    
+    
+    
+# Copyright (c) 2002 Holger Schwender, University of Dortmund, Germany
+
+# This function does the Significance Analysis of Microarray Experiments. The output of this function is
+# a table of statistics (p0, #number of significant genes, #number of falsely called genes, #FDR) for some
+# delta and a SAM Plot for some (not necessarily the same) delta. Additionally it is possible that this
+# function computes a delta for a given number or proportion of genes which should be significant.
+
+# The output of this function can be used to select the delta in the SAM Analysis. For further analysis
+# the output of sam() must be assigned to an object.
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Please note that
+# 1. SAM was introduced in Tsuher, V., Tibshirani, R., and Chu, G. (2001), Significance analysis
+#    of microarrays applied to the ionizing radiation response, PNAS,98, 5116-5121,
+# 2. there is a patent pending for the SAM technology at Stanford University,
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# data: the data set; there is only one condition: every row of this data set must represent a gene
+# x: the columns of the data set which belong to the cases (in the unpaired case) or the "after treatment"-
+#    values (in the paired case)
+# y: the columns of the data set which belong to the control group (in the unpaired case) or to the "before
+#    treatment"-measurements
+# paired: paired or unpaired data
+# mat.samp: the permutation matrix. If specified and correct, this matrix will be used, even if rand and B are
+#           specified.
+# B: number of permutations used in the calculation of the Null. Will not be used, if mat.samp is specified.
+# balanced: if TRUE, balanced permutations will be used
+# na.rm: if na.rm=FALSE, the d-values of genes with one or more missing values will be set to NA. If na.rm=TRUE, the
+#        missing values will be removed during the computation of the d-values.
+# s0: the fudge factor. If NA, s0 will automatically be computed as the minimum coefficient of variation of
+#     d(i) as a function of s(i)
+# *.s0: These options are necessary for the calculation of s0 in fudge(). For detailed information see fudge().
+#       alpha.s0 are the possible values of s0; if include.s0=TRUE, then s0=0 is also a possible choice;
+#       factor.s0 is the constant with which the MAD is multiplied
+# p0: the (prior) probability that a gene is unaffected
+# *.p0: These options are used in p0.est(). For detailed information see p0.est().
+#       lambda.p0 is a number between 0 and 1 (including 0 and 1) which is used to estimate p0; if lambda.p0=1,
+#       a natural cubic spline with 3 df of p0(vec.lambda.p0[i]) on vec.lambda.p0[i] is fitted
+# *.fdr: These options are used in sam.fdr(). For detailed information see sam.fdr().
+#        delta.fdr are the delta for which the FDR are computed; if med.fdr=TRUE, the median number, otherwise
+#        the expected number, of falsely called genes is calculated; if graphic.fdr=TRUE, the plots will be made;
+#    for each thres.fdr two lines parallel to the 45?line are plotted; if pty.fdr=TRUE, a square SAM plot
+#    is made; if help.fdr=TRUE, helplines will be plotted in both the delta vs. FDR and the delta vs.
+#    #significant genes plot
+#    If you only like to use ngenes and avoid the computation of the FDR for some delta, i.e the analysis
+#        which is done by sam.fdr(), set delta.fdr=NULL
+# ngenes: a number or proportion of genes for which a delta is computed so that about this number or percentage
+#         of genes fall outside the thresholds cutup and cutlow, i.e. so that about this number or proportion
+#         of genes is called significant. Default is NA, i.e. no such analysis will be done.
+#           This is a option in sam.ngenes().
+# iteration: the number of iterations used in sam.ngenes(). For details see sam.ngenes().
+# initial.delta: the initial guesses for delta in sam.ngenes(). For details see sam.ngenes()
+# rand: the set.seed. Default is NA, i.e. there will be no set.seed().
+
+
+sam.old<-function(data,x,y=NULL,paired=FALSE,mat.samp=NULL,B=100,balanced=FALSE,na.rm=FALSE,s0=NA,alpha.s0=seq(0,1,.05),include.s0=TRUE,
+        factor.s0=1.4826,p0=NA,lambda.p0=1,vec.lambda.p0=(0:95)/100, delta.fdr=(1:10)/5,
+        med.fdr=TRUE,graphic.fdr=TRUE,thres.fdr=seq(0.5,2,.5),pty.fdr=TRUE,help.fdr=TRUE,ngenes=NA,iteration=3,
+        initial.delta=c(0.1,seq(.2,2,.2),4),rand=NA){
+    rs.out<-rs.cal(data,x,y,paired=paired,mat.samp=mat.samp,B=B,bal=balanced,na.rm=na.rm,rand=rand)
+    r<-rs.out$r     # calculation of the observed and expected r- and s-values
+    s<-rs.out$s
+    r.perm<-rs.out$r.perm
+    s.perm<-rs.out$s.perm
+    mat.samp<-rs.out$mat.samp   # the permutation matrix
+    var.0.genes<-rs.out$var.0.genes  # the row numbers corresponding to the genes with variance Zero
+    if(is.na(s0))   # calculation of the fudge factor s0
+        s0<-fudge(r,s,alpha=alpha.s0,include.zero=include.s0,factor=factor.s0)$s.zero
+    d<-r/(s+s0)      # observed unsorted d-values
+    if(any(is.na(d)))
+        cat("There are",sum(is.na(d)),"missing d values.","\n","\n")
+    d.sort<-sort(d,na.last=TRUE)  # sorted observed d-values
+    d.perm<-r.perm/(s.perm+s0)
+    d.perm<-apply(d.perm,2,sort,na.last=TRUE)  # matrix of sorted permuted d-values
+    d.bar<- rowMeans(d.perm)   # expected sorted d-values
+    if(is.na(p0))
+        p0<-p0.est(d,d.perm,lambda=lambda.p0,vec.lambda=vec.lambda.p0)$p0  # estimation of p0
+
+    FDR<-NULL
+    delta.ngenes<-NULL
+    fdr.ngenes<-NULL
+    if(!is.null(delta.fdr)){   # doing a SAM Analysis for some delta
+        cat("SAM Analysis for a set of delta:","\n")
+        sam.fdr.out<-sam.fdr(d.sort,d.bar,d.perm,p0,delta=delta.fdr,med=med.fdr,graphic=graphic.fdr,thres=thres.fdr,
+            pty.square=pty.fdr,helplines=help.fdr)
+        FDR<-sam.fdr.out$mat.fdr    # calculation of some statistics like #significant, #falsely called
+                            # genes, FDR
+        #print(sam.fdr.out$tab.fdr)  #output #modified by H.CHO
+        cat("\n")
+    }
+    if(!is.na(ngenes)){   # for given number or percentage of significant genes a delta is computed for the
+                              # calculation of the FDR
+        sam.ngenes.out<-sam.ngenes(d.sort,d.bar,d.perm,ngenes=ngenes,iteration=iteration,initial.delta=initial.delta,med=med.fdr,
+            p0=p0)
+            fdr.ngenes<-sam.ngenes.out$fdr.ngenes       # some statistics for the exact delta or for the upper
+          			                        # and lower bound
+            delta.ngenes<-sam.ngenes.out$delta.ngenes   # exact delta
+
+    }
+    if(is.null(FDR))
+        FDR<-fdr.ngenes
+    structure(list(d=d,d.sort=d.sort,s=s,d.bar=d.bar,d.perm=d.perm,mat.samp=mat.samp,s0=s0,
+		FDR=FDR,p0=p0,fdr.ngenes=fdr.ngenes,delta.ngenes=delta.ngenes,med.fdr=med.fdr,
+		x=x,y=y,paired=paired,var.0.genes=var.0.genes))
+}
+
+# Copyright (C) 2003 Holger Schwender
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Please note that
+# 1. SAM was introduced in Tsuher, V., Tibshirani, R., and Chu, G. (2001), Significance analysis
+#    of microarrays applied to the ionizing radiation response, PNAS,98, 5116-5121,
+# 2. there is a patent pending for the SAM technology at Stanford University,
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+sam.plot<-function(sam.out, dat, delta,q.values=TRUE,R.fold=TRUE,R.unlog=TRUE,
+		na.rm=FALSE,file.out=NA,gene.names=NULL){
+	use.numbers<-sam.out$use.numbers
+	rand<-sam.out$rand
+	
+	#data<-eval(sam.out$X.name) #modified by H. Cho
+	data <- dat 
+	 
+	if(R.unlog)
+		data<-2^data
+	if(!is.null(gene.names))
+		data<-cbind(data,gene.names)
+	cgn<-ifelse(is.null(gene.names),NA,ncol(data))
+	tmp<-sam.plot.old(sam.out,delta,data,q.values=q.values,R.fold=R.fold,na.rm=na.rm,
+		file.out=file.out,col.gene.name=cgn,use.numbers=use.numbers,rand=rand)
+	invisible(structure(list(vec.fdr=tmp$vec.fdr,sam.output=tmp$sam.output,
+		row.sig.genes=tmp$row.sig.genes)))
+}
+	# Copyright (c) 2002 Holger Schwender
+
+# This function produces a SAM Plot for a delta, and it stores some statistics (p0, #significant genes,
+# #falsely called genes, FDR) and a table of the significant genes with some statistics (d-value, s-value)
+# in a file. A previous analysis with sam() must be done to use this function, but it is possible to choose
+# a delta which was not used in this previous analysis.
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Please note that
+# 1. SAM was introduced in Tsuher, V., Tibshirani, R., and Chu, G. (2001), Significance analysis
+#    of microarrays applied to the ionizing radiation response, PNAS,98, 5116-5121,
+# 2. there is a patent pending for the SAM technology at Stanford University,
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# sam.out: the object to which the output of a previous analyis with sam() was assigned
+# delta: the value of delta with which the significant genes and the FDR should be identified. This delta
+#        must not necessarily be used in the previous analysis   
+# data: the used data set; this data set must be the same data set as in sam(), but it could be, e.g.,
+#        the unnormalized version of the data set used in sam() if this data set was normalized
+# q.values: if TRUE, for each gene its q-value is computed 
+# R.fold: if TRUE, the fold change of each significant gene is calculated and added to the output
+# na.rm: if na.rm=FALSE, the d-values of genes with one or more missing values will be set to NA. If na.rm=TRUE, the
+#        missing values will be removed during the computation of the d-values.
+# pty.square: if TRUE, a square SAM Plot is generated with x- and y-axes having the same range
+# file.out: output (for details see description of this function) is stored in this file. To prevent this,
+#           set file.out=NA
+# col.accession: if col.accession is a positive integer, this column of data is interpreted as the accession
+#                number of the gene and it is added to the output. To avoid this, set col.accession=NA
+# col.gene.name: if col.gene.name is a positive integer, this column of data is interpreted as the name of
+#                the gene and is added to the output. To avoid this, set col.gene.name=NA
+# use.numbers: if TRUE, the number of observations which correspond to a point in the SAM Plot will be used
+#              as symbol for this point (instead of a circle)
+# rand: if specified, the set.seed() which is used in the computation of the q-values to remove 
+#       tied Wilcoxon Rank statistics is set to rand
+
+
+sam.plot.old<-function(sam.out,delta,data,q.values=TRUE,R.fold=TRUE,na.rm=FALSE,pty.square=TRUE,file.out=NA,
+        col.accession=NA,col.gene.name=NA,use.numbers=sam.out$use.numbers,rand=sam.out$rand){
+    wilc<-ifelse(is.null(sam.out$d),TRUE,FALSE)
+    if(wilc){
+        d<-sam.out$W
+        d.sort<-sam.out$W.sort
+        d.bar<-sam.out$W.exp
+        d.perm<-sam.out$table.W.exp
+    }
+    else{
+        d<-sam.out$d
+        d.bar<-sam.out$d.bar
+        d.sort<-sam.out$d.sort
+        d.perm<-sam.out$d.perm
+    }
+    p0<-sam.out$p0
+    if(!any(sam.out$FDR[,1]==delta))  # checks if delta was used in previous analysis
+        # if not an analysis with sam.fdr() is done, i.e. the interesting statistics are computed
+        sam.fdr(d.sort,d.bar,d.perm,p0,delta=delta,med=sam.out$med.fdr,graphic=FALSE,wilc=wilc)$mat.fdr->vec.fdr
+    if(any(sam.out$FDR[,1]==delta))    # if delta was used, we use the corresponding statistics saved in sam.out
+        vec.fdr<-sam.out$FDR[which(sam.out$FDR[,1]==delta),]
+    sig.genes<-NULL
+    if(vec.fdr[9]!=0)
+        sig.genes<-c(sig.genes,1:vec.fdr[9])
+    if(vec.fdr[8]!=length(na.exclude(d))+1)
+        sig.genes<-c(sig.genes,vec.fdr[8]:length(na.exclude(d)))
+    index<-(1:length(d))                 # make an index vector of the row numbers of all genes                         
+    row.sig.genes<-index[order(d)][sig.genes]   # the row numbers of the significant genes   
+    if(!wilc){
+    
+        #H.Cho 11auh04
+        #sam.plotter(d.sort,d.bar,delta,pty.square=pty.square,main=paste(c("SAM Plot for delta =",delta),collapse=""),
+        #    vec.fdr=vec.fdr,sig.genes=sig.genes) # SAM 
+        
+        
+        # the output is made
+        output<-cbind("d(i)"=round(d.sort[sig.genes],4),"s(i)"=round(sam.out$s[order(d)][sig.genes],4))
+        if(q.values){         #q-values are computed
+            mat.qvalue<-q.value.cal(d,d.perm,p0)$mat.qvalue
+            q.value<-mat.qvalue[order(mat.qvalue[,1]),3]   # sort the q.values
+            output<-cbind(output,"q-value"=round(q.value[sig.genes],5))
+    }}
+    else{
+        mat.count<-sam.out$mat.count
+        fdr.for.plot<-sam.fdr(mat.count[,2],mat.count[,1],d.perm,p0,delta=delta,graphic=FALSE,wilc=TRUE)$mat.fdr
+        sig.genes.plot<-c(0:fdr.for.plot[,9],fdr.for.plot[,8]:length(na.exclude(d)))
+        
+        #H.Cho 11aug04 
+        #sam.plotter(mat.count[,2],mat.count[,1],delta,pty.square=pty.square,vec.fdr=vec.fdr,sig.genes=sig.genes.plot,
+        #    main=paste(c("SAM Plot using Wilcoxon Rank Statistics \n and delta =",delta),collapse=" "),wilc=TRUE,
+        #    use.numbers=use.numbers,count=mat.count[,3])
+        if(q.values)
+            q.value<-q.value.wilc(d,p0,length(sam.out$x),length(sam.out$y),paired=sam.out$paired)$q.value
+        output<-cbind("W"=d[row.sig.genes],"q-value"=round(q.value[row.sig.genes],5))
+    }   
+    if(!is.na(col.accession))      
+        output<-cbind("access"=data[row.sig.genes,col.accession],output) 
+    if(R.fold){
+        fold.change<-R.fold.cal(data[row.sig.genes,],sam.out$x,sam.out$y,na.rm=na.rm)
+        output<-cbind(output,"R.fold"=round(fold.change[,3],4))
+    }
+    if(!is.na(col.gene.name))
+        output<-cbind(output,"gene"=substring(data[row.sig.genes,col.gene.name],1,50))
+    output<-cbind("ID"=row.sig.genes,output)  # add the index to the output; also for an nicer output
+    if(wilc)
+        output<-output[nrow(output):1,]
+    sam.output<-as.data.frame(output)
+    if(!is.na(file.out)){  # output is stored in a file
+        which.sam<-ifelse(wilc,"SAM-Wilc","SAM")
+        cat("Results of",which.sam,"using delta =",round(delta,4),"\n","\n","\n","cutlow:",round(vec.fdr[6],3),"\n","cutup:",
+            round(vec.fdr[7],3),"\n","p0:",round(p0,4),"\n","significant genes:",vec.fdr[4],"\n", 
+            "falsely called genes:",round(vec.fdr[3],4),"\n","FDR:",round(vec.fdr[5],4),"\n","\n","\n",
+            "Genes called significant",ifelse(wilc,":",paste(c("(with s0 =",round(sam.out$s0,3),"):"),collapse=" ")),
+            "\n","\n",file=file.out)
+	write.table(t(dimnames(sam.output)[[2]]),file=file.out,sep="\t",append=TRUE,row.names=FALSE,col.names=FALSE,quote=FALSE)
+        write.table(sam.output,file=file.out,sep="\t",append=TRUE,row.names=FALSE,col.names=FALSE,quote=FALSE)
+        cat("Output is stored in",file.out,"\n")
+    }
+    else
+	#print(sam.output)
+	
+	#H.Cho
+    #par(pty="m")    
+    structure(list(vec.fdr=vec.fdr,sam.output=sam.output,row.sig.genes=row.sig.genes))
+}
+# Copyright (c) 2002 Holger Schwender
+
+# This program produces the SAM Plot for one or several delta. This function is constructed as helpfunction.
+# So it doesn't check for incorrect use. That's why this function should carefully be used, if one likes to
+# use it.
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Please note that
+# 1. SAM was introduced in Tsuher, V., Tibshirani, R., and Chu, G. (2001), Significance analysis
+#    of microarrays applied to the ionizing radiation response, PNAS,98, 5116-5121,
+# 2. there is a patent pending for the SAM technology at Stanford University,
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# d.sort: vector of sorted observed d-values
+# d.bar: vector of (sorted) expected d-values
+# delta: value or vector (it is possible to choose more than one delta) for which the SAM Plot should
+#        be generated.
+# pty.square: if TRUE, a square SAM Plot is generated with x- and y-axes having the same range
+# main: the title of the plot, which appears above the plot
+# make.legend: if FALSE, a legend for deltas will be added to the SAM Plot. make.legend should only be set to TRUE,
+#              if several deltas are used and neither vec.fdr nor sig.genes is specified
+# vec.fdr: if vec.fdr is specified, a SAM Plot for the corresponding delta will be generated. This option
+#          should only be used for one delta. 
+# sig.genes: specifying sig.genes will only make sense, if vec.fdr is specified. If sig.genes is specified,
+#            the points in the SAM Plot which correspond to the values of sig.genes will be marked with green
+#            color
+# wilc: if TRUE, a SAM Plot for sam.wilc() will be generated. If FALSE, a SAM Plot for sam() is made.
+# use.numbers: if TRUE, the symbols for the points will be the numbers of observations which correspond to this
+#              points. Otherwise circles are used. This option should only be used, if wilc=TRUE. 
+# count: a vector with the numbers of observations which correspond to the points in the plot. This should
+#        only be used, if wilc=TRUE.
+
+
+sam.plotter<-function(d.sort,d.bar,delta,pty.square=TRUE,main="SAM Plot",color=1,make.legend=FALSE,vec.fdr=NULL,
+            sig.genes=NULL,wilc=FALSE,use.numbers=FALSE,count=NULL){
+    lim.min.x<-min(d.bar-.1,na.rm=TRUE)  # some limits are set for the plot
+    lim.max.x<-max(d.bar+.1,na.rm=TRUE)
+    lim.min.y<-min(d.sort-.1,na.rm=TRUE)
+    lim.max.y<-max(d.sort+.1,na.rm=TRUE)
+    if(pty.square){
+        #H.CHo 11aug04
+        #par(pty="s",lab=c(10,10,7))
+        lim.min.x<-min(lim.min.x,lim.min.y)  # other limits will be needed, if a
+        lim.min.y<-min(lim.min.x,lim.min.y)  # square SAM Plot is desired
+        lim.max.x<-max(lim.max.x,lim.max.y)
+        lim.max.y<-max(lim.max.x,lim.max.y)
+    }
+    lab.names<-ifelse(wilc,"W values","d(i)")  # make some dinstinction between the labels
+    symbol<-ifelse(use.numbers,"n","p")        # for sam() and sam.wilc()
+    
+    #H.Cho
+    #plot(d.bar,d.sort,main=main,xlab=paste(c("expected",lab.names),collapse=" "),ylab=paste(c("observed",lab.names),collapse=" "),
+    #    type=symbol,xlim=c(lim.min.x,lim.max.x),ylim=c(lim.min.y,lim.max.y))  # points in the SAM Plot
+    if(use.numbers)    # numbers can be used as symbols in sam.wilc()
+        text(d.bar,d.sort,count,cex=.8)
+    abline(0,1)
+    for(i in 1:length(delta)){   # the delta lines
+        abline(delta[i],1,lty=2,col=color[i])
+        abline(-delta[i],1,lty=2,col=color[i])
+    }
+    if(make.legend)   # a legend is made
+        legend(lim.min.x,lim.max.y,legend=c("delta",as.character(delta)),lty=2,col=c(0,color),bty="n",cex=.8)
+    if(!is.null(vec.fdr)){        # the cutlines are plotted
+        abline(h=vec.fdr[6],lty=5)  # cutlow
+        abline(h=vec.fdr[7],lty=5)  # cutlup
+        # text is added to the plot
+        text(rep(lim.min.x,6),seq(lim.max.y,lim.max.y-(lim.max.y-lim.min.y)/4,length=6),c("cutlow:","cutup:",
+            "p0:","significant:","false:","FDR:"),adj=0,cex=.75)
+        text(rep(lim.min.x+(lim.max.x-lim.min.x)/ifelse(pty.square,4.8,6),6),seq(lim.max.y,lim.max.y-(lim.max.y-lim.min.y)/4,length=6),
+            round(vec.fdr[c(6,7,2,4,3,5)],3),adj=0,cex=.75)
+        if(use.numbers)
+            text(d.bar[sig.genes],d.sort[sig.genes],count[sig.genes],cex=.8,col=3)
+        else
+            points(d.bar[sig.genes],d.sort[sig.genes],col=3)
+    }
+}
+# Copyright (C) 2002 Holger Schwender
+
+# To get the same results in sam() in S and R, one has to use the same permutation matrix.
+# Unfortunately the random numbers generators in S and R work differently.
+# This program solves this problem by defining the permutation matrix 'mat.samp' which can
+# be used in sam.bal() to do a SAM analysis. The difference between sam() and sam.bal() is
+# that in sam.bal() a predefined permutation matrix can be used where in sam() this matrix
+# will be calculated.
+
+# CAUTION: The results in S-plus differ from the results in R - even for the same set.seed().
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Please note that
+# 1. SAM was introduced in Tsuher, V., Tibshirani, R., and Chu, G. (2001), Significance analysis
+#    of microarrays applied to the ionizing radiation response, PNAS,98, 5116-5121,
+# 2. there is a patent pending for the SAM technology at Stanford University,
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# n.x: the number of cases (i.e. length of 'case' in sam())
+# n.y: the number of controls ( i.e. length of 'control' in sam())
+# B: the number of permutations which should be used in the SAM analysis
+# paired: if paired data or not
+# balanced: if balanced is TRUE, balanced permutations or permutations which are as balanced as possible
+#           are used
+# rand: here one can define set.seed(), if NA, set.seed() will not be used
+# file.out: the permutation matrix will be stored here for further use e.g. in R 
+#           if there shouldn't be any output, set file.out=NA 
+
+sam.sampler<-function(n.x,n.y,B,paired=FALSE,balanced=FALSE,rand=NA,file.out=NA){
+    if(!is.na(rand))
+        set.seed(rand)
+    if(!paired){
+        if(!balanced){
+            mat.samp<-matrix(0,B,n.x+n.y)
+            for(i in 1:B)
+                mat.samp[i,]<-sample(c(rep(1,n.x),rep(0,n.y)),n.x+n.y)
+        }
+        if(balanced){
+            mat.samp.x<-matrix(0,B,n.x)
+            mat.samp.y<-matrix(0,B,n.y)
+            for(i in 1:B){
+                mat.samp.x[i,]<-sample(rep(c(1,0),ceiling(n.x/2)),n.x)
+                mat.samp.y[i,]<-sample(rep(c(1,0),ceiling(n.y/2)),n.y)
+            }
+            mat.samp<-cbind(mat.samp.x,mat.samp.y)
+        }
+    }
+    if(paired){
+        if(n.x!=n.y)
+            stop("x must be equal to y")
+        mat.samp<-matrix(0,B,n.x)
+        for(i in 1:B)
+            mat.samp[i,]<-sample(c(-1,1),n.x,replace=TRUE)
+    }
+    if(!is.na(file.out))
+        write.table(mat.samp,file=file.out,sep="\t")
+    return(mat.samp)
+}
+    
+# Copyright (C) 2003 Holger Schwender
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Please note that
+# 1. SAM was introduced in Tsuher, V., Tibshirani, R., and Chu, G. (2001), Significance analysis
+#    of microarrays applied to the ionizing radiation response, PNAS,98, 5116-5121,
+# 2. there is a patent pending for the SAM technology at Stanford University,
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+sam.wilc<-function(data,cl,delta=1:max(abs(W.diff)),na.rm=FALSE,zero.rand=TRUE,
+		rand=NA,graphic=TRUE,thres=round(quantile(2:max(abs(W.diff)),(0:3)/3)),
+		use.numbers=TRUE){
+	X.name<-match.call()$data
+	xy.out<-xy.cal(cl,TRUE)
+	x<-xy.out$x
+	y<-xy.out$y
+	paired<-xy.out$paired
+	wilc.out<-wilc.cal(data,x,y,paired=paired,zero.rand=zero.rand,rand=rand,na.rm=na.rm)
+   	W<-wilc.out$W        # observed unsorted W-values
+    	W.sort<-sort(W)      # observed sorted W-values
+    	W.exp<-wilc.out$W.exp   # expected (sorted) W-values
+    	var.0.genes<-wilc.out$var.0.genes  # index of genes with variance Zero
+    	n.genes<-sum(!is.na(W))    # number of genes with non missing W-value
+    	W.exp.number<-n.genes*wilc.out$f.null    # vector of expected numbers of the W-values under the null
+    	W.exp.value<-as.numeric(names(W.exp.number))    # vector of the possible W-values
+    	n.exp<-length(W.exp.number)
+    	vec.lambda<-NULL
+    	vec.p0<-NULL
+    	for(i in 1:floor(n.exp/2)){   # estimation of p0
+        	vec.p0[i]<-sum(W>=W.exp.value[i] & W<=W.exp.value[n.exp-i+1],na.rm=TRUE)/sum(W.exp.number[i:(n.exp-i+1)])
+        	vec.lambda[i]<-1-sum(W.exp.number[i:(n.exp-i+1)])/n.genes
+    	}
+    	spline.out<-smooth.spline(vec.lambda,vec.p0,w=1-vec.lambda,df=3)
+    	p0<-min(predict(spline.out,1)$y,1)
+    	W.diff<-W.sort-W.exp   # computation of W.diff  (we are looking for |W.diff|>=delta)
+    	if(any(delta<=0) || any(delta!=round(delta)))
+		stop("Delta must be a positive integer.")
+	table.W.exp<-cbind(W.exp.value,W.exp.number)
+    	sam.fdr.out<-sam.fdr(W.sort,W.exp,table.W.exp,p0,delta=delta,wilc=TRUE,graphic=FALSE)
+    	FDR<-sam.fdr.out$mat.fdr
+    	#print(sam.fdr.out$tab.fdr)
+
+    	table.count<-table(W.exp,W.sort)  # for the SAM Plot the numbers of observations which correspond to the
+    	W.exp.value<-as.numeric(dimnames(table.count)[[1]])  # possible points is computed
+    	W.value<-as.numeric(dimnames(table.count)[[2]])
+    	n.exp<-length(W.exp.value)
+    	mat.count<-matrix(c(rep(W.exp.value,length(W.value)),rep(W.value,each=n.exp),
+        	as.vector(table.count)),ncol = 3)
+    	mat.count<-mat.count[-which(mat.count[,3]==0),]
+    	n.sig<-NULL
+    	# SAM Plot
+    	
+    	#remarked by H. CHo 11Aug04
+    	#if(graphic){
+        # 	sam.plotter(mat.count[,2],mat.count[,1],thres,main="SAM Plot using Wilcoxon Rank Statistics",
+        #     		color=2:(length(thres)+1),make.legend=TRUE,wilc=TRUE,use.numbers=use.numbers,count=mat.count[,3])
+        # 	X11()
+        # 	# delta vs. FDR and delta vs. #significant genes
+        # 	roller.coaster(FDR) # Delta vs. FDR and Delta vs. #significant genes
+	    #}
+	   
+    	invisible(structure(list(X.name=X.name,W=W,W.exp=W.exp,W.sort=W.sort,W.exp.number=W.exp.number,
+		p0=p0,spline.out=spline.out,FDR=FDR,mat.count=mat.count,
+		x=x,y=y,paired=paired,use.numbers=use.numbers,rand=rand)))
+}
+# Copyright (c) 2002 Holger Schwender
+
+# This function computes the observed and the expected Wilcoxon Rank statistics and the distribution of
+# the W-values under the Null.
+
+# This function is a helpfunction for sam.wilc() and ebam.wilc().
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Please note that
+# 1. SAM was introduced in Tsuher, V., Tibshirani, R., and Chu, G. (2001), Significance analysis
+#    of microarrays applied to the ionizing radiation response, PNAS,98, 5116-5121,
+# 2. there is a patent pending for the SAM technology at Stanford University,
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+# data: the used data set. Every row of this data set must correspond to a gene.
+# x: the columns of data, which belong to the cases (unpaired) or to the "after treatment"-measurements (paired)
+# y: the columns of data, which belong to the control group (unpaired) or to the "before treatment"-measurements
+#    (paired)
+# paired: paired or unpaired data. If paired=TRUE, i.e. there are paired observations, x and y must have the same
+#         length and (x[i],y[i]) must be an observation pair
+# zero.rand: if there are Zeros in the paired case, what should be done with these Zeros? If zero.rand=TRUE, a sign
+#            is randomly assigned to each observation pair (x[i],y[i]) with x[i]-y[i]=0. If FALSE, the sign of such
+#            observation pairs is set to '-' (suggested by Lehmann (1975))
+# rand: is only necessary in the paired case for the random choice of the signs of Zeros (see zero.rand)
+# na.rm: if na.rm=TRUE, each missing value in the data will be replaced by the genewise mean. If FALSE, the W-value
+#        of every gene with one or more missing values is set to NA
+
+
+wilc.cal<-function(data,x,y,paired=FALSE,zero.rand=TRUE,rand=NA,na.rm=FALSE){
+    if(!is.na(rand))
+        set.seed(rand)
+    X<-as.matrix(data[,c(x,y)])
+    mode(X)<-"numeric"
+    n.genes<-nrow(X)  # number of genes
+    NA.genes<-NULL
+    var.0.genes<-NULL
+    if(any(is.na(X))){  # checks if there are NAs
+        NA.genes<-unique(ceiling(which(is.na(t(X)))/ncol(X)))  # which gene has NAs?
+        cat("Warning: There are",length(NA.genes),"genes with at least one missing value.")
+        if(na.rm){
+            X[NA.genes,]<-na.replace(X[NA.genes,])   # replace missing values with the gene mean
+            X[which(is.na(X))]<-0  # if there are still NAs, i.e. if there are genes with no non-missing
+        }                          # value, these NAs will be set to 0 and treated later.
+        if(!na.rm)
+            cat(" The W-value of these genes is set to NA.")
+        cat("\n","\n")
+    }
+
+
+    if(!paired){  # paired case
+        n.x<-length(x)
+        n.y<-length(y)
+        n<-n.x+n.y
+        W.mean<-n.x*(n+1)/2   # mean of W-values under the null
+        W.min<-n.x*(n.x+1)/2  # minimum of W-values under the null
+        W.max<-n.x*(2*n.y+n.x+1)/2  # max of W-values under the null
+        X.rank<-t(apply(X,1,rank))  # compute the rowwise ranks
+        X.sum<-apply(X.rank,1,var)  # check if there are some genes with variance Zero
+        if(any(X.sum==0)){     # which genes have variance zero?
+            cat("Warning: There are",sum(X.sum==0),"genes with variance Zero or no non-missing value. The W-value of these genes is set to NA.",
+                "\n","\n")
+            var.0.genes<-which(X.sum==0)
+        }
+        W <- rowSums(X.rank[,1:n.x])  # compute the observed W-value of each gene
+        if(!is.null(var.0.genes)){
+            W[var.0.genes]<-NA            # set the W-value of the genes with variance zero to NA
+            n.genes<-n.genes-length(var.0.genes)
+        }
+        if(!na.rm && !is.null(NA.genes)){
+            W[NA.genes]<-NA             # set the W-value of the genes which have variance zero to NA
+            n.genes<-n.genes-length(NA.genes)   # number of genes with non-missing W-value
+        }
+        W.exp<-W.min+qwilcox(((1:n.genes)-.5)/n.genes,n.x,n.y)  # compute the expected W-values
+        f.null<-dwilcox(0:(n.x*n.y),n.x,n.y)   # compute the distribution of the W-values under the Null
+    }
+    if(paired){  # paired case
+        if(length(x)!=length(y))  # check if x and y have the same length
+            stop("x any y must have the same length.")
+        n<-length(x)
+        X<-X[,1:n]-X[,(n+1):(2*n)]   # subtract the y-columns from the corresponding x-columns of the data set
+        X.sum<-apply(X,1,var)     # check if there are genes with variance zero
+        if(any(X.sum==0)){
+            cat("There are",sum(X.sum==0,na.rm=TRUE),"genes with variance Zero or no non-missing value. The W-value of these genes is set to NA.",
+                "\n","\n")
+            var.0.genes<-which(X.sum==0)  # which genes have variance zero?
+        }
+        W.max<-n*(n+1)/2   # max of W-values under the Null, min is always 0
+        W.mean<-n*(n+1)/4  # mean of W-values under the Null
+        if(sum(X==0)>0){   # check if there are some Zeros
+            cat("There are",sum(X==0),"Zeros.","\n","\n")
+            if(zero.rand)   # if zero.rand=TRUE, a sign is randomly assigned to observation pairs with Zero difference
+                X[which(X==0)]<-sample(c(.00001,-.00001),sum(X==0),rep=TRUE)
+        }
+        W<-NULL
+        X.rank<-NULL
+        for(i in 1:n.genes)   # compute the observed W-values
+            W[i]<-sum(rank(abs(X[i,]))[X[i,]>0])
+        if(!is.null(var.0.genes)){
+            W[var.0.genes]<-NA    # set the W-values of genes with variance Zero to NA
+            n.genes<-n.genes-length(var.0.genes)
+        }
+        if(!na.rm && !is.null(NA.genes)){
+            W[NA.genes]<-NA      # set the W-values of genes with missing values to NA
+            n.genes<-n.genes-length(NA.genes)   # number of genes with non-missing W-values
+        }
+        W.exp<-qsignrank(((1:n.genes)-.5)/n.genes,n) # expected W-values
+        f.null<-dsignrank(0:W.max,n)    # compute the distribtuion of the W-values under the null
+    }
+    if(sum(W!=round(W),na.rm=TRUE)>0){
+        cat("tied Wilcoxon scores:", sum(W!=round(W),na.rm=TRUE),"\n","\n")
+        y.rand<-sample(c(-0.5,0.5),length(which(W!=round(W))),replace=TRUE)            # integer
+        W[which(W!=round(W))]<-W[which(W!=round(W))]+y.rand
+    }
+    names(f.null)<-as.character(ifelse(paired,0,W.min):W.max)
+
+    structure(list(W=W,W.exp=W.exp,f.null=f.null,X.rank=X.rank,var.0.genes=var.0.genes,
+		NA.genes=NA.genes,n.genes=n.genes))
+}
+
+# Copyright (C) 2003 Holger Schwender
+
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Please note that
+# 1. SAM was introduced in Tsuher, V., Tibshirani, R., and Chu, G. (2001), Significance analysis
+#    of microarrays applied to the ionizing radiation response, PNAS,98, 5116-5121,
+# 2. there is a patent pending for the SAM technology at Stanford University,
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+xy.cal<-function(cl,wilc=FALSE,emp=FALSE){
+	ebs<-ifelse(emp,"EB","S")
+	ana.type<-paste(ebs,ifelse(wilc,"AM-Wilc","AM"),sep="")
+	lev<-unique(cl)
+	uni.cl<-length(lev)
+	uni.cl.abs<-length(unique(abs(cl)))
+	if(uni.cl>2 & uni.cl!=2*uni.cl.abs)
+		stop("There is something wrong with the classlabels.")
+	if(uni.cl==1){
+		if(wilc)
+			stop("SAM-Wilc and EBAM-Wilc are not available yet for one class data.")
+		cat(ana.type,"Analysis for the one-class case.","\n","\n")
+		paired<-TRUE
+		if(lev!=1)
+			cat("Warning: Expected classlabel is 1. cl will thus be set to 1.","\n","\n")
+		x<-rep(1,length(cl))
+		y<-NULL
+	}
+	if(uni.cl==2){
+		cat(ana.type,"Analysis for the two class unpaired case.","\n","\n")
+		paired<-FALSE
+		if(min(lev)!=0 | max(lev)!=1){
+			cat("Warning: Expected classlabels are 0 and 1. cl will thus be set to 0 and 1.","\n","\n")
+			cl[which(cl==min(lev))]<-0
+			cl[which(cl==max(lev))]<-1
+		}
+		x<-which(cl==1)
+		y<-which(cl==0)
+	}
+	if(uni.cl==2*uni.cl.abs){
+		cat(ana.type,"Analysis for the two class paired case.","\n","\n")
+		paired<-TRUE
+		sort.cl<-sort(cl,index=TRUE)
+		if(!all(sort.cl$x==c(-uni.cl.abs:-1,1:uni.cl.abs)))
+			stop("There is something wrong with the classlabels.")
+		x<-sort.cl$ix[(uni.cl.abs+1):uni.cl]
+		y<-sort.cl$ix[uni.cl.abs:1]
+	}
+	structure(list(x=x,y=y,paired=paired))
+}
+
+
+
+
+######################################################################################
+### MAIN
+######################################################################################
+
+### REPLACE infile
+geneSigs.N <- read.table("infile", header=TRUE)
+### REPLACE conds
+conditions <- c(conds)
+### REPLACE outfile
+outFile <- "outfile"
+### REPLACE condLabels
+labels <- c(condLabels)
+### REPLACE iLPEFDR
+i.LPE.FDR <-  iLPEFDR
+### REPLACE iSAMqvalue
+i.SAM.qvalue <-  iSAMqvalue
+
+
+# strip the 1st column of probe.set
+probename <-  geneSigs.N[,1] 
+probename <- as.matrix(probename)
+geneSigs.N <- geneSigs.N[,-1] 
+
+
+
+# analyses
+geneSigs.N.log2 <- logb(geneSigs.N,base=2)
+results.tfc <- traditionalFoldChange(geneSigs.N, conditions, outFile, labels)
+results.lfc <- logFoldChange(geneSigs.N.log2, conditions, outFile, labels)
+report <- cbind(Probe.Set=probename,
+                round(geneSigs.N,  digits=1), 
+                round(results.tfc, digits=2),
+                round(results.lfc, digits=2)
+                )
+
+#check if replicated data                
+if(min(conditions)  > 1) { 
+
+   results.tt <- func.ttest(geneSigs.N.log2, conditions, labels)
+   if(i.LPE.FDR==0) results.lpe <- func.lpe(geneSigs.N.log2, conditions, labels, probe.set.name=probename)
+   if(i.LPE.FDR==1) results.lpe <- func.lpe.FDR(geneSigs.N.log2, conditions, labels, probe.set.name=probename)
+   if(i.SAM.qvalue==0) results.sam <- func.sam(geneSigs.N.log2, conditions, labels, probe.set.name=probename)
+   if(i.SAM.qvalue==1) results.sam <- func.sam.qvalue(geneSigs.N.log2, conditions, labels, probe.set.name=probename)
+
+   # make a report
+   report <- cbind(Probe.Set=probename,
+                round(geneSigs.N,  digits=1), 
+                round(results.tfc, digits=2),
+                round(results.lfc, digits=2),
+                round(results.tt,  digits=5),
+                round(results.lpe, digits=5),
+                round(results.sam, digits=5))
+}
+
+
+
+# writes a tab-delimited file, 1st column=ProbeSet, #ofRows=#ofChipProbes
+write.table(report, file=outFile , row.names=F, sep='\t')
+
+
+############################################################################################
+### END
+############################################################################################

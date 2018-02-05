@@ -1,0 +1,3 @@
+cond	name	description	spc_fk
+age1	age group 1(men)	age range includes 21-27	50
+age2	age group 2(men)	age range includes 67-75	50

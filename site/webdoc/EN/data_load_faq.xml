@@ -1,0 +1,25 @@
+<part id="data_load_faq">
+<title>FAQ</title>
+<qandaset>
+
+<qandaentry id="can_i_load_studies_with_different_chip_types">
+  <question>
+    <para>
+      Can I load studies with different chip types? 
+    </para>
+  </question>
+  <answer>
+    <para>
+    You cannot load studies with different chip types if all your study
+    data is in a single input file (this is logical as rows are named
+    for probe set ids specific to individual chips).  You can configure
+    a study with different chip types (on a per sample basis) via the
+    GUI and array center staff can load such a study.  It may be possible
+    to bulk load studies with different chip types using the data
+    directory option, although this functionality has not been tested.
+    </para>
+  </answer>
+</qandaentry>
+
+</qandaset>
+</part>

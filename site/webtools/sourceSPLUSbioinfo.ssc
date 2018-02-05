@@ -1,0 +1,412 @@
+##################################################################
+##### NIH S-PLUS Training in Bioinformatics, Feb. 20, 2002 #######
+#####         Jae K. Lee and Jennifer Gibson               #######
+#####    Division of Biostatistics and Epidemiology        #######
+#####     University of Virginia School of Medicine        #######
+#####                Michael O’Connell                     #######
+#####             Insightful Corporation                   #######
+
+##### This file contains code for functions                #######
+##### Companion file contains code for running analyses    #######
+##### assumes running from users\splusbioinfo              #######
+##### data in users\splusbioinfo\NIH                       #######
+##### scripts in users\splusbioinfo                        #######
+
+
+
+####### LPE SIGNIFICANCE EVALUATION ##########################################################
+# Significance evaluation based on Local-Pooled-Error (LPE) distribution                     #
+# Nadon R., Shi P., Skandalis A., Woody E., Hubschle H., Susko E., Rghei N.,                 #
+# Ramm P. (2001). Statistical inference methods for gene expression arrays,                  #
+# Proceedings of SPIE, BIOS 2001, Microarrays: Optical Technologies and Informatics, 46-55.  #
+# Lee J.K. (2002). Discovery and validation of microarray gene expression patterns,          #
+# LabMedia International, to appear.                                                         #
+##############################################################################################
+   
+pvals <- function(diffmat,sdmat)
+{ 
+	ngenes <- dim(diffmat)[1]
+	nrepls <- dim(diffmat)[2]
+	pright <- matrix(NA, nrow=ngenes, ncol=nrepls)
+	pleft <- matrix(NA, nrow=ngenes, ncol=nrepls)
+	for(i in 1:ngenes)
+	{
+   	 if(i%%500==0) print(i)
+	 for (j in 1:nrepls)
+		{
+   		if(!is.na(diffmat[i,j]))
+       pright[i,j] <- 1-pnorm(diffmat[i,j],mean=0,sd=sdmat[i,j])
+       pleft[i,j] <- pnorm(diffmat[i,j],mean=0,sd=sdmat[i,j])
+	   }
+	}
+
+	#Calculate left tail product of p-values
+	prprod <- apply(pright,1,FUN=prod)
+	#Calculate right tail product of p-values
+	plprod <- apply(pleft,1,FUN=prod)
+
+	#Keep the minimum of the left tail product, right tail product
+	minp <- apply(cbind(prprod,plprod),1,FUN=min)
+	pout <- cbind(diffmat,prprod,plprod,2*minp)
+	return(pout)
+}
+
+
+####### Lowess normalization between two channels or two chips ###############
+# Yang, Y.H., Dudoit, S., Luu, P., and Speed, T.P. (2001).                   #
+# Normalization for cDNA microarray data, Proceedings of SPIE, BIOS 2001,    #
+# Microarrays: Optical Technologies and Informatics, 141-152                 #
+##############################################################################
+
+lowess.nor <- function(x,y) 
+{
+	# x = log(cy3 or chip1) and y = log(cy5 or chip2)
+	out <- list()
+	na.point <- (1:length(x))[!is.na(x) & !is.na(y)]
+	x <- x[na.point]; y <- y[na.point]  
+	fit <- lowess(x+y, y-x)
+	# moc: changed from approx(fit,x+y)
+	diff.fit <- approx(fit$x,fit$y,x+y)
+	out$y <- y - diff.fit$y
+	out$x <- x
+	return(out)   
+}
+
+
+####### Inter-Quartile-Range NORMALIZATION #######
+
+### Find interquartile range ###
+
+iqrfn <- function(x)
+{
+	quantile(x,0.75,na.rm=T)-quantile(x,0.25,na.rm=T)
+}
+
+### IRQ normalization between channels or chips ###
+
+btwn.norm <- function(tmp)
+{  
+	#Adjust IQ ranges to be the same as max of IQRs
+	divisor <- matrix(rep(apply(tmp,2,iqrfn)/max(apply(tmp,2,iqrfn)),
+					dim(tmp)[1]), nrow=dim(tmp)[1],byrow=T)
+	tmp.adj <- tmp/divisor
+	
+	#Adjust medians to be the same as max of medians
+	adjustment <- matrix(rep(max(apply(tmp.adj,2,median,na.rm=T))-apply(tmp.adj,2,median,na.rm=T),
+	  					dim(tmp.adj)[1]),nrow=dim(tmp.adj)[1],byrow=T)
+	tmp.adj2 <- tmp.adj+adjustment
+	return(tmp.adj2)
+}
+
+
+
+### Functions for clustering and heatmap ###
+
+flip2.fn<-function(x) {
+# flips a matrix x side-to-side (for display)
+# x is a matrix
+rows<-dim(x)[1]
+for (i in 1:rows) 
+	{
+ 	x[i,]<-rev(x[i,])
+	}
+x
+}
+
+#######
+
+distcor.fn<-function(x) {
+# computes distance matrix based on correlation
+# x is a matrix
+# distances are computed among rows of x
+# this function is very slow and wants to be optimized
+
+if (!is.matrix(x)) {stop("X must be a matrix")}
+rows <- dim(x)[1]
+if (rows>100) {cat("Lots of rows, this will be slow.\n")}
+
+distmat<-matrix(NA,ncol=rows,nrow=rows)
+for (i in 1:rows) 
+	{
+	cat(i,"\n")
+		for (j in i:rows) 
+			{
+			this.cor<-cor(x[i,],x[j,],na.method="omit")
+			distmat[i,j]<-this.cor
+			distmat[j,i]<-this.cor
+			}
+	}
+distmat
+}
+
+#######
+
+distcor2.fn <-function(x) {
+# computes distance matrix based on correlation
+# computes distance among rows of x
+
+if (!is.matrix(x)) {stop("X must be a matrix")}
+rows <- dim(x)[1]
+cols <- dim(x)[2]
+
+means <- apply(x,1,mean, na.rm=T)
+sigmas <- sqrt(apply(x,1,var, na.method="omit"))
+distmat <- matrix(NA,ncol=rows,nrow=rows)
+
+x <- sweep(x,1,means)
+myna <- function(x) {sum(is.na(x))}
+row.nas <- apply(x,1,myna)
+
+#ij.nas is the number which are not NAs
+ij.nas <- (1-is.na(x))%*%(1-t(is.na(x)))
+
+#zero will cause no contribution to sum of squares
+x[is.na(x)] <- 0
+
+#this could maybe be replaced by a sweep
+for (i in 1:rows) 
+	{
+	x[i,]<-x[i,]/sigmas[i]
+	}
+
+for (i in 1:rows) 
+	{
+	#uncomment the line below to print iteration number while running
+	#cat(i,"\n")
+	sumsq <- (x[i,])%*%(t(x))
+	#sumsq is a vector.  this.cor is a vector
+	this.cor <- ((1/(ij.nas[i,]-1)))*sumsq
+	distmat[i,] <- this.cor  
+	}
+distmat
+}
+
+#######
+
+plclust2.fn<-function(x.h,rotate.me=F, colors=NA, lwd=1, ...) {
+# this function is like the plclust function, but allows a 90 degree
+# rotation of the dendrogram and color coding.
+
+# x.h is a hierarchical clustering object (the output of hclust)
+
+# get info from plclust
+x.pl <- plclust(x.h,las=1,labels=F,plot=F)
+
+# set up the plotting area
+if (!rotate.me) 
+	{
+	plot(1,1,type="n",xlim=c(1,max(x.h$order)),
+	ylim=c(min(x.pl$y),max(x.pl$yn)),yaxt="n",bty="n",xlab="",ylab="", ...)
+	}
+else 
+	{
+	plot(1,1,type="n",ylim=c(1,max(x.h$order)),
+	xlim=c(-max(x.pl$yn),-min(x.pl$y)),xaxt="n",bty="n",xlab="",ylab="", ...)
+	}
+
+# prepare for plotting
+n <- max(x.h$order)
+nodecolors <- rep(1,(n-1))
+if (any(is.na(colors))) 
+	{
+	colors <- rep(1,n)
+	}
+
+# plot each branch of the tree
+for (i in 1:(n-1)) 
+	{
+	temp <- x.h$merge[i,]
+	if (temp[1]<0) 
+		{
+		x1 <- x.pl$x[abs(temp[1])]
+#  y1<-x.pl$y[abs(temp[1])]
+#  use the line below for leaves which extend to the boundary
+		y1 <- (-min(x.pl$y))
+		}
+	else 
+		{
+ 		 x1<-x.pl$xn[abs(temp[1])]
+ 		 y1<-x.pl$yn[abs(temp[1])]
+		}
+	x2 <- x.pl$xn[i]
+	y2 <- x.pl$yn[i]
+	if (temp[2]<0) 
+		{
+		 x3 <- x.pl$x[abs(temp[2])]
+#  y3<-x.pl$y[abs(temp[2])]
+#  use the line below for leaves which extend to the boundary
+  		 y3 <- (-min(x.pl$y))
+		}
+	else 
+		{
+		 x3 <- x.pl$xn[abs(temp[2])]
+		 y3 <- x.pl$yn[abs(temp[2])]
+		}
+
+# set up colors for this branch
+# right side
+	if(temp[1]<0) 
+		{ 
+		color1<-colors[abs(temp[1])] 
+		}
+	else 
+		{ 
+		color1<-nodecolors[temp[1]]  
+		}
+# left side
+	if(temp[2]<0) 
+		{ 
+		color3<-colors[abs(temp[2])] 
+		}
+		else { color3<-nodecolors[temp[2]]  
+		}
+# middle
+	if(color1==color3) 
+		{ 
+		color2<-color1 
+       nodecolors[i]<-color2
+		}
+	else 
+		{ 
+		color2<-1 
+		}
+# draw the branch
+	if (!rotate.me) 
+		{
+		lines(c(x1,x1),c(y1,y2),col=color1,lwd=lwd)
+		lines(c(x1,x3),c(y2,y2),col=color2,lwd=lwd)
+		lines(c(x3,x3),c(y2,y3),col=color3,lwd=lwd)
+		# lines(c(x1,x1,x3,x3),c(y1,y2,y2,y3))
+		}
+	else 
+		{
+		lines(c(-y1,-y2),c(x1,x1),col=color1,lwd=lwd)
+		lines(c(-y2,-y2),c(x1,x3),col=color2,lwd=lwd)
+		lines(c(-y2,-y3),c(x3,x3),col=color3,lwd=lwd)
+		}
+	} 
+# end of loop over all branches
+}
+
+
+###################### readMicroarrayData ##############################
+#  This function is used to read the raw experimental data from yeast  #
+#  genome microarrays posted on http://genome-www.stanford.edu/swisnf/ #
+#  and generate a dataset, my.s2, that is used in a mixed model        #
+#  analysis of these data in the vein of Wolfinger, et al. (2000).     #
+#  A complete dataset, my.s2.complete, of which my.s2 is a subset,     #
+#  can also be generated by this function.                             #
+#                                                                      #
+#  To use this function, download all 12 datasets (*.txt files) from   #
+#  the URL listed above to a directory.  In this directory, rename     #
+#  the 12 downloaded files to a sequence of files with filenames       #
+#  distinguished only by the numbers 1, 2, ..., 12.  For example, one  #
+#  could do the following:                                             #
+#        move snf2ypda.txt sudarsanam1.txt                             #
+#        move snf2ypdc.txt sudarsanam2.txt                             #
+#        move snf2ypdd.txt sudarsanam3.txt                             #
+#        move snf2mina.txt sudarsanam4.txt                             #
+#        move snf2minc.txt sudarsanam5.txt                             #
+#        move snf2mind.txt sudarsanam6.txt                             #
+#        move swi1ypda.txt sudarsanam7.txt                             #
+#        move swi1ypdc.txt sudarsanam8.txt                             #
+#        move swi1ypdd.txt sudarsanam9.txt                             #
+#        move swi1mina.txt sudarsanam10.txt                            #
+#        move swi1minc.txt sudarsanam11.txt                            #
+#        move swi1mind.txt sudarsanam12.txt.                           #
+#  Note that these 12 txt files should be the only 12 txt files        #
+#  contained in this directory.  No other txt files except these 12    #
+#  should be in this directory during the running of this function.    #
+#                                                                      #
+#  Then, run this function in S-PLUS 6 by                              #
+#        my.s2 <- readMicroarrayData("path of the directory")          #
+#  my.s2.complete will also be generated by running the function.      #
+#                                                                      #
+#  Note: It takes about 2 minutes on a 1.4 GHz machine to run.         # 
+########################################################################
+
+readMicroarrayData <- function(path=".",out1="my.s2.complete",out2="my.s2",where=1) 
+{
+
+   files <- dos(paste("dir", paste("\"", path, "\"", sep = ""), "/B /A:-D"))
+   files <- files[grep(".[Tt][Xx][Tt]",files)]
+   PathNames <- paste(path, "/", files, sep="")
+   DatasetNames <- substring(files, 1, nchar(files)-4)
+   maxnchar <- max(nchar(DatasetNames))
+
+   for (i in 1:length(files)) {
+       assign(DatasetNames[i], importData(PathNames[i], type="ASCII",
+                                          delimiter="\t", separateDelimiters=T))
+       NonEmptyRows <- which(!is.na(get(DatasetNames[i])[,1]) |
+                             !is.na(get(DatasetNames[i])[,2]))
+       assign(DatasetNames[i],get(DatasetNames[i])[NonEmptyRows,])
+
+       data <- get(DatasetNames[i])
+       data[,"TYPE"] <- casefold(data[,"TYPE"],upper=T)
+       data[,"NAME"] <- casefold(data[,"NAME"],upper=T)
+       data[,"GENE"] <- casefold(data[,"GENE"],upper=T)
+
+       NAME.NA.Rows <- which(is.na(get(DatasetNames[i])[,"NAME"]))
+       GENE.NA.Rows <- which(is.na(get(DatasetNames[i])[,"GENE"]))
+       if (length(NAME.NA.Rows) > 0)
+          data[NAME.NA.Rows,"NAME"] <- data[NAME.NA.Rows,"TYPE"]
+       if (length(GENE.NA.Rows) > 0)
+          data[GENE.NA.Rows,"GENE"] <- data[GENE.NA.Rows,"NAME"]
+
+       data[,"NAME"] <- as.factor(data[,"NAME"])
+       data[,"GENE"] <- as.factor(data[,"GENE"])
+       data[,"TYPE"] <- as.factor(data[,"TYPE"])
+
+       nchari <- nchar(DatasetNames[i])
+       if (nchari == maxnchar-1)
+          my.array <- as.integer(substring(DatasetNames[i],nchari,nchari))
+       else if (nchari == maxnchar)
+          my.array <- as.integer(substring(DatasetNames[i],nchari-1,nchari))
+
+       spot <- as.integer(row.names(get(DatasetNames[i])))
+       assign(DatasetNames[i], cbind(data, data.frame(SPOT=spot)))
+
+       Flag0Rows <- which(get(DatasetNames[i])[,"FLAG"] == 0)
+       assign(DatasetNames[i],get(DatasetNames[i])[Flag0Rows,])
+
+       if (my.array <= 3) strain = "snf2rich"
+       else if (my.array <= 6) strain <- "snf2mini"
+       else if (my.array <= 9) strain <- "swi1rich"
+       else if (my.array <= 12) strain <- "swi1mini"
+       my.diff <- get(DatasetNames[i])[,"CH1I"] - get(DatasetNames[i])[,"CH1B"]
+       logi <- rep(NA, length(my.diff)) 
+       logi[which(my.diff > 0)] <- logb(my.diff[which(my.diff > 0)], base=2)  
+       Mutant <- cbind(get(DatasetNames[i]),
+                    data.frame(ARRAY=my.array,STRAIN=strain,DIFF=my.diff,LOGI=logi))
+
+       strain = "wildtype"
+       my.diff <- get(DatasetNames[i])[,"CH2I"] - get(DatasetNames[i])[,"CH2B"]
+       logi <- rep(NA, length(my.diff)) 
+       logi[which(my.diff > 0)] <- logb(my.diff[which(my.diff > 0)], base=2)  
+       Wildtype <- cbind(get(DatasetNames[i]),
+                    data.frame(ARRAY=my.array,STRAIN=strain,DIFF=my.diff,LOGI=logi))
+
+       assign(DatasetNames[i], 
+              data.frame(rbind(Mutant,Wildtype),row.names=1:(2*dim(Mutant)[1])))
+
+       if(i == 1) my.s2.complete <- get(DatasetNames[1])
+       else my.s2.complete <- rbind(my.s2.complete, get(DatasetNames[i]))
+   }
+
+my.s2.complete[,"STRAIN"] <- as.character(my.s2.complete[,"STRAIN"])
+my.s2.complete <- my.s2.complete[order(my.s2.complete$STRAIN),]
+my.s2.complete[,"STRAIN"] <- as.factor(my.s2.complete[,"STRAIN"])
+my.s2.complete <- data.frame(my.s2.complete[order(my.s2.complete$ARRAY,
+                                                  my.s2.complete$SPOT,
+                                                  my.s2.complete$GENE,
+                                                  my.s2.complete$NAME,
+                                                  my.s2.complete$STRAIN),],
+                             row.names=1:dim(my.s2.complete)[1]) 
+my.s2 <- data.frame(gene=my.s2.complete[,"GENE"],name=my.s2.complete[,"NAME"],
+                 array=my.s2.complete[,"ARRAY"],spot=my.s2.complete[,"SPOT"],
+                 strain=my.s2.complete[,"STRAIN"],logi=my.s2.complete[,"LOGI"])
+assign(out1,my.s2.complete,where=1)
+assign(out2,my.s2,where=1)
+return(my.s2)
+invisible()
+}

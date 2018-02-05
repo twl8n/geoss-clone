@@ -1,0 +1,26 @@
+<form action="add_am_to_an_cond.cgi" method="post">
+<input type=hidden name="an_cond_pk" value="{an_cond_pk}">
+
+<br>
+ 
+<b>Instructions:</b><br>
+You can add hybridizations to this condition from existing analysis condition(s), study(s), experimental condition(s) or individual hybridization(s).  You can also add hybridizations to this condition by filtering hybridizations in a criteria file based on continuous or categorical variables.  To enact changes click on Add Hybrids to Condition. <br><br>
+
+Condition Name:  {an_cond_name}  &nbsp;&nbsp; <input type="image"
+border="0" name="edit_an_cond_{an_cond_pk}" src="../graphics/pencil.gif" width="25" height="25"><br>
+Creation Time: {an_cond_created}<br>
+Condition Description: {an_cond_desc}<br>
+<br>
+
+Choose Source of Hybridizations:<br>
+<input type=radio name=source value="an_cond" {an_cond_checked}>Analysis Conditions &nbsp; &nbsp;
+<input type=radio name=source value="study" {study_checked}>Studies &nbsp; &nbsp;
+<input type=radio name=source value="exp_condition" {exp_condition_checked}>Experimental Conditions &nbsp; &nbsp;
+<input type=radio name=source value="arraymeasurement" {arraymeasurement_checked}>Hybridizations &nbsp; &nbsp;
+<input type=radio name=source value="criteria_file" {criteria_file_checked}>From Criteria File<br>
+<input type=submit name="submit" value="Choose Hybridization Source"><br>
+<br>
+{criteria_file_html}
+{source_html}
+
+</form>

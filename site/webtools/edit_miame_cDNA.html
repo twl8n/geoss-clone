@@ -1,0 +1,250 @@
+<!--ED_TYPE_POPUP-->
+<div onclick='event.cancelBubble = true;' class=popup
+id=ed_type_popup>
+Type of experiment. For example, is it a comparison of normal vs. diseased
+tissue, a time course, or designed to study the effects of a gene knockout?
+</div>
+
+<!--ED_DESIGN_POPUP-->
+<div onclick='event.cancelBubble = true;' class=popup
+id=ed_design_popup>
+A description of the comparisons made in each hybridization, whether to a
+standard reference sample, or between experimental samples.  
+</div>
+
+<!--ED_FACTORS_POPUP-->
+<div onclick='event.cancelBubble = true;' class=popup
+id=ed_factors_popup>
+The parameters or conditions tested, such as time, dose, or genetic
+variation.
+</div>
+
+<!--ED_QC_STEPS_POPUP-->
+<div onclick='event.cancelBubble = true;' class=popup
+id=ed_qc_steps_popup>
+For example, replicates or dye swaps.
+</div>
+
+<!--ED_URLS_POPUP-->
+<div onclick='event.cancelBubble = true;' class=popup
+id=ed_urls_popup>
+Should include any supplemental websites or database accession numbers.
+</div>
+
+<!--SMP_ORIGIN_POPUP-->
+<div onclick='event.cancelBubble = true;' class=popup
+id=smp_origin_popup>
+Origin of the biological sample should include the name of the organism and
+the provider of the sample.  Characteristics might include things like
+gender, age, developmental stage, strain, or disease state.
+</div>
+
+<!--SMP_MANIPULATION_POPUP-->
+<div onclick='event.cancelBubble = true;' class=popup
+id=smp_manipulation_popup>
+For example, growth conditions, treatments, separation techniques.
+</div>
+
+<!--SMP_LABELING_POPUP-->
+<div onclick='event.cancelBubble = true;' class=popup
+id=smp_labeling_popup>
+For example, the RNA or DNA extraction and purification protocol.
+</div>
+
+<!--AD_DESIGN_POPUP-->
+<div onclick='event.cancelBubble = true;' class=popup
+id=ad_design_popup>
+Should include platform type (whether the array is a spotted glass array, an 
+<i>in situ</i> synthesized array, etc.); surface and coating ad_specs
+(when known--often commercial suppliers do not provide this data); and the
+availability of the array (the name or make of commercially available 
+arrays).
+</div>
+
+<!--AD_REPORTER_TYPE_POPUP-->
+<div onclick='event.cancelBubble = true;' class=popup
+id=ad_reporter_type_popup>
+Type should be cDNA or oligonucleotide.  Information characterizing the
+reporter molecule might include appropriate database reference(s) and
+sequence (if available).
+</div>
+
+<!--AD_SPOTTING_PROTOCOLS_POPUP-->
+<div onclick='event.cancelBubble = true;' class=popup
+id=ad_spotting_protocols_popup>
+Including array substrate, the spotting buffer, and any post-printing,
+including cross-linking.
+</div>
+
+<form action="edit_miame2.cgi" method=POST>
+<br>
+You may save your data at any time.  To resume entering data, choose <a
+href="choose_miame1.cgi">Edit/Delete/Submit
+publishing information</a> from the GEOSS Member Home Page.<br>
+When you have entered all data, choose "Submit".  This will initiate the 
+publishing process.  You will receive a notification email when the data is
+made available to the public.  This process typically takes about 2 days.<br>
+<br>
+<input type="submit" name="save" value="Save form">
+<input type="submit" name="submit" value="Submit information">
+
+<h1>Information for study: {miame_name_val}</h1>
+<input type="hidden" name="miame_name" value="{miame_name_val}"> 
+<input type="hidden" name="miame_pk" value="{miame_pk_val}">
+<input type="hidden" name="miame_description" value="{miame_description_val}">
+<input type="hidden" name="start_compile_date"
+value="{start_compile_date_val}">
+
+<h1>Experiment</h1>
+<h2>Experiment Design</h2>
+The goal of this section is to provide a general description of the
+experiment and its goal.
+<br>
+<br>
+
+Type of experiment:
+[<a href="help_miame.html#ed_type" class=popupLink onclick="return !showPopup('ed_type_popup', event);">help</a>]
+<br>
+<textarea rows="3" name="ed_type"
+cols="90">{ed_type_val}</textarea></br>
+
+Hybridization design:
+[<a href="help_miame.cgi#ed_design" class=popupLink
+onclick="return !showPopup('ed_design_popup', event);">help</a>]
+[<a href="help_miame.cgi#ed_design" class=popupLink onclick="return
+!showPopup('ed_design_popup', event);">help</a>]
+<br>
+<textarea rows="3" name="ed_design" cols="90">{ed_design_val}</textarea></br>
+
+Experimental factors:
+[<a href="help_miame.html#ed_factors" class=popupLink onclick="return !showPopup('ed_factors_popup', event);">help</a>]
+<br>
+<textarea rows="3" name="ed_factors"
+cols="90">{ed_factors_val}</textarea></br>
+
+Number of hybridizations performed:
+<input type="text" size="4" name="ed_num_hybrids" value="{ed_num_hybrids_val}"><br>
+
+Type of reference used for the hybridization:<br>
+<textarea rows="3" name="ed_reference" cols="90">{ed_reference_val}</textarea></br>
+
+Quality control steps taken:
+[<a href="help_miame.html#ed_qc_steps" class=popupLink
+onclick="return !showPopup('ed_qc_steps_popup', event);">help</a>]
+<br>
+<textarea rows="3" name="ed_qc_steps"
+cols="90">{ed_qc_steps_val}</textarea><br>
+
+URLs of supplemental websites:
+[<a href="help_miame.html#ed_urls" class=popupLink
+onclick="return !showPopup('ed_urls_popup', event);">help</a>]
+<br>
+<textarea rows="3" name="ed_urls" cols="90">{ed_urls_val}</textarea>
+<hr>
+
+<h2>Samples Used, Extraction Preparation, and Labeling</h2>
+Origin of the biological sample and its characteristics:
+[<a href="help_miame.html#smp_origin" class=popupLink
+onclick="return !showPopup('smp_origin_popup', event);">help</a>]
+<br>
+<textarea rows="3" name="smp_origin" cols="90">{smp_origin_val}</textarea><br>
+
+Manipulation of the samples and the protocols used:
+[<a href="help_miame.html#smp_manipulation" class=popupLink
+onclick="return !showPopup('smp_manipulation_popup', event);">help</a>]
+<br>
+<textarea rows="3" name="smp_manipulation"
+cols="90">{smp_manipulation_val}</textarea><br>
+
+Protocols for preparing the hybridization and labeling extracts:
+[<a href="help_miame.html#smp_labeling" class=popupLink
+onclick="return !showPopup('smp_labeling_popup', event);">help</a>]
+<br>
+<textarea rows="3" name="smp_labeling"
+cols="90">{smp_labeling_val}</textarea><br>
+
+External controls (spikes) added:<br>
+<textarea rows="3" name="smp_spikes" cols="90">{smp_spikes_val}</textarea><br>
+<hr>
+
+<h2>Hybridization Procedures and Parameters</h2>
+Protocols and conditions used during hybridization, blocking, and washing:<br>
+<textarea rows="3" name="hybrid_procedures"
+cols="90">{hybrid_procedures_val}</textarea><br>
+<hr>
+
+<h2>Measurement Data and Specifications</h2>
+
+Names and versions of scanning hardware and software used:<br>
+<textarea rows="3" name="hw_sw_info" cols="90">{hw_sw_info_val}</textarea><br>
+
+Type of image analysis software used:<br>
+<textarea rows="3" name="sw_type" cols="90">{sw_type_val}</textarea><br>
+
+Description of the measurements produced by the image analysis software:<br>
+<textarea rows="3" name="measurements_image_ana"
+cols="90">{measurements_image_ana_val}</textarea><br>
+
+Description of which measurements were used in the analysis:<br>
+<textarea rows="3" name="sw_measurements_used_ana"
+cols="90">{sw_measurements_used_ana_val}</textarea><br>
+
+Parameters used in both hardware and software:<br>
+<textarea rows="3" name="hw_sw_params" cols="90">{hw_sw_params_val}</textarea><br>
+
+How the data is analyzed and transformed:<br>
+<textarea rows="3" name="sw_data_manipulation"
+cols="90">{sw_data_manipulation_val}</textarea><br>
+<hr>
+
+<h1>Array Design</h1>
+
+General array design: 
+[<a href="help_miame.html#ad_design" class=popupLink
+onclick="return !showPopup('ad_design_popup', event);">help</a>]
+<br>
+<textarea rows="3" name="ad_design" cols="90">{ad_design_val}</textarea><br>
+
+What occupies each feature (spot) on the microarray: <br>
+<textarea rows="3" name="ad_spot" cols="90">{ad_spot_val}</textarea><br>
+
+Specifications of the array manufacture: <br>
+<textarea rows="3" name="ad_specs" cols="90">{ad_specs_val}</textarea><br>
+
+Location of array and ID of its respective reporter (molecule present on each
+spot) for each feature (spot):
+<textarea rows="3" name="ad_location_id" cols="90">{ad_location_id_val}</textarea><br>
+<br>
+
+Type of each reporter, such as clone ID or gene accession number:
+[<a href="help_miame.html#ad_reporter_type" class=popupLink
+onclick="return !showPopup('ad_reporter_type_popup', event);">help</a>]
+<br>
+<textarea rows="3" name="ad_reporter_type" cols="90">{ad_reporter_type_val}</textarea><br>
+
+<h3>For commercial arrays:</h3>
+Reference to manufacturer, including catalog number and website:<br>
+<textarea rows="3" name="ad_manufacturer" cols="90">{ad_manufacturer_val}</textarea><br>
+
+<h3>For non-commercial arrays:</h3>
+Source of reporter molecules with references:<br>
+<textarea rows="3" name="ad_reporter_source" cols="90">{ad_reporter_source_val}</textarea><br>
+
+Method of reporter preparations with references:<br>
+<textarea rows="3" name="ad_reporter_prep" cols="90">{ad_reporter_prep_val}</textarea><br>
+
+Spotting protocols used:
+[<a href="help_miame.html#ad_spotting_protocols" class=popupLink
+onclick="return !showPopup('ad_spotting_protocols_popup', event);">help</a>]
+<br>
+<textarea rows="3" name="ad_spotting_protocols"
+cols="90">{ad_spotting_protocols_val}</textarea><br>
+
+Additional treatments performed prior to hybridization:<br>
+<textarea rows="3" name="ad_prehybrid_treatment"
+cols="90">{ad_prehybrid_treatment_val}</textarea><br>
+<hr>
+
+<input type="submit" name="save" value="Save form">
+<input type="submit" name="submit" value="Submit information">
+</form>

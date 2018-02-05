@@ -1,0 +1,95 @@
+  <loop>
+  <table width="100%" border=3 cellpadding=3 cellspacing=0>
+    <tr>
+          <td>
+            <b>*Experimental Condition {num_ec} Name:</b>
+            {exp_name}
+          </td>
+       <td>
+        Delete: {exp_delete}
+      </td>
+    </tr>
+    <tr>
+      <td colspan=2>
+        <table width="100%" border=1 cellpadding=3 cellspacing=0>
+          <tr bgcolor="#c9dfae">
+            <th>*Short Name</th>
+            <th>*Species</th>
+            <th>Sample Type for<br>Microarray Analysis</th>
+            <th>Notes</th>
+            <th>Description</th>
+         </tr>
+         <tr>
+           <td>{short_name}</td>
+           <td>{select_species}</td>
+           <td>{select_sample}</td>
+           <td>{notes}</td>
+           <td>{description}</td>
+         </tr>
+       </table>
+     </td>
+     </tr>
+     <tr>
+       <td colspan=2>
+         <table width="100%">
+           <tr><td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
+           <td>
+         <table width="100% border=1 cellpadding=3 cellspacing=0>
+           <tr bgcolor="#cbcebf">
+             <th colspan=8>Biological Replicates</th>
+           </tr>
+           <tr>
+             <th>Sample<br>Name</th>
+             <th>*Chip Type</th>
+             <th>* # of Chips <br>(replicates)</th>
+             <th>Lab Book<br>ID</th>
+             <th>Lab Book<br>Owner</th>
+             <th>Sample<br>Origin</th>
+             <th>Sample<br>Manipulation</th>
+             <th>Delete</th>
+           </tr>
+           <loop2>
+           <tr>
+             <td align="center">
+               {smp_name}
+             </td>
+             <td align="center">
+               {select_layout}
+             </td>
+             <td align="center">
+               {num_am}
+             </td>
+             <td align="center">
+               {lab_book}
+             </td>
+             <td align="center">
+               {select_lab_book_owner}
+             </td>
+             <td align="center">
+               {origin}
+             </td>
+             <td align="center">
+               {manipulation}
+             </td>
+             <td align="center">
+               {smp_delete}
+             </td>
+           </tr>
+           </loop2>
+           </table>
+           </td>
+           </tr>
+         </table>
+       </td>
+     </tr>
+     <tr>  
+      <td colspan=2> 
+        Number of samples (biological replicates) to add to this 
+        experimental condition:
+        <input type="text" maxlength="3" size="3"
+         name="{add_smp}" value="">&nbsp;
+      </td>
+     </tr>
+   </table>
+   <br>
+  </loop>

@@ -1,0 +1,116 @@
+<html>
+<head><title>Differential Expression Discovery Documentation</title></head>
+<body bgcolor="#FFFFFF">
+<p><b>Description</b><br>
+The GEOSS module 'Differential Discovery' performs calculations that are intended for
+discovery of differentially expressed genes. 
+This module uses the following methods: 
+fold changes, two-sample t-test, Westfall & Young's permutation test, LPE test, and SAM test.
+The output from this module is formatted in a table structure for easier access and readability.<br>
+<br>
+</p>
+<p><br>
+<b>Statistical Methods</b><br>
+The following computations are done on the input data::<br><br>
+
+<li> Traditional fold changes (TradFC) are computed by a log-base-2 transformation on
+the ratio of average expression values between two conditions.<br>
+
+<li> Log fold changes (LogFC) are computed as the difference between average
+expression values of the two conditions, where the expression values have
+been log-base-2 transformed before averaging.<br>
+
+<li> Student's two-sample t-test is performed on the log-base-2 transformed
+ expression values, for all pairs of conditions.<br>
+
+<li> Westfall & Young's permutation test is performed on the log-base-2 transformed
+expression values, for all pairs of conditions. For explanation of the permutation test
+analysis, look at:<br><br>
+
+<ul>
+1. Westfall, P.H., and Young, S.S. (1993). Resampling-based multiple
+     testing: Examples and methods for p-value adjustment. John Wiley
+     & Sons..<br>
+2. Ge, Y., Dudoit, S., and T. P. Speed (2003). 
+Resampling-based multiple testing for microarray data analysis. 
+<i>TEST</i>, Vol. 12, No. 1, p. 1-44. 
+</ul>
+
+<li> Local Pooled Error (LPE) test is performed on the log-base-2 transformed
+expression values, for all pairs of conditions.  For explanation of the LPE
+test, look at:<br><br>
+<ul>
+1. Jain, N., Thatte, J., Braciale, T., Ley, K., O'Connell, M.,
+and Lee, J.K. (2003).  Local pooled error test for identifying
+differentially expressed genes with a small number of replicated microarrays,
+<i>Bioinformatics</i>,  19, 1945-1951.<br>
+2. Lee, J.K. and O'Connell, M. (2003). Chapter 7: An Splus library for the
+analysis of microarray data.  <i>The Analysis of Gene Expression Data:
+Methods and Software</i>, edited by Parmigiani, Garrett, Irizarry, and Zeger.
+Springer: New York.<br><br>
+</ul>
+
+<li> Significance Analysis of Microarray (SAM)  is performed on the log-base-2 transformed
+expression values, for all pairs of conditions.  For explanation of the SAM
+analysis, look at:<br><br>
+<ul>
+1. Tusher, V.G., Tibshirani, R., and Chu, G. (2001). Significance
+     analysis of microarrays applied to the ionizing radiation
+     response, <i> PNAS </i>, 98, 5116-5121.<br>
+2. Storey, J.D. (2002). A direct approach to the false discovery
+     rate, _<i>Journal of the Royal Statistical Society, Series B</i>,  64,
+     479-498.<br>
+3. Storey, J.D. and Tibshirani, R.(2003). Chapter 12: SAM Thresholding and False Discovery Rates 
+for Detecting Differential Gene Expression in DNA Microarrays
+<i>The Analysis of Gene Expression Data:
+Methods and Software</i>, edited by Parmigiani, Garrett, Irizarry, and Zeger.
+Springer: New York
+</ul>
+
+<p><br>
+  <b>Input files</b><br>
+Differential Discovery expects input in this form:<br>
+</p>
+<ul>
+  <li> A file containing chip data. The file should have row and column labels.<br>
+    <br>
+</ul>
+Analyses that create input in this format include:<br>
+<ul>
+  <li> Quality Control<br>
+</ul>
+<p>&nbsp;</p>
+<p><b>Output files</b><br>
+Differential Discovery creates the following output:<br>
+</p>
+<ul>
+  <li> An intermediate data file containing expression data and statistics for all probe sets.
+</ul>
+    <br>
+</ul>
+Analyses that accept differential discovery output as input include:<br>
+<ul>
+  <li>Filter<br>
+  <li>Add Links<br>
+</ul>
+<p>&nbsp;</p>
+<p><b>Parameters:</b><br>
+</p>
+<ul>
+  <li> (Optional) differential discovery by - whether additional statistics are computed
+  <li> Intermediate data filename - name of the data file to pass to other
+analysis nodes<br>
+  <li> Log filename - name of the file containing log and error messages<br>
+</ul>
+
+<p>&nbsp;</p>
+<p><b>Note:</b><br>
+</p>
+<ul>
+  <li> If there are no replicates for a condition, only the fold changes are computed. 
+</ul>
+
+
+</body></html>
+
+

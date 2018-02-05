@@ -1,0 +1,562 @@
+<article id="install_guide">
+<title>Install Guide</title>
+<para>
+  This section provides a detailed description of how to install
+  &product; via the &product; rpm. The installer 
+  is expected to have root access and to have a good 
+  grasp of basic LINUX commands. If you are not comfortable with the Linux 
+  command line and with editing text files, we strongly suggest that you have 
+  your Linux system administrator install &product; for you. 
+</para>
+<sect1 id="install_dependencies">
+<title>Install Dependencies</title>
+  <para>
+    Prior to installing &product;, all products that &product; depends on 
+    must be installed. For complete information on how to install these 
+    products, see their respective documentation. We will try to provide
+    hints that pertain to configuring these products in an optimal
+    fashion for use with &product;.
+    The information we provide on how to install these products may 
+    be &product; specific, and is intended to supplement existing product 
+    documentation.
+  </para>
+  <formalpara>
+    <title>Install <ulink url="http://fedora.redhat.com">Fedora</ulink>
+    </title>
+    We use and test &product; on Fedora Core.  For information on
+    installing on different platforms, see the <link
+    linkend="different_install_platforms">install FAQ</link>.
+    If you are installing Fedora from scratch, here are some broad
+    suggestions based on our install.  Note that this is intended only
+    as a guideline.  As there are frequent releases and patches, it is
+    difficult to provide exact information.
+  </formalpara>
+  <para>
+    During the graphical install, there is a page 
+    asking which packages to install. The easy (albeit longer install and 
+    longer updates) is to install everything. You'll get extra stuff you don't 
+    need, but as far as we know that doesn't cause any problems. If you want 
+    to choose packages, this as worked for us: KDE, Editors, 
+    Server configuration, 
+    Web server, SQL database, Development tools, Kernel development, 
+    KDE development, Administration Tools, System tools.
+  </para>
+  <para>
+    When you get to the firewall configuration of the install, turn the 
+    firewall on, but allow SSH, HTTPS and HTTP through the firewall.
+    After installing Fedora, we recommend that you run yum update to get all 
+    pertinent updates and fixes. 
+    
+      <tip>
+      The standard yum configuration uses the Fedora 
+      site which can be very slow. You might have better luck with a Fedora 
+      mirror. To set this up, login as root, and edit
+      <filename>/etc/yum.conf</filename>. Change the baseurl line 
+      of the [updates-released] section:
+        <informalexample>
+          <para>
+            <computeroutput>
+baseurl=http://ftp.dulug.duke.edu/pub/fedora/linux/core/updates/$releasever/$basearch/
+ftp://ftp.linux.ncsu.edu/pub/fedora/linux/core/updates/$releasever/$basearch/
+ftp://ftp.tu-chemnitz.de/pub/linux/fedora-core/updates/$releasever/$basearch/
+http://fedora.redhat.com/updates/released/fedora-core-$releasever
+            </computeroutput>
+          </para>
+        </informalexample>
+      </tip>
+    </para>
+    
+    <para>
+    To run yum update (which may take a several minutes):
+     </para>
+
+    <para>
+    <computeroutput>[root] #</computeroutput><command>yum update</command>
+    </para>
+
+    <formalpara>
+    <title>  Install 
+      <ulink url="http://httpd.apache.org/docs-2.0/install.html"> 
+      Apache</ulink></title>
+      If you are installing on Fedora, Apache should already be installed. You 
+      will need to make sure that Apache is configured to start automatically 
+      when the system boots and to ensure that the appropriate ports are open 
+      to allow http and https communication.
+    </formalpara>
+
+    <formalpara>
+      <title>Install <ulink url=
+  "http://www.postgresql.org/docs/7.4/interactive/installation.html">Postgres
+      </ulink></title>
+
+      Postgres is installed with Fedora (per our notes above as part of the 
+      SQL database package). Ensure that it starts automatically and 
+      initializes itself the first time you boot the computer.
+    </formalpara>
+
+    <formalpara>
+      <title>
+      Install <ulink url="http://www.r-project.org/">R
+      </ulink> and the <ulink url="http://bioconductor.org">bioconductor
+      libraries.</ulink></title>
+
+      <ulink
+      url="http://cran.r-project.org/doc/FAQ/R-FAQ.html#How-can-R-be-installed_003f">Instructions for installing R</ulink> can be found at the R
+      project website. After installing R, make a symbolic link from
+      R2.1 to R (each analysis module is tied to a specific version of
+      R):
+        <programlisting>[root] # ln -s /usr/local/bin/R /usr/local/bin/R2.1</programlisting>
+      Your installed R location may vary (e.g., the RPM installs it in
+      /usr/bin).
+      <ulink
+      url="http://www.bioconductor.org/faq.html#biocLite">Instructions
+      for installing Bioconductor</ulink> can be found at the
+      Bioconductor website.
+    </formalpara>
+
+    <formalpara>
+      <title>Install annotation data from Bioconductor.</title>
+      Open an R session and type:
+        <programlisting>
+        source("http://www.bioconductor.org/biocLite.R")
+        biocLite(pkgs = c(
+          "YEAST",
+          "hgu133a",
+          "hgu133b",
+          "hgu133plus2",
+          "hgu95av2",
+          "hgu95b",
+          "hgu95c",
+          "hgu95d",
+          "hgu95e",
+          "hu6800",
+          "humanCHRLOC",
+          "humanLLMappings",
+          "mgu74a",
+          "mgu74av2",
+          "mgu74b",
+          "mgu74bv2",
+          "mgu74c",
+          "mgu74cv2",
+          "moe430a",
+          "moe430b",
+          "mouse4302",
+          "mouseCHRLOC",
+          "mouseLLMappings",
+          "rae230a",
+          "rae230b",
+          "rat2302",
+          "ratCHRLOC",
+          "ratLLMappings",
+          "rgu34a",
+          "rgu34b",
+          "rgu34c",
+          "ygs98"
+        ))
+        </programlisting>
+    </formalpara>
+
+    <formalpara>
+      <title>Install the Biobase, HEM, LPE, e1071, MiPP, multtest, and
+      annotate R Modules.</title>
+      The links below link to the versions we installed for testing:
+      <itemizedlist>
+      <listitem><ulink
+      url="http://bioconductor.org/packages/1.9/bioc/html/Biobase.html">Biobase_1.12.2.tar.gz</ulink></listitem>
+      <listitem><ulink
+      url="http://cran.r-project.org/src/contrib/Descriptions/e1071.html">e1071_1.5-16.tar.gz</ulink></listitem>
+      <listitem><ulink
+      url="http://www.bioconductor.org/packages/bioc/1.8/html/MiPP.html">MiPP_1.4.0.tar.gz</ulink></listitem>
+      <listitem><ulink
+      url="http://www.bioconductor.org/packages/1.9/bioc/html/LPE.html">LPE_1.8.0.tar.gz</ulink></listitem>
+      <listitem><ulink
+      url="http://bioconductor.org/packages/1.9/bioc/html/HEM.html">HEM_1.0.6.tar.gz</ulink></listitem>
+      <listitem><ulink
+      url="http://bioconductor.org/packages/1.9/bioc/html/multtest.html">multtest_1.12.2.tar.gz</ulink></listitem>
+      <listitem><ulink
+      url="http://bioconductor.org/packages/1.9/bioc/html/annotate.html">annotate_1.12.1.tar.gz</ulink></listitem>
+      </itemizedlist>
+      Install the modules with the following commands:
+      <programlisting>
+      [root] # R CMD INSTALL Biobase_1.12.2.tar.gz
+      [root] # R CMD INSTALL e1071_1.5-16.tar.gz
+      [root] # R CMD INSTALL MiPP_1.4.0.tar.gz
+      [root] # R CMD INSTALL LPE_1.8.0.tar.gz
+      [root] # R CMD INSTALL HEM_1.6.0.tar.gz
+      </programlisting>
+    </formalpara>
+
+    <formalpara>
+      <title>Install Perl Modules:</title>
+
+       Perl modules should be installed via rpm, so that the &product; 
+       rpm dependencies are satisfied. We supply rpm versions of
+       the AppConfig and PDF-API2 modules, as they are not currently
+       available via yum.  The tar file with these Perl modules is
+       called geoss_perl_modules.tar and is available for download at
+       the &sourceforge_site;. Other modules can be installed using yum. 
+    </formalpara>
+    <para>
+      <computeroutput>
+        [root] # 
+      </computeroutput>
+      <command>yum install perl-DBI perl-DBD-Pg perl-Compress-Zlib</command>
+    </para>
+    <para>
+      <computeroutput>
+        [root] # 
+      </computeroutput>
+      <command>tar -zxf geoss_perl_modules.tar.gz</command>
+    </para>
+    <para>
+      <computeroutput>
+        [root] # 
+      </computeroutput>
+      <command>rpm -ivh perl-AppConfig-1.56-1.noarch.rpm perl-PDF-API2-0.3r77-1.noarch.rpm</command>
+      </para>
+
+    <formalpara>
+      <title>Download and untar the layout files:</title>
+      You will also need to download and untar the layout files. We have made 
+      them available at the &sourceforge_site;.  Download
+      <filename>geoss_layouts.tar.gz </filename> then do the following:
+    </formalpara>
+    <para>
+      <computeroutput>
+        [root] # 
+      </computeroutput>
+     <command>tar -zxvf geoss_layouts.tar.gz</command>
+    </para>
+    <para>
+      This will create <filename>geoss_layouts</filename> directory in 
+      the current directory.  Remember the path to this directory since
+      you'll be prompted for it later in the install process.
+    </para>
+</sect1>
+
+<sect1 id="configure_postgres">
+<title>Configure Postgres</title>
+  <para>
+    <computeroutput>
+        [root] # 
+    </computeroutput>
+  <command>su -l postgres</command>
+  </para>
+  <para>
+  Check the values of:
+  </para>
+  <para>
+    <computeroutput>
+        [postgres] $ 
+    </computeroutput>
+  <command> pg_controldata /var/lib/pgsql/data</command>
+  </para>
+  <para>
+  You should see lines like this: 
+  </para>
+  <computeroutput>
+      LC_COLLATE: C
+      LC_CTYPE: C
+  </computeroutput>
+  <para>
+  If these settings are not correct, some sorting operations will have 
+  the wrong order. 
+  </para>
+  
+  <para>
+  Edit <filename>/var/lib/pgsql/data/postgresql.conf</filename>. 
+  Uncomment the tcpip_socket 
+  line (by removing the leading #) and set the value to true. This will 
+  allow DBI to connect to the database.
+  </para>
+  <para>
+  Edit <filename>pg_hba.conf</filename> to specify who can connect to
+  the geoss database. Add the following lines:
+  </para>
+  <literallayout><computeroutput>local geoss geoss md5
+host geoss geoss 127.0.0.1 255.255.255.255 md5</computeroutput></literallayout>
+  <para>
+    Next, add the geoss <link linkend="postgres_user">postgres
+    user</link>:
+  </para>
+  <para>
+    <computeroutput>
+        [postgres] $ 
+    </computeroutput>
+    <command> createuser -a -d -E -P geoss</command>
+  </para>
+  <para>
+  When you are prompted for a password, enter a secure password. You will 
+  need to supply this password to the geoss_initialize script when you 
+  initialize &product;. 
+  </para>
+  <para>
+  Next, add geoss <link linkend="postgres_database">postgres database</link>:
+  </para>
+  <para>
+    <computeroutput>
+        [postgres] $ 
+    </computeroutput>
+    <command> createdb geoss</command>
+  </para>
+  <para>
+  Go back to being the root user: 
+  </para>
+  <para>
+    <computeroutput>
+        [postgres] $ 
+    </computeroutput>
+    <command> exit</command>
+  </para>
+  <para>
+     Restart postgres so that your new changes take effect:
+  </para>
+  <para>
+    <computeroutput>
+        [root] # 
+    </computeroutput>
+    <command>/etc/rc.d/init.d/postgresql restart</command>
+  </para>
+  <para>
+    This completes Postgres configuration.  Now verify that you can 
+    connect to the database correctly by typing:
+  </para> 
+  <para>
+    <computeroutput>
+        [root] # 
+    </computeroutput>
+    <command> psql geoss -d geoss </command>
+  </para>
+
+  <para>
+    <computeroutput>
+        Password:
+    </computeroutput>
+    <command><replaceable>Postgres geoss user password</replaceable></command>
+  </para>
+
+  <para>
+    <computeroutput>
+        geoss=# 
+    </computeroutput>
+    <command> \q</command>
+  </para>
+  <para>
+  If you are unable to connect to the database in this fashion, you must 
+   correct the error before proceeding or the install will not work. 
+  </para>
+</sect1>
+
+<sect1 id="install_&product;">
+  <title>Install &product;</title>
+  Install the <ulink url="http://sourceforge.net/projects/geoss">&product; 
+  rpm:</ulink>
+  <para>
+    <computeroutput>
+        [root] # 
+    </computeroutput>
+    <command> rpm -ivh <replaceable>geoss rpm file</replaceable></command>
+  </para>
+  <para>
+  This will install &product; code into the following directories:
+  <itemizedlist>
+  <listitem>
+  <para>
+    <filename>/usr/bin</filename>
+  </para>
+  </listitem>
+  <listitem>
+  <para>
+    <filename>/usr/lib</filename>
+  </para>
+  </listitem>
+  <listitem>
+  <para>
+    <filename>/var/lib/geoss</filename>
+  </para>
+  </listitem>
+  <listitem>
+  <para>
+    <filename>/var/www/html/geoss</filename>
+  </para>
+  </listitem>
+  </itemizedlist>
+  The majority of the files are perl scripts, html files, and graphics.
+  </para>
+  <para>
+  Now initialize the geoss database:
+  </para>
+  <para>
+    <computeroutput>
+      [root] # 
+    </computeroutput>
+    <command> geoss_initialize --db_name=geoss --db_user=geoss</command>
+  </para>
+  <para>
+  This script will prompt you for a password. Enter the <link
+  linkend="postgres_user">postgres geoss user</link> 
+  that you choose when you created your Postgres geoss 
+  user. Also, the script will ask you for the path to the 
+  <filename>geoss_layouts.tar.gz</filename>
+  file that you downloaded in Step 1.1.
+  </para>
+  <para>
+  The <link linkend="geoss_initialize">geoss_initialize</link> script 
+  loads the geoss database, adds the <link
+  linkend="administrator_user">administrator user</link> and the <link
+  linkend="default_public_user">default public user</link>, loads <link
+  linkend="analysis">analysis</link> modules, and loads <link
+  linkend="layout">layouts</link>. Loading the layouts takes 
+  15 minutes to 30 minutes. Be patient. The loader will print a stream of 
+  status messages while the load proceeds.
+  <tip>
+  If there are error messages during the initialization phase, you do not 
+  need to reinstall the rpm. You can address the issue which caused the 
+  problem (most likely an inability to connect to the database) and then 
+  re-run the component of the initialization script that failed. 
+  </tip>
+  </para>
+</sect1>
+
+<sect1 id="configure_apache">
+<title>
+Configure Apache
+</title>
+  <para>
+  The following information applies to the most basic Apache configuration 
+  for &product;.  For information on alternative configurations 
+  including those using suExec, Virtual Hosts, or public_html see the <link
+  linkend="install_faq">install FAQ</link>.
+  The first step is to modify <filename>httpd.conf</filename> so 
+  that &product; directories 
+  are accessible and &product; cgi scripts can run.
+  The rpm post install script will print out a suggested set of directives. 
+  Apache configuration files can vary greatly, but you will want to add 
+  something like this to the end of your <filename>httpd.conf:</filename>
+  </para>
+   <para>
+        <screen>
+        &lt;Directory /var/www/html/geoss/site&gt;
+        AddHandler cgi-script .cgi .pl
+        DirectoryIndex index.cgi index.html index.pl
+        AllowOverride Limit Fileinfo
+        Options ExecCGI FollowSymLinks
+        Order allow,deny
+        Allow from all
+        &lt;Directory&gt;
+        </screen>
+    </para>
+    <para>
+    Also verify the following in the httpd.conf file:
+      <itemizedlist>
+      <listitem>
+      <para>
+      ServerName should be set to your server name
+      </para>
+      </listitem>
+      <listitem>
+      <para>
+      DocumentRoot may be set to <filename>/var/www/html/geoss/site</filename> 
+      if you 
+      would like.  This will take users straight to geoss when they type
+      in the url that just contains your server name.  However, modifying
+      the DocumentRoot may be a problem if you are serving other 
+      applications.  In that case, you can leave it at /var/www/html.  If
+      you leave it, you will need to set the additional_path information
+      when you configure &product;.
+      </para>
+      </listitem>
+      </itemizedlist>
+    </para>
+  <para>
+    Restart the webserver after modifying the configuration file by 
+    entering:
+  </para>
+  <para>
+    <computeroutput>
+        [root] # 
+    </computeroutput>
+    <command>apachectl restart</command>
+  </para>
+</sect1>
+
+<sect1 id="&product;_configuration">
+<title>&product; Configuration</title>
+ <para>
+   &product; is now active on your system, but prior to general use, you need 
+   to set some configuration options.  If you have not set your DocumentRoot 
+   to <filename>/var/www/html/geoss/site</filename>, you will need to 
+   manually set the "additional_path" information before you can successfully
+   access all the web pages.  
+  </para>
+  <para>
+    <computeroutput>
+        [root] # 
+    </computeroutput>
+     <command>psql <replaceable>geoss</replaceable> -d <replaceable>geoss
+     </replaceable></command>
+  </para>
+  <para>
+    <computeroutput>
+        geoss=# 
+    </computeroutput>
+     <command>update configuration set additional_path = '<replaceable>
+     /geoss/site</replaceable>';</command>
+  </para>
+  <para>
+    <computeroutput>
+        geoss=# 
+    </computeroutput>
+     <command>\q</command>
+  </para>
+  <para>
+    Login to &product;. Do this by setting your browser to
+    "http://<replaceable>yourservername</replaceable>
+    <replaceable>/additional_path</replaceable>/geoss/site".
+
+    Login on the left hand side in "Member Login". Use login
+    <userinput>admin</userinput> and password
+    <userinput>administrator</userinput>. 
+  </para>
+  <para>
+    Click on the <link linkend="configure_&product;">Configure &product;
+    </link> link from &admin_home; to configure the parameters for
+    your installation.
+  </para>
+  <para>
+    Verify the success of the installation by viewing <link linkend=
+    "&product;_installation_information">&product; Installation Information
+    </link>. In particular, it is important to verify that all directory 
+    permission tests are successful.
+  </para>
+  <formalpara>
+    <title>Change Password</title>
+      Your installation is now complete. For security reasons, the default 
+      &product; <link linkend="administrator_user">administrator</link>
+      password should be changed.  This can be done via the <link linkend=
+      "change_my_password">Change my password</link> link in <link linkend=
+      "user_gui">&mem_home;</link>.
+  </formalpara>
+  <para>
+  Additionally, you should change the password for the <link
+  linkend="default_public_user">default_public_user</link>.  This can be
+  done vie the <link linkend="change_user_password">Change User
+  Password</link> link in <link linkend="admin_gui">&admin_home;</link>.</para>
+  <para>
+    Your installation is now complete. Next you will want to add new 
+    <link linkend="users">users</link>, which can be done from <link
+    linkend="admin_gui">&admin_home;</link>. 
+  </para>
+</sect1>
+
+<sect1 id="upgrading_&product;">
+<title>Upgrading &product;</title>
+<para>
+Upgrading &product; is quite simple and merely involves upgrading the
+rpm: rpm -U.  However, there may be initial changes necessary that
+involve making database changes or installing new software dependencies.
+For information on these changes, view the release notes.
+</para>
+</sect1>
+
+</article>

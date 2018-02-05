@@ -1,0 +1,119 @@
+Bulk Loading of GEOSS data
+
+Objectives:
+-----------
+
+To provide a mechanism for loading information into the
+GEOSS database that is quicker than the current GUI mechanism.
+
+1. Allow an upload of a known-state test database to facilitate testing.
+
+2. Provide a quick mechanisim to upload historical data for users who 
+   install GEOSS.
+
+3. Provide an interface for loading multiple orders for which data is
+   available, without requiring array center staff users to navigate
+   through each order in curtools.
+
+
+Tools:
+------
+1. Add a command-line tool (geoss_bulk_load) for bulk load of data.  
+This tool expects all configuration to be in place (i.e. study defined,
+order created, and data in chip_data_path).  It checks existing locked
+(submitted) orders and checks the chip data path to see if the
+appropriate files to load are present.  This tool should allow both
+interactive and force modes.  Interactive mode will find the order then
+ask whether or not to load the order.  Force mode will automatically
+load all available orders.
+
+2.  Add a GUI interface to geoss_bulk_load so that it is available to
+array center staff via the GEOSS GUI.
+
+3.  Add a command-line tool (geoss_bulk_configurator) which configures
+study/order information.  The configuration is based on a set of input
+data and configuration files.  The tools should have a read-only mode 
+that states what will be created if the tool is run and error checks the
+input.  The tools should also have a flag to inhibit locking of orders
+so that configuration can be viewed and modified through the GUI if
+necessary.  The default behaviour will be to lock the orders so that
+they are ready for data load. 
+
+4.  Users should be able to run geoss_bulk_configurator and
+geoss_bulk_load in combination to load all data.
+
+5.  Add a tool to create mutliple geoss user accounts
+(geoss_bulk_adduser).
+
+Assumptions
+------------
+1.  The tools will handle the mas5 and gcos data formats.
+
+2.  The configurator assumes a 1-to-1 relationship between array studies
+and array orders.  This is reasonable as a bulk configuration implies
+the loading of historical data, for which the order step has long since
+been complete.   
+
+
+Steps to Load Historical Data
+-----------------------------
+1.  Add all users using geoss_bulk_adduser.
+
+2. Create a directory that contains all data for bulk load.  Make
+one subdirectory named with the userid of each user who owns data.
+Within an individual user subdirectory, create a subdirectory for each 
+order/study.  The name of the subdirectory will become the name of the
+array study. Note that the bulk load expects a 1-to-1 relationship
+between orders and studies.  
+
+3.  For each study, move the corresponding data files into that
+directory.  Files must be renamed to the following format:
+
+[order_#]_<exp. cond. short name>_<bio. replicate letter>[_chip replicate #]
+
+Order # - this is optional.  If an unused order_number in appropriate 
+GEOSS format is specified, then it will be used.  If no order number is
+specified, one will be automatically generated.
+
+Exp. cond. short name - this name must be six or fewer characters.
+
+Bio. replicate letter - this is a sequence of letters used to indicate
+ biological replicates.  If you have only one sample, with the short
+ name of samp1, then it would be named samp1_A.  If you had two samples
+ from the same experimental condition, then they would be named samp1_A
+ and samp1_B.
+
+Chip replicate # - this is a sequence of numbers used to indicate chip
+replicates.  If you had two chip replicates for each of the samples
+mentioned above, then your data files would be named "samp1_A_1",
+"samp1_A_2", "samp1_B_1", and "samp1_B_2".
+
+There must be a txt file and an RPT file for each hybridization.
+
+4.  Optional txt files containing additional information may be placed 
+in the study subdirectory.  Txt files should be named after the table
+they contain data for (valid tables include study, exp_condition, and
+sample).  Columns should be tab-delimited.  Sample txt files are shown here:
+
+study.txt
+sty_comments  this is a bulk load study
+
+exp_condition.txt
+samp1  description  This is the description
+samp2  name  Long name sample 2
+samp2  description   This is the second description
+
+sample.txt
+samp1_A_1   smp_name  24hr
+samp1_A_2   smp_name  24hrb
+
+These txt files will provide the ability to load associated data that
+makes GEOSS a more useful data archive.  This information is not
+required to be able to load data or to run analysis on data.
+
+5. Run geoss_bulk_configurator in read-only mode.  Correct any errors it
+reports.
+
+6. Run geoss_bulk_configurator.
+
+7. Run geoss_bulk_data_load.

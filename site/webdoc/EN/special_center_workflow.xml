@@ -1,0 +1,101 @@
+<part id="special_center_workflow">
+<title>Overview: Workflows for Special Center Administrator Users</title>
+<para>
+<link linkend="special_center">Special centers</link> group <link
+linkend="users">users</link> who have similar processing needs that
+differ slightly from regular users.  In particular, these users may have
+access to billing discounts by virtue of their association to the
+special center.  In some cases, their <link
+linkend="array_order">array orders</link> may require approval by
+special center staff before the discounts are applied.
+</para>
+<para>
+For example, the <ulink url="http://genes.med.virginia.edu">UVa
+&product; install</ulink> has two special centers configured: the
+Digestive Center and the Cancer Center.  These centers correspond to
+groups at <ulink url="http://www.virginia.edu/">UVa</ulink> that have
+negotiated discounts on array center processing fees for their members
+with the <link linkend="array_center">array center</link>.
+</para>
+<para>
+The <link linkend="special_center_administrator_user">special center
+administrator(s)</link> are responsible for managing <link
+linkend="special_center">special centers</link>.  The tasks involve
+maintaining the list of special center members, keeping center contact
+information current, and potentially approving orders.  Information on
+each of these tasks is provided below.</para>
+<article id="center_management">
+<title>Center Management</title>
+<para>
+<link linkend="special_center">Special center</link> management involves
+keeping information regarding the center and center membership current.
+Although the <link linkend="administrator_user">&product;
+administrator</link> can modify all this information, the special center
+administrator is in a much better position to be aware of changes in the
+special center and is thus responsible for maintaining the information.</para>
+<sect1 id="manage_center_information">
+<title>Manage Center Information</title>
+<para>
+It is important to keep contact information current.  Special center
+administrators can update information about the organization including
+description, phone number, url, logo, icon, and array order approval
+requirements.  All edits are performed via the <link
+linkend="edit_special_center_information">Edit special center
+information</link> link accessible from <link
+linkend="special_center_gui">&center_home;</link>.  Note, however, that
+if you wish to change the logo or icon associated with a special center,
+you will have to upload the logo file via the <link
+linkend="upload_logo_or_icon_file">Upload logo/icon file</link> link
+prior to  modifying the logo or icon file from "Edit special center
+information".
+</para>
+</sect1>
+<sect1 id="manage_center_members">
+<title>Manage Center Members</title>
+<para>
+It is also the responsibility of the special center administrator to
+ensure appropriate membership in the special center.  Normally, when
+<link linkend="users">users</link> <link
+linkend="request_an_account">request an account</link> they will
+indicate with special centers they belong to.  The &product; <link
+linkend="administrator_user">Administrator</link> will verify the new
+user's association with the special center prior to creating the account
+and will ensure that user is a member of the special center when
+creating the account.  However, if users become disassociated with the
+special center, the special center administrator needs to modify the
+membership list to reflect that change.  Additionally, if a current
+&product; user becomes a member of the special center, the special
+center administrator should make that change as well.  
+</para>
+<para>
+Membership list maintenance is accomplished via the <link
+linkend="edit_special_center_members">Edit special center members</link>
+accessible via <link linkend="special_center_gui">&center_home;</link>.
+</para>
+</sect1>
+</article>
+<article id="approving_orders">
+<title>Approving Orders</title>
+<para>
+Array centers may be configured so that <link
+linkend="array_order">array orders</link> require approval.  Generally,
+when a user finishes configuring their array order, they submit it.  The
+<link linkend="array_center_staff_user">array center staff</link>
+receive an email stating that the array order configuration is complete
+and the order is ready for processing.  However, if the array order is
+associated with a special center that requires orders to be approved,
+the procedure includes an extra step.  In that instance, when an order
+is submitted, instead of emailing array center staff, the special center
+administrator is emailed and notified that the array order is ready for
+processing.  Next, the array order must be approved by the special
+center administrator.  Only once it is approved by the special center
+administrator is the notification sent to the array center staff.
+</para>
+<para>
+Array center staff can approve orders via two interfaces: the <link
+linkend="approve_orders">Approve Orders</link> link and the <link
+linkend="special_center_view_reports">View Reports</link> link, both
+accessible via <link linkend="special_center_gui">&center_home;</link>.
+</para>
+</article>
+</part>

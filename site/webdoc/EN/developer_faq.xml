@@ -1,0 +1,395 @@
+<part id="developer_faq">
+<title>FAQ</title>
+<qandaset>
+
+<qandaentry id="how_are_version_numbers_determined">
+  <question>
+    <para>
+      How are version numbers determined?
+    </para>
+  </question>
+  <answer>
+    <para>
+      Historically, the version numbering is a bit arbitrary.  Really,
+      the only steadfast rule that applied was that the larger the
+      number, the more recent the release.  As for versions following
+      release 2.3.0, the following rules will be used for determining
+      version numbers:
+
+      Version numbers will take the following form:
+       <replaceable>major release</replaceable>.
+       <replaceable>minor release</replaceable>.
+       <replaceable>fix release</replaceable>
+       <optional>.<replaceable>test release</replaceable></optional>
+    </para>
+    <formalpara><title>Major Release</title>
+    A major release encompasses major functionality changes.  A full and
+    complete testing cycle is performed.  This release may or may not be 
+    backward compatible.</formalpara>
+    <formalpara><title>Minor Release</title>
+    A minor release encompasses minor functionality changes.  A full and
+    complete testing cycle is performed.  This release will always be
+    backwards compatible and may or may not include changes to the
+    underlying database structure.
+    </formalpara>
+    <formalpara><title>Fix Releases</title>
+    These release include minor fixes that address bugs only in released
+    code.  Typically a complete testing cycle is not completed and only
+    components impacted by the bug are retested.  These releases should
+    not include changes to the database structure.
+    </formalpara>
+    <formalpara><title>Test Releases</title>
+    An optional fourth release number indicates that the release is a
+    test release, built only for testing code prior to release.  These
+    releases are not available for download.
+    </formalpara>
+  </answer>
+</qandaentry>
+
+<qandaentry id="how_do_i_build_the_geoss_rpm">
+  <question>
+    <para>
+    How do I build the &product; rpm?
+    </para>
+  </question>
+  <answer>
+    <para>
+      The best reference I found for building an rpm was "Maximum RPM" 
+      by Edward Bailey.  It is very complete and largely accurate.  Check
+      there for answers to questions.
+    </para>
+    <para>
+      As for building the rpm, here are the main steps.  The first time you 
+      build the rpm, you will need to create a place to build the rpm.  It
+      is best not to build rpms as root, so you need to mimic the 
+      rpm-building directory structure.
+      <orderedlist>
+        <listitem>
+          <para>
+            Start from your home directory.
+          </para>
+          <para>
+            <command> cd </command>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <command>
+              mkdir buildroot
+            </command>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <command>
+              cat > .rpmmacros
+            </command>
+          </para>
+          <para>
+            <command>
+              %_topdir /home/<replaceable>your_id</replaceable>/.rpm
+            </command>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <command>
+            mkdir .rpm
+            </command>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <command>
+              mkdir .rpm/SOURCES
+            </command>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <command>
+              mkdir .rpm/SPECS
+            </command>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <command>
+              mkdir .rpm/BUILD
+            </command>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <command>
+              mkdir .rpm/RPMS
+            </command>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <command>
+              mkdir .rpm/SRPMS
+            </command>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <command>
+              mkdir .rpm/RPMS/i386
+            </command>
+          </para>
+        </listitem>
+      </orderedlist>
+    </para>
+    <para>
+      You now have a complete build structure.  You will not need to redo 
+      the above steps each time you build the rpm.  The following steps are 
+      the steps that need to be completed each time you build an rpm.
+    </para> 
+    <orderedlist>
+      <listitem>
+        <para>
+        <command>cd geoss</command> 
+        </para>  
+      </listitem>
+      <listitem>
+        <para>
+          <command>cvs up -d</command> 
+        </para>  
+      </listitem>
+      <listitem>
+        <para>
+          If needed, commit any code changes (<command>cvs commit -m
+          "<replaceable>comments</replaceable></command>"). 
+        </para>  
+      </listitem>
+      <listitem>
+        <para>
+          Edit <filename>build-options.default</filename> to reflect the
+          new version number. 
+        </para>  
+      </listitem>
+      <listitem>
+        <para>
+          <command>cd devtools</command> 
+        </para>  
+      </listitem>
+      <listitem>
+        <para>
+         Edit <filename>geoss-X.X.spec</filename>  to reflect the new
+         version number.
+        </para>  
+      </listitem>
+      <listitem>
+        <para>
+          <command>./make_rel_commands.pl</command> 
+        </para>  
+      </listitem>
+      <listitem>
+        <para>
+         The make_rel_commands will prompt you for the new version
+         number.  Then it prints out a list of the commands you need to
+         run, with the correct version number inserted.  You can copy
+         and paste the commands at that point. 
+        </para>  
+      </listitem>
+    </orderedlist>
+    <para>
+    The resulting rpm, assuming everything went well, is in 
+    <filename>~/.rpm/RPM/i386</filename>.  We currently do not sign the rpm.
+    </para>
+  </answer>
+</qandaentry>
+
+<qandaentry>
+  <question>
+    <para>
+    How do I build the rpms for AppConfig and PDF-API2?
+    </para>
+  </question>
+  <answer>
+
+  </answer>
+</qandaentry>
+
+<qandaentry>
+  <question>
+    <para>
+    Where should I look for error messages and debugging statements?
+    </para>
+  </question>
+  <answer>
+    <para>
+     There are several places you can check for error messages.  Each 
+     is described below:
+       <variablelist>
+         <varlistentry>
+           <term>
+             <filename>/var/log/httpd/error_log</filename>
+             <filename>/var/log/httpd/ssl_error_log</filename>
+           </term>
+           <listitem>
+             <para>
+               If you get an "Internal Server Error" in the browser, check
+               these log files for additional information.  Anything 
+               written to STDERR will appear in these log files.
+             </para>
+           </listitem>
+         </varlistentry>
+         <varlistentry>
+           <term>
+             <filename>USER_DATA_DIR/<replaceable>userid</replaceable>/error.txt</filename>
+           </term>
+           <listitem>
+             <para>
+               Errors specific to individual users may show up here.  In the
+               code, the write_log function is used to write messages to 
+               this file.  Typically the errors relate to analysis or 
+               data load activity.
+             </para>
+           </listitem>
+         </varlistentry>
+         <varlistentry>
+           <term>
+             <filename>USER_DATA_DIR/<replaceable>userid</replaceable>/child_error.txt</filename>
+           </term>
+           <listitem>
+             <para>
+             Additional write_log output.  In analyses, when a child 
+             process is spawned, it will write to this file.
+             </para>
+           </listitem>
+         </varlistentry>
+       </variablelist>
+    </para>
+  </answer>
+</qandaentry>
+
+<qandaentry>
+  <question>
+    <para>
+    How should I read in html files?
+    </para>
+  </question>
+  <answer>
+    <para>
+    The get_allhtml, readfile, and readtemplate functions are found in
+    <filename>geoss_session_lib.pl</filename>.  They are used to read in
+    html files.  Typically, some variable substitution is executed on the 
+    html file, and then the page is ready to be displayed.  All three
+    functions expect an input html file.  Optionally, a header html and
+    a footer file can be specified and their contents will be 
+    prepended/appended to the specified html file.  The header and footer
+    file that we use contains the &product; logo and navigation bar.
+    </para>
+    <para>
+      The readfile function essentially returns the html string of 
+      the header file plus the input file plus the footer file.  No
+      variable substitutions are made and it is the programmer's
+      responsibility to ensure that the html string is fully substituted
+      and appropriate for display. 
+    </para>
+    <para>
+      The get_allhtml file expects extra parameters: the database handle,
+      the user primary key, and a hash reference.  It uses this 
+      information to perform substitutions for the programmer.  
+      Theoretically, it returns a display read html string.  The hash
+      reference should contain and key/values necessary for substitution
+      into the html file  (usually you will need to specify "htmltitle",
+      "htmldescription", and "help" at the very least).  the function 
+      will determine configuration variables necessary for substitution 
+      using the hash reference and the database handle and make 
+      the substitutions for you.  It is recommend that you use 
+      this function if there is no loop in the html file.
+    </para>
+    <para>
+      The read_template function is intended for use when there are loops
+      in the html file.  A loop is designated in the html file by the
+      &gt;loop&lt; tag.  A second loop is designated by &lt;loop2&gt;.  
+      The programmer must manually substitute both all variables (
+      both loop and non-loop).  Look at existing code for examples.  
+      The read_template function assists the programmer by returning
+      the html string and the a the separate html strings for each of 
+      the loops.
+    </para>
+  </answer>
+</qandaentry>
+
+<qandadiv id="developer_faq_analysis_development">
+<title>Analysis Development</title>
+
+<qandaentry>
+  <question>
+    <para>
+    What steps are involved in adding a new analysis?
+    </para>
+  </question>
+  <answer>
+  <orderedlist>
+    <listitem>
+      <para>
+        Create a new subdirectory in the analysis subdirectory.  Add 
+        it to the list of SUBDIRS in the <filename>Makefile</filename>.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+        In the new subdirectory, add a cfg file that specifies the
+        parameters for the analysis, the actual analysis code, and an
+        html help file that explains the analysis.  Create an
+        appropriate <filename>Makefile</filename>.  The easiest way to
+        do this is to copy from an existing analysis.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+      Load the analysis using by using the geoss_add_analysis command.
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+      </para>
+    </listitem>
+    <listitem>
+      <para>
+      </para>
+    </listitem>
+  </orderedlist>
+  </answer>
+</qandaentry>
+<qandaentry>
+  <question>
+    <para>
+    How do I unload an analysis?
+    </para>
+  </question>
+  <answer>
+
+  </answer>
+</qandaentry>
+<qandaentry>
+  <question>
+    <para>
+    How do I upgrade an analysis?
+    </para>
+  </question>
+  <answer>
+
+  </answer>
+</qandaentry>
+<qandaentry>
+  <question>
+    <para>
+    How do I troubleshoot analysis failures?
+    </para>
+  </question>
+  <answer>
+
+  </answer>
+</qandaentry>
+
+</qandadiv>
+
+</qandaset>
+</part>

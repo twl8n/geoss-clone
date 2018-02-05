@@ -1,0 +1,83 @@
+1. Add logo and link to site/index.pl. These will be set to values in
+    the new organization table. (2 hr)
+2. Add new user type "organization_curator". (1 hr)
+3. Add a mechanism to indicate whether a user is a digestive center member
+  Database:
+   Table: Organization
+   Fields: 
+     org_pk 
+     org_name - text
+     org_description - text
+     org_phone - phone number
+     org_url - url
+     logo - fi_pk
+     display_logo - boolean
+     icon - fi_pk # this is the icon that will be displayed beside users of
+that group
+     chip_discount_percent
+     need_approval - boolean
+
+  Table: org_us_link
+     org_fk
+     us_fk 
+     curator - boolean
+
+   When a user is added there will be checkboxes (in the add_user page - 
+   parameters for the command line script) for each organization in
+  the organization table.  If the checkbox is set, a record is inserted 
+  into org_us_link when the user is created. (4 hrs)
+
+4. Modify "Request a new order" to include an additional option that allows
+ orders to be optionally associated with an organization.  Only display 
+ organizations which the user is a member of.  Allow association with only
+ one organization. (1 hr)
+
+5. Modify order creation so that the order needs to be "submitted" once 
+ configuration is complete. (4 hrs)
+
+6. If the order is associated with an organization, and that organization
+ requires approval (need_approval is true) then the order submittal email
+ is sent to all organization curators, otherwise, the submittal email is 
+ sent to the GEOSS curator. (4 hrs)
+
+7. An "Organization Home" will be created.  It will contain the following
+ links:
+    - edit contact info (edit the organization table)
+    - edit members
+    - approve orders
+    - reports
+  (8 hrs)
+
+8.  The submittal email (step 6) will contain a link to the "approve orders"
+ link in the organization home interface.  This interface will allow 
+ organization curators to approve or reject orders.  Approved orders will
+ send a submittal email to the GEOSS curator.  
+(2 hrs)
+
+9.  The approve order interface will have a comment field.
+(n/a)
+
+10.  The billing log will be modified to show whether the order is 
+ associated with an organization and to incorporate the appropriate 
+ discount for the organization.
+(3 hrs)
+
+11. Reports for "Organization Home" will be developed in a later design phase.
+(n/a)
+
+Total: 29 hours
+
+
+Cancer Center Migration
+-----------------------
+This implementation will allow for migration of cancer center members 
+handling to the new "organization" functionality.  This would require
+the following:
+
+- convert the existing database (capture cancer center values)
+- remove cancer_center_member field from the db, from add_user, and 
+  from account.cgi
+- insert old value into the new implementation
+- test
+
+This is probably and additional 6 hours of work.

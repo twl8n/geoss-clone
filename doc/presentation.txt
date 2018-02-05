@@ -1,0 +1,258 @@
+1
+GEOSS (Gene Expression Open Source System) is a system for the storage
+and analysis of microarray data.  GEOSS provides a variety of functions:
+  - is a repository for gene chip data
+  - used by the array lab at the University of Virginia to manage
+    ordering, processing, and billing of gene chips 
+  - used by investigators at the University of Virginia to retreive,
+    analyze, and share their chip data
+  - used by public users to access and analyze gene chip data
+
+This presentation illustrates the public user interface and how
+public users can analyze gene chip data.  Specifically, it addresses:
+  - how to create an Analysis Tree that analyzes others data
+  - how to create an Analysis Tree to analyze your own data
+  - how to view the results files
+  - what each of the current analysis modules does and what their
+    results mean
+
+2
+The UVa public server is at:
+
+http:/biostat.virginia.edu/geoss/site
+
+  - accounts may be requested via the "Request An Account" link
+  - public user accounts are automatically generated and users may login
+    immediately with their new account
+
+3
+Member Home
+
+The "Member Home" page is the main menu for public users. There are four 
+main activity areas:
+  - Array Study Management
+  - File Management
+  - Analysis Management
+  - Account Managment
+
+  
+4
+View All Studies
+
+The "View All Studies" link provides an overview of publically
+accessible studies.  Users interested in viewing and analyzing data sets
+made available by investigators should use this link as a starting
+point.
+
+- searching and sorting capabilities can be used to identify studies of
+  interest
+- clicking on the "Study Name" link will provide information on the
+  source of the study  (typically the PubMed entry)
+- clicking on "Full View" provides detailed information about a study,
+  including the study abstract, the default GEOSS analysis results, and
+  a short cut to creating your own analysis tree using the data from the
+  study in question
+
+5
+File Management
+The "View My Files" link allows the user to view and/or download files that
+they have access to.  For public users, this is primarily analysis
+results files.
+
+- use the "Directories" section to navigate to the directory you wish to
+  view.  Note that results files for each analysis tree are in their own
+  directory
+- use the "Files" section to view/download a file by clicking on the
+  link in the "File" column
+
+6
+Analysis Trees
+
+GEOSS analyses are called "Analysis Trees".  Each tree consists of one
+or more analyses being performed on a set of input data.  In order to
+create an analysis tree, we must define several items:
+
+- the data source
+- the data grouping
+- the analyses to perform, including their order and parameters
+
+
+7
+Data Sources
+
+There are three possible data sources available to public users:
+
+1) Array Study
+A study that is already defined in the system and has been made
+viewable by public users.  The data is already loaded and the chips have
+been grouped into conditions.
+
+2) Analysis Set
+A customized grouping of chips into conditions, and conditions into
+sets.  The chip data may have been uploaded by the public user or may be
+obtained from data others have made available to public users.
+
+3) UVa Public Data     
+UVa Array Studies that have been made publically available.  The data is
+already loaded and the chips have been grouped into conditions.
+
+8
+Creating a Tree
+
+Trees can be created using the "Create/Run a new analysis tree"
+- provide a unique name
+- specify a default structure (we recommend starting with the default
+  structure and modifying it as needed)
+- designate a source type and then click "Choose Source"
+- pick the specific source then click "Next"
+
+9
+Refining a tree
+
+The "Edit Analysis Tree" page allows you to refine the tree stucture.
+You can:
+
+- Change the tree name
+- Add/Remove modules
+- Set the parameters for each node
+- View help for a particular node
+
+When you have completed tree configuration, you may run the tree by
+clicking "Run Analysis"
+
+10
+Tree Result Files
+
+Tree result files can be viewed via the "View My Files" link.
+Alternatively, several short cuts to tree results are provided:
+- the "View tree files" link from Edit Analysis Tree
+- the "View Analysis Result Files" from the Full View inside the Study
+  Viewer
+- the "file repository" link from "Run Analysis Tree"
+
+11
+Advanced Data Preparation
+
+The Advanced Data Preparation links allow users to specify their own
+grouping.  This allows them to use their own data or to specify
+customized grouping of others data.
+
+You must upload your own data prior to grouping and analyzing it.  
+
+12 
+Upload external array data file or a criteria file
+
+To upload data use the  "Upload external array data file or a criteria 
+file" link.  
+
+  - currently, only data files generated using mas5 or GCOS may be
+    uploaded
+  - specify the data file to upload
+  - specify the chip type associated with the data file
+  - provide a unique, meaningful name for the chip data
+
+Click on "Upload", to upload the data.  Note that if you are uploading
+large data files, there may be some delays associated with this action.
+
+Currently public users can only load chips individually.  Development is
+underway to make the multi-chip load functionality available to public
+users.
+
+13
+Grouping Terminology
+
+Analysis Condition - a grouping of several chips into one condition.
+Chips in the same condition should be either biological or technical
+replicates.  As such, they will have the same chip layout.  There must
+be one or more chips in each condition.
+
+Analysis Set - a grouping of an Analysis Conditions.  There must be two
+or more conditions in an analysis set.
+
+14
+
+Building an Analysis Condition
+
+The "Create new analysis condition" link can be used to build an
+analysis condition.
+
+Hybridizations can be specified from a variety of sources:
+  - uploaded hybridizations are accessible from choosing
+    "Hybridizations" as the source
+  - multiple hybridizations can be added at once by choosing one of the
+    other option.  For instance, choosing studies as a source would add
+    an all conditions associated with a specific study to the analysis
+    condition
+  - criteria files can be used to select hybridizations to add based on
+    specified critieria.  For instance, your criteria file might specify
+    the gender and age associated with a set of hybridizations.  You
+    could then specify a condition that contains only samples taken from
+    males over 50.
+
+15
+
+Building an Analysis Set
+
+The "Create new analysis set" link can be used to build an analysis set.
+
+Again, several sources are available:
+
+- if you select "Analysis Conditions" as the source, you can choose the
+  conditions you just created to be included in the set
+- other options provide short cuts.  For instance, if you choose an
+  entire study, the system will automatically build the analysis
+  conditions for you and you can refine those conditions as appropriate
+
+As discussed earlier, "Analysis Sets" are one of the possible inputs to
+a tree.  The newly created set can now be analyzed.       
+  
+16
+
+Example:  Analyze your own data
+
+1) Upload each chip file using "Upload an external array data file or
+criteria file
+2) Group all the chips in to analysis conditions using "Create new
+analysis condition"
+3) Group all the analysis conditions together into an analysis set using
+"Create new set of conditions"
+4) Click on "Create tree using this Set"
+5) Run the tree
+6) View the results via "View my files"
+
+17
+
+Example: Get analysis results from public data
+1) Use "View all studies" to find a study of interest
+2) Click on "Full View" for detail on the study.  Use "View Analysis
+Result File" to see the default analysis results for the study.
+3) If you wish to create a customized tree, provide a name and 
+click on "Create Customized Data Set for Analysis" from the full view.
+4) Customize set and conditions
+5) Click on "Create tree using this Set"
+6) Run the tree
+6) View the results via "View my files"
+
+18
+Account Management
+
+These links provide the ability to modify account settings including:
+  - personal info (email address)
+  - password
+  - other users in your group who may see your data
+
+
+19
+Conclusion
+
+It is not necessary to download GEOSS in order to use the public
+service.  However if you are interested in installing your own version
+of GEOSS to support an array center processing chip data, GEOSS can be
+obtained from:
+
+http://sourceforge.net/projects/geoss/
+
+Questions can be sent to:
+  teela-geoss@peff.net
+
+

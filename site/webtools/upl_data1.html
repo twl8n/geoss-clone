@@ -1,0 +1,37 @@
+<form action="upl_data1.cgi" enctype="multipart/form-data" method=post>
+<br>
+<table width="700" border=0 cellpadding=4 cellspacing=0>
+<tr>
+<td valign="top"><div align="right">Filename:</div></td>
+<td><input type="text" name="file_name" size=30 maxlength=30 value="{file_name}"></td>
+</tr>
+<tr>
+<td valign="top"><div align="right">*File Type:</div></td>
+<td>
+<input type="radio" name="filetype" value="mas5">
+<a href="../webdoc/EN/html/uploading_external_experiment_data.html">mas5</a>
+&nbsp;&nbsp;
+<!--<input type="radio" name="filetype" value="cDNA">cDNA&nbsp;&nbsp;-->
+<input type="radio" name="filetype" value="criteria">
+<a href="../webdoc/EN/html/using_criteria_files.html">criteria</a>&nbsp;&nbsp;
+<input type="radio" name="filetype" value="other">other&nbsp;&nbsp;
+</td>
+</tr>
+<tr><td valign="top">
+<div align="right">Hybridization Name (mas5 file uploads only):</div></td>
+<td><input type="text" name="hyb_name" size=30 maxlength=30 value="{hyb_name}"></td>
+</tr>
+<tr>
+<td valign="top"><div align="right">Affymetrix Chip (mas5 file uploads only):</div></td>
+<td>{select_arraylayout}</td>
+</tr>
+<tr>
+<td valign="top"><div align="right">*File to Upload:</div></td>
+<td><input type="file" name="filedata" size=60 value="{file_data}"></td>
+</tr>
+<tr>
+<td valign="top><div align="right">&nbsp;</div></td>
+<td><input type="submit" name="submit" value="Upload"></td>
+</tr>
+</table>
+</form>

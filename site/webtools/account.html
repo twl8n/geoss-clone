@@ -1,0 +1,65 @@
+ <form method="POST" action="account.cgi">
+ <input type=hidden name=step value=3>
+ <table>
+ <tr><td colspan=2>Use this form to update your contact information.</td></tr>
+ <tr><td colspan=2>&nbsp;</td></tr>
+ <tr>
+ <td>First Name:</td>
+ <td><input type="text" name="contact_fname" value="{contact_fname}"></td>
+ </tr>
+ <tr>
+ <td>Last Name:</td>
+ <td><input type="text" name="contact_lname" value="{contact_lname}"></td>
+ </tr>
+ <tr>
+ <td>Credentials:</td>
+ <td><input type="text" name="credentials" value="{credentials}"></td>
+ </tr>
+ <tr>
+ <td>Organization:</td>
+ <td><input type="text" name="organization" value="{organization}"></td>
+ </tr>
+ <tr>
+ <td>User Type:</td>
+ <td><font color=blue>{type}</font></td>
+ </tr>
+ <tr>
+ <td>Email:</td>
+ <td><input type="text" name="contact_email" size=30 value="{contact_email}" ></td>
+ </tr>
+ <tr>
+ <td>Phone:</td>
+ <td><input type="text" name="contact_phone" size=15 value="{contact_phone}" ></td>
+ </tr>
+ <tr>
+ <td>Organization Phone:</td>
+ <td><input type="text" name="org_phone" size=15 value="{org_phone}"></td>
+ </tr>
+ <tr>
+ <td>Toll Free Phone:</td>
+ <td><input type="text" name="org_toll_free_phone" size=15 value="{org_toll_free_phone}"></td>
+ </tr>
+ <tr>
+ <td>Organization Fax:</td>
+ <td><input type="text" name="org_fax" size=15 value="{org_fax}"></td>
+ </tr>
+ <tr>
+ <td>Organization Email:</td>
+ <td><input type="text" name="org_email" size=30 value="{org_email}"></td>
+ </tr>
+ <tr>
+ <td>Organization Mail Address:</td>
+ <td><textarea name="org_mail_address" cols="30" rows="4">{org_mail_address}</textarea></td>
+ </tr>
+ <tr>
+ <td>Organization URL:</td>
+ <td><input type="text" name="url" size="30" value="{url}"></td>
+ </tr>
+ <tr>
+ <td>&nbsp;</td>
+ <td>
+ <input type="submit" value="Submit"><br><br><input type="reset" value="Reset">
+ </td>
+ </tr>
+ </table>
+ </form>

@@ -1,0 +1,18 @@
+<article id="writing_and_modifying_documentation">
+  <title>Writing and Modifying Documentation</title>
+<para>
+GEOSS documentation is written in xml and the <ulink
+url="http://www.docbook.org">Docbook</ulink>style sheets are
+applied to create documentation in html.   
+</para>
+<para>
+All documentation is stored in <filename
+class='directory'>geoss/site/webdoc/EN</filename>.  In order to modify
+documentation, make changes in the relevant xml file and then type:
+<command>
+make install
+</command>
+You can verify your changes by checking 
+
+</para>
+</article>

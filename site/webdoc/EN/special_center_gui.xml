@@ -1,0 +1,302 @@
+<part id="special_center_gui">
+<title>Center Home: The Special Center Administrator GUI Tool</title>
+<para>
+<link linkend="special_center_administrator_user">Special center
+administrators</link> can perform all necessary administration functions
+from &center_home;.  Note that if you are a special center administrator
+for more than one special center, each link will first require you to
+identify which special center you are currently administering prior to
+granting you access to the specified function.
+</para>
+<article id="special_center_management">
+<sect1 id="approve_orders">
+<title>Approve Orders</title>
+<para>
+This link allows administrators to review and approve <link
+linkend="array_order">array orders</link>.  To approve an order, enter
+any relevant comments in the "Approval Comments" field and click on the
+"Approve Order" button associated with the specific order.  Note that
+there are several other links on the page that allow the special center
+administrator to view further information on the owner and creator of
+the array order and on the associated study.</para>
+</sect1>
+<sect1 id="special_center_view_reports">
+<title>View Reports</title>
+<para>
+<link linkend="special_center_administrator_user">Special center
+administrators</link> can use this link to view information on <link
+linkend="array_order">array orders</link> associated with the <link
+linkend="special_center">special center</link>.  The following fields
+are included in the report:
+<variablelist>
+  <varlistentry>
+    <term>
+      <link linkend="order_number">Order Number</link>
+    </term>
+    <listitem>
+      <para>
+        An order number is assigned to each array order requested by a
+        <link linkend="users">user</link>.  This unique identifier links
+        the samples to a particular study and set of experimental
+        conditions.  In the report, the order number is presented as a
+        link.  Clicking on the link is one way to access the page to
+        approve a specific array order.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+      Is Approved
+    </term>
+    <listitem>
+      <para>
+        This column provides the date in which the array order
+        was approved or notes if it has not been approved yet.          
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+      Approval Comments
+    </term>
+    <listitem>
+      <para>
+        The special center administrator can choose to list comments
+        when approving orders.  These comments are displayed here.
+      </para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term>
+      <link linkend="order_status">Order Status</link>
+    </term>
+    <listitem>
+      <para>
+        This field lists the status of the array order.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+      Study
+    </term>
+    <listitem>
+      <para>
+        This field lists the <link linkend="array_study">array
+        study</link> associated with the array order.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+      Study Comments
+    </term>
+    <listitem>
+      <para>
+        This field lists the comments associated with the array study.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+      <link linkend="primary_investigator">PI</link> Name
+    </term>
+    <listitem>
+      <para>
+        This field lists the name of the PI who owns the data.
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist> 
+Note that the report can be sorted on any of the columns by pressing the
+button that is the column header.
+</para>
+</sect1>
+<sect1 id="edit_special_center_members">
+<title>Edit Special Center Members</title>
+<para>
+This link allows the <link
+linkend="special_center_administrator_user">special center
+administrator</link> to add and remove members from their <link
+linkend="special_center">special center.</link>  When adding <link
+linkend="users">users</link> to the special center, their role must be
+specified (i.e. regular member or administrator member).</para>
+<para>
+To remove a user from the special center, check the checkbox under
+"Remove User" that is in the same row as the <link
+linkend="&product;_login_id">login id</link> for the user you wish to
+remove.  Then click "Modify Members".  Several users may be removed
+simultaneously.</para>
+<para>
+To add a user to the special center as a regular member, check the
+checkbox under "Add User" that is in the same row as the login id for
+the user you wish to add.  Then click "Modify Members".  To add a user
+to the special center as another special center administrator, check the
+checkbox under "Add Curator" that is in the same row as the login id for
+the user you wish to add.  Then click "Modify Members".  Several users
+may be added simultaneously.</para>
+</sect1>
+<sect1 id="edit_special_center_information">
+<title>Edit Special Center Information</title>
+<para>
+The <link linkend="special_center_administrator_user">special center
+administrator</link> can use this link to modify the specifics of their
+<link linkend="special_center">special center</link>.  Special centers
+have the following characteristics:
+
+<variablelist>
+  <varlistentry>
+    <term>
+      Special Center Name
+    </term>
+    <listitem>
+      <para>
+        This field is set by the <link
+        linkend="administrator_user">&product; administrator</link> 
+        when the special center is created.  It can not be modified by
+        the special center administrator, but is displayed for
+        informational purposes.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+      Special Center Description
+    </term>
+    <listitem>
+      <para>
+        This field provides a brief description of the organization.
+        Currently, it is only displayed to the &product; administrator
+        for informational purposes.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+      Special Center Phone Number
+    </term>
+    <listitem>
+      <para>
+        This is the contact number that the &product; administrator
+        should use to contact the special center should
+        the need arise.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+      Billing Discount
+    </term>
+    <listitem>
+      <para>
+        The <link linkend="array_center_staff_user">array center
+        staff</link> inform the &product; administrator about the
+        discount agreement for a special center.  Only the &product;
+        administrator can modify this value, but it is displayed here
+        for informational purposes.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+      Special Center URL
+    </term>
+    <listitem>
+      <para>
+        This field displays the URL to to the
+        special center web site. It is used when the special center has
+        a logo displayed on the <link linkend="home_page">&product; home 
+        page</link>. The logo is linked to this URL.                     
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+      Special Center Logo
+    </term>
+    <listitem>
+      <para>
+        This field allows the special center administrator to assign a
+        logo to the special center.  Simply choose the appropriate logo
+        file from drop down box.  Only files that have been uploaded
+        via the <link linkend="upload_logo_or_icon_file">Upload
+        Logo/Icon File</link> link are available as options.
+      </para>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+      Special Center Icon
+    </term>
+    <listitem>
+      <para>
+        This field allows the special center administrator to assign a
+        icon to the special center.  Simply choose the appropriate icon
+        file from drop down box.  Only files that have been uploaded
+        via the <link linkend="upload_logo_or_icon_file">Upload
+        Logo/Icon File</link> link are available as options.
+      </para>
+      <note>
+        Although you can set an icon file, it is not yet used by the
+        system.  That functionality will be implemented in a future
+        release.
+      </note>
+    </listitem>
+  </varlistentry>
+
+  <varlistentry>
+    <term>
+      Orders Require Approval Before Array Center Processing
+    </term>
+    <listitem>
+      <para>
+        Special center administrators can set whether they want to
+        manually approve <link linkend="array_order">array orders</link>
+        or whether approval should be automatic.  Check the box for
+        manual approval.  
+      </para>
+    </listitem>
+  </varlistentry>
+</variablelist>
+</para>
+</sect1>
+<sect1 id="upload_logo_or_icon_file">
+<title>Upload logo/icon file</title>
+<para>
+Depending on how the <link linkend="administrator_user">administrator
+</link> has configured the <link linkend="special_center">special center
+</link>, the special center may be allowed to place their logo on the
+home page of the &product; installation.  In order to designate a logo,
+you must first upload it.  This link can be used to upload logo files.
+Once the logo has been uploaded, you will need to associate it with the
+special center.  This is done via that <link
+linkend="edit_special_center_information">Edit Special Center
+Information</link> link.  
+</para>
+<para>
+Icons can also be uploaded, but they are not yet used by the system.
+Eventually, the icons will be to associated users with special centers,
+but this feature is not yet implemented.
+</para>
+<para>
+To upload a file, specify where the file is a logo or an icon.  Then use
+the "Choose File" button to identify the file to upload.  It is not
+necessary to specify a filename if you want the filename to remain the
+same.  However, if you would like to rename the file, you may specify
+the new filename in the "Filename" field.  Click "Upload" to upload the
+file.
+</para>
+</sect1>
+</article>
+</part>

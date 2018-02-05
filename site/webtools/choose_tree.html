@@ -1,0 +1,48 @@
+<loop> 
+<table width="700" border=0 cellspacing=0 cellpadding=3>
+  <tr> 
+    <td valign="top" bgcolor="#99CC99"> 
+      <table width="100%" border="0" cellspacing="5" cellpadding="0" bgcolor="#FFFFFF">
+        <tr> 
+          <td width="70%"> 
+            <form action="edit_atree1.cgi" method="post">
+              <div align="right"> 
+                <input type=submit name=submit2 value="Edit {tree_name}">
+                <input type="image" border="0" name="imageField" src="../graphics/pencil.gif" width="25" height="25">
+                <input type=hidden name="tree_pk" value="{tree_pk}">
+              </div>
+            </form>
+          </td>
+          <td width="30%"> </td>
+        </tr>
+        <tr> 
+          <td width="70%"> 
+            <div align="right">Tree name:</div>
+          </td>
+          <td width="30%">{tree_name}</td>
+        </tr>
+        <tr> 
+          <td width="70%"> 
+            <div align="right">Number of nodes:</div>
+          </td>
+          <td width="30%">{number_of_nodes}</td>
+        </tr>
+        <tr> 
+          <td width="70%"> 
+            <form action="delete_atree1.cgi" method="post">
+              <div align="right"> 
+                <input type="submit" name="submit" value="Delete {tree_name}">
+                <input type="image" border="0" name="imageField2" src="../graphics/trash.gif" width="25" height="25">
+                <input type="hidden" name="tree_pk" value="{tree_pk}">
+              </div>
+            </form>
+          </td>
+          <td width="30%">&nbsp;</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<br>
+</loop> <br>
+<br>

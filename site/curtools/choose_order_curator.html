@@ -1,0 +1,168 @@
+{oi_form}
+<br>
+
+<loop> 
+<a name ="__{oi_pk}">
+<table width="750" border="1" cellpadding="2" cellspacing="0">
+  <tr> 
+    <td valign="top"> 
+	<form name="form" method="post" action="edit_order_curator2.cgi">
+      <input type="hidden" name="state" value="0">
+        <table width="100%" border="0" cellpadding="2" cellspacing="0">
+          <tr> 
+            <td COLSPAN=3> 
+             {message}
+            </td>
+           </tr>
+           <tr>
+            <td width="30%" valign="top"> 
+            <input type=hidden name="oi_pk" value={oi_pk}>
+            <div align="right">Owner:<br>
+	    login, phone:</div>
+            </td>
+            <td width="30%" valign="top">&nbsp;<a href="view_account.cgi?login={login}">{contact_fname} {contact_lname}
+</a><br>{login}, {contact_phone}</td>
+            <td width="40%" valign="top">Created by: <a href="view_account.cgi?login={created_by_login}">
+	    {created_by_fname} {created_by_lname}</a></td>
+            <td width="40%"><input type=submit name="submit" value="Update"></td>
+          </tr>
+          <tr> 
+            <td bgcolor="#99FFCC"> 
+              <div align="right">Array order number: </div>
+            </td>
+            <td>&nbsp;<b>{order_number}</b></td>
+            <td bgcolor="#99FFCC"> 
+              <div align="right">Locked: </div>
+            </td>
+            <td> 
+              <input type="checkbox" name="locked" value="1">
+            </td>
+          </tr>
+          <tr> 
+            <td bgcolor="#99FFCC">
+              <div align="right">Organization affiliation: </div>
+            </td>
+            <td>{org_name}</td>
+            <td bgcolor="#99FFCC"> 
+              <div align="right">Number of samples: </div>
+            </td>
+            <td>&nbsp;{number_of_samples}</td>
+          </tr>
+          <tr> 
+            <td bgcolor="#99FFCC"> 
+              <div align="right">Chips Ordered: </div>
+            </td>
+            <td> 
+              <input type="checkbox" name="chips_ordered" value="1">
+            </td>
+            <td bgcolor="#99FFCC"> 
+              <div align="right">Chips Billed: </div>
+            </td>
+            <td> 
+              <input type="checkbox" name="chips_billed" value="1">
+            </td>
+          </tr>
+          <tr> 
+            <td bgcolor="#99FFCC"> 
+              <div align="right">RNA Iso. Billed: </div>
+            </td>
+            <td> 
+              <input type="checkbox" name="rna_isolation_billed" value="1">
+            </td>
+            <td bgcolor="#99FFCC"> 
+              <div align="right">Analysis Billed: </div>
+            </td>
+            <td> 
+              <input type="checkbox" name="analysis_billed" value="1">
+            </td>
+          </tr>
+          <tr> 
+            <td bgcolor="#99FFCC"> 
+              <div align="right">Have Chips:</div>
+            </td>
+            <td> 
+              <input type="checkbox" name="have_chips" value="1">
+            </td>
+            <td bgcolor="#99FFCC"> 
+              <div align="right">Billing code: </div>
+            </td>
+            <td>&nbsp; 
+              <input type="text" name="billing_code" value="{billing_code}" maxlength="128">
+            </td>
+          </tr>
+          <tr> 
+            <td bgcolor="#99FFCC">
+		<div align="right">Isolations: </div>
+	    </td>
+            <td>
+		<input type="text" name="isolations" value="{isolations}" maxlength="16"</td>
+            <td bgcolor="#99FFCC"> 
+              <div align="right">Date Report Completed: </div>
+            </td>
+            <td>&nbsp; 
+              <input type="text" name="date_report_completed" value="{date_report_completed}" maxlength="128">
+          </tr>
+          <tr> 
+            <td bgcolor="#99FFCC">
+		<div align="right">Chips Bill Date: </div>
+	    </td>
+            <td>
+		<input type="text" name="chips_bill_date" value="{chips_bill_date}" maxlength="16"</td>
+            <td bgcolor="#99FFCC"> 
+              <div align="right">Isolation Bill Date: </div>
+            </td>
+            <td>&nbsp; 
+              <input type="text" name="isolation_bill_date" value="{isolation_bill_date}" maxlength="128">
+            </td>
+          </tr>
+          <tr> 
+            <td bgcolor="#99FFCC">
+		<div align="right">Preps Bill Date: </div>
+	    </td>
+            <td>
+		<input type="text" name="preps_bill_date" value="{preps_bill_date}" maxlength="16"</td>
+            <td bgcolor="#99FFCC">
+		<div align="right">Date Samples Received: </div>
+	    </td>
+            <td>
+		<input type="text" name="date_samples_received" value="{date_samples_received}" maxlength="16"</td>
+          </tr>
+        </table>
+        </form>
+        <font color="#FF0000">{message}</font>
+      <br>
+      <table width="100%" border=0 cellpadding=2 cellspacing=0>
+        <tr bgcolor="#99FFCC"> 
+          <td valign="top">Hyb. Name</td>
+          <td valign="top">Chip</td>
+          <td valign="top">Study name</td>
+          <td valign="top">Exp. Condition name</td>
+          <td valign="top">Run date</td>
+          <td valign="top">&nbsp;</td>
+          <td valign="top">View QC</td>
+        </tr>
+        {load_all}
+        <loop2> 
+        <tr> 
+          <td>{hybridization_name}</td>
+          <td>{al_name}</td>
+          <td>{study_name}</td>
+          <td>{ec_name}</td>
+          <td>{timestamp}</td>
+          <td>&nbsp;</td>
+          <td> 
+            <form name="form1" method="post" action="load_data1.cgi">
+              <input type="submit" name="Submit" value="Load {hybridization_name}">
+              <input type="hidden" name="am_pk" value="{am_pk}">
+              <input type="hidden" name="state" value="0">
+              <input type="hidden" name="oi_pk" value="{oi_pk}">
+            </form>
+          </td>
+        </tr>
+        </loop2> 
+      </table>
+    </td>
+  </tr>
+</table>
+<br>
+</loop>

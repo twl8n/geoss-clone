@@ -1,0 +1,16 @@
+hybridization_name	description
+03-06_age1_A	data taken from GSM5254
+03-06_age1_B	data taken from GSM5255
+03-06_age1_C	data taken from GSM5256
+03-06_age1_D	data taken from GSM5257
+03-06_age1_E	data taken from GSM5259
+03-06_age1_F	data taken from GSM5260
+03-06_age1_G	data taken from GSM5261
+03-06_age2_A	data taken from GSM5262
+03-06_age2_B	data taken from GSM5263
+03-06_age2_C	data taken from GSM5264
+03-06_age2_D	data taken from GSM5265
+03-06_age2_E	data taken from GSM5266
+03-06_age2_F	data taken from GSM5268
+03-06_age2_G	data taken from GSM5270
+03-06_age2_H	data taken from GSM5271

@@ -1,0 +1,94 @@
+This is a brief description of the site style guide.
+
+-------
+General
+
+We don't use H1, etc (heading) tags. These render in bizarre (usually
+very large) text in may browsers. Instead major headings are bold, +1
+size. Minor headings are bold.
+
+All the text and images in main documentation pages is in a single
+table row. Multiple table rows are a headache to
+maintain. Intra-paragraph spacing is left to the browser defaults and
+done with paragraphs (not breaks). Table rows will mess up the
+paragraph spacing.
+
+We are using italics for "command line user name" prompt
+identification. The actual command is bold.
+
+Transcripts are <pre>.
+
+We are not using colored horizontal rules (<hr>). It may not be well
+supported, and it is a headache to maintain.
+
+
+---------------
+Page properties
+<body bgcolor="#FFFFFF" topmargin="0"
+  leftmargin="0" link="#006633" vlink="#666633">
+
+Link colors are web-safe colors which are close to the logo colors.
+
+Margin height and width are often zero as well, but I'm not 
+sure what effect that has, and many pages leave these to the browser
+default. 
+
+
+---------------
+Main page table
+600 pixels wide, zero border, zero cellpadding, zero cellspacing
+
+Column 1 is the left color bar, and it goes all the way to the top of
+the page. This was done to avoid the necessity of cellpadding in the
+main table. Instead column 2 of the main table serves as a
+gutter. Cellpadding causes problems.
+
+column 1: 10 pixels
+column 2: 10 pixels
+column 3: 580 pixels
+
+Columns 1 and 1 are bottom aligned. 
+
+Columns 1 and 2 are held to their correct size with a 10x10 white gif
+(at the bottom where it isn't a visual problem).
+
+
+----------
+Logo table
+The logo table is now inside the main table.
+
+The logo table is often 2 columns, but this isn't very
+consistent. Ideally the logo table is 3 columns. Table size is
+100%. Zero border etc.
+column 1: smaller than the logo, and the logo pushes it out
+column 2: smaller than 10 pixels (the table is in percent), and uses
+white.gif at 10x10 to push it out to 10 pixels (visually consistent
+wit the color bars and gutter).
+column 3: size doesn't matter, use the remainder
+
+Logo table text is: <font face="Verdana, Arial, Helvetica, sans-serif"
+size="+1">
+
+
+------
+Colors
+
+The logo is a jpg, and aliasing and lossy compression create some
+extra colors, but in general the colors are:
+
+light green: c9dfae
+dark green: 85a25f
+purple: 80007e
+
+
+Install guide medium red: db003b
+
+Admin pages dark red: 7c0000
+
+Developer dark blue: 1660b2
+
+User guides logo light green: c9dfae
+
+Other pages logo purple: 80007e
+
+

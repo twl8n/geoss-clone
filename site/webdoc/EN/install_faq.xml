@@ -1,0 +1,1022 @@
+<part id="install_faq">
+<title>FAQ</title>
+<qandaset>
+<qandadiv id="general_install_faq"><title>General</title></qandadiv>
+
+<qandaentry>
+  <question>
+    <para>
+      How do I get further assistance with an install?
+    </para>
+  </question>
+  <answer>
+    <para>
+      Contact either Teela James <email>teela-virginia@peff.net</email>
+       or Jodi Kanter <email>jkanter@virginia.edu</email>.
+    </para>
+  </answer>
+</qandaentry>
+
+<qandaentry>
+  <question id="different_install_platforms">
+    <para>
+      Has &product; been ported to other platforms?                
+    </para>
+  </question>
+  <answer>
+    <para>
+&product; is only officially supported on Fedora, but it should be
+fairly simple to run on any Unix-based OS. We have also installed
+it on OS X, so it is definitely possible to install &product; in that
+environment. &product; has not been developed with the intention of
+using it in a Windows environment, although it is probably possible
+if you setup the appropriate Unix-emulation software (Cygwin).
+
+    </para>
+  </answer>
+</qandaentry>
+
+<qandaentry>
+  <question id="os_x_install_hints">
+    <para>
+     I want to install on OS X.  Do you have any notes on differences in
+     the install process? 
+    </para>
+  </question>
+  <answer>
+   <note>The following information is not tested regularly and may be
+   obsolete.  
+   </note> 
+   <para>
+     <variablelist>
+       <varlistentry>
+         <term>
+           Install Dependencies
+         </term>
+         <listitem>
+           <orderedlist>
+             <listitem>
+               <para>
+               Install R 
+               </para>
+               <para>
+               http://gifi.stat.ucla.edu/pub/index.php
+               </para>
+             </listitem>
+             <listitem>
+               <para>
+               Install fink
+               <command>http://fink.sourceforge.net/download/index.php</command>
+               </para>
+             </listitem>
+             <listitem>
+               <para>
+               Install readline
+               <command>sudo  /sw/bin/fink install readline</command>
+               </para>
+             </listitem>
+             <listitem>
+               <para>
+               Install Postgres (I installed from source.  You should
+               install a more current version than illustrated here).  
+               <para><command>www.postgresql.org</command></para>
+               <para><command>cd /usr/local/src</command></para>
+               <para><command>sudo sh</command></para>
+               <para><command>mkdir postgres</command></para>
+               <para><command>cd postgres</command></para>
+               <para><command>tar -xzvf postgresql-7.3.3.tar.gz</command></para>
+               <para><command>cd postgresql-7.3.3</command></para>
+               <para><command>./configures --with-includes=/sw/include/
+               --with-libraries=/sw/lib</command></para>
+               <para><command>make</command></para>
+               <para><command>make install</command></para>
+               </para>
+             </listitem>
+             <listitem>
+               <para>
+               Added the postgres user (system preferences, accounts).
+               </para>
+             </listitem>
+             <listitem>
+               <para>
+               Created a .tcsh file for the postgres user containing:
+               <screen>
+               setenv PGDATA /usr/local/pgsql/data
+               setenv PATH ${PATH}:/usr/local/pgsql/bin
+               setenv LC_COLLATE="C"
+               </screen>
+               </para>
+             </listitem>
+             <listitem>
+               <para>
+               Initialize the db.
+               <para><command>rm -r
+               /usr/local/pgsql/data</command></para>
+               <para><command>initdb -D /var/lib/pgsql/data
+               --pwprompt</command></para>
+               </para>
+             </listitem>
+             <listitem>
+               <para>
+               Modify
+               <filename>/usr/local/pgsql/data/pg_hba.conf</filename>.
+               The last two lines should read:
+               <screen>
+              local   all         all                                     md5  
+              host    all         all         127.0.0.1 255.255.255.255   trust
+               </screen>
+               </para>
+             </listitem>
+             <listitem>
+               <para>
+               Modify <filename>postgresql.conf</filename>:
+               <screen>tcpip_socket = true</screen>
+               </para>
+             </listitem>
+             <listitem>
+               <para>
+               Start postgres:
+               <command>
+               postmaster -D /usr/local/pgsql/data
+               </command>
+               </para>
+             </listitem>
+             <listitem>
+               <para>
+                Setup Postgres to run on startup.
+              </para>
+              <para>
+                <screen>
+#!/bin/sh
+              
+##
+# PotgreSQL RDBMS Server
+##
+
+# PostgreSQL boot time startup script for Darwin/Mac OS X. To install,
+# change
+# the "prefix", "PGDATA", "PGUSER", and "PGLOG" variables below as
+# necessary. Next, create a new directory,
+# "/Library/StartupItems/PostgreSQL".
+# Then copy this script and the accompanying "StartupParameters.plist"
+# file
+# into that directory. The name of this script file *must* be the same
+# as the
+# directory it is in. So you'll end up with these two files:
+#
+#    /Library/StartupItems/PostgreSQL/PostgreSQL
+#    /Library/StartupItems/PostgreSQLStartupParameters.plist
+#
+# Next, add this line to the /etc/hostconfig file:
+#
+# POSTGRESQLSERVER=-YES-
+#
+# The startup bundle will now be read to go. To prevent this script from
+# starting PostgreSQL at system startup, simply change that line in
+# /etc/hostconfig to:
+#
+# POSTGRESQLSERVER=-NO-
+#
+# For more information on Darwin/Mac OS X startup bundles, see this article:
+#
+#  http://www.opensource.apple.com/projects/documentation/howto/html/SystemStarter_HOWTO.html
+#
+# Created by David Wheeler, 2002.
+
+################################################################################
+## EDIT FROM HERE
+################################################################################
+
+# Installation prefix
+prefix=/usr/local/pgsql
+
+# Data directory
+PGDATA="/usr/local/pgsql/data"
+
+# Who to run pg_ctl as, should be "postgres".
+PGUSER=postgres
+
+# Where to keep a log file
+PGLOG="$PGDATA/serverlog"
+
+################################################################################
+## STOP EDITING HERE
+################################################################################
+
+# The path that is to be used for the script
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# What to use to start up the postmaster
+DAEMON="$prefix/bin/pg_ctl"
+
+. /etc/rc.common
+
+StartService () {
+      if [ "${POSTGRESQLSERVER:=-NO-}" = "-YES-" ]; then
+          ConsoleMessage "Starting PostgreSQL database server"
+          sudo -u $PGUSER $DAEMON start -D "$PGDATA" -s -l $PGLOG
+      fi
+}
+
+StopService () {
+      ConsoleMessage "Stopping PostgreSQL database server"
+      sudo -u $PGUSER $DAEMON stop -D "$PGDATA" -s -m fast
+}
+
+RestartService () {
+      if [ "${POSTGRESQLSERVER:=-NO-}" = "-YES-" ]; then
+           ConsoleMessage "Restarting PostgreSQL database server"
+           sudo -u $PGUSER $DAEMON restart -D "$PGDATA" -s -m fast
+      else
+            StopService
+      fi
+}
+
+RunService "$1"
+
+# END OF FILE
+
+
+{
+    Description     = "PostgreSQL Database Server";
+    Provides        = ("postgres database");
+    Requires        = ("Disks", "Resolver");
+    Uses            = ("NFS", "Network Time");
+    OrderPreference = "None";
+    Messages =
+    {
+      start = "Starting PostgreSQL database server";
+      stop  = "Stopping PostgreSQL database server";
+      restart = "Restarting PostgreSQL database server";
+    };
+}
+
+                </screen>
+              </para>
+             </listitem>
+           </orderedlist>
+         </listitem>
+       </varlistentry>   
+       <varlistentry>
+         <term>
+           Configure Postgres
+         </term>
+         <listitem>
+         <orderedlist>
+         <listitem>
+           <para>
+           Create the "geoss" user in Postgres.
+           </para>
+         </listitem>
+         <listitem>
+           <para>
+           Create the "geoss" database in Postgres.
+           </para>
+         </listitem>
+         <listitem>
+           <para>
+             Test database connection by:
+             <command>
+             psql -d geoss -U geoss
+             </command>
+           </para>
+         </listitem>
+         </orderedlist>
+         </listitem>
+       </varlistentry>   
+       <varlistentry>
+         <term>
+           Install GEOSS
+         </term>
+         <listitem>
+           <orderedlist>
+           <listitem>
+           <para>
+             Obviously you can't use the rpm install, so I unpacked the
+             source.  I used the following settings in my
+             build-options.mk:
+             <screen>
+             # This file contains build options for a GEOSS
+             # installation.
+             GEOSS_DIR = geoss
+             HTML_DIR ?= /Library/WebServer/Documents
+             WEB_DIR = $(HTML_DIR)/$(GEOSS_DIR)
+             USER_DATA_DIR ?= /var/lib/$(GEOSS_DIR)
+             BIN_DIR ?= /usr/local/bin
+             LIB_DIR ?= /usr/local/lib/geoss
+             GEOSS_DBMS ?= Pg
+             DB_NAME ?= geoss
+             GEOSS_HOST ?= localhost
+             GEOSS_PORT ?= 5432
+             GEOSS_SU_USER ?= geoss
+             PERL_LOCATION = auto
+             VERSION = GEOSS OS X Custom
+             COOKIE_NAME = $(HOSTNAME)_$(DB_NAME)_GEOSSID
+             WEB_USER=www
+             </screen>
+           </para>
+           </listitem>
+           <listitem>
+           <para>
+             I built the system as root.  You may wish to build it as
+             someone one other than root.  To do this, you must make 
+             sure that the user doing the build has permissions to write
+             to WEB_DIR as defined in build-options.mk.  They will also
+             need to be able to write to BIN_DIR and LIB_DIR.  The
+             WEB_USER must be able to write to USER_DATA_DIR.
+           </para>
+           <para>
+             <command>
+             make install
+             </command>
+           </para>
+           </listitem>
+           </orderedlist>
+         </listitem>
+       </varlistentry>   
+       <varlistentry>
+         <term>
+           Configure Apache
+         </term>
+         <listitem>
+           <orderedlist>
+             <listitem>
+               <para>
+                 Modify <filename>/etc/httpd/conf/httpd.conf</filename> 
+                 to include a directive for GEOSS:
+               </para> 
+               <para>
+                 <screen>
+                 Added a Directory directive for GeneX dir:
+                 &lt;Directory "/Library/WebServer/Documents/geoss"&gt;
+                     Options Indexes FollowSymLinks ExecCGI       
+                     DirectoryIndex index.shtml index.html index.pl
+                     AllowOverride All
+                     Order allow,deny
+                     Allow from all
+                 &lt;/Directory&gt;
+                 </screen>
+               </para>
+             </listitem>
+             <listitem>
+               <para>
+               Modify AddHandler to read:
+               </para>
+               <para>
+                 <screen>AddHandler cgi-script .cgi .pl</screen>
+               </para>
+             </listitem>
+             <listitem>
+               <para>In <filename>/etc/hostconfig</filename> modify:</para>
+               <para><screen>WEBSERVER=-NO-</screen></para>
+               <para>to</para>
+               <para><screen>WEBSERVER=-YES-</screen></para>
+             </listitem>
+           </orderedlist>
+         </listitem>
+       </varlistentry>   
+       <varlistentry>
+         <term>Perl Setup</term>
+         <listitem>
+         <para>
+           I found that perl 5.6.0 didn't install DBD::Pg corrently.  I
+           upgraded to perl 5.6.1 using fink and this worked correctly
+           for me.  I then made a symbolic link from
+             <filename>/usr/bin/perl</filename> to
+             <filename>/sw/bin/perl</filename>.  I believe this should
+             no longer be necessary--the makefiles have been changed
+             since I installed to detect which version of perl to use.
+             Alternatively you can set the version of Perl using by 
+             defining PERL_LOCATION for the Makefiles (see
+             <filename>rules.mk</filename>).
+         </para>
+         </listitem>
+       </varlistentry>
+     </variablelist>
+   </para>
+  </answer>
+</qandaentry>
+
+<qandadiv id="installing_&product;_install_faq;">
+<title>Installing &product;</title></qandadiv>
+
+<qandaentry>
+  <question>
+    <para>
+      Why would I want to install from a tarball?               
+    </para>
+  </question>
+  <answer>
+    <para>
+      There are several reasons that you may wish to install &product; 
+      from a tarball:
+      <itemizedlist>
+      <listitem>
+        <para>
+        you wish to customize your installation
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+        you aren't using Fedora on an i386 architecture (the only 
+        platform that we build an rpm for)
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+        you don't wish to install with rpm
+        </para>
+      </listitem>
+      <listitem>
+        <para>
+         you want to put &product; in a non-standard location
+        </para>
+      </listitem>
+     </itemizedlist>
+    </para>
+  </answer>
+</qandaentry>
+
+<qandaentry>
+  <question>
+    <para>
+    How do I install from the tarball?
+    </para>
+  </question>
+  <answer>
+    <para>
+    If you install from a tarball and build your own system, there is an
+    additional dependencies.  You either need to install Docbook, or
+    modify the Makefile in the site directory so that it does not make
+    the contents of the webdoc directory (in which case you won't have
+    the documentation installed).  For our purposes, installing Docbook
+    means being able to run <command>xsltproc -o html/ --stringparam
+    use.id.as.filename 1
+    <replaceable>path</replaceable>/docbook-xsl-1.66.1/html/chunk.xsl</command> 
+    </para>
+    <para>
+    For information on Docbook, see <ulink
+    url="http://docbook.org/tdg/en/html/docbook.html">DocBook: The
+    Definitive Guide</ulink>.
+    </para>
+    <para>
+     The following steps should be performed as the user you wish to 
+     install, starting from the directory you wish to install in:
+     <itemizedlist>
+     <listitem>
+       <para>
+         <command>gunzip geoss-X.X.tar.gz</command>
+       </para>
+     </listitem>
+     <listitem>
+       <para>
+         <command>tar xvf geoss-X.X.tar</command>
+       </para>
+     </listitem>
+     <listitem>
+       <para>
+         <command>cd geoss</command>
+       </para>
+     </listitem>
+     <listitem>
+       <para>
+         <command>cp <filename>build-options.default</filename> 
+           <filename>build-options.mk</filename></command> 
+       </para>
+     </listitem>
+     <listitem>
+       <para>
+        edit <filename>build-options.mk</filename> for desired 
+         changes in the build
+       </para>
+     </listitem>
+     <listitem>
+       <para>
+       <command>make all</command> 
+       </para>
+     </listitem>
+     <listitem>
+       <para>
+       <command>geoss_initialize --db_name=geoss --db_user=geoss</command>
+       <note>
+        If you set <link linkend="BIN_DIR">BIN_DIR</link> in <filename>
+        build-options.mk</filename> to something that is not in your path,
+        you will need to prepend that BIN_DIR path to the <command>
+        geoss_initialize</command> command.
+       </note>
+       </para>
+     </listitem>
+     </itemizedlist>
+    </para>
+    <para>
+    </para>
+  </answer>
+</qandaentry>
+
+<qandaentry id="what_do_the_settings_in_build-options.mk_do">
+  <question>
+    <para>
+    What do the settings in build-options.mk do?
+    </para>
+  </question>
+  <answer>
+    <para>
+      <variablelist>
+        <varlistentry id="GEOSS_DIR">
+          <term>
+            GEOSS_DIR
+          </term>
+          <listitem>
+            <para>
+              The path to the &product; install from HTML_DIR.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="HTML_DIR">
+          <term>
+            HTML_DIR
+          </term>
+          <listitem>
+            <para>
+              DocumentRoot as defined in
+              <filename>httpd.conf</filename>.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="WEB_DIR">
+          <term>
+            WEB_DIR
+          </term>
+          <listitem>
+            <para>
+              This stores the directory where the &product; webpages and
+              scripts are installed.  The directory needs to be
+              accessible to the <link
+              linkend="WEB_USER">WEB_USER</link>.  This variable should
+              be left at its default setting.  Changes should be made to
+              GEOSS_DIR and HTML_DIR to achieve changes to WEB_DIR.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="USER_DATA_DIR">
+          <term>
+            USER_DATA_DIR
+          </term>
+          <listitem>
+            <para>
+              This is the directory that stores &product; user files,
+              including results from analysis trees, uploaded files, and
+              data files.  The directory needs to be accessible to the
+              <link linkend="WEB_USER">WEB_USER</link>.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="BIN_DIR">
+          <term>
+            BIN_DIR
+          </term>
+          <listitem>
+            <para>
+              This is the directory where &product; command line scripts
+              will be installed.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="LIB_DIR">
+          <term>
+            LIB_DIR 
+          </term>
+          <listitem>
+            <para>
+              This is the directory where &product; function libraries
+              will be installed.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="GEOSS_DBMS">
+          <term>
+            GEOSS_DBMS
+          </term>
+          <listitem>
+            <para>
+              This specifies the type of database we are connecting to
+              and is needed by the DBI module.  We have never used a
+              database other than Postgres, so do so at your own risk.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="DB_NAME">
+          <term>
+            DB_NAME
+          </term>
+          <listitem>
+            <para>
+              This is the name of the database created to hold
+              &product; tables.  This value is used to install tables
+              and to connect to the database.  It is the value used for
+              the <link linkend="postgres_database">postgres
+              database</link> during the install.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="GEOSS_HOST">
+          <term>
+            GEOSS_HOST 
+          </term>
+          <listitem>
+            <para>
+              This identifies the server hosting your GEOSS database and
+              is used to connect to the database.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="GEOSS_PORT">
+          <term>
+            GEOSS_PORT
+          </term>
+          <listitem>
+            <para>
+              This is the Postgres port and is used to connect to the
+              database.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="GEOSS_SU_USER">
+          <term>
+            GEOSS_SU_USER
+          </term>
+          <listitem>
+            <para>
+            This is the name of the <link
+            linkend="postgres_user">postgres user</link> that has
+            permission on the database specified by the <link
+            linkend="DB_NAME">DB_NAME</link> parameter.  This value is
+            used to connect to the database.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="PERL_LOCATION">
+          <term>
+            PERL_LOCATION
+          </term>
+          <listitem>
+            <para>
+              The location of the Perl interpreter on your system.
+              Setting this value to "auto" will result in the system
+              determining the location of the interpreter through use of
+              the <command>which</command> command.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="VERSION">
+          <term>
+            VERSION
+          </term>
+          <listitem>
+            <para>
+              This is the &product; version that is being installed.  It
+              will be displayed on the footer.  Unless you are making
+              code changes, you shouldn't change the version number.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="COOKIE_NAME">
+          <term>
+            COOKIE_NAME
+          </term>
+          <listitem>
+            <para>
+              This is the name of the cookie that &product; sets when
+              the user logs in.  By default, it included the <link
+              linkend="DB_NAME">database name</link> to avoid conflicts
+              in the event of several &product; installs on one system.
+              This value should not need to be changed.
+            </para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry id="WEB_USER">
+          <term>
+            WEB_USER
+          </term>
+          <listitem>
+            <para>
+              This is the user who runs your web server.  &product; uses
+              this value to chgrp certain directories so that the web
+              server can read them.  If you user suExec, you will need
+              to change this value to the user you suExec to.
+            </para>
+          </listitem>
+        </varlistentry>
+
+      </variablelist>
+    </para>
+  </answer>
+</qandaentry>
+
+<qandaentry
+id="can_you_give_me_an_example_of_the_build-options.mk_file_for_a_non-root_install">
+  <question>
+    <para>
+      Can you give me an example of the build-options.mk file for a 
+      non-root install?
+    </para>
+  </question>
+  <answer>
+    <para>
+      This is the build options set for a non-root install where
+      &product; is served out of the public_html directory.
+      <screen>
+      #This file contains build options for a GEOSS installation.
+      GEOSS_DIR = geoss
+      HTML_DIR ?= /home/tdj4m/public_html
+      WEB_DIR = $(HTML_DIR)/$(GEOSS_DIR)
+      USER_DATA_DIR ?= /home/tdj4m/local/$(GEOSS_DIR)
+      BIN_DIR ?= /home/tdj4m/local/$(GEOSS_DIR)/bin
+      LIB_DIR ?= /home/tdj4m/local/$(GEOSS_DIR)/lib
+      GEOSS_DBMS ?= Pg
+      DB_NAME ?= tdj4m
+      GEOSS_HOST ?= localhost
+      GEOSS_PORT ?= 5432
+      GEOSS_SU_USER ?= tdj4m
+      PERL_LOCATION = auto
+      VERSION = GEOSS 2.0
+      WEB_USER=tdj4m
+      </screen>
+    </para>
+  </answer>
+</qandaentry>
+
+<qandaentry>
+  <question>
+    <para>
+    I installed from the rpm.  The files installed successfully, but 
+    the initialization script failed.  What should I do?
+    </para>
+  </question>
+  <answer>
+    <para>
+    If the initialization scripts failed, you do not need to re-install
+    the rpm.  First, determine why the initialization script failed and
+    address the issues. Then you can run the 
+    initialization scripts manually.  See <command><link
+    linkend="geoss_initialize">geoss_initialize</link></command> for
+    more information.
+    </para>
+  </answer>
+</qandaentry>
+
+<qandadiv id="security_install_faq"><title>Security</title></qandadiv>
+
+<qandaentry>
+  <question>
+    <para>
+      What should I do to secure &product;?
+    </para>
+  </question>
+  <answer>
+    <para>
+    &product; is intended to be run on a box where untrusted users do
+    not have command line access.  If you are storing sensitive data in
+    &product;, it is recommend that you provide such a setting.
+    </para>
+    <para>
+    If you do not provide a dedicated environment, considering using
+    suExec.
+    </para>
+    <para>
+    Use https/SSL.
+    </para>
+    <para>
+    The PostgreSQL port should only be open to the local machine.
+    </para>
+    <para>
+    Make sure you change your administrator password from the default
+    value.
+    </para>
+    <para>
+    Make sure that access to the <link
+    linkend="postgres_database">postgres database</link> is encrypted
+    (set to "md5", not "trust", in <filename>pg_hba.conf</filename>).
+    </para>
+    <para>
+    Depending on your <filename>httpd.conf</filename> settings, the
+    <filename>.geoss</filename> password file can be displayed by the
+    web browser.  This is a risk if your DocumentRoot is set to a parent
+    directory of <filename>/var/www/html/geoss/site</filename>.  If you
+    can access the password file via the browser, you will need to
+    restrict access.  The following addition to your
+    <filename>httpd.conf</filename> should work.  <screen>
+    <literallayout>
+    &lt;Files .geoss&gt;
+    Order allow,deny
+    Deny from all
+    &lt;/Files&gt;
+    </literallayout>
+    </screen>
+    </para>
+    <note>
+    While we devote considerable effort to ensuring &product; data is
+    secure, you should perform your own security analysis to ensure that
+    the product meets your requirements.
+    </note>
+  </answer>
+</qandaentry>
+
+<qandaentry>
+  <question>
+    <para>
+      Are there security issues that I should be aware of?
+    </para>
+  </question>
+  <answer>
+    <para>
+    The database password for the <link linkend="postgres_user">postgres
+    database</link> is visible to anyone who has shell access as the
+    user who runs the webserver.
+    </para>
+    <para>
+    End user files (which contain gene chip data) are accessible to
+    anyone who has shell access as the web user.
+    </para>
+  </answer>
+</qandaentry>
+
+<qandadiv id="installing_or_configuring_dependencies_install_faq">
+<title>Installing/Configuring Dependencies</title></qandadiv>
+<note>
+We have not done extensive testing on alternate configuration.
+&product; is intended to be run in a dedicated environment.  However it
+is often useful to have it installed with other applications
+(particularly in a development scenario), so the following answers
+provide some hints on how to achieve an alternative installation.
+</note>
+<qandaentry>
+  <question>
+    <para>
+      How do I get Apache to run when the system starts up?
+    </para>
+  </question>
+  <answer>
+    <para>
+    Use the <command>chkconfig</command> command or the
+    <command>ntsysv</command> command.
+    </para>
+  </answer>
+</qandaentry>
+
+<qandaentry>
+  <question>
+    <para>
+      How do I set up virtual hosting?
+    </para>
+  </question>
+  <answer>
+    <para>
+    Substitute your server's ip address and the fully qualified domain
+    name assigned to your server by your hostmaster.
+
+    <screen>
+    NameVirtualHost 10.10.1.5
+    &lt;VirtualHost 10.10.1.5&gt;
+    DocumentRoot /var/www/html/geoss
+    ServerName genes.med.virginia.edu
+    &lt;/VirtualHost&gt;
+
+    # Apache will only listen on port 80 by default.  Defining the
+    # virtual server (below) won't make it automatically listen on the
+    # virtual server's port.
+    Listen 443
+    &lt;VirtualHost _default_:443&gt;
+    # General setup for the virtual host
+    DocumentRoot "/var/www/html" 
+    SSLEngine on
+    </screen>
+    
+    </para>
+  </answer>
+</qandaentry>
+
+<qandaentry>
+  <question>
+    <para>
+      How do I set up Apache to support an install in a user directory?
+    </para>
+  </question>
+  <answer>
+    <para>
+    Make the following changes in
+    <filename>/etc/httpd/httpd.conf</filename>:
+    <itemizedlist>
+      <listitem>
+      <para>
+      Comment out line disabling UserDir so that it reads:
+      <screen>
+      #UserDir disable
+      </screen>
+      </para>
+      </listitem>
+      <listitem>
+      <para>
+      Uncomment the line that sets the UserDir value so that it read:
+      <screen>
+      UserDir public_html
+      </screen>
+      </para>
+      </listitem>
+      <listitem>
+      <para>
+      Add a directive for files served from UserDir.  Assuming you are
+      only running geoss files, that directive would be:
+      <screen>
+      &lt;Directory /home/*/public_html&gt;
+      AllowOverride Limit
+      Options ExecCGI SymLinksIfOwnerMatch
+      Order allow,deny
+      &lt;\Directory&gt;
+      </screen>
+      </para>
+      </listitem>
+      <listitem>
+      <para>
+      Remember that the public_html directory will need to have 755
+      permissions and that the user home directory will need to have 711
+      permissions for this to work.
+      </para>
+      </listitem>      
+      
+      </itemizedlist>
+    </para>
+  </answer>
+</qandaentry>
+
+<qandaentry>
+  <question>
+    <para>
+      How do I set up Apache to use suExec?
+    </para>
+  </question>
+  <answer>
+    <para>
+    </para>
+  </answer>
+</qandaentry>
+
+<qandaentry>
+  <question>
+    <para>
+      Do I have to use Apache as my web server?
+    </para>
+  </question>
+  <answer>
+    <para>
+    We have not tested &product; with any other web server.
+    </para>
+  </answer>
+</qandaentry>
+
+<qandaentry>
+  <question>
+    <para>
+      Do I have to use rpm to install perl modules?
+    </para>
+  </question>
+  <answer>
+    <para>
+    If you are going to user rpm to install &product;, then you should
+    use rpm to install the Perl modules, or the dependency checks will
+    fail.  If you are not use rpm to install &product;, you can install
+    the Perl modules in any fashion you choose.
+    </para>
+  </answer>
+</qandaentry>
+
+<qandaentry>
+  <question>
+    <para>
+      How do I get Postgres to run when the system starts up?
+    </para>
+  </question>
+  <answer>
+    <para>
+    Use the <command>chkconfig</command> command or the
+    <command>ntsysv</command> command.
+    </para>
+  </answer>
+</qandaentry>
+
+</qandaset>
+</part>

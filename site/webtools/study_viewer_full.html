@@ -1,0 +1,94 @@
+<form action="study_viewer_full.cgi" method=POST>
+<input type="hidden" name="sty_pk" value="{sty_pk}">
+<table width="700" border=0 cellpadding=4 cellspacing=0>
+  <tr>
+    <td colspan=4>
+      <b>Array Study Name:</b>&nbsp;
+      {study_name}
+  </tr>
+
+  <tr>
+    <td colspan = 2>
+      <b>Organism:</b>&nbsp;
+      {organism} 
+    </td>
+    <td colspan=2>
+      <b>Disease:</b>&nbsp;
+      {dis_name}
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan=4>
+      <hr>
+    </td>
+  </tr>
+
+  {analysis_html}
+  <tr>
+    <td colspan=4>
+      <hr>
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan=4>
+      <b>Array Study Description</b>
+    </td>
+  </tr>
+  <tr>
+    <td colspan=4>
+      {description}
+    </td>
+  </tr>
+
+  <tr>
+    <td colspan=4>
+      <hr>
+    </td>
+  </tr>
+  
+  <tr>
+    <td colspan=4>
+      <b>Condition and Hybridization Information</b>
+    </td>
+  </tr>
+  
+  <loop>
+    <tr><td colspan=4> <table width="100%" border=1>
+      <tr>
+        <td colspan=4>
+          <b>Experimental Condition: </b>&nbsp;
+          {name} 
+        </td>
+      </tr> 
+      <tr>
+        <td colspan=4 >
+          <b>Condition Description:</b> &nbsp;
+          {description} 
+        </td>
+      </tr> 
+      <tr>
+        <th width="25%">Hybridization</th>
+        <th width="25%">Chip</th>
+        <th width="50%" colspan=2>Description</th>
+      </tr>
+      <loop2>
+        <tr>
+          <td colspan=1>
+          {hybridization_name}
+        </td>
+          <td colspan=1>
+          {chip}
+        </td>
+        <td colspan=2>
+          {hybridization_description}
+        </td>
+      </tr>
+    </loop2>
+    
+    </table></td></tr>
+  </loop>
+</table>
+</form>
+<a href="./study_viewer.cgi">Back to 'View All Array Studies'</a>

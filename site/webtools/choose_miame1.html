@@ -1,0 +1,61 @@
+<loop> 
+
+
+<table width="700" border=0 cellspacing=0 cellpadding=3>
+  <tr> 
+    <td valign="top" bgcolor="#99CC99"> 
+      <table width="100%" border="0" cellspacing="5" cellpadding="0" bgcolor="#FFFFFF">
+        <tr> 
+          <td width="70%"> 
+            <form action="edit_miame1.cgi" method="post">
+              <div align="right"> 
+                <input type=submit name="Edit_{miame_pk}" value="Edit {miame_name}">
+                <input type="image" border="0" name="imageField" src="../graphics/pencil.gif" width="25" height="25">
+                <input type=hidden name="miame_pk" value="{miame_pk}">
+              </div>
+            </form>
+          </td>
+          <td width="30%"> </td>
+        </tr>
+        <tr> 
+          <td width="70%"> 
+            <div align="right">MIAME information for:</div>
+          </td>
+          <td width="30%">{miame_name}</td>
+        </tr>
+        <tr> 
+          <td width="70%"> 
+            <div align="right">Date information compilation started:</div>
+          </td>
+          <td width="30%">{start_compile_date}</td>
+        </tr>
+        <tr> 
+          <td width="70%"> 
+            <div align="right">Date information published:</div>
+          </td>
+          <td width="30%">{publish_date}</td>
+        </tr>
+        <!--tr> 
+          <td width="70%"> 
+            <div align="right">Comments:</div>
+          </td>
+          <td width="30%">{miame_description}</td>
+        </tr-->
+        <tr> 
+          <td width="70%"> 
+            <form action="edit_miame1.cgi" method="post">
+              <div align="right"> 
+                {delete_info}
+                <input type="hidden" name="publish_date" value="{publish_date}">
+                <input type="hidden" name="miame_pk" value="{miame_pk}">
+              </div>
+            </form>
+          </td>
+          <td width="30%">&nbsp;</td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<br>
+</loop> <br>

@@ -1,0 +1,42 @@
+<form action="delete_order.cgi" method=POST
+  enctype="multipart/form-data">
+<table width=700 border=1 cellpadding=2 cellspacing=0>
+  <tr>
+   <th>*Select Order</th>
+   <th>Order Pk</th>
+   <th>Order Number</th>
+   <th>Owner</th>
+   <th>Group</th>
+   <th>Status</th>
+   <th>Samples</th>
+   <th>Chips</th>
+   <th>Chip Type</th>
+   <th>Study</th>
+   <th>Organization</th>
+   <th>Billing Code</th>
+  </tr>
+  <loop>
+  <tr>
+   <td><input type="radio" name="oi_pk" value="{pk}"></td>
+   <td>{pk}</td>
+   <td>{name}</td>
+   <td>{owner}</td>
+   <td>{group}</td>
+   <td>{status}</td>
+   <td>{number_of_samples}</td>
+   <td>{number_of_chips}</td>
+   <td>{chip_type}</td>
+   <td>{study}</td>
+   <td>{organization}</td>
+   <td>{billing_code}</td>
+  </tr>
+  <tr>
+</loop>
+</table>
+<p>
+<input type="submit" name="submit" value="Delete Order">
+</form>
+<p>
+<small>* denotes mandatory field</small>
+</p>
+

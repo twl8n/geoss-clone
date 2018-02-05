@@ -1,0 +1,219 @@
+This document is intended to describe the way developers can integrate
+analyses with Genex Va.  An analysis routine is any script that can be run
+from the Unix command line that accepts appropriate input and produces output.  In order to integrate a analysis into Genex Va, developers must provide the following:
+    - the analysis script
+    - analysis documentation
+    - analysis configuration file
+    - a working example (sample input and output files)
+
+Detailed description of each below.
+
+1. Analysis Script
+The analysis script should be writtens in such a way that it can be executed from the unix command line in one command.  They can be written in any language.  The file should have at least one input file and a minimum of two output files.  One output file should be the analysis result, the other should be a log file that specifies what parameters the analysis was run with, its input and output files, and the version of the analysis being run.
+
+The analysis script should accept a path parameter in the format  "--settings path <path>".  The script should write files to the path specified in this parameter.  The analysis should never reference absolute paths or write to directories other than the one specified in <path>.
+
+The log file should be generated even if the run is not successful.  The log file should contain all errors, warnings, and successes.
+
+A well written analysis will contain an optional flag that will increase debugging messages sent to the log file.
+
+2.Analysis Documentation
+Analysis documentation is intended for the end user.  It should be written in html, so it can be linked to the analysis name.  Documentation should include a description of the analysis, all user configurable parameters, and small sample input/output files.  Documentation should include contact information for the module maintainer.
+
+3. Analysis Configuration File
+
+The analysis configuration file describes the structure of the analysis including: the analysis name, how to run the analysis, necessary parameters, and expected input and output files.  The configuration file should be called analysisName.cfg.  This file is used to load a definition of the analysis so that it is one of the choices users are presented with when configuring analysis trees.  A brief example of contents is below.  A complete example concludes this document.
+
+## filetypes
+## filetypes describes the different files that interact with your analysis.  You should 
+## have a minimum of three (one for input, one for output, one for logfile).  This
+## associates the command line parameter name with the file.
+filetype = name=pcint
+filetype = comment=Input file for treedraw
+filetype = arg_name=--infile
+
+filetype = name=tdout
+filetype = comment=Data output for treedraw
+filetype = arg_name=--outfile
+
+filetype = name=log
+filetype = comment=Log file
+filetype = arg_name=--logfile
+
+## extension
+## gives the extension for each of the above filetypes
+## users can configure filenames, but the system adds the extension for them.  It
+## determines what extension to add based on the value specified here.
+## You should have one entry for each filetype.
+extension = filetype=pcint
+extension = ext=txt
+
+extension = filetype=tdout
+extension = ext=pdf
+
+extension = filetype=log
+extension = ext=txt
+
+## analysis
+## This defines the name of your analysis and the comand string used
+## to call it.  The name is what the user will see when they select the analysis 
+## as a node in their analysis tree.  The command string is what is called 
+## (minus parameters) when the node is run.
+name = treedraw
+cmdstr = ./treedraw.pl
+
+## analysis_filetypes_link
+## When each node runs, it needs to determine what its input is, based on the 
+## output of the node prior to in, and the kind of input it needs.  This specifies
+## whether a filetype is considered an input filetype for this analysis.
+## Set input = to 1 if the type is an acceptable input type.  You need to have at 
+## least one entry with input =1.
+#analysis_filetypes_link
+analysisfile = filetype=pcint
+analysisfile = input =1
+
+analysisfile = filetype=tdout
+analysisfile = input =0
+
+analysisfile = filetype=log
+analysisfile = input =0
+
+## user_parameter_names
+## This table defines parameters the user can set.  Each entry here will allow mean 
+## the user gets to configure that value.  
+## name - is the parameter name.  The name, followed by the parameter value set by
+## 	the user will be appended to the command string
+## display_name - this is the label the user will see in the GUI when configuring the
+## 	parameter
+## type - determines the object in which the user enters the configurable value. 
+##	Supported types include file, text, textarea, checkbox, condsSelect 
+## and radio.  If you
+## 	require other types, please submit an enhancement request via bugzilla.
+## condsSelect is a multiple select structure that allows you to choose
+## conditions associated with the tree input file
+## default -(optional) default value for this variable
+## optional - if set to 1, the user won't see an '*' beside the field.  The '*' indicates
+##	that the user is required to fill in that field.
+## note that for all user specified files (typically everything but the input file), a
+## 	user_parameter_names record needs to be configured.  The name field for
+## 	this record must match the argname specified in the filetypes record
+up = name=--outfile
+up = display_name= Graphical output file for treedraw
+up = type=file
+up = default=tdout.pdf
+
+up = name=--logfile
+up = display_name=Log filename
+up = type=file
+up = default=tdlog.txt
+
+up = name=--zoom
+up = display_name=Zoom factor
+up = type=text
+up = default=0
+
+## sys_parameter_names
+## Like user_parameter_names, system_parameter_names will be concatenated with their 
+##	value and appended to the command line string.  However, system _parameter
+## 	values are not set by the user.  They are determined by the system.  As such, 
+##	custom programming may be required to support your system parameters.
+## 	You may (and should) use some of the currently supported system parameters.
+##	Supported parameters include:
+##
+##	sp = name=--infile
+##		You should always use this parameter.  It allows your analysis to take
+##	it's input from the node it is connected to in the tree structure.
+##	
+##	sp = name=--email
+##	sp = name=--fileURI
+##		The system will set the value of the email field to the email address of 
+## 	the person logged into Genex who is performing the analysis.  FileURI is set
+##	to the location of the output files.  These parameters are intended for use
+## 	with the Rwrapper.pl script and should be specified if you are using that script.
+##
+##	sp = name = --settings path
+##		The system will set this value to the path where investigators files
+##	should be written.   You will need to use this parameter to know where
+##	to read/write input/output files.  (Use Getopt::Long for the settings hash if 
+##	you are writing your script in perl.)
+##
+##	sp = name =--settings conds
+##		This is the number of conditions associated with the file specified 
+##	in the input file.  
+##
+##	sp =name = --settings condLabels
+##		These are the names of the conditions.
+##
+
+sp = name=--settings path
+
+sp = name=--infile
+
+
+4. Working example
+A working example includes a complete input file, complete output file(s),
+and the command line (with parameters) necessary to get the supplied output
+from the supplied input.  This assists the person integrating your analysis in ensuring that  everything is working.  Further examples of analyses can be found in the source code for Genex-Va.
+
+An automatic configurator is planned for future releases.  However, currently it is necessary to give your analysis to a member of the Genex-Va team for integration.
+
+
+Integrating an Analysis
+
+This portion of the document applies only to those responsible for integrating an analysis.  These individuals must be able to write changes to Genex source.
+
+Integrating an analysis has several steps:
+create a directory for your analysis
+copy files to that directories
+perform a make load_analysis and a make from your directory
+verify that the analysis is loaded into the database
+test the analysis 
+
+1. Create a directory for your analysis
+
+Create a subdirectory off the analysis directory for your analysis.  Your
+subdirectory should be named after your analysis.  Alter the makefile in the
+analysis subdirectory so that the list of SUBDIRS contains your subdirectory.
+
+2.Copy files to appropriate directories
+
+The analysis script and the configuration file should be placed in the
+directory you just created. You will also need a makefile.  Copy the makefile
+from one of the other analyses--you likely won't need to make changes. 
+
+2.Perform a geoss_add_analysis and a make
+You need to run a geoss_add_analysis to add new analyses (and new versions of
+analyses) to the database.  Once the are added they will appear in the list of
+analyses available to the user in the GUI.  If you modify the .cfg you will
+need to remove and re-add the analysis.
+
+You also need to perform a make in the analysis directory.  This should be
+done any time you change a .pl or .rw file.
+
+3.Verify that the analysis is loaded.  If there weren't errors in the aforementioned step, then the analysis is probably loaded.  You can verify this by building a tree node.  The new analysis name should be included in the list of options for nodes.  If there were errors, you will need to fix the configuration file.  You can unload and reload the analysis using the following commands:
+  geoss_add_analysis
+  geoss_rm_analysis
+
+4.Once you have successfully loaded the analysis, you should test it by building a tree containing a node of the new analysis.  If there are errors, you should examine the logs (error.txt and qc_error.log) in /var/genres/<your genexid> and output files in the directory named after your tree.
+
+
+Using Rwrapper
+
+If you are running an R script, you probably want to use Rwrapper which
+handles passing parameters into the R script.  It also emails the researcher
+when the analysis is complete.  Just follow the examples of other analyses on
+how to do this.  
+
+Note that Rwrapper will replace parameters with identical names following a replace comment.
+
+i.e. ### REPLACE teela ###
+somecode("teela")
+
+will cause teela to be replaced with the value of the parameter --settings
+teela=<value>.  A new r script is created with the altered parameter values
+and run.  
+
+It is essential that you do not place a line between the REPLACE and the 
+value you intend to replace.  That will break things.
+
+

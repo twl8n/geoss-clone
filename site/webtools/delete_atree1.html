@@ -1,0 +1,19 @@
+<table width=700 border=1 cellpadding=0 cellspacing=0>
+ <tr>
+   <td valign="top">
+     Tree name: <b>{tree_name}</b><br>
+     Number of nodes: {number_of_nodes}<br>
+   </td>
+   <td valign="top" width="30%">
+
+   <form action="delete_atree2.cgi" method=POST>
+   <input type="hidden" name="tree_pk" value="{tree_pk}">
+   <input type="submit" name="submit" value="Delete this tree now">
+   </form>
+   This will delete tree {tree_name} and all {number_of_nodes} node(s)
+   in this tree.  If the tree is a default tree for a specific study,
+   the study will no longer have a default tree.  All output files from 
+   the tree will be deleted.<br>
+   </td>
+ </tr>
+</table>

@@ -1,0 +1,240 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>Va GEOSS Security System Description</title>
+<meta name="keywords" content="gene, chip, expression, affymetrix, genechip, oligo, two, color, spotted, array, dna, rna, oligonucleotide, cdna, analysis, analytical, copy, copy dna, spotted array, hybridization, mrna, messenger, messenger rna, cy3, cy5, probe, reverse transcriptase, reverse transcription, glass, slide, sage, serial, serial analysis of gene expression, photo dimerization, genotype, genotypes, genotyping, fold change, over expression, under expression, up regulation, down regulation, photo lithography, linux, open source, apache, postgres, postgresql, database, secure, curate, curation, curator, perfect match, westfa, young, stat analysis, clustering, perm cluster, r-cluster, r cluster, tree view, go, gene ontology, flurochroms, patrick brown, t-test, anova, function prediction">
+<meta name="description" content="GEOSS is an Open Source Gene Expression Database supporting storage and analysis of Affymetrix&reg; GeneChip&reg; technology, with planned support for two color spotted arrays and other gene expression measurement technologies. GEOSS is designed to serve as an secure repository and archive for many researchers' data. ">
+</head>
+<BODY bgcolor="#FFFFFF" link="#006633" vlink="#666633" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr valign="top"> 
+    <td width="10">&nbsp;</td>
+    <td width="100"><font face="Verdana, Arial, Helvetica, sans-serif" size="+1"><a href="./index.cgi"><img src="graphics/geoss_logo.jpg" width="216" height="96" border="0"></a></font></td>
+    <td width="8">&nbsp;&nbsp;</td>
+    <td width="490"><font face="Verdana, Arial, Helvetica, sans-serif" size="+1">GEOSS 
+      Virginia: The Security System</font> </td>
+  </tr>
+</table>
+<br>
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr> 
+    <td width="8" valign="top">&nbsp;</td>
+    <td width="20" valign="top" bgcolor="990066">&nbsp;</td>
+    <td width="8" valign="top">&nbsp; </td>
+    <td width="564" valign="top"> 
+      <p><b> GEOSS Security System.</b> 
+      <p>Tom Laudeman, Jodi Kanter </p>
+      <p> GEOSS has row level security implemented in Perl and supported by 
+        4 tables within the database. Some tables, especially the chip data tables 
+        are secured indirectly since these tables can only be accessed via keys 
+        found in directly secured tables. There is an assumption here that the 
+        server running GEOSS is secure and has logins only from admins, and 
+        that the database is not accessible outside the GEOSS scripts, or to 
+        other servers. Http requests for data must be SSL encrypted. If a database 
+        server is used, local packets must not be allowed outside a secure subnet.</p>
+      <p>This 4 table security model is based on extensive discussions with Hilmar 
+        Lapp and Jason Stewart. (It is actually a 6 table model since it include 
+        the contact table, and we added primary investigator capability.)</p>
+      <p><b>Salient points about the Security model.</b></p>
+      <ul>
+        <li>There are two aspects to security: web interface, and database records.</li>
+        <li>Web security is currently based on Apache htaccess authentication 
+          and SSL. Future versions will use a database and CGI based 'true' security 
+          model.</li>
+        <li>GEOSS has row-level security for the database tables. The row level 
+          security is implemented in standard SQL, and is supported by a Perl 
+          API.</li>
+        <li>The security model has users, groups, and primary investigators. PIs 
+          are simply users distinguished by having them self as a PI. In a practical 
+          sense, GEOSS only allows PIs to own data.</li>
+        <li>GEOSS has a full set of permissions, however, not all are used. 
+          User permissions are controlled by the software, and indirectly by the 
+          curators. Group permissions are under the user's control as usual. World 
+          or 'other' permissions are not used. Execute and suid permissions are 
+          not used.</li>
+        <li>Users may create their own groups, and control the group membership.</li>
+        <li>There isn't really a 'super-user'. In cases where the security system 
+          needs to perform some super user action, the underlying Perl code simply 
+          doesn't use the security API calls.</li>
+        <li>Security system permissions, etc. can be manipulated from the Postgres 
+          command line (psql). For this and other reasons, only sysadmins are 
+          allowed logins to the GEOSS server. Curators are generally not sysadmins. 
+          (Data curation is the responsibility of the microarray center personnel.)</li>
+        <li>Database security tables are only joined to the rest of the GEOSS 
+          schema via a foreign key linked to the primary key of each secured table.</li>
+        <li>The security system foreign key occurs in the groupref table of the 
+          security system.</li>
+        <li>Some tables are secured 'directly'. These tables share a foreign key 
+          with the groupref table in the security system.</li>
+        <li>Other tables are secured 'indirectly'. There is no access to these 
+          tables except via foreign keys from a directly secured table. </li>
+        <li>A prime example of 'direct' is the arraymeasurement table (hybridization 
+          information) </li>
+        <li>A prime example 'indirect' is the am_spots_mas5 table which contains 
+          the signal data. </li>
+        <li>Information in arraymeasurement must be accessed in order to get signal 
+          data from am_spots_mas5. Records in am_spots_mas5 are meaningless unless 
+          you have the data from arraymeasurement.</li>
+        <li>Selecting records from a given table with read or write permissions 
+          requires a SQL query with eight clauses. This doesn't create a bottleneck 
+          because the directly secured tables have small numbers of records. For 
+          instance, the arraymeasurement table has one record per gene chip. Contrast 
+          this with the am_spots_mas5 table that has 12,625 records for each HG95AV2 
+          gene chip.</li>
+        <li>All directly secured tables share a single sequence for their primary 
+          key. This guarantees that any directly secured table's foreign key in 
+          the groupref table is unique. Since there are 2 raised to the 32 power 
+          available numbers in this set, we don't anticipate running out of primary 
+          key values.</li>
+      </ul>
+      <p>&nbsp;</p>
+      <p><b>Overview.</b></p>
+      <p>This document assumes that the reader has working familiarity with databases 
+        and operating system security models.</p>
+      <p>Please note that we distinguish between two major types of data: meta 
+        data (usually just called 'data') and chip/array derived values referred 
+        to as 'chip data'. 'Chip data' is indirectly secured, and the reasons 
+        and methodologies are explained in detail below.</p>
+      <p>We chose a security system with the following criteria:</p>
+      <p>- minimal impact on the GEOSS schema</p>
+      <p>- row level granularity</p>
+      <p>- Unix-like permissions for user (owner) and group</p>
+      <p>- included some type of sessioning for use with a Web interface</p>
+      <p>When a user creates a new record (by creating a new study, or adding 
+        an experimental condition, etc.) the new record is owned by the current 
+        user's primary investigator (PI). New records created have group read/write 
+        access by default. Group read and write are optional and are controlled 
+        by the owner (the PI). In many cases, the member of a research team who 
+        performs the wet bench work also interacts with GEOSS to create studies, 
+        experimental conditions, and to request orders and fill out orders. The 
+        PI may only be involved when the gene chip data is ready. In a small lab, 
+        the PI often does everything. GEOSS has been designed to accommodate 
+        team members in any role.</p>
+      <p>Since the security tables are independent of the GEOSS data tables, 
+        the security system can be modified with little or no impact on the rest 
+        of GEOSS.</p>
+      <p>The 4 main security system tables are: groupref, grouplink, groupsec, 
+        usersec. The 2 ancillary tables are: contact, pi_sec. Contact contains 
+        personal information, and a pi_sec contains PI information. Neither of 
+        these two latter tables are central players in the security system. </p>
+      <p>The only requirement of a secured data table is that it shares a special 
+        sequence to generate primary keys (the sequence is called pk_seq). The 
+        data table's primary key is the foreign key which links the security system 
+        to the data table rows. For example, when inserting a record into the 
+        study table, the new study record's primary key is the next value from 
+        pk_sec, and that same primary key is the linking value in groupref. We 
+        know the ownership and permissions of the study record by linking to the 
+        corresponding groupref record.</p>
+      <p>Usersec and groupsec contain information about a user and that user's 
+        group. These two tables share a primary key, and this same primary key 
+        is used by the GEOSS contact table. The numeric uid and gid are in 
+        usersec and groupsec, respectively. </p>
+      <p>Grouplink has a one to many relationship with groupsec. Group member's 
+        gids are stored in grouplink, thus grouplink contains the members of each 
+        of the groups.</p>
+      <p>Groupref is the real heart of the security system. The primary key of 
+        a secured row of a data table is a foreign key in groupref. Table groupref 
+        also contains the uid of the owner, the gid of the group, and an integer 
+        bitfield for the permissions. Groupref has one row for every row of data 
+        directly secured in other tables. For instance, if you create a study 
+        with two experimental conditions, there will be three records in directly 
+        secured tables. There will be three corresponding records in groupref.</p>
+      <p>This security system makes the assumption that the database is transactional. 
+        Since multiple sequential operations are required to insert data, each 
+        transaction must be atomic, or race conditions would result in corrupting 
+        the primary keys used to link the data to the security tables.</p>
+      <p>&nbsp;</p>
+      <p><b>Details of Read Permissions.</b></p>
+      <p>The following Perl string is a SQL <font face="times"><b>WHERE</b> clause 
+        used to determine if a user has read permission to a given row. In this 
+        string, $table is the name of the secured table, $pkey is the name of 
+        that table's primary key, and $userid is the security system usersec primary 
+        key (uid and gid) of the user REMOTE_USER.</font></p>
+      <p>(groupref.ref_fk=$table.$pkey and</p>
+      <p> ((grouplink.us_fk=$userid and<br>
+        groupref.us_fk=grouplink.us_fk and<br>
+        grouplink.gs_fk=groupref.gs_fk and<br>
+        (groupref.permissions&amp;256)&gt;0) or </p>
+      <p> (groupref.gs_fk=grouplink.gs_fk and<br>
+        grouplink.us_fk=$userid and<br>
+        (groupref.permissions&amp;32)&gt;0 )))</p>
+      <p>The first stanza joins groupref to a data table $table with primary key 
+        field $pkey.</p>
+      <p>The second stanza checks to see if the owner of the record has read permissions 
+        (decimal 256 is octal 400).</p>
+      <p>The third stanza check to see if the group has read permissions (decimal 
+        32 is octal 40).</p>
+      <p>The API assumes that the programmer will call the functions appropriately. 
+        In other words, the programmer will call <font face="Courier">read_where_clause() 
+        when selecting data for read, and <font face="Courier">write_where_clause()</font> 
+        when updating a record.</font></p>
+      <p><b>Details of Write Permissions.</b></p>
+      <p>(groupref.ref_fk=$table.$pkey and</p>
+      <p> ((groupref.us_fk=$userid and<br>
+        groupref.us_fk=grouplink.us_fk and<br>
+        grouplink.gs_fk=groupref.gs_fk and<br>
+        (groupref.permissions&amp;128)&gt;0) or</p>
+      <p> (groupref.gs_fk=grouplink.gs_fk and<br>
+        grouplink.us_fk=$userid and<br>
+        (groupref.permissions&amp;16)&gt;0 )))</p>
+      <p>Once again, the first stanza joins groupref to a data table $table with 
+        primary key field $pkey.</p>
+      <p>The second stanza checks to see if the owner of the record has write 
+        permissions (decimal 128 is octal 200).</p>
+      <p>The third stanza checks to see if the group has write permissions (decimal 
+        16 is octal 20).</p>
+      <p>In both the read and the write cases, only tables which contain meta 
+        data are secured. The actual data (usually signal values) can only be 
+        accessed after getting foreign keys from a directly secured table. The 
+        meta data tables (such as exp_condition and arraymeasurement) are fairly 
+        small, so even a complex query will run quickly. The many thousands of 
+        records for the actual chip data are referenced via foreign keys obtained 
+        from meta data tables. Thus the final query which retrieves data is small 
+        and efficient.</p>
+      <p><b>Advantages of the 4 Table System.</b></p>
+      <p>From a programming standpoint, this system simplifies interaction between 
+        the security tables and the rest of GEOSS . GEOSS data tables have 
+        no security-related information in them. The only requirement for a table 
+        to be directly secured is that it use the unified primary key sequence 
+        ( pk_seq ). </p>
+      <p>Inserting a new record is a two step process which is completed in a 
+        single transaction (and must be a transaction to avoid trouble). First 
+        the data row is inserted; the primary key is auto assigned, and and the 
+        sequence auto incremented (this is typical behavior for Postgres). Second, 
+        the security API is called, and retrieves the most recent primary key, 
+        and creates a record in groupref with the most recent primary key as the 
+        foreign key (groupref.ref_fk). Having completed both of these steps, the 
+        transaction can be committed.</p>
+      <p>The security system doesn't know what table is being secured, it only 
+        tracks the primary key. Retrieving data involves joining the data table 
+        to groupref and grouplink.</p>
+      <p>Updates are performed in the usual manner. The security system involvement 
+        in an update happens prior to the update where the API is used to verify 
+        that the record about to be updated is allowed.</p>
+      <p>Reading records requires that any <font face="times"><b>SELECT</b> use 
+        the additional <b>FROM</b> and <b>WHERE</b> clauses supplied by <font face="Courier">read_where_clause</font>().</font></p>
+      <p>The 4 table system has another theoretical advantage. More complex security 
+        criteria can be implemented by updating the Perl code, and by adding fields 
+        to the 4 security tables. This would have no effect on the rest of the 
+        GEOSS schema. Since the schema is complex, and the amount of data (especially 
+        chip data) can be immense, it is a big advantage to not change the GEOSS 
+        data tables when the security system gets new features.</p>
+      <p>The 4 table system has enough tables that it is possible to implement 
+        ACLs with only an additional field or two. ACLs are nice for their increased 
+        granularity and flexibility, however, the price is complexity for end 
+        users and admins.</p>
+      <p>One aspect of this system is that it is not encapsulated by the database 
+        manager (Postgres) at a low level. Rogue scripts can easily ignore the 
+        security system. This is yet another reason why we limit command line 
+        access (and IP connections to the Postgres port) on the GEOSS server.</p>
+      <p>Many thanks to Hilmar Lapp and Jason Stewart. It took several days of 
+        exchanged messages to work out the details of Hilmar's suggestion to use 
+        4 tables and to use the single primary key sequence. I did not immediately 
+        see the elegance of this solution (nor did I initially understand some 
+        key concepts) so I'm thankful for Hilmar and Jason's patience. Jason's 
+        wisdom and advice have been instrumental in our progress on GEOSS.</p>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

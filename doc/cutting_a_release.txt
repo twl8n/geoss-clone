@@ -1,0 +1,96 @@
+$Id: cutting_a_release.txt,v 1.4 2007/01/09 16:14:47 tdj4m Exp $ 
+$Date: 2007/01/09 16:14:47 $ 
+
+Cutting a Release of GEOSS
+==========================
+1) Update the Version number in build-options.default and in
+devtools/geoss-X.X.spec
+
+2) Update release notes.
+
+3) Follow steps outlined in devtools/make_rel_commands.pl
+
+9) Upload it to Sourceforge anonymous ftp upload server. SourceForge only supports ftp, and
+you must use the incoming file area. Login as anonymous, and use your
+email address as the password. Use binary upload mode.
+
+ftp upload.sourceforge.net
+# login as usual for anonymous ftp
+cd /incoming
+bin
+put geoss-X_Y_Z.tar.gz
+put geoss-X_Y_Z-1.i386.rpm
+put geoss_layouts.tar.gz
+put geoss_perl_modules.tar
+quit
+
+
+10) Go to Sourceforge and login. Go to
+https://sourceforge.net/projects/va-genex
+(Eventually we'll move all this over to the geoss project,
+but in the meantime we're still using the va-genex project for
+releases).
+
+
+11) In the main menu, click "Admin" which takes you to
+https://sourceforge.net/project/admin/?group_id=71073 
+
+
+12) In the second menu click "File Releases" which takes you to
+https://sourceforge.net/project/admin/editpackages.php?group_id=71073 
+
+Scroll down to the bottom of the page. 
+
+
+13) Click "Add a Release" for the GEOSS project. 
+
+
+14) The release name is human readable, use the format: GEOSS 2.1.0
+
+Click the "Create This Release" button.
+
+
+15) At the top of the page "Step 1: ..." Date, Release Name, and
+"Active" status should all be correct. Scroll down to "Upload Release
+Notes". Treat this field as "Brief download instructions and brief release
+notes". This is NOT our release_notes.txt file. Type in some brief
+notes. Include the following text changing version numbers as
+appropriate:
+
+--
+To install GEOSS you must download three files.
+
+For an rpm install the first file is: geoss-2.0-1.i386.rpm. 
+For an manual install the first file is: geoss-2.0.tar.gz
+
+Everyone must also download two additional files:
+geoss_layouts.tar.gz
+geoss_perl_modules.tar
+--
+
+15.1) Now do the "Upload Change Log". This is our
+doc/release_notes.txt. Browse for the file as usual.
+
+Scroll down to below the two text boxes.
+
+Check "Preserve my pre-formatted text."
+
+Click "Submit/Refresh".
+
+
+16) In the middle of the page "Step 2: ..." click the check box next
+to the files you uploaded with ftp. Be careful. It is possible to click
+someone else's files. Click "Add files and/or Refresh View". Be sure
+to get all three files 
+
+
+17) At the bottom of the page "Step 3: ..." Filename and release
+should be correct. Choose "Platform-Independent" from the processor
+drop down. Choose "Source .gz" from the File Type drop down. Click
+"Update/Refresh".
+
+
+18) Go to the Files section of our project to verify that the new
+release is available. 
+
+

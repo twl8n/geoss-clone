@@ -1,0 +1,53 @@
+<table width="700" border=0 cellspacing=0 cellpadding=3>
+  <tr> 
+    <td valign="top" bgcolor="#99CC99"> 
+      <table width="100%" border="0" cellspacing="5" cellpadding="0" bgcolor="#FFFFFF">
+        <tr> 
+          <td width="30%" valign="top"> 
+            <div align="right"><b>Analysis Condition Name</b>:</div>
+          </td>
+          <td width="70%" valign="top">{an_cond_name}</td>
+        </tr>
+        <tr> 
+          <td width="30%" valign="top"> 
+            <div align="right">Date Created:</div>
+          </td>
+          <td width="70%" valign="top">{an_cond_created}</td>
+        </tr>
+        <tr> 
+          <td width="30%" valign="top"> 
+            <div align="right">Description:</div>
+          </td>
+          <td width="70%" valign="top">{an_cond_desc}</td>
+        </tr>
+        <tr> 
+          <td width="30%" valign="top"> 
+            <div align="right">Number of Hybridizations:</div>
+          </td>
+          <td width="70%" valign="top">{number_of_hybridizations}</td>
+        </tr>
+        <tr> 
+          <td colspan="2" align="left" valign="top"> 
+            <form action="delete_an_cond.cgi" method="post">
+              <div> 
+                <input type="submit" name="submit" value="Yes, Delete Condition">
+                <input type="image" border="0" name="imageField2" src="../graphics/trash.gif" width="25" height="25">
+                <input type="hidden" name="delete_check" value="true">
+                <input type="hidden" name="an_cond_pk" value="{an_cond_pk}">
+              </div>
+            </form>
+         </td>
+       </tr>
+       <tr>
+         <td valign="top">
+           <form action="choose_an_cond.cgi" method="post">
+             <input type="submit" value="No Deletion">
+           </form>
+         </td>
+         <td></td>
+      </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<br>

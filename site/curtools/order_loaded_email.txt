@@ -1,0 +1,11 @@
+To: {email}
+Cc: {ccMail}
+From: {fromMail}
+Subject: GEOSS Array Order Loaded
+
+Please be advised that the data for order {order_number} is complete.
+Data is now available via the "View My Files" link from the "Member Home"
+interface within {GEOSS_url}.
+
+Please contact <a href="mailto:{contact}">GEOSS staff</a> if you have any questions.
+

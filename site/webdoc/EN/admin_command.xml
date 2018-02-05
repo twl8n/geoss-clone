@@ -1,0 +1,862 @@
+<part id="admin_command">
+<title>Administrator Command Line Tools</title>
+<article id="administrator_command_line_tools" >
+
+<para>
+A variety of command line tools are available to the <link
+linkend="administrator_user">administrator</link>.
+Script names begin with "geoss_", so you can easily see the commands
+installed on your system by typing that prefix and using tab complete.
+The scripts are written in Perl and help can be obtained on most of the
+commands by typing <command>perldoc <replaceable>filename</replaceable>
+</command>.
+</para>
+
+<para>
+<note>If you are running the commands as a user who does not have 
+privileges to access the <link linkend="&product;_access_file">
+&product; Access File
+</link>, you will need to enter the password for the 
+<link linkend="postgres_user">postgres_user</link>.
+</note>
+</para>
+
+<sect1 id="geoss_add_all_ana">
+<title>geoss_add_all_ana</title>
+<para>This script is called as part of the install process by <link
+linkend="geoss_initialize"><command>geoss_initialize</command>
+</link>.  It should not be necessary to run this script separately,
+except as a troubleshooting activity.  It finds all the cfg files
+in the analysis directory and loads each of the via a call to <link
+linkend="geoss_add_analysis"><command>geoss_add_analysis</command></link>.
+</para>
+<para>
+Usage:
+<cmdsynopsis>
+<command>
+geoss_add_all_ana
+</command>
+</cmdsynopsis>
+</para>
+</sect1>
+
+<sect1 id="geoss_add_all_layouts">
+<title>geoss_add_all_layouts</title>
+<para>
+This script is called as part of the install process by <link
+linkend="geoss_initialize"><command>geoss_initialize</command>
+</link>.  It loads a set of layouts by calling <link
+linkend="geoss_loadaffylayout"><command>geoss_loadaffylayout</command></link>
+on each. The <parameter>directory</parameter> parameter defines the
+location to search for layout files; If it is a directory, that
+directory will be searched. If <parameter>directory</parameter> is a
+<filename>.tar</filename> or <filename>.tar.gz</filename> file, the
+contents will first be extracted.
+
+</para>
+
+Usage:
+<cmdsynopsis>
+<command>
+geoss_add_all_layouts
+<arg choice="req"><replaceable>&product;_login_id</replaceable></arg>
+<arg choice="req"><replaceable>directory</replaceable></arg>
+<group>
+<arg>subset</arg>
+<arg>remainder</arg>
+<arg><replaceable><link linkend="chip_name">chip name</link></replaceable></arg>
+
+</group>
+</command>
+</cmdsynopsis>
+</sect1>
+
+<sect1 id="geoss_add_analysis">
+<title>geoss_add_analysis</title>
+<para>Adds new <link linkend="analysis">analysis</link> to &product;.
+Analyses are installed as part of the install process, but you may need
+to add an individual analysis using this script if you wish to add an
+analysis that has been written since you installed or if you are 
+troubleshooting an install.
+</para>
+<para>
+Usage:
+<cmdsynopsis>
+<command>
+geoss_add_analysis
+<arg choice="req">--configfile<replaceable> filename</replaceable></arg>
+</command>
+</cmdsynopsis>
+</para>
+</sect1>
+
+<sect1 id="geoss_adduser">
+<title>geoss_adduser</title>
+<para>This script will add a <link linkend="users">user</link> to
+&product;.  This functionality can also be accessed via the <link
+linkend="add_a_user">Add a user</link> link in <link
+linkend="admin_gui">&admin_home;</link>.
+</para>
+<note>Very little testing has been done with the optional parameters.</note>
+<note>We recently changed the names of the user types, but this script
+still uses the legacy names.  Please see the links to the types for
+equivalency.</note>
+<para>
+Usage:
+<cmdsynopsis>
+<command>
+geoss_add_user
+<arg choice="req">--login <replaceable><link
+linkend="&product;_login_id">login </link></replaceable></arg>
+<arg choice="req">--password <replaceable><link
+linkend="password">password</link></replaceable></arg>
+<arg choice="req">--type 
+<group>
+<arg><link linkend="administrator_user">administrator</link></arg>
+<arg><link linkend="array_center_staff_user">curator</link></arg>
+<arg><link linkend="member_user">experiment_set_provider</link></arg>
+<arg><link linkend="public_user">public</link></arg>
+</group>
+</arg>
+<arg choice="req">--pi_login <replaceable><link
+linkend="&product;_login_id">pi_login </link></replaceable></arg>
+<arg>--organization<replaceable> organization</replaceable></arg>
+<arg>--contact_fname<replaceable> first name</replaceable></arg>
+<arg>--contact_lname<replaceable> last name</replaceable></arg>
+<arg>--contact_phone<replaceable> phone number</replaceable></arg>
+<arg>--contact_email<replaceable> email address</replaceable></arg>
+<arg>--department<replaceable> department</replaceable></arg>
+<arg>--building<replaceable> building</replaceable></arg>
+<arg>--room_number<replaceable> room number</replaceable></arg>
+<arg>--org_phone<replaceable> phone number</replaceable></arg>
+<arg>--org_email<replaceable> email address</replaceable></arg>
+<arg>--org_mail_address<replaceable> mail address</replaceable></arg>
+<arg>--org_toll_free_phone<replaceable> phone number</replaceable></arg>
+<arg>--org_fax<replaceable> fax number</replaceable></arg>
+<arg>--url<replaceable> url</replaceable></arg>
+<arg>--credentials<replaceable> credentials</replaceable></arg>
+</command>
+</cmdsynopsis>
+</para>
+</sect1>
+
+<sect1 id="geoss_bulk_adduser">
+<title>geoss_bulk_adduser</title>
+<para>This script will add multiple <link linkend="users">users</link> to
+&product;.  The script requires an input file that contains information
+about the accounts to create.
+</para>
+<note>We recently changed the names of the user types, but this script
+still uses the legacy names.  Please see the glossary definition of
+<link linkend="users">user</link> for a definition of the legacy types
+and their relation to the current user types.
+</note>
+<para>
+Usage:
+<cmdsynopsis>
+<command>
+geoss_bulk_adduser
+<arg choice="req">--infile <replaceable>filename</replaceable></arg>
+<arg>--debug</arg>
+<arg>--readonly</arg>
+</command>
+</cmdsynopsis>
+</para>
+<para>
+The input file is a text file containing tab separated columns.  Column
+headers correspond to database fields for user accounts.  At least three
+headers must exist in the file: login, type, and pi_login.  Optional
+columns include: password, contact_email, contact_fname, contact_lname,
+contact_phone, organization, building, room_number, org_phone,
+org_email, org_mail_address, org_toll_free_phone, org_fax, url,
+credentials, and org_pk.
+</para>
+<para>
+Note that specifying an org_pk will associate a user with an
+existing
+special center.  There is no way to specify the user as the
+administrator of a special center.
+</para>
+<para>
+Here is an example of an acceptable input file:
+<screen>
+
+login  type                     pi_login  contact_email      contact_lname
+mem1   experiment_set_provider  mem1      mem1@virginia.edu  Smith
+mem2   experiment_set_provider  mem1      mem2@virginia.edu  Jones   
+pub1   public                   pub1      pub1@virginia.edu  Chen
+pub2   public                   pub2      pub2@virginia.edu  Ali
+
+</screen>
+<note>All data should be tab delimited.  Extra spacing has been added
+for readability.</note>
+</para>
+<para>
+If there is an error in configuration of a user, that user will not be
+added.  Users with correct configuration are still added even if other
+rows
+of the input file contains incorrect configuration.  It is advisable to run the script in readonly mode initially to
+assist in identifying poor configuration.
+</para>
+</sect1>
+
+<sect1 id="geoss_bulk_configurator">
+  <title>geoss_bulk_configurator</title>
+  <para>
+This script can be used for bulk configuration of
+<link linkend="array_study">array studies</link> and <link
+linkend="array_order">array orders</link>.  
+Note that studies must be configured--orders are optional. Orders
+are used in conjunction with an array center to faciliate 
+processing chips, and installations that do not have array centers, will
+not need to configure orders.  Additionally, if you have an array center,
+you may still choose to forego orders (as you are currently loading
+data, that implies that the orders have already been processed, so you
+would only be loading orders for historical purposes). 
+  </para>
+  <para>
+It is recommended that the <link
+linkend="geoss_bulk_adduser"><command>geoss_bulk_adduser</command></link>
+ script be used prior to this one to create <link linkend="users">user</link> 
+ accounts.  The <link linkend="geoss_bulk_load"><command>geoss_bulk_load
+ </command></link> or the <link
+ linkend="geoss_load_available"><command>
+ geoss_load_available</command></link> script
+may be used after this one to actually load the data for the studies and 
+orders that are created by this script.  An overview of this process is
+provided in the <link linkend="bulk_data_configuration">Bulk Data
+Configuration</link> overview.
+  </para>
+  <para>
+A specific directory structure and a set of configuration files provide 
+information needed to create studies.
+  </para>
+<note>Extensive testing has not been complete with optional descriptive
+information.  Please use our bug tracking system to report any
+difficulties.</note>
+  <para>
+Usage:
+    <cmdsynopsis>
+      <command>
+geoss_bulk_configurator
+        <arg choice="req">--path <replaceable>path </replaceable> |
+--userpath <replaceable>userpath</replaceable></arg>
+        <arg>--readonly </arg>
+        <arg>--nolock </arg>
+        <arg>--debug </arg>
+       </command>
+     </cmdsynopsis>
+  </para>
+
+  <para>
+Prior to running the script, it is necessary to configure the data that you 
+wish to load into a specific directory structure.  The structure depends on the format of the input data and the desired results.  The answers to the following questions determine the format:
+    <variablelist>
+      <varlistentry>
+        <term>
+Are you loading data for one user or for many users?
+        </term>
+        <listitem>
+          <para>
+If you are only loading data for one user, your top level directory will 
+be named after the login id for that user.  You will pass the --userpath 
+argument to the script and specify the path to the directory named after the 
+user.  If you are loading data for more than one user, you will create a top
+level directory that contains subdirectories named after the login id for each
+user that you will be loading data for.  You will pass the --path argument to
+the script and provide the path to the top level directory.
+         </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </para>
+
+  <para>
+Inside the user directory, there should be a subdirectory for each study to be
+loaded.  The name of this subdirectory will become the name of the study
+(hereafter this will be called the study directory).  For
+each study, address the following questions:
+
+    <variablelist>
+      <varlistentry>
+        <term>
+Will you be loading an order associated with the study?
+        </term>
+        <listitem>
+          <para>
+Associating an order with a study is optional.  In many cases, you will not need
+an order (orders are typically placed with array centers, so if you do not have
+an array center, the concept of an order is not relevant for your installation).
+If you do wish to load orders, you will need to create a file called
+order_info.txt in the study directory.  This file must contain the order number
+you wish to assign to this study.  Note that you can only assign one order to
+one study using the bulk configurator.   
+
+<note>
+If you use the bulk configurator to create orders and your installation uses
+sequential or year sequential order number formats, you will need to ensure that
+you do not use order numbers yet to be assigned.  
+</note>
+
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>
+Will you be loading all data for the study from one file or loading data for
+each chip from multiple files?
+        </term>
+        <listitem>
+          <para>
+The bulk configurator accepts <link linkend="single_data_file">single
+data file</link> or <link linkend="data_directory">data directory</link>
+data formats.  The one you use will depend on the where you got your
+original data from and which form it is closest to.  The single file
+load will load all data for all chips from a single file.  The data
+directory load will require multiple files that are generated by
+affymetrix software.
+          </para>
+          <para>
+To configure your input data files,
+create a "data" subdirectory in the study directory.  If you doing a single
+file load, place only the one data file in the data subdirectory.  If you 
+are doing a multiple file load, place all data files in the data 
+subdirectory.  Note that if you are doing a single file load, you must 
+create a
+<filename>chip_name.txt</filename> file in the study that
+indicates the chip type.
+
+Sample single file load files:
+
+Sample multiple file load files:
+
+          </para>
+        </listitem>
+      </varlistentry>
+
+      <varlistentry>
+        <term>
+Will you be loading meta-data associated with the study?
+        </term>
+        <listitem>
+          <para>
+It is possible (and desirable) to configure many of the fields associated with
+studies, experimental conditions, samples, and orders.  These are placed
+in the study directory.  Meta data files
+are tab delimited text files.  Some meta-data files provide a single
+piece of informatin about the study (chip_name.txt, disease.txt).  Other
+meta-data files provide information for components of the study and
+correspond to geoss tables.  In these files, the first row of the file 
+contains column headers.  The first column is the unique identifier.
+Subsequent columns must correspond to field names for the associated
+table.  Possible meta-data files include:
+            <variablelist>
+              <varlistentry>
+                <term>
+      chip_name.txt
+                </term>
+                <listitem>
+                  <para>
+        This file contains the name of the chip (i.e. HG_U95Av2).  The
+        chip name must correspond to the value of the "name" field of a 
+        record in the arraylayout table.  This file is required for
+        single file loads.
+                  </para>
+                  <para>
+<ulink url="../examples/chip_name.txt">Sample chip_name.txt file</ulink>
+                  </para>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+      disease.txt
+                </term>
+                <listitem>
+                  <para>
+        This file contains the name of the disease the study is
+        associated with (i.e. "Adrenocortical Carcinoma").  The
+        disease name must correspond to the value of the "dis_name" 
+        field of a record in the disease table.  Note that this file is
+        optional, but configuring disease associations aids in
+        navigation when there are a large number of studies.  
+                  </para>
+      <para><ulink url="../examples/disease.txt">Sample dis_name.txt
+      file</ulink></para>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+    study.txt
+                </term>
+                <listitem>
+                  <para>
+      This file contains additional information for the study table.
+      Note that the first column is essentially a place holder as the
+      study is already uniquely identified (by the directory name that
+      the meta-data files are contained in).
+                  </para>
+      <para><ulink url="../examples/study.txt">Sample study.txt
+      file</ulink></para>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+    exp_condition.txt
+                </term>
+                <listitem>
+                  <para>
+      This file contains additional information for the exp_condition
+      table.  Experimental conditions are uniquely identfied by the cond
+      column, which corresponds to the abbrev_name field in the exp_cond
+      table.
+                  </para>
+      <para><ulink url="../examples/exp_condition.txt">Sample
+      exp_condition.txt file</ulink></para>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+    order_info.txt
+                </term>
+                <listitem>
+                  <para>
+      This file must be included if you wish to associate an order with
+      a given study.  To associate an order, the order_number column
+      must be defined.  Like the study meta-data file, the first column
+      is a placeholder, as only one order can be associated with a
+      study via the bulk configurator.
+                  </para>
+      <para><ulink url="../examples/order_info.txt">Sample
+      order_info.txt file</ulink></para>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+    sample.txt
+                </term>
+                <listitem>
+                  <para>
+      This file contains additional information associated with the
+      sample table.  
+The first column is used as a key.  It must correspond to short names
+and sample identifier used in the data file names for the current study.  
+                  </para>
+      <para><ulink url="../examples/sample.txt">Sample
+      sample.txt file</ulink></para>
+                </listitem>
+              </varlistentry>
+              <varlistentry>
+                <term>
+    arraymeasurement.txt
+                </term>
+                <listitem>
+                  <para>
+      This file contains additional information associated with the
+      arraymeasurement table.  The hybridization_name column is used to
+      uniquely identify arraymeasurements.  Note that these names should
+      correspond to the column headers of your data file (single file
+      load) or the chip filenames (directory load).
+                  </para>
+      <para><ulink url="../examples/arraymeasurement.txt">Sample
+      arraymeasurement.txt file</ulink></para>
+                </listitem>
+              </varlistentry>
+            </variablelist>
+          </para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </para>
+
+<para>
+The naming of arraymeasurement records is critically important in proper
+use of the bulk configurator.  The bulk configurator uses these names to
+determine what experimental conditions, biological replicates, and chip
+replicates the study is composed of.  A name has the following format:
+
+<optional><replaceable>order number</replaceable>_</optional>
+<replaceable>short name</replaceable>_
+<replaceable>biological replicate letter indicator</replaceable>
+<optional>_<replaceable>chip replicate number indicator</replaceable></optional>
+
+</para>
+<example>
+<para>
+For example, given the following directory structure:
+<screen>
+topdir
+       mem1
+           frog study
+                     00-12_fcond1_A.txt
+                     00-12_fcond1_B.txt
+                     00-12_fcond2_A.txt
+                     00-12_fcond2_B.txt
+                     00-12_fcond1_A.rpt
+                     00-12_fcond1_B.rpt
+                     00-12_fcond2_A.rpt
+                     00-12_fcond2_B.rpt
+           rat study
+                     rcond1_A_1.txt
+                     rcond1_A_2.txt
+                     rcond1_A_1.rpt
+                     rcond1_A_2.rpt
+</screen>
+</para>
+<para>
+The user "mem1" must already exist in the system and will own both of
+the studies created.  Two studies, "frog study" and "rat study" will be
+created.  Frog study is assigned order number "00-12".  Two conditions
+"fcond1" and "fcond2" are created.  Four samples will be created in the
+order, due to the fact that each experimental condition has 2 biological
+replicates (_A and _B). 
+</para>
+
+<para>
+Rat study only has one condition, "rcond1".  Because there
+is no order number specified, an order will not be associated with this
+study.  There will be only one sample record, corresponding to the
+rcond1 condition.  There will, however, be two hybridizations corresponding 
+to that sample due to the chip replicates indicated by the "_1" and "_2".
+</para>
+</example>
+
+</sect1>
+
+<sect1 id="geoss_bulk_load">
+<title>geoss_bulk_load</title>
+<para>
+This script can be used to load data for multiple <link
+linkend="array_study">array studies</link>.  It is intended for use
+after running <link
+linkend="geoss_bulk_configurator"><command>geoss_bulk_configurator
+</command></link>.  
+</para>
+<para>
+Usage:
+<cmdsynopsis>
+<command>
+geoss_bulk_load
+<arg choice="req">
+--path <replaceable> path</replaceable> | 
+--userpath <replaceable>user path</replaceable> | 
+</arg>
+<arg>--readonly</arg>
+<arg>--debug</arg>
+</command>
+</cmdsynopsis>
+</para>
+<para>
+This command expects appropriate data files to be in place in the
+directory specified by --path or --userpath.  See
+<command>geoss_bulk_configurator</command> for a complete description of
+the necessary path structure.  This script will try to load each study
+in the path and commits successful study loads and reports failed study
+loads.
+</para>
+</sect1>
+
+<sect1 id="geoss_load_available">
+<title>geoss_load_available</title>
+<para>
+This script can be used to load data for multiple <link
+linkend="array_order">array orders</link>.  It only loads data for
+orders that are complete and locked (submitted) and have data available
+in the specified chip data path.  It is intended for use by array center
+staff who wish to load multiple orders quickly from the command line.
+It could also be used by administrators doing a bulk load of historical
+orders.
+</para>
+<para>
+Usage:
+<cmdsynopsis>
+<command>
+geoss_load_available
+<arg choice="req">--chip_data_path <replaceable>
+path</replaceable></arg>
+<arg>--interactive</arg>
+<arg>--readonly</arg>
+<arg>--debug</arg>
+</command>
+</cmdsynopsis>
+</para>
+<para>
+The chip_data_path parameter can be used to override the chip data path
+specified in the configuration table.  The load function will look in
+the specified path for the chip data files.  The interactive parameter
+causes the script to request confirmation for the load of each order
+prior to performing the load.  This can be used if you only wish to load
+a subset of available orders. 
+</para>
+</sect1>
+
+<sect1 id="geoss_change_dbpw">
+<title>geoss_change_dbpw</title>
+<para>This script is used to change the password for the
+<link linkend="postgres_user"><application>Postgres</application> user
+</link>.  The script changes the
+password in <application>Postgres</application> and updates 
+the <link linkend="&product;_access_file">&product; Access File</link>.
+This functionality can also be accessed via the <link
+linkend="change_the_postgres_password_for_the_&product;_user"> Change
+the Postgres password for the &product;_user</link>  link in <link
+linkend="admin_gui">&admin_home;</link>.
+</para>
+<para>
+Usage:
+<cmdsynopsis>
+<command>
+geoss_change_dbpw
+</command>
+</cmdsynopsis>
+</para>
+</sect1>
+
+<sect1 id="geoss_change_userpw">
+<title>geoss_change_userpw</title>
+<para>This script changes the <link linkend="password">password
+</link> for a specified &product; <link linkend="users">user</link>
+.  
+This functionality can also be accessed via the <link
+linkend="change_user_password">Change user password</link> link in
+<link linkend="admin_gui">&admin_home;</link>.</para>
+<para>
+Usage:
+<cmdsynopsis>
+<command>
+geoss_change_userpw
+<arg choice="req"><replaceable> <link
+linkend="&product;_login_id">login</link> </replaceable></arg>
+</command>
+</cmdsynopsis>
+</para>
+</sect1>
+
+<sect1 id="geoss_file_insert">
+<title>geoss_file_insert</title>
+<para>This script inserts information regarding a file into the
+<database class="table">file_info</database> table and into the 
+<database class="table">groupref</database> table, allowing a user to
+see that file from their <link linkend="view_my_files">View My Files
+</link> link in <link linkend="user_gui">&mem_home;</link>.</para>
+
+<para>
+Files should not typically be added in this fashion, but we've found
+that we needed to be able to do this several times and this script keeps
+the references between the tables intact.</para>
+<note>The file must exist in the appropriate location in the file
+repository before running this script.</note>
+<para>
+Usage:
+<cmdsynopsis>
+<command>
+geoss_file_insert
+</command>
+</cmdsynopsis>
+</para>
+</sect1>
+
+<sect1 id="geoss_get_ord_num">
+<title>geoss_get_ord_num</title>
+<para>This returns the <link linkend="order_number">order number(s)</link>
+associated with a specified study.  If there are multiple order numbers
+associated with the study, they are separated by a space.
+
+Usage:
+<cmdsynopsis>
+<command>
+geoss_get_ord_num <replaceable>study name</replaceable>
+</command>
+</cmdsynopsis>
+</para>
+</sect1>
+
+
+<sect1 id="geoss_initialize">
+<title>geoss_initialize</title>
+<para>This script is intended to be run as part of a regular install.
+It defines the 
+<link linkend="postgres_database">database</link> structure, creates the 
+<link linkend="administrator_user">administrator user</link> and the
+<link linkend="default_public_user">default public user</link>, 
+adds all <link linkend="analysis">analyses</link> and adds a subset of 
+<link linkend="layout">layouts</link>
+.</para>
+<para>
+Usage:
+<cmdsynopsis>
+<command>
+geoss_initialize
+<arg choice="req">--db_name<replaceable> 
+  <link linkend="postgres_database"> database name</link></replaceable></arg>
+<arg choice="req">--db_user<replaceable> 
+  <link linkend="postgres_user"> user name</link></replaceable></arg>
+</command>
+</cmdsynopsis>
+</para>
+</sect1>
+
+<sect1 id="geoss_loadaffylayout">
+<title>geoss_loadaffylayout</title>
+<para>This script should be used when you wish to upload a new layout
+into &product;.  For information on input files, see <link
+linkend="admin_faq_layout_management">relevant parts of the Admin FAQ</link>.
+</para>
+<para>
+Usage:
+<cmdsynopsis>
+<command>
+geoss_loadaffylayout
+<arg choice="req">--db_name<replaceable> 
+  <link linkend="postgres_database"> database name</link></replaceable></arg>
+<arg choice="req">--login<replaceable> 
+  <link linkend="&product;_login_id"> login</link></replaceable></arg>
+<arg choice="req">--name<replaceable> <link linkend="chip_name">chip
+name</link></replaceable></arg>
+<arg choice="req">--input<replaceable> filename</replaceable></arg>
+<arg choice="req">--speciesid<replaceable> <link
+linkend="species_id">species id</link></replaceable></arg>
+<arg choice="req">--chipcost<replaceable> <link linkend="chip_cost">chip
+cost</link></replaceable></arg>
+<arg>--nocommit</arg>
+</command>
+</cmdsynopsis>
+</para>
+</sect1>
+
+<sect1 id="geoss_multi_chip_load">
+<title>geoss_multi_chip_load</title>
+<para>
+This script can be used to load data for mutliple chips from one file.  
+It only loads data for orders that are complete and locked
+(submitted) and have data available in the specified chip_data_file.
+The data file should contain tab separated data.  The first column is the
+probe set id.  Subsequent columns are chip data.  Each column must have a
+valid hybridization name for a hybridization that has not yet been
+loaded.  Note that only signal data is provided/loaded.  This means there 
+will be no quality control information available for chips loaded using this
+script.
+</para>
+<para>
+Usage:
+<cmdsynopsis>
+<command>
+geoss_multi_chip_load
+<arg choice="req">--chip_data_file<replaceable> 
+  chip data file name</replaceable></arg>
+<arg choice="req">--chip<replaceable> <link linkend="chip_name">chip
+name</link></replaceable></arg>
+<arg>--readonly</arg>
+<arg>--debug</arg>
+</command>
+</cmdsynopsis>
+</para>
+</sect1>
+
+<sect1 id="geoss_order_info">
+<title>geoss_order_info</title>
+<para>This script provides information about an 
+<link linkend="array_order">array order</link> from the command
+line.  You can provide either an 
+<link linkend="order_number">order number</link>
+ or an oi_pk (primary key
+value from the order_info table) as input.
+</para>
+<para>
+Usage:
+<cmdsynopsis>
+<command>
+geoss_order_info
+<group>
+<arg><replaceable>order number</replaceable></arg>
+<arg><replaceable>oi_pk</replaceable></arg>
+</group>
+</command>
+</cmdsynopsis>
+</para>
+</sect1>
+
+<sect1 id="geoss_rm_analysis">
+<title>geoss_rm_analysis</title>
+<para>Generally, 
+<link linkend="analysis">analyses</link>
+ should never be removed.  This is because
+researchers may wish to reproduce results generated using a specific
+version of an analysis.  If changes to a module are required, a new
+version of the analysis should be created.
+
+Occasionally, however, it is desirable to remove an analysis.  This is
+typically done by those who are developing analyses, as they try to
+refine the analysis (on a development system).  In this case, analyses
+can be removed using this script.  The analysis must not be is use,
+though, if it is to be removed, so you will need to delete all <link
+linkend="analysis_tree">trees</link> that use the analysis.</para>
+<para>
+Usage:
+<cmdsynopsis>
+<command>
+geoss_rm_analysis
+<arg choice="req">--analysis 
+<group>
+<arg><replaceable> an_pk</replaceable></arg>
+<arg><replaceable> analysis_name</replaceable></arg>
+<arg><replaceable> filename (for analysis configuration
+file)</replaceable></arg>
+</group>
+</arg>
+</command>
+</cmdsynopsis>
+</para>
+</sect1>
+
+<sect1 id="geoss_rm_inactive_users">
+<title>geoss_rm_inactive_users</title>
+<para>This script removes 
+<link linkend="inactive_user">inactive_users</link>.  
+If you do not specify a type,
+inactive users of all types will be removed. This functionality can also
+be accessed via the <link linkend="remove_inactive_users">Remove
+inactive users</link> link in <link
+linkend="admin_gui">&admin_home;</link>.</para>
+
+<note>We recently changed the names of the user types, but this script
+still uses the legacy names.  Please see the links to the types for
+equivalency.</note>
+<para>
+Usage:
+<cmdsynopsis>
+<command>
+geoss_rm_inactive_users
+<arg>--type 
+<group>
+<arg><link linkend="administrator_user">administrator</link></arg>
+<arg><link linkend="array_center_staff_user">curator</link></arg>
+<arg><link linkend="member_user">experiment_set_provider</link></arg>
+<arg><link linkend="public_user">public</link></arg>
+</group>
+</arg>
+</command>
+</cmdsynopsis>
+</para>
+</sect1>
+
+<sect1 id="geoss_vacuum">
+<title>geoss_vacuum</title>
+<para>This script is used to vacuum the <link
+linkend="postgres_database">Postgres database</link>.  This script
+should be called automatically and should not need to be run manually.
+The script must be run as the Linux postgres user.  The input file 
+needs to contain the password to connect to the database. </para>
+<para>
+Usage:
+<cmdsynopsis>
+<command>
+geoss_vacuum
+<arg choice="req">--configfile<replaceable> filename</replaceable></arg>
+</command>
+</cmdsynopsis>
+</para>
+</sect1>
+
+</article>
+</part>

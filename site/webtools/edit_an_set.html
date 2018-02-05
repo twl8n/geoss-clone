@@ -1,0 +1,122 @@
+<form action="edit_an_set.cgi" method="post">
+<table>
+<tr>
+  <td>
+    <table>
+      <tr>
+        <td>
+          Analysis Set Name:
+          <input type=text name=an_set_name value="{an_set_name}" 
+            size="55" maxlength="30"> 
+        </td>
+      </tr>
+      
+      <tr>
+        <td>
+          Analysis Set Description:
+          <input type=text name=an_set_desc value="{an_set_desc}" 
+             size="50" maxlength="80">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Chip Type: {chiptype}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Creation Time: {an_set_created}
+        </td>
+      </tr>
+    </table>
+  </td>
+  <td>
+    <table>
+      <tr>
+        <td>
+          <a href="choose_an_set.cgi">Edit another set</a> 
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <a href="create_an_set.cgi">Create another set</a> 
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type="submit" name="submit" value="Add Conditions">
+        </td>
+      </tr>
+      <tr>
+        <td>
+          {create_tree}
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+</table>    
+
+<hr>
+
+<table border="1" cellspacing="0" cellpadding="4">
+  <tr>
+    <td colspan=8>Current Conditions in Set
+    </td>
+  </tr>
+  <tr valign="top">
+    <td>Delete
+    </td>
+    <td>
+      Name <input type=image src="../graphics/sort_ascending.jpg" 
+      name=order_by value=an_cond_name::asc> <input type=image 
+      src="../graphics/sort_descending.jpg" name=order_by 
+      value=an_cond_name::desc>
+    </td>
+    <td>Description
+    </td>
+    <td>
+      Created <input type=image src="../graphics/sort_ascending.jpg" 
+      name=order_by value=an_cond_created::asc> <input type=image 
+      src="../graphics/sort_descending.jpg" name=order_by 
+      value=an_cond_created::desc>
+    </td>
+    <td># of 
+    Hybrids
+    </td>
+    <td>
+      Owner <input type=image src="../graphics/sort_ascending.jpg" 
+      name=order_by value=login::asc> <input type=image 
+      src="../graphics/sort_descending.jpg" name=order_by 
+      value=login::desc>
+    </td>
+    <td>
+      Group <input type=image src="../graphics/sort_ascending.jpg" 
+        name=order_by value=gs_name::asc> <input type=image 
+        src="../graphics/sort_descending.jpg" name=order_by 
+        value=gs_name::desc>
+      </td>
+     <td>Edit</td>
+   </tr>
+
+   <loop>
+   <tr>
+    <td> 
+      <input type=checkbox name="an_cond_pk" value="{an_cond_pk}">
+    </td>
+    <td>{an_cond_name}</td>
+    <td>{an_cond_desc}</td>
+    <td>{an_cond_created}</td>
+    <td>{number_of_hybridizations}</td>
+    <td>{gs_name}</td>
+    <td>{login}</td>
+    <td>{edit}</td>
+   </tr>
+   </loop>
+</table>
+
+<input type="hidden" name="an_set_pk" value="{an_set_pk}">
+<input type="submit" name="submit" value="Update">&nbsp;
+</form>
+
+

@@ -1,0 +1,72 @@
+<html>
+<head><title>Cluster  Documentation</title></head>
+<body bgcolor="#FFFFFF">
+<p><b>Description</b><br>
+The cluster analysis performs hierarchical clustering analysis for
+microarray data (it is recommended to apply this module for an array data
+set with less than 2,000 genes for optimal performance).  One can choose
+different combinations of one of the distance metrics (e.g., Euclidean,
+Pearson correlation, Spearman correlation) and one of clustering
+algorithms (e.g., "single", "complete", "average").<br>
+</p>
+Cluster then draws the hierarchical clustering tree and
+corresponding image maps (cluster-image map; CIM) from the output of a
+hierarchical clustering algorithm.  This will generate a high-density pdf
+graphic, which is zoomable by utilizing Adobe Acrobat reader.  The gene names
+and annotations at the end of the tree branches are hyperlinked to genome web
+sites.<br>
+Cluster version 3 is run using R 2.4.0.
+</p>
+<p><br>
+  <b>Input files</b><br>
+Cluster expects input in this form:<br>
+</p>
+<ul>
+  <li> A file containing an analysis criteria.  The file should have row and
+column labels. Note that we won't process more than 7000 rows.<br>
+    <br>
+</ul>
+Analyses that create input in this format include:<br>
+<ul>
+  <li> Filter <br>
+  <li> Differential Discovery (likely too many rows - run through filter first) <br>
+</ul>
+<p>&nbsp;</p>
+<p><b>Output files</b><br>
+  Cluster creates the following output:<br>
+</p>
+<ul>
+  <li> A file containing data necessary to draw a graph
+  <li> A file containing user data
+  <li> A file containing stat data
+  <li> A pdf file showing a cluster tree
+    <br>
+</ul>
+    Analyses that accept cluster output as input include:<br>
+<ul>
+  <li>None<br>
+</ul>
+<p>&nbsp;</p>
+<p><b>Parameters:</b><br>
+</p>
+<ul>
+  <li> Graphical output filename - name of the file containing the tree<br>
+  <li> Zoom factor - zoom increases "magnification" of the tree but not the
+colorized expression map<br>
+  <li> Need of log 2 transformation - log2-transformation is taken typically and the previous modules provide raw data, 
+  so this should be set to 'True', unless log2-transformation is taken elsewhere.<br>
+  <li> Euclidean distance measure - the distance/dissimilarity metric. <br>
+	"Euclidean" - Euclidean distance<br>
+	"Correlation" - Pearson correlation<br>
+	"Spearman correlation" - Spearman rank correlation<br>
+  <li> Clustering algorithm  <br>
+	"average"  - average distance<br>
+	"complete" - maximum distance or farthest neighbor <br>
+	"single"   - minimum distance or nearest neighbor<br>
+  <li> Log filename - name of the file containing log and error messages<br>
+  <li> Statistical graph, user, Tstat output filenames are obsolete <br>
+</ul>
+<p><br>
+  <br>
+</p>
+</body></html>

@@ -1,0 +1,155 @@
+
+######################################################################################
+#
+#
+# This file discovers differentially expressed genes for multiple conditions,
+# using ANOVA and HEM
+#
+# Last updated on 2005-06-21, HyungJun Cho (hcho@virginia.edu)
+#
+#
+######################################################################################
+
+
+
+######################################################################################
+#
+# ANOVA
+#
+######################################################################################
+
+library(multtest)
+
+func.ANOVA <- function(logData, conditions)
+{
+
+     cl <- c()
+     for(i in 1:length(conditions)){
+        cl <- c(cl, rep(i-1, conditions[i]))
+     }
+
+     resT <- mt.maxT(X=logData,classlabel=cl,test="f")
+     #resP <- mt.minP(X=logData,classlabel=cl, test="f")
+     rawp <- resT$rawp[order(resT$index)]
+     teststat <- resT$teststat[order(resT$index)]
+     BH <- mt.rawp2adjp(rawp, proc=c("BH"))
+ 
+     allp<-cbind(teststat, rawp, BH$adjp[order(BH$index),2], resT$adjp[order(resT$index)])
+     colnames(allp) <- c("ANOVA.F.statistic", "ANOVA.p.value", "BH.p.value", "WY.p.value")
+
+     return(allp)
+}
+
+
+
+######################################################################################
+#
+# HEM
+#
+######################################################################################
+
+library(HEM)
+
+func.HEM <- function(logData, conditions)
+{
+
+    #Construct a design matrix   
+     cl <- c()
+     rep <- c() 
+     for(i in 1:length(conditions)){
+        cl <- c(cl, rep(i, conditions[i]))
+        rep <- c(rep, 1:conditions[i])
+     }
+     design <- data.frame(cl, rep)
+
+     q <- 0.01; B <- 25; burn.ins <- 1000; n.samples <- 3000
+     #q <- 0.1; B <- 5; burn.ins <- 3; n.samples <- 3 #for testing
+     
+     #Bayesian HEM for a large sample 
+     if(min(conditions) >6) {
+     
+        out.hem <- hem(logData, n.layer=1, design=design, burn.ins=burn.ins, n.samples=n.samples) 
+        out.fdr <- hem.fdr(logData, n.layer=1, design=design, hem.out=out.hem, n.iter=1)
+     
+     }
+
+     #Emprical Bayes HEM for a small sample 
+     if(min(conditions) <=6) {     
+     
+        #EB prior 
+        out.eb  <- hem.eb.prior(logData, n.layer=1,  design=design,  method.var.t="neb", q=q, B=B)
+
+        #Fit HEM with EB prior                                   
+        out.hem <- hem(logData, n.layer=1, design=design, method.var.t="neb", var.t=out.eb$var.t, 
+                    burn.ins=burn.ins, n.samples=n.samples) 
+                   
+        #Compute FDRs                
+        out.fdr <- hem.fdr(logData, n.layer=1, design=design, hem.out=out.hem, eb.out=out.eb, n.iter=1)
+
+     }   
+           
+     #Output 
+     out <- out.fdr$fdr
+     colnames(out) <- c("HEM.H.statistic","HEM.FDR")                  
+     return(out)
+
+}
+
+
+
+
+
+######################################################################################
+### MAIN
+######################################################################################
+
+### REPLACE infile
+geneSigs.N <- read.table("infile", header=TRUE)
+### REPLACE conds
+conditions <- c(conds)
+### REPLACE outfile
+outFile <- "outfile"
+### REPLACE condLabels
+labels <- c(condLabels)
+
+if(min(conditions)  <= 1) { 
+   whyerr <- "One or more conditions in your data set has only one replicate. 
+              Every condition should have at least two replicates."         
+   write(whyerr, file=2)
+   quit(status = 1)
+}
+
+# strip the 1st column of probe.set
+probename <-  geneSigs.N[,1] 
+probename <- as.matrix(probename)
+geneSigs.N <- geneSigs.N[,-1] 
+
+
+
+# analyses
+geneSigs.N.log2 <- logb(geneSigs.N,base=2)
+report <- cbind(Probe.Set=probename, round(geneSigs.N,  digits=1)) 
+
+#check if replicated data                
+if(min(conditions)  > 1) { 
+
+   results.ANOVA <- func.ANOVA(geneSigs.N.log2, conditions)
+   results.HEM   <- func.HEM(geneSigs.N.log2, conditions)
+
+   # make a report
+   report <- cbind(Probe.Set=probename,
+                   round(geneSigs.N,  digits=1), 
+                   round(results.ANOVA, digits=5),
+                   round(results.HEM,   digits=5)                
+                   )
+}
+
+
+
+# writes a tab-delimited file, 1st column=ProbeSet, #ofRows=#ofChipProbes
+write.table(report, file=outFile , row.names=F, sep='\t')
+
+
+############################################################################################
+### END
+############################################################################################

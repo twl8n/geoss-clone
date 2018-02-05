@@ -1,0 +1,18 @@
+To load the listed data, press 'Start Loading'. 
+<br>
+<form action="load_data2.cgi" method=POST>
+Array order number: {order_number}<br>
+<input type="hidden" name="order_number" value="{order_number}">
+<input type="hidden" name="state" value="{state}">
+<input type="hidden" name="oi_pk" value="{oi_pk}">
+<loop>
+Hybridization name: {hybridization_name}<br>
+<input type="hidden" name="am_pk_{am_pk}" value="{am_pk}">
+<input type="hidden" name="file_txt_{am_pk}" value="{file_txt}">
+<input type="hidden" name="file_rpt_{am_pk}" value="{file_rpt}">
+<input type="hidden" name="file_exp_{am_pk}" value="{file_exp}">
+<input type="hidden" name="hyb_name_{am_pk}" value="{hybridization_name}">
+</loop>
+<br>
+<input type="submit" name="submit" value="Start Loading">
+</form>

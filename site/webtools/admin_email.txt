@@ -1,0 +1,20 @@
+To: {email}
+Cc: {ccMail}
+From: {fromMail}
+Subject: GEOSS account is ready
+Dear {name},
+
+Thank you for using GEOSS. A new login account has been created for you.
+Your login name is: {login}
+
+The admin will contact you with a password if you have not already chosen one.
+
+Your account is already active. You can now use the "GEOSS Login" 
+features of GEOSS. Please check the contact information associated with
+your account when you login.
+
+{nextURL}
+
+Thank you
+
+GEOSS Admins

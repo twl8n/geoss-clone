@@ -1,0 +1,14 @@
+To: {email}
+Cc: {ccMail}
+From: {fromMail}
+Subject: Array Order Request Fulfilled
+
+The array order you requested has been created.  It is order {order_number}.
+You may now complete configuration via the "Edit/Delete an existing order" 
+link in GEOSS Member Home.
+
+The following URL will allow you to edit the array order:
+{edit_delete_url}
+
+You will need to login to GEOSS if you are not currently logged in.
+

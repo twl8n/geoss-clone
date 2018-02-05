@@ -1,0 +1,95 @@
+<form action="edit_one_sample.cgi" method=POST>
+  <b>Array Order Configuration</b>
+  <table border=0>
+    <tr> 
+      <td>
+        <table border=0>
+          <tr>
+            <td> 
+              <i>Order number: </i>
+            </td>
+            <td>{order_number}<br>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td> 
+        <table>
+          <tr>
+            <td>
+             <i>PI/PI group:</i>
+            </td>
+            <td>{pi_name}/{pi_group}</td>
+          </tr>
+       </table>
+     </td>    
+    </tr>
+    <tr>
+      <td>
+        <table>
+          <tr>
+        
+            <td><i>Special Center Affiliation:</i></td>
+            <td>{org_name}</td>
+          </tr>
+        </table>
+       </td>
+       <td>
+         <table>
+           <tr>
+             <td><i>Status:</i></td>
+             <td>{order_status}</td>
+           </tr>
+         </table>
+       </td>
+    </tr>
+     <tr>
+       <td colspan=2><hr></td>
+     </tr>
+     <tr>
+      <td colspan=2>
+<input type=submit name="submit" value="Update Sample">
+<input type=submit name="next" value="Edit Order">
+       </td>
+     </tr>
+<tr>
+<td>*Study+Experimental Condition/Protocol:</td>
+<td>{select_exp}<br></td>
+</tr>
+
+<tr>
+<td>Sample name:</td>
+<td><input type="text" name="smp_name" value="{smp_name}" size=40><br></td>
+</tr>
+ 
+<tr>
+<td>Chip Type: {select_arraylayout}</td>
+<td>Number of chips: <input type="text" length="4" name="num_am" value="{num_am}"</td>
+</tr>
+
+<tr>
+<td>Lab notebook ID:</td>
+<td><input type="text" name="lab_book" value="{lab_book}" size=40><br></td>
+</tr>
+
+<tr>
+<td>Lab notebook owner:</td>
+<td>{select_lab_book_owner}<br></td>
+</tr>
+
+<tr>
+<td>Sample origin:</td>
+<td><textarea rows="5" name="smp_origin" cols="40" wrap="virtual">{smp_origin}</textarea></td><br>
+</tr>
+
+<tr>
+<td>Sample manipulation:</td>
+<td><textarea align="left" rows="5" name="smp_manipulation" cols="40" wrap="virtual">{smp_manipulation}</textarea></td>
+</tr>
+
+</table>
+<input type=submit name="submit" value="Update Sample">
+<input type=submit name="next" value="Edit Order">
+<input type=hidden name=oi_pk value={oi_pk}>
+<input type=hidden name=smp_pk value={smp_pk}>
+</form>

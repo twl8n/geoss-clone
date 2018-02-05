@@ -1,0 +1,90 @@
+<form action="edit_order.cgi" method=POST>
+<input type=hidden name=oi_pk value={oi_pk}>
+  <table border=0 cellpadding=5 cellspacing=0>
+    <tr> 
+      <td valign="top"> 
+        <div align="right">Order number</div>
+      </td>
+      <td>{order_number}<br>
+      </td>
+    </tr>
+    <tr> 
+      <td valign="top"> 
+        <div align="right">Organization Affiliation:</div>
+      </td>
+      <td>{org_name}<br>
+      </td>
+    </tr>
+    <tr> 
+      <td valign="top"> 
+        <div align="right">Primary Investigator/PI group</div>
+      </td>
+      <td>{pi_name}/{pi_group}</td>
+    </tr>
+      <td valign="top"> 
+        <div align="right">Billing code</div>
+      </td>
+      <td> 
+        <input type="text" maxlength="128" size="60" name="billing_code" value="{billing_code}">
+        <br>
+      </td>
+    </tr>
+    <tr> 
+      <td valign="top"> 
+        <div align="right">Total number of samples</div>
+      </td>
+        <td><input type="text" maxlength="128" size="10"
+        name="number_of_samples" value="{number_of_samples}"></td>
+      </td>
+    </tr>
+  </table>
+  <table border=0 cellpadding=3 cellspacing=0>
+  <tr>  
+  <td bgcolor="#2222FF" ><font COLOR="#FFFFFF">&nbsp;</font> </td>
+  <td bgcolor="#2222FF" ><font COLOR="#FFFFFF">&nbsp;</font> </td>
+  </tr> 
+  <tr>
+  <td><b>Defaults values for samples:</b></td>
+  <td>&nbsp;</td>
+  </tr>
+<tr>
+<td>*Study+Experimental Condition/Protocol:</td>
+<td>{select_exp}<br></td>
+</tr>
+
+<tr>
+<td>Sample name:</td>
+<td><input type="text" name="smp_name" value="{smp_name}" size=40><br></td>
+</tr>
+ 
+<tr>
+<td>Lab notebook ID:</td>
+<td><input type="text" name="lab_book" value="{lab_book}" size=40><br></td>
+</tr>
+
+<tr>
+<td>Lab notebook owner:</td>
+<td>{select_lab_book_owner}<br></td>
+</tr>
+
+<tr>
+<td>Sample origin:</td><br>
+<td><textarea rows="5" name="smp_origin" cols="40" wrap="virtual">{smp_origin}</textarea></td><br>
+</tr>
+
+<tr>
+<td>Sample manipulation:</td><br>
+<td><textarea align="left" rows="5" name="smp_manipulation" cols="40" wrap="virtual">{smp_manipulation}</textarea></td><br>
+</tr>
+
+<tr>
+<td>Number of Hybridizations:</td>
+        <td><input type="text" maxlength="128" size="10"
+        name="number_of_hybs" value="{number_of_hybs}"></td>
+</tr>
+
+</table>
+
+
+<input type=submit name="submit" value="Next">
+</form>

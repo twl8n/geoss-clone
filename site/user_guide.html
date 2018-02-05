@@ -1,0 +1,156 @@
+<html>
+<head>
+  <title>GEOSS User Guide</title>
+</head>
+
+<body bgcolor="#FFFFFF" marginheight="0" marginwidth="0" topmargin="0"
+  leftmargin="0" link="#006633" vlink="#666633">
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr valign="top"> 
+    <td width="10" bgcolor="#c9dfae" valign="bottom"> 
+      <p align="center"><img src="graphics/white.gif" width="10" height="10"></p>
+    </td>
+    <td width="10" valign="bottom"> 
+      <p align="center"><img src="graphics/white.gif" width="10" height="10"></p>
+    </td>
+    <td width="580"> 
+      <div align="left"> 
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr> 
+            <td width="37%"><a href="./index.cgi"><img src="graphics/geoss_logo.jpg" width="216" height="96" border="0" alt="GEOSS Gene Expression Open Source System"></a></td>
+            <td valign="top" width="2%"><img src="graphics/white.gif" width="10" height="10"></td>
+            <td valign="top" width="61%"><font face="Verdana, Arial, Helvetica, sans-serif" size="+1">GEOSS 
+              User Guide</font></td>
+          </tr>
+        </table>
+        <p>
+          <a href="install_guide.html">Install Guide</a>&nbsp;
+          <a href="admin_guide.html">Admin Guide</a>&nbsp; 
+          <a href="user_guide.html">User Guide</a>&nbsp; 
+          <!--   <a href="curator_guide.html">Curator Guide</a>&nbsp;-->
+          <a href="org_curator_guide.html">Org Curator Guide</a>&nbsp;
+          <a href="developer_guide.html">Developer Guide</a></p>
+        <hr noshade color="008000">
+        <p>This documentation describes how to use the GEOSS system. </p>
+        <hr noshade color="990066">
+        <p><strong>User Guide</strong></p>
+      </div>
+      <div align="left"> 
+        <p><b>1.0&nbsp;Member Home: The User's Interface </b></p>
+        <p>The main page for user activity is called "Member Home". Only users 
+          who are logged in may perform GEOSS activities from Member Home. </p>
+        <p>Detailed explanations of all links in "Member Home" are discussed in 
+          the "<a href="stepbystep.html">Step-by-step Guide</a>". </p>
+        <p>&nbsp;</p>
+      </div>
+      <div align="left"><b>2.0&nbsp;User Documentation Links </b></div>
+      <ul>
+        <li> 
+          <div align="left"><b>2.1 <a href="stepbystep.html">Step-by-step Guide</a></b><br>
+            This document provides step-by-step instructions on how to use GEOSS. 
+          </div>
+        </li>
+        <li> 
+          <div align="left"><b>2.2 <a href="analysis_step.html">Analyzing Data 
+            via Analysis Trees</a></b><br>
+            This document provides a description of analysis trees and how to 
+            use them to analyze your data and generate reports. </div>
+        </li>
+        <li> 
+          <div align="left"><b>2.3 <a href="analysis_tutorial.html">Analysis Tutorial</a></b><br>
+            This document provides a detailed example of Analysis Tree creation 
+            and results interpretation. </div>
+        </li>
+        <li> 
+          <div align="left"><b>2.4 Links to details about each analysis module.</b></div>
+          <ul>
+            <li>
+              <div align="left"><a href="webtools/analysis/qualityControl/qualityControl_1.html">Quality 
+                Control</a><br>
+              </div>
+            </li>
+            <li>
+              <div align="left"><a href="webtools/analysis/diffDiscover/diffDiscover_2.html">Differential 
+                Discovery (aka Stat Analysis)</a></div>
+            </li>
+            <li>
+              <div align="left"><a href="webtools/analysis/filter/filter_2.html">Filter</a><br>
+              </div>
+            </li>
+            <li><a href="webtools/analysis/cluster/cluster_1.html">Cluster</a><br>
+            </li>
+            <li>
+              <div align="left"><a href="webtools/analysis/addLinks/addLinks_1.html">Add 
+                Links</a><br>
+              </div>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <div align="left"> 
+        <p>&nbsp;</p>
+      </div>
+      <div align="left"> 
+        <p><b>3.0&nbsp;FAQ</b> <br>
+      </div>
+  <ul>
+   <li><b>3.1 Analysis</b></li>
+      <ul>
+        <li> 
+          <div align="left"><b>3.1.1 My analysis didn't generate result files. 
+            What happened? </b> </div>
+          <div align="left"></div>
+          <div align="left">If you have waited the appropriate amount of time 
+            and there are no output files, then one of the analysis modules has 
+            crashed. The crash could be caused by any number of things. If you 
+            are using the filter module, make sure you have selected at least 
+            two conditions. You can also check the contents of log files in your 
+            file repository as they may help isolate the problem. Enlist your 
+            administrator's help in determining why the crash occurred. <br>
+          </div>
+        </li>
+        <li> 
+          <div align="left"><b>3.1.2 Why can't I view the results of treedraw 
+            analysis? </b> </div>
+          <div align="left"></div>
+          <div align="left">If you are trying to view the results of the treedraw 
+            analysis using Acrobat Reader and Reader crashes, you may have run 
+            treedraw with too many input rows. You may either view the output 
+            pdf using a different pdf viewer, like xpdf, or you should try using 
+            the filter module to restrict the number of rows treedraw takes as 
+            input. There is more information about this bug in the treedraw analysis 
+            help pages. <br>
+          </div>
+        </li>
+      </ul>
+    <li><b>3.2 Orders</b></li>
+      <ul>
+        <li> 
+          <div align="left"><b>3.2.1 What are the different order states and what do they mean? </b> </div>
+          <div align="left"></div>
+          <div align="left">
+Orders can have the following states:
+<ul>
+<li><b>Incomplete</b>: The order has been created.  Configuration may have begun, but it is not yet complete due to an insufficient number of samples or hyrbidizations.</li>
+<li><b>Complete</b>: Order configuration meets minimum requirements for a complete order (at least one sample and at least one sample per hybridization).  </li>
+<li><b>Submitted</b>:  Once an order is complete, it may be submitted.  A submitted order is locked and you may no longer edit the order.  When you submit an order, the notification process to let others know the order is ready is initiated.</li>
+<li><b>Approved</b>: If the order is associated with an organization, it can may require approval.  Once it is submitted, it will be sent to for approval.  If no approval is required, it is automatically approved and sent to the array center for processing.</li>
+<li><b>Finished</b>: An order is finished when all chip data has been loaded for the order.</li>
+           <br>
+          </div>
+        </li>
+      </ul>
+    </ul>
+      <div align="left"> 
+        <p>&nbsp;</p>
+      </div>
+    </td>
+  </tr>
+  <!-- Answers to the aforementioned questions -->
+</table>
+
+<br>
+</body>
+</html>
+
+

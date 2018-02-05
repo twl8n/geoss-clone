@@ -1,0 +1,171 @@
+This document contains hints on using CVS.  It is aimed at CVS beginners 
+using GEOSS.
+
+1. Basic CVS usage
+
+2. CVS comments
+
+3. Accesing CVS with a key
+
+4. Using .cvsignore
+
+5. Figuring out what happened with CVS
+
+6. Further Reference
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Basic CVS usage
+CVS is a source control system that allows multiple developers to work 
+simultaneously on a project.  In order to use CVS, you will need to get an
+administrator to set up access to the repository.  
+
+First, you will need to check out your initial copy of the repository:
+
+- add the following lines to your .bashrc
+CVSEDITOR=vi
+CVS_RSH=ssh
+
+- source your .bashrc
+. .bashrc
+
+- check out your copy of the code
+cvs -d:ext:<userid>@reed6.med.virginia.edu:/p5/cvs co geoss
+
+Now you are ready to modify code.  Once you have made changes and are ready 
+to share them with others, you can commit the file with:
+
+cvs commit -m "Description of change" <filename>
+
+To add a file:
+cvs add <filename>
+
+To remove a file:
+cvs remove <filename>
+
+To check whether your system is current:
+cvs -n -q up
+
+To check the status of a file:
+ cvs status -v Makefile
+
+To update your system:
+cvs up 
+cvs up -d  
+
+
+2. CVS comments
+When you commit a file, you specify a comment (-m "Comment").  This comment
+is what others see when they check the log for a specific file. 
+A good comment says why you made the change, not what change you made.  If 
+someone wants to know what you have done, they can check the code diffs.  
+
+If possible, refer to a bugzilla bug number in the comment when you check in 
+a file.  
+
+3. Accesing CVS with a key
+
+Everytime you issue a cvs command you will be asked for a password
+to authenticate yourself.  It doesn't take long to get tired of 
+typing your password.  A good solution to this is to use a 
+personalized key and ssh-agent.  These tools allow CVS to remember
+your authentication credentials for a certain period of time so 
+that you don't need to re-enter your password repeatedly.
+
+First, create a key if you don't have one:
+ssh-keygen -t dsa
+
+To start ssh-agent:
+
+ssh-agent
+-copy & paste all lines
+ssh-add
+
+
+4. Using .cvsignore
+
+If you do an update and CVS encounters a file that it doesn't know 
+about, it will print a warning that looks like:
+? unknown_filename.txt
+If you have a lot of unknown files, it is easy to miss the fact that
+there is an unknown file that you meant to add to the system.  So if 
+there are a lot of legitame unknown files, you should tell CVS to 
+ignore them, so that the warnings are more meaningful.  
+
+In GEOSS, after running a make, the "built" versions of files are in 
+all the directories.  Most of these files have .cgi extentions. If 
+you don't want to see warnings about these files, you have two options: 
+you can do a "make clean" prior to running an update, or you can create
+an appropriate .cvsignore file.
+
+The .cvsignore file tells CVS which files in the current directory are
+okay not to keep track of.  The file contains a series of filenames.
+Wildcards, such as *, can be used. In GEOSS, there is a script in 
+devtools (make_cvsignore.pl) that can be run to create .cvsignore
+files in all the directories.  Run the script from the devtools directory.
+It takes no parameters.
+
+
+5. Figuring out what happened with CVS
+CVS can be used to help you investigate what happened to a file.  The 
+most useful commands for this are "cvs log" and "cvs diff".  
+
+CVS Log:
+This command should be used when you want to find out what has happened 
+to a file and who has changed it.  Execute:
+
+cvs log <filename>
+
+Looks as follows:
+
+[tdj4m@biostat site]$ cvs log developer_guide.html 
+tdj4m@reed6.med.virginia.edu's password: 
+
+RCS file: /p5/cvs/geoss/site/developer_guide.html,v
+Working file: developer_guide.html
+head: 1.9
+branch:
+locks: strict
+access list:
+symbolic names:
+        Rel-2_0: 1.8
+        start: 1.1.1.1
+        vendor: 1.1.1
+keyword substitution: kv
+total revisions: 10;    selected revisions: 10
+description:
+----------------------------
+revision 1.9
+date: 2004/06/14 18:46:47;  author: tdj4m;  state: Exp;  lines: +84 -2
+Added two FAQs - one regarding log files, the other regarding reading in html
+files
+----------------------------
+revision 1.8
+date: 2004/06/09 14:21:33;  author: twl8n;  state: Exp;  lines: +3 -3
+fix colors again, fix admintools pages
+
+Looking at the above information, you can see that 'tdj4m' was the last 
+person to edit the file.
+
+
+CVS diff:
+
+If you want to know exactly what happened to a file, you can use "cvs diff".
+By default, cvs diff shows you the difference between your local copy of 
+the file and the repository version.  However, you can also specify the 
+versions of the file that you want to see the difference between:
+
+cvs diff -r 1.8 -r 1.9 developer_guide.html
+
+To get information on reading diff output, view the diff manpages.  CVS will
+accept most diff options.
+
+
+6. Further Reference
+cvs --help-commands
+cvs <subcommand> --help-options (i.e. cvs diff --help-options)
+info cvs
+man cvs
+http://www/cvshome.org/
+"Open Source Development with CVS" - Karl Fogel
+http://www.chuug.org/talks/2003.html (Adrian Martin's CVS presentation)

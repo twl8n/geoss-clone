@@ -1,0 +1,14 @@
+To: {email}
+Cc: {ccMail}
+From: {fromMail}
+Subject: GEOSS Array Order Approval Request
+
+Configuration of array order {oi_pk} is complete and the array order 
+requires approval prior to array center processing.  Please review 
+the array order and approve via the GEOSS "Center Home" interface.
+
+The url to approve the array order is:
+{approve_url}
+
+You will need to login to GEOSS if you are not currently logged in.
+

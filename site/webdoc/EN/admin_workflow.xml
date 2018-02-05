@@ -1,0 +1,160 @@
+<part id="admin_workflow">
+<title>Overview: Workflows for Administrator Users</title>
+<article id="&product;_administration_overview">
+<title>&product; Administration</title>
+<para>The initial responsibility of the administrator is to configure
+&product; correctly and ensure the installation is secure. &product;
+system parameters should be set during product installation via the
+<link linkend="configure_&product;">Configure &product;</link>.  System
+status should be verified via the <link
+linkend="&product;_installation_information">&product; Installation
+Information</link> link.  When the information displayed here is
+satisfactory, installation is complete.</para>
+<para>There are also links for periodic tasks like changing the Postgres
+password for the geoss user and emailing all users.  While these 
+tasks can be done
+manually, &admin_home; provides an easy mechanism for these periodic
+maintenance tasks.</para>
+
+</article>
+<article id="user_administration_overview">
+<title>User Administration</title>
+<para>The primary on-going responsibility for &product; administrators
+is <link linkend="users">user</link> administration.  This includes adding, removing, disabling and
+enabling users.  Additionally, each user is associated with a <link
+linkend="primary_investigator">PI</link> and administrators may need
+manage those associations.</para>
+<para>
+Potential new users can use the <link
+linkend="request_an_account">Request An Account</link> link on the 
+main page to request an account.  When an account
+is requested, the administrator is emailed with all the relevant
+information.  The email includes a link to take the administrator
+straight to the account creation page and to populate all the fields as
+specified by the requester.  Please note that the administrator must
+already be logged into &product; to utilize the automatic field
+population feature.  Alternatively, administrators can just use the
+<link linkend="add_a_user">Add A User</link> and specify information
+manually.
+</para>
+<para>Active users (those who have data on the system) cannot be
+removed.  This is because &product; acts as a data repository and data
+does not get deleted.  Currently, there isn't a feature to change the
+ownership of the data, so it is necessary to maintain users who own
+data.  However, if it is necessary to terminate a user's access to the system,
+the administrator can disable the user's account.</para>
+</article>
+<article id="special_center_administration_overview">
+<title>Special Center Administration</title>
+<para>Administrators are responsible for adding and removing <link
+linkend="special_center">Special Centers</link>.  Special Centers are
+essentially groups of users that have different needs regarding the
+billing and/or processing of their orders.  Administrators use GUI tools
+from &admin_home; to add and remove special centers, specify billing
+discounts for the special center and to define whether
+the Special Center's logo should be displayed on the &product; main page.
+The administrator can also use GUI tools from <link
+linkend="special_center_gui">&center_home;</link> to edit
+members in a special center, upload icons and logos, and to view reports
+for the center.  The tools in &center_home; are intended for use by <link
+linkend="special_center_administrator_user">Special Center Administrator
+Users</link>, who can perform a subset of the actions available to
+&product; administrators.</para>
+</article>
+
+<article id="bulk_data_configuration">
+<title>Bulk Data Configuration</title>
+<para>
+This article describes the mechanism for configuring and loading data
+from the command line.  This process is useful for importing large
+amounts of data (historical data) and importing data from other systems.  
+</para>
+<para>
+The basic process for loading from the command line is:
+<orderedlist>
+<listitem>
+Assemble and format data files for loading
+</listitem>
+<listitem>
+Verify correct data dependencies, including adding users with
+<link linkend="geoss_bulk_adduser"><command>geoss_bulk_adduser</command></link>
+</listitem>
+<listitem>
+Test data configuration and run the configurator
+</listitem>
+<listitem>
+Run the bulk loader
+</listitem>
+</orderedlist>
+Each step is discussed below in detail.
+</para>
+
+<formalpara>
+<title>Compile data files into appropriate path structure</title>
+<para>
+The first step in this process is to compile all the data you wish to
+load.  Data files should be put in a special directory structure.  The
+top level directory should contain subdirectories that correspond to the
+<link linkend="&product;_login_id">&product;_login_id</link> of the user
+who owns the data to be loaded.  Inside each user directory, there
+should be one directory for each <link linkend="array_study">array
+study</link> to be loaded.  Each study directory contains the a series
+of files relating to the study configuration and one or more files
+specifying data.  See the documentation for <link linkend=
+"geoss_bulk_configurator"><command>geoss_bulk_configurator</command></link>
+for details on the required directory structure.
+</para>
+</formalpara>
+
+<formalpara>
+<title>Configure data dependencies</title>
+Once you have the appropriate data directory ready for load, you should
+ensure that all data dependencies are satisfied.
+When you load data for studies and orders, that data often references
+data from other tables (via the primary key).  In order for the
+configuration to work successfully, all data that is linked to must be
+configured.  Specifically, you should verify that the user who owns the
+data exists, the correct species exist, and the correct arraylayouts
+exist.  Additionally, if you are configuring associated diseases or
+special centers they will need to exist as well.  Note that running the
+bulk configurator with the --readonly flag will allow you to check many
+of these errors.
+</formalpara>
+
+<para>
+There are  command-line utilites to facilitate the creation of users:
+<link linkend="geoss_bulk_adduser"><command>geoss_bulk_adduser</command></link>,
+and <link linkend="geoss_adduser"><command>geoss_adduser</command></link>.
+There is a command-line utility to facilitate creation of layouts:
+<link linkend="geoss_loadaffylayout"><command>geoss_loadaffylayout
+</command></link>,
+Species and diseases are loaded directly into the db when the
+<link linkend="geoss_initialize">geoss_initialize</link> command is run.
+If you need to add additional species or disease, do so directly through
+the psql command line tool.
+</para>
+
+<formalpara>
+<title>Test data configuration and run the configurator</title>
+When data dependencies are resolved, it is time to run
+<command>geoss_bulk_configurator</command>.  This script will create
+studies based on the input data path passed to it as a
+parameter.  It is advisable to initially run the script in readonly mode
+to verify correct configuration of data.  If the create sequence from
+the readonly output looks acceptable, and no errors are reported, rerun
+the script without the readonly flag to correctly load data.
+</formalpara>
+
+<formalpara>
+<title>Run the bulk loader</title>
+After running <command>geoss_bulk_configurator</command> successfully,
+studies and orders have been created, but the are not loaded.  To
+actually load the data, run <link linkend="geoss_bulk_load">
+<command>geoss_bulk_load</command></link> to load by study or <link
+linkend="geoss_load_available"><command>geoss_load_available</command>
+</link> to load by order.  Once this is complete, the entire bulk load 
+process is complete.
+</formalpara>
+
+</article>
+</part>

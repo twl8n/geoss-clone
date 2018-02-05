@@ -1,0 +1,73 @@
+
+<table width="600" border="0" cellpadding="3" cellspacing="0">
+  <tr>
+    <td bgcolor="#990066"> 
+      <table width="100%" border="0" cellpadding="3" cellspacing="0">
+        <tr>
+          <td bgcolor="#FFFFFF">
+
+ <form method="POST" action="org_edit_mem.cgi">
+ <input type=hidden name=step value=3>
+ <input type=hidden name=org_pk value={org_pk}>
+ <input type="submit" value="Modify Members">
+  <input type="reset" value="Reset Values">
+ <table border="1" width="100%" cellpadding="3" cellspacing="0">
+ <tr>
+  <th align="left">Remove<br>User:</th>
+  <th align="left" cellpadding="3" width="50%">Name:</th>
+  <th align="left" cellpadding="3" width="20%">Login:</th>
+  <th align="left" cellpadding="3" width="10%">Curator:</th>
+ </tr>
+ <loop>
+ <tr>
+ <td>
+  <input type="checkbox" name="rm_{us_pk}" value="1"> 
+ </td>
+ <td>
+  {name}
+ </td>
+ <td>
+  {login}
+ </td>
+ <td>
+  {curator}
+ </td>
+ </tr>
+ </loop>
+ </table>
+ <hr>
+ <table border="1" width="100%" cellpadding="3" cellspacing="0">
+ <tr>
+  <th align="left">Add<br>User:</th>
+  <th align="left">Add<br>Curator:</th>
+  <th align="left" width="50%">Name:</th>
+  <th align="left" width="30%">Login:</th>
+ </tr>
+ <loop2>
+ <tr>
+ <td>
+  <input type="checkbox" name="add_{us_pk}" value="1"> 
+ </td>
+ <td>
+  <input type="checkbox" name="cur_{us_pk}" value="1"> 
+ </td>
+ <td>
+  {name}
+ </td>
+ <td>
+  {login}
+ </td>
+ </tr>
+ </loop2>
+ </table>
+ <input type="submit" value="Modify Members">
+  <input type="reset" value="Reset Values">
+ </form>
+
+</td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
+

@@ -1,0 +1,64 @@
+This document describes the steps involved in setting up an additional GEOSSdeveloper environment on biostat.virginia.edu.  As biostat already has working GEOSS setups, a minimal number of steps are necessary to create a new setup.
+
+
+Prior to beginning this procedure, the user must have access to the cvs geoss
+repository.  Currently, Dawn Adelsberger (dma9w@virginia.edu) is responsible
+for setting up these accounts.
+
+Note:  Windows users can use putty.exe to open an ssh session on the server.
+
+1. Add the new user account.  The user should be part of their own group, the "users" group, and the "apache" group.  
+
+adduser -G users apache <newuser>
+
+2. As postgres, modify /var/lib/pgsql/data/pg_hba.conf:
+Add:
+local   <userid> <userid>                                           md5
+host    <userid> <userid>       127.0.0.1         255.255.255.255   md5
+
+- createdb <userid>
+- createuser -A -D -E -P <userid>
+
+- pg_ctl -D /var/lib/pgsql/data restart
+
+
+3. As the user, in the user account:
+
+ - modify .bashrc file.  Add:
+     export CVSEDITOR=vi
+     export CVS_RSH=ssh
+     export CVSROOT=:ext:<userid>@cvs.geoss.sourceforge.net:/cvsroot/geoss
+
+ - . .bashrc
+ - cvs co geoss
+ - cd geoss
+ - cp build-options.default build-options.mk
+ - vi options.mk
+    - set HTML_DIR ?= /home/<userid>/public_html
+    - set USER_DATA_DIR ?= /home/<user_id>/local/$(GEOSS_DIR)
+    - set BIN_DIR ?= /home/<user_id>/local/$(GEOSS_DIR)/bin
+    - set LIB_DIR ?= /home/<user_id>/local/$(GEOSS_DIR)/lib
+    - set DB_NAME = <userid>
+    - set GENEX_SU_USER = <userid>
+
+ - make install
+
+4. Initialize GEOSS
+
+- cd ~<userid>/local/geoss/bin
+- ./geoss_initialize   (will take awhile due to layout loading - you may start
+  step 5 while geoss_initialize is running)
+
+5. Login to the new GEOSS via browser
+(biostat.virginia.edu/~<userid>/geoss/site).  Login: admin Password:
+administrator.  You will need to do this twice (first time will fail-don't
+ask).  Go to admintools, 'Configure GEOSS'.  
+
+- set the following:
+   WWW Host - biostat.virginia.edu/~<userid>
+   Additional Path - /geoss/site
+   Chip Data Path - /var/local/geoss/data
+
+   other items as appropriate
+
+

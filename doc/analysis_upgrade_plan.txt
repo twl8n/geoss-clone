@@ -1,0 +1,22 @@
+
+This document outlines the proposed stradegy for upgrading statistical analyses that are part of the genex-va system.
+
+1. Overview
+Genex-Va provides users with statistical analyses modules that can be used to analyze data.  Naturally, we will want to update these routines from time to time.  However, if a routine has been used by a researcher to analyze their data, 
+we should not modify it, as it is essential that researchers can reproduce their results.  Therefore, we should never over-write an analysis that is currently in use.
+
+To address this, all files associated with a module will be stored in their 
+own directory off the analysis subdirecotry.  For each version, there will
+be a complete set of files with an _ and version number appended to the
+filename (before extension). For example, the first version of a module will
+contain files such as module_1.cfg and module_1.rw. The next version would
+have module_2.cfg and module_2.rw.  The complete name with version number
+will be displayed in the analysis selection box that researchers use to
+choose an analysis.
+
+When the system administrator does a cvs update or adds there own module,
+they should do a make load_analysis to get new versions of analyses.  Note
+that the system will try to reload all modules, and issue warnings about
+already loaded modules.  These warnings are expected.
+
+

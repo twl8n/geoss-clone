@@ -1,0 +1,16 @@
+key        smp_name        smp_manipulation
+age1_A   red1            mani1
+age1_B   red2            mani1
+age1_C   red3            mani1
+age1_D   red4            mani1
+age1_E   red5            mani1
+age1_F   red6            mani1
+age1_G   red7            mani1
+age2_A   blue1           manib1
+age2_B   blue2           manib1
+age2_C   blue3           manib1
+age2_D   blue4           manib1
+age2_E   blue5           manib1
+age2_F   blue6           manib1
+age2_G   blue7           manib1
+age2_H   blue8           manib1

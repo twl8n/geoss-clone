@@ -1,0 +1,12 @@
+update study set tree_fk = NULL;
+delete from user_parameter_values;
+delete from user_parameter_names;
+delete from sys_parameter_values;
+delete from sys_parameter_names;
+delete from node;
+delete from tree;
+delete from analysis_filetypes_link;
+delete from extension;
+delete from filetypes;
+delete from analysis;
+delete from file_info where node_fk is not NULL;

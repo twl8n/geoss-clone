@@ -1,0 +1,30 @@
+<part id="array_center_staff_faq">
+<title>FAQ</title>
+<qandaset>
+<qandadiv id="loading_data_acs_faq"><title>Loading Data</title></qandadiv>
+<qandaentry>
+  <question>
+    <para>
+      When loading data, which files must exist in the chip data path 
+      in order to successfully load data?
+    </para>
+  </question>
+  <answer>
+    <para>
+    You must have the "txt" file.  The "rpt" file is recommended as it 
+    is used to error check against the <link linkend="layout">layout</link>
+    of the chip type specified for the 
+    <link linkend="hybridization">hybridization</link>.   
+    </para>
+    <para>
+    Other files are not mandatory.  Some provide quality control data.  All 
+    other files, if loaded, will be made available to <link linkend="users">
+    users</link> for download.  Additionally, if the user <link 
+    linkend="publishing_your_data">publishes their data</link> these files
+    will be made available to the public. 
+    </para>
+  </answer>
+</qandaentry>
+
+</qandaset>
+</part>

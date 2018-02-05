@@ -1,0 +1,68 @@
+Report Type:	Expression Report
+Date:          	01:55PM 04/25/2003
+______________________________________________________________________
+
+Filename:		03-17_6AI_B.CHP
+Probe Array Type:	MG_U74Av2
+Algorithm:		Statistical
+Probe Pair Thr:	8
+Controls:		Antisense
+______________________________________________________________________
+
+Alpha1:		0.04
+Alpha2:		0.06
+Tau:		0.015
+Noise (RawQ):	3.870
+Scale Factor (SF):	1.521
+TGT Value:		250
+Norm Factor (NF):	1.000
+______________________________________________________________________
+
+Background:
+	Avg: 88.30	Std: 1.63	Min: 83.10	Max: 92.00
+Noise:
+	Avg: 5.37	Std: 0.24	Min: 4.90	Max: 6.20
+Corner+
+	Avg: 215		Count: 32
+Corner-
+	Avg: 10312		Count: 32
+Central-
+	Avg: 10018		Count: 9
+______________________________________________________________________
+
+The following data represents probe sets that exceed the probe pair threshold 
+and are not called "No Call".
+
+Total Probe Sets:	12473
+Number Present:	5792	46.4%
+Number Absent:	6346	50.9%
+Number Marginal:	335	2.7%
+
+Average Signal (P):	699.8
+Average Signal (A):	58.0
+Average Signal (M):	156.6
+Average Signal (All):	358.7
+______________________________________________________________________
+
+Housekeeping Controls:
+Probe Set		Sig(5')	Det(5')	Sig(M')	Det(M')	Sig(3')	Det(3')	Sig(all)	Sig(3'/5')
+B-ACTINMUR/M12481	13230.3	P	15148.5	P	14557.9	P	14312.23	1.10
+GAPDHMUR/M32599	11524.7	P	10905.2	P	9522.7	P	10650.90	0.83
+TRANSRECMUR/X57349	110.2	P	117.4	P	332.0	P	186.53	3.01
+PYRUCARBMUR/L09192	103.5	A	69.0	A	129.6	A	100.67	1.25
+18SRNAMUR		609.7	P	217.9	P	1406.0	P	744.54	2.31
+______________________________________________________________________
+
+Spike Controls:
+Probe Set		Sig(5')	Det(5')	Sig(M')	Det(M')	Sig(3')	Det(3')	Sig(all)	Sig(3'/5')
+BIOB		188.2	P	388.2	P	210.6	P	262.29	1.12
+BIOC		711.0	P	 	 	577.6	P	644.32	0.81
+BIODN		705.8	P	 	 	2368.4	P	1537.12	3.36
+CREX		6008.4	P	 	 	8372.2	P	7190.29	1.39
+DAPX		30.6	A	32.5	A	4.8	A	22.64	0.16
+LYSX		1.5	A	5.4	A	6.8	A	4.58	4.51
+PHEX		2.6	A	2.7	A	16.8	A	7.35	6.56
+THRX		6.4	A	38.4	A	5.8	A	16.90	0.90
+TRPNX		58.0	A	5.9	A	1.2	A	21.72	0.02
+______________________________________________________________________
+

@@ -1,0 +1,88 @@
+Development Environment for GEOSS
+
+This document provides an overview of developing for GEOSS in the
+development environment configured on the biostat server.  It describes
+basic steps to start developing and should be useful to those who are new
+to the project.  This is not an extensive treatment of the topic and those
+who are unfamiliar with certain tools, like CVS and make, should learn
+more about those tools to better understand the process described here.
+
+This document assumes you have a setup and functional development
+environment on the biostat server.
+
+Developement Steps:
+  - obtain current code 
+  - code changes 
+  - test changes 
+  - revise and retest code as necessary 
+  - commit changes to current code
+
+1. Obtain current code
+
+It is important to modify and add to the most current code base.  To get
+current code:
+ - cd geoss 
+ - cvs up -d (provide password)
+
+This will retrieve and merge modified files into your code base.
+If one of the files is marked with a 'C', there is a conflict between
+your code and the new code that you have just retrieved.  You must not
+ignore the conflict.  Use an editor to examine the file.  Search for
+"<<<".  These characters will highlight the conflict, by showing both
+your version of the code and the conflicting code that was retrieved
+from the source repository.
+
+2. Code changes
+
+Once you have a current copy of the code, you can change file of
+interest to you.  The majority of the code for our product is found in
+the webtools directory.  If you are working on analysis changes, this code
+can be found in ~/geoss/site/webtools/analysis/<specific analysis>.
+
+3. Test changes
+
+Code changes occur in your copy of the code.  In order for the
+changed files to be used by the web server, you will need to run make.
+To make the code, type:
+
+make install
+
+(Note: this should be done in the directory your file is in.)
+
+Then see if your changes work the way you think they should.  Your
+modified code should be running at biostat.virginia.edu/~<yourid>/geoss/site.
+
+4. If you make further changes, remember to retest thoroughly.  Once you
+check in the code, it is available to all users, so if you introduce a
+bug, it can affect a lot of people.
+
+5. Commit changes
+
+Once you are happy with the changes, you can commit the files by typing:
+
+cvs commit -m "<Short comments here>" filename1 filename2
+
+You can commit an entire directory by omitting the filenames.  
+
+If you add a new file, you will need to do a cvs add before the commit:
+cvs add filename
+
+If you remove a file, you need to remove if from the repository using:
+cvs remove filename
+
+To look at change notes on a file, run: cvs log filename
+
+*** Special note on developing analyses:
+
+- If you create a new analysis, it should have its own directory off
+the analysis directory.  Copy files from an existing directory and use
+them as a template for the new analysis.  You will need to use the 
+geoss_add_analysis script (bin directory) to add the analysis to the 
+database.
+
+- To make a new version of and existing analysis, copy the cfg, html,
+and rw files to similarly named files with an incremented version number.
+Make appropriate changes through out, then run geoss_add_analysis.
+
+Please refer to documentation in geoss/doc for details on developing
+analysis modules.

@@ -1,0 +1,59 @@
+### MAIN ###
+### REPLACE infile
+geneSigs.N <-read.table("infile", header=TRUE, row.names=1)
+### REPLACE conds
+conditions <- c(conds)
+### REPLACE outfile
+outFile <- "outfile"
+### REPLACE condLabels
+labels <- c(condLabels)
+
+geneSigs.N <- logb(geneSigs.N,base=2)
+
+#Westfeld & Young
+library(multtest)
+
+numConds <- length(conditions)
+yColStart <- 1
+allResults <- c()
+for (y in 1:numConds)
+{
+	zColStart <- 1
+	yColEnd <- yColStart + conditions[y] - 1
+	for (z in 1:numConds)
+	{
+		if (y < z)
+		{
+			zColEnd <- zColStart + conditions[z] - 1
+			A <- geneSigs.N[,yColStart:yColEnd]
+			Albl <- rep(0, conditions[y])
+			B <- geneSigs.N[,zColStart:zColEnd]
+			Blbl <- rep(1, conditions[z])
+			
+			classlbl <- c(Albl, Blbl)
+			colPrefix <- paste(labels[y], labels[z], sep="-")
+			AB <- cbind(A,B)
+			resT<-mt.maxT(AB, classlbl, B=1E8)
+			num <- length(names(resT))
+			for (t in 1:num)
+			{
+			  names(resT)[t] <- paste(colPrefix, names(resT)[t],
+			  sep="-")
+			}
+			
+			if (length(allResults) == 0)
+			{
+			  allResults <- resT
+			} else
+			{
+			  allResults <- cbind(allResults, resT)
+			}
+		}
+		zColStart <- zColStart + conditions[z]
+	}
+	yColStart <- yColStart + conditions[y]
+}
+outCols <- ncol(allResults)
+row.names(allResults) <- row.names(geneSigs.N)
+write("Results from Westfall & Young: ", outFile, append=FALSE)
+write.table(allResults, outFile, append=TRUE, sep="\t")

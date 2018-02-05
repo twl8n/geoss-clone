@@ -1,0 +1,51 @@
+<html>
+<head><title>Westfall & Young Documentation</title></head>
+<body bgcolor="#FFFFFF">
+<p><b>Description</b><br>
+The westfallYoung analysis provides permutation-based multiple testing
+procedures to identify differentially expressed genes in DNA microarray
+experiments. It includes resampling-based multiple testing procedures for
+controlling the family-wise error rate (FWER): Bonferroni, Hochberg (1988),
+Holm (1979), Sidak, Westfall & Young (1993) (referred to as minP and
+maxT).<br>
+
+WestfallYoung also includes procedures for controlling the false discovery
+rate (FDR): Benjamini & Hochberg (1995), Benjamini & Yekutieli
+(2001) step-up procedures.<br>
+</p>
+<p><br>
+  <b>Input files</b><br>
+WestfallYoung expects input in this form:<br>
+</p>
+<ul>
+  <li> a file containing quality controlled chip data. The file should have row and column labels.<br>
+    <br>
+</ul>
+Analyses that create input in this format include:<br>
+<ul>
+  <li>QualityControl<br>
+</ul>
+<p>&nbsp;</p>
+<p><b>Output files</b><br>
+WestfallYoung creates the following output:<br>
+</p>
+<ul>
+  <li> An intermediate data file 
+</ul>
+Analyses that accept WestfallYoung output as input include:<br>
+<ul>
+  <li>none<br>
+</ul>
+<p>&nbsp;</p>
+<p><b>Parameters:</b><br>
+</p>
+<ul>
+  <li> Intermediate data filename - name of the data file to pass to other analysis nodes<br>
+  <li> Log filename - name of the file containing log and error messages<br>
+</ul>
+<p><br>
+  <br>
+</p>
+</body></html>
+
+

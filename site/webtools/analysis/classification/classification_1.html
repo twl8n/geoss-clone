@@ -1,0 +1,79 @@
+<html>
+<head><title>Classification Documentation</title></head>
+<body bgcolor="#FFFFFF">
+<p><b>Description</b><br>
+The GEOSS module 'Classification' provides optimal sets of genes that separate samples into two classes.
+The output from this module is formatted in a table structure for easier access and readability.
+Classification version 1 uses R 2.1.
+<br>
+</p>
+<p><br>
+<b>Statistical Methods</b><br>
+Classification can be performed by LDA, QDA, SVM, or logistic regression based on MiPP. 
+For explanation, look at:<br>
+
+<ul>
+1. Soukup M, Cho H, and Lee JK (2005). Robust classification
+     modeling on microarray data  using misclassification penalized
+     posterior, <em>Bioinformatics</em>,  21 (Sppl), i423-i430. <br>
+2.  Soukup M and Lee JK (2004). Developing optimal prediction models
+     for cancer classification  using gene expression data, 
+     <em> Journal of Bioinformatics and Computational Biology</em>, 1(4) 681-694.
+</ul>
+
+
+<p><br>
+  <b>Input files</b><br>
+Classification expects input in this form:<br>
+</p>
+<ul>
+  <li> A file containing chip data. The file should have row and column labels.<br>
+    <br>
+</ul>
+Analyses that create input in this format include:<br>
+<ul>
+  <li> Quality Control <br>
+  <li> Filter <br>
+  <li> Multi-Condition Filter <br>
+</ul>
+
+<p><b>Output files</b><br>
+  Classification creates the following output:<br>
+</p>
+<ul>
+  <li> A output file containing optimal sets of genes and classification error measurements
+</ul>
+Analyses that accept filter output as input include:<br>
+<ul>
+  <li>None<br>
+</ul>
+<p>&nbsp;</p>
+<p><b>Parameters:</b><br>
+</p>
+<ul>
+  <li> 'Number of splits' is the number of independent splits into train and test sets. For each split, a different model may be selected. 
+  <li> 'Number of sequential runs' is the number of sequential runs after eliminating the genes selected in the previous runs. This may discover masked genes.
+  <li> 'Cutoff point for model selection' is the cutoff point of 5% sMiPP to select optimal models for each split.
+  <li> 'Define new conditions if greater than 2' allows one to define new conditions, 
+        particularly make multiple conditions into two conditions. 
+        Type in 1 or 2 to define new conditions and leave boxes 'blank' to exclude unused conditions.
+        If all boxes are blank, only the first two conditions are used.
+  <li> If an independent test set for each condition is available, click 'Yes' in 'Are train and test sets distinct?' 
+       and specify which ones are train or test sets in 'Specify if train and test sets are distinct'.
+</ul>
+<p>
+
+<p>&nbsp;</p>
+<p><b>Note:</b><br>
+</p>
+<ul>
+  <li> Note that multiple classes are not accepted at present, 
+       so if there are more than two classes, you should combine multiple conditions into two conditions.
+  <li> When an independent test set for each condition is available, 
+       one train set and one test set must be specified for each of new conditions 1 and 2. 
+</ul>
+</p>
+
+</body></html>
+
+

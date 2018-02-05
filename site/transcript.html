@@ -1,0 +1,337 @@
+<html>
+<head>
+<title>Installation transcript</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000">
+<p><a href="./">Geoss Home</a> &nbsp;|&nbsp; <a href="install_guide.html">Install 
+  Guide</a> </p>
+<pre>[root@gilligan root]# cat /etc/sysconfig/i18n
+LANG="en_US.UTF-8"
+SUPPORTED="en_US.UTF-8:en_US:en"
+SYSFONT="latarcyrheb-sun16"
+[root@gilligan root]# cp i18n /etc/sysconfig/i18n
+[root@gilligan root]# yum update
+Gathering header information file(s) from server(s)
+Server: Fedora Core 1 - i386 - Base
+Server: Fedora Core 1 -- Fedora US mirror
+Server: Fedora Linux (stable) for Fedora Core 1 -- Fedora US mirror
+Server: Fedora Core 1 updates -- Fedora US mirror
+Server: Fedora Core 1 - i386 - Released Updates
+Finding updated packages
+Downloading needed headers
+.
+.
+.
+Transaction(s) Complete
+[root@gilligan root]# cat /etc/sysconfig/i18n
+#default RH settings
+#LANG="en_US.UTF-8"
+#SUPPORTED="en_US.UTF-8:en_US:en"
+#SYSFONT="latarcyrheb-sun16"
+
+# recommended settings
+LANG="en_US"
+SUPPORTED="en_US:en"
+SYSFONT="lat0-sun16"
+SYSFONTACM="iso01"
+LC_ALL="C"
+LC_COLLATE="C"
+[root@gilligan root]# su -l postgres
+-bash-2.05b$ pg_controldata
+pg_control version number:            72
+Catalog version number:               200211021
+Database cluster state:               in production
+pg_control last modified:             Thu Jun  3 15:57:36 2004
+Current log file ID:                  0
+Next log file segment:                1
+Latest checkpoint location:           0/8018FC
+Prior checkpoint location:            0/8018BC
+Latest checkpoint's REDO location:    0/8018FC
+Latest checkpoint's UNDO location:    0/0
+Latest checkpoint's StartUpID:        11
+Latest checkpoint's NextXID:          480
+Latest checkpoint's NextOID:          16976
+Time of latest checkpoint:            Thu Jun  3 15:57:32 2004
+Database block size:                  8192
+Blocks per segment of large relation: 131072
+Maximum length of identifiers:        64
+Maximum number of function arguments: 32
+Date/time type storage:               Floating point
+Maximum length of locale name:        128
+LC_COLLATE:                           C
+LC_CTYPE:                             C
+-bash-2.05b$ psql -U postgres template1
+Welcome to psql 7.3.4-RH, the PostgreSQL interactive terminal.
+
+Type:  \copyright for distribution terms
+       \h for help with SQL commands
+       \? for help on internal slash commands
+       \g or terminate with semicolon to execute query
+       \q to quit
+
+template1=# alter user postgres with encrypted password 'z1a8,BGt';
+ALTER USER
+template1=# create user geoss with encrypted password 'trust' createdb;
+CREATE USER
+template1=# create database geoss;
+CREATE DATABASE
+template1=# \q
+-bash-2.05b$ emacs -nw data/pg_hba.conf
+-bash-2.05b$ emacs -nw data/postgresql.conf
+-bash-2.05b$ exit
+logout
+[root@gilligan root]# /etc/rc.d/init.d/postgresql restart
+Stopping postgresql service:                               [  OK  ]
+Starting postgresql service:                               [  OK  ]
+[root@gilligan root]# yum install perl-DBI perl-DBD-Pg perl-Compress-Zlib
+.
+.
+.
+perl-DBI is installed and is the latest version.
+perl-DBD-Pg is installed and is the latest version.
+perl-Compress-Zlib is installed and is the latest version.
+No actions to take
+[root@gilligan root]# yum install blas
+.
+.
+.
+blas is installed and is the latest version.
+No actions to take
+[root@gilligan root]# wget http://www.cran.mirrors.pair.com/bin/linux/redhat/Fedora1/i386/R-1.9.0-1.i386.rpm
+--16:30:18--  http://www.cran.mirrors.pair.com/bin/linux/redhat/Fedora1/i386/R-1.9.0-1.i386.rpm
+           => `R-1.9.0-1.i386.rpm'
+Resolving www.cran.mirrors.pair.com... done.
+Connecting to www.cran.mirrors.pair.com[216.92.2.152]:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 15,088,909 [text/plain]
+
+100%[==================================================================>] 15,088,909     2.83M/s    ETA 00:00
+
+16:30:23 (2.83 MB/s) - `R-1.9.0-1.i386.rpm' saved [15088909/15088909]
+
+[root@gilligan root]# wget http://bioconductor.org/repository/release1.4/package/Source/multtest_1.4.1.tar.gz
+--16:30:31--  http://bioconductor.org/repository/release1.4/package/Source/multtest_1.4.1.tar.gz
+           => `multtest_1.4.1.tar.gz'
+Resolving bioconductor.org... done.
+Connecting to bioconductor.org[155.52.45.54]:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 834,680 [application/x-tar]
+
+100%[==================================================================>] 834,680        3.17M/s    ETA 00:00
+
+16:30:31 (3.17 MB/s) - `multtest_1.4.1.tar.gz' saved [834680/834680]
+
+[root@gilligan root]# rpm -i R-1.9.0-1.i386.rpm
+warning: R-1.9.0-1.i386.rpm: V3 DSA signature: NOKEY, key ID 97d3544e
+[root@gilligan root]# R -CMD INSTALL multtest_1.4.1.tar.gz
+* Installing *source* package 'multtest' ...
+.
+.
+.
+* DONE (multtest)
+[root@gilligan root]# wget http://tull.achs.virginia.edu/~twl8n/geoss_perl_modules.tar
+--16:32:15--  http://tull.achs.virginia.edu/%7Etwl8n/perl_modules.tar
+           => `perl_modules.tar'
+Resolving tull.achs.virginia.edu... done.
+Connecting to tull.achs.virginia.edu[128.143.19.166]:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1,064,960 [application/x-tar]
+
+100%[==================================================================>] 1,064,960     10.26M/s    ETA 00:00
+
+16:32:16 (10.26 MB/s) - `geoss_perl_modules.tar' saved [1064960/1064960]
+
+[root@gilligan root]# tar -xvf geoss_perl_modules.tar
+perl-AppConfig-1.56-1.noarch.rpm
+perl-PDF-API2-0.3r77-1.noarch.rpm
+[root@gilligan root]# rpm -i perl-AppConfig-1.56-1.noarch.rpm perl-PDF-API2-0.3r77-1.noarch.rpm
+[root@gilligan root]# wget http://tull.achs.virginia.edu/~twl8n/geoss_layouts.tar.gz
+--13:44:45--  http://tull.achs.virginia.edu/%7Etwl8n/geoss_layouts.tar.gz
+           => `geoss_layouts.tar.gz'
+Resolving tull.achs.virginia.edu... done.
+Connecting to tull.achs.virginia.edu[128.143.19.166]:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 21,186,732 [application/x-gzip]
+
+100%[==================================================================>] 21,186,732    10.34M/s    ETA 00:00
+
+13:44:47 (10.34 MB/s) - `geoss_layouts.tar.gz' saved [21186732/21186732]
+
+[root@gilligan root]# tar -zxvf geoss_layouts.tar.gz
+./geoss_layouts/
+./geoss_layouts/HG-U133A.txt
+./geoss_layouts/MG-U74Av2.txt
+./geoss_layouts/ARABIDOPSIS.txt
+./geoss_layouts/HG-U133_Plus_2.txt
+./geoss_layouts/DROSOPHILA.txt
+./geoss_layouts/HG-U133B.txt
+./geoss_layouts/MG-U74A.txt
+./geoss_layouts/MG-U74Bv2.txt
+./geoss_layouts/MG-U74Cv2.txt
+./geoss_layouts/MOE430A.txt
+./geoss_layouts/MOE430B.txt
+./geoss_layouts/MOUSE430_2.txt
+./geoss_layouts/P.AERUGINOSA.txt
+./geoss_layouts/RAE230A.txt
+./geoss_layouts/RAE230B.txt
+./geoss_layouts/RN-U34.txt
+./geoss_layouts/RT-U34.txt
+./geoss_layouts/RAT230_2.txt
+./geoss_layouts/E_COLI.txt
+./geoss_layouts/HG-U95Av2.txt
+./geoss_layouts/HG-U95B.txt
+./geoss_layouts/HG-U95C.txt
+./geoss_layouts/HG-U95D.txt
+./geoss_layouts/HG-U95E.txt
+./geoss_layouts/HUFL.txt
+./geoss_layouts/Mu11KA.txt
+./geoss_layouts/Mu11KB.txt
+./geoss_layouts/RG-U34A.txt
+./geoss_layouts/RG-U34B.txt
+./geoss_layouts/RG-U34C.txt
+./geoss_layouts/YG-S98.txt
+[root@gilligan root]# scp twl8n@reed6.med.virginia.edu:/home/tdj4m/geoss-2.0-1.i386.rpm .
+The authenticity of host 'reed6.med.virginia.edu (128.143.19.56)' can't be established.
+RSA key fingerprint is 78:98:bb:0c:45:40:b5:7f:ad:03:57:0e:4a:25:da:a1.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added 'reed6.med.virginia.edu,128.143.19.56' (RSA) to the list of known hosts.
+twl8n@reed6.med.virginia.edu's password:
+geoss-2.0-1.i386.rpm                                                        100% 3563KB   3.8MB/s   00:00
+[root@gilligan root]# rpm -ivh geoss-2.0-1.i386.rpm
+Preparing...                ########################################### [100%]
+   1:geoss                  ########################################### [100%]
+[root@gilligan root]# emacs -nw /etc/httpd/conf/httpd.conf
+[root@gilligan root]# /etc/rc.d/init.d/httpd restart
+Stopping httpd:                                            [  OK  ]
+Starting httpd:                                            [  OK  ]
+[root@gilligan geoss]# geoss_initialize --db_name=geoss --db_user=geoss
+Unable to read /var/www/html/geoss/.geoss as root
+ to determine db connection info
+Please enter database access password:
+Initializing database. . .
+NOTICE:  CREATE TABLE / PRIMARY KEY will create implicit index 'contact_pkey' for table 'contact'
+.
+.
+.
+Adding administrator user
+Successfully added user admin.
+
+
+Adding all analyses
+Adding /var/www/html/geoss/site/webtools/analysis/addLinks/addLinks_1.cfg
+Adding /var/www/html/geoss/site/webtools/analysis/filter/filter_1.cfg
+Adding /var/www/html/geoss/site/webtools/analysis/diffDiscover/diffDiscover_1.cfg
+Adding /var/www/html/geoss/site/webtools/analysis/permCluster/permCluster_1.cfg
+Adding /var/www/html/geoss/site/webtools/analysis/qualityControl/qualityControl_1.cfg
+Adding /var/www/html/geoss/site/webtools/analysis/treedraw/treedraw_1.cfg
+Adding /var/www/html/geoss/site/webtools/analysis/westfallYoung/westfallYoung_1.cfg
+Adding layouts.  This make take a few minutes.
+Enter the path of the layout tar file or the directory containing layout files:
+/root/geoss_layouts
+
+Adding HG-U133A layout
+/usr/local/bin/geoss_loadaffylayout starts at Thu Jun  3 16:42:52 EDT 2004 with options:
+input: /root/geoss_layouts/HG-U133A.txt
+speciesid: 50
+chipcost: 400
+name: HG-U133A
+dbname: geoss
+login: admin
+Instantiating AffyLayoutReader  [OK]
+Creating connection  [OK]
+Instantiating ArrayLayout [OK]
+Processed genes: 0 features: 0
+.
+.
+.
+Added 21200 genes, 22283 features on chip,
+.
+.
+.
+(HG-U133_Plus_2 should be here)
+.
+.
+.
+Adding HG-U95Av2 layout
+/usr/local/bin/geoss_loadaffylayout starts at Thu Jun  3 16:45:21 EDT 2004 with options:
+input: /root/geoss_layouts/HG-U95Av2.txt
+speciesid: 50
+chipcost: 400
+name: HG-U95Av2
+dbname: geoss
+login: admin
+Instantiating AffyLayoutReader  [OK]
+Creating connection  [OK]
+Instantiating ArrayLayout [OK]
+.
+.
+.
+Added 11303 genes, 12625 features on chip,
+Adding MG-U74Av2 layout
+/usr/local/bin/geoss_loadaffylayout starts at Thu Jun  3 16:46:52 EDT 2004 with options:
+input: /root/geoss_layouts/MG-U74Av2.txt
+speciesid: 41
+chipcost: 0
+name: MG-U74Av2
+dbname: geoss
+login: admin
+Instantiating AffyLayoutReader  [OK]
+Creating connection  [OK]
+Instantiating ArrayLayout [OK]
+.
+.
+.
+Added 11923 genes, 12488 features on chip,
+Adding MOE430A layout
+/usr/local/bin/geoss_loadaffylayout starts at Thu Jun  3 16:48:32 EDT 2004 with options:
+input: /root/geoss_layouts/MOE430A.txt
+speciesid: 41
+chipcost: 400
+name: MOE430A
+dbname: geoss
+login: admin
+Instantiating AffyLayoutReader  [OK]
+Creating connection  [OK]
+Instantiating ArrayLayout [OK]
+.
+.
+.
+Added 21030 genes, 22690 features on chip,
+Adding RAE230A layout
+/usr/local/bin/geoss_loadaffylayout starts at Thu Jun  3 16:51:20 EDT 2004 with options:
+input: /root/geoss_layouts/RAE230A.txt
+speciesid: 53
+chipcost: 375
+name: RAE230A
+dbname: geoss
+login: admin
+Instantiating AffyLayoutReader  [OK]
+Creating connection  [OK]
+Instantiating ArrayLayout [OK]
+.
+.
+.
+Added 15686 genes, 15923 features on chip,
+
+Your next step is to modify your apache configuration to allow web access
+ and ExecCGI on /var/www/html/geoss.
+Based on your build parameters, and assuming a default apache setup,
+ you will need to add the following:
+<Directory "/var/www/html/geoss/site">
+AllowOverride Limit
+Options ExecCGI FollowSymLinks
+Order allow,deny
+Allow from all
+</Directory>
+
+After saving your changes, restart the webserver (apachectl restart).
+  You should now be able to logon to GEOSS by visiting
+ http://<your server>/geoss/site.
+[root@gilligan geoss]# pwd
+/var/lib/geoss
+[root@gilligan geoss]# cd ~/
+</pre>
+</body>
+</html>

@@ -1,0 +1,137 @@
+filter <- function(infile, conditions, comp.labels, FC, FCvalue, FCmax, 
+TP, TPvalue, TPmax, LPE, LPEvalue, LPEmax, LPEBY, LPEBYvalue, LPEBYmax, outfile) 
+{
+#  infile: input file from stat analysis
+#  conditions: vector of numbers of replicates on all conditions
+#  comp.labels: vector of lables on two conditions for comparison
+#  FC: use of fold change criterion
+#  FCvalue: FC value
+#  FCmax: maximum number of genes by FC
+#  TP: use of t-statistics
+#  TPvalue: t-stat p-value
+#  TPmax: maximum number of genes by t-stat
+#  LPE: use of LPE test
+#  LPEvalue: LPE p-value (Jain et al., 2003) 
+#  LPEmax: maximum number of genes by LPE
+#  LPEBY: use of LPE BY test
+#  LPEBYvalue: LPE FDR p-value (Benjamini & Yekutieli, 2001) 
+#  LPEBYmax: maximum number of genes by LPE
+#  outfile: outfile to clustering
+#
+# if none is chosen, rank(LPEvalue) <= 1000  will be returned
+#
+
+if (length(comp.labels)!=2) stop("the number of comparing conditions is not two!") 
+n.chips <- sum(conditions)
+input <- read.csv(infile, sep="\t", row.names=1)
+# next several lines to identify the right columns for selection
+comp.col <- intersect(grep(comp.labels[1], attributes(input)$names), 
+			grep(comp.labels[2], attributes(input)$names))
+FC.point <- intersect(grep("LOGFOLD", attributes(input)$names), comp.col)
+TP.point <- intersect(grep("T.p.value", attributes(input)$names), comp.col)
+LPE.all <- intersect(grep("LPE", attributes(input)$names), comp.col)
+LPE.point <- intersect(grep("raw", attributes(input)$names), LPE.all)
+LPEBY.point <- intersect(grep("BY", attributes(input)$names), LPE.all)
+
+if(FC) { 
+	output1 <- input[abs(input[,FC.point]) >= log2(FCvalue),]
+	if((1-TP)*(1-LPE)*(1-LPEBY)) {
+ 		output.rank1 <- order(abs(output1[,FC.point]))
+        	output1 <- output1[output.rank1 <= FCmax,]
+		} 
+	} 
+if(TP) {
+	output2 <- input[ (input[,TP.point] <= TPvalue),]
+	if((1-FC)*(1-LPE)*(1-LPEBY)) {
+		output.rank2 <- rev(order(output2[,TP.point]))
+        	output2 <- output2[output.rank2 <= TPmax,]
+		}
+	}  
+if(LPE) {
+	output3 <- input[(input[,LPE.point] <= LPEvalue),] 
+	if((1-FC)*(1-TP)*(1-LPEBY)) {
+		output.rank3 <- rev(order(output3[,LPE.point]))
+        	output3 <- output3[output.rank3 <= LPEmax,]
+		}   
+	}
+if(LPEBY) {
+	output4 <- input[(input[,LPEBY.point] <= LPEBYvalue),] 
+	if((1-FC)*(1-TP)*(1-LPE)) {
+		output.rank4 <- rev(order(output4[,LPEBY.point]))
+        	output4 <- output4[output.rank4 <= LPEBYmax,]
+		}   
+	}
+if((1-FC)*(1-TP)*(1-LPE)*(1-LPEBY)) {
+		output5 <- input
+		output.rank5 <- rev(order(output5[,LPE.point]))
+        	output5 <- output5[output.rank5 <= 1000,]
+	}
+
+# find the output rows
+FCrow <- (1:nrow(input)); TProw <- (1:nrow(input)); LPErow <- (1:nrow(input)); LPEBYrow <- (1:nrow(input)) 
+if(FC) FCrow <- match(attributes(output1)$row.names, attributes(input)$row.names)
+if(TP) TProw <- match(attributes(output2)$row.names, attributes(input)$row.names)
+if(LPE) LPErow <- match(attributes(output3)$row.names, attributes(input)$row.names)
+if(LPEBY) LPEBYrow <- match(attributes(output4)$row.names, attributes(input)$row.names)
+if((1-FC)*(1-TP)*(1-LPE)*(1-LPEBY)) LPErow <- match(attributes(output5)$row.names, attributes(input)$row.names)
+output.row <- intersect(FCrow, TProw)
+output.row <- intersect(output.row, LPErow)
+output.row <- intersect(output.row, LPEBYrow)
+output <- input[output.row,]
+
+final.point <- LPE.point  # in case none is chosen
+if(FC) final.point <- FC.point
+if(TP) final.point <- TP.point
+if(LPEBY) final.point <- LPEBY.point
+if(LPE) final.point <- LPE.point
+
+output.rank <- rev(order(output[,final.point]))
+if(final.point==FC.point) output.rank <- order(abs(output[,final.point]))
+min.number <- min(nrow(input), 1000) 
+# Above should be nrow(input), but restrict to 1000 due to treeDraw (pdf) problem
+if(FC) min.number <- min(min.number, FCmax)
+if(TP) min.number <- min(min.number, TPmax)
+if(LPE) min.number <- min(min.number, LPEmax)
+if(LPEBY) min.number <- min(min.number, LPEBYmax)
+output <- output[output.rank <= min.number,]
+output <- log2(output[,1:n.chips])
+Probe.Set <- row.names(output)
+newout <- cbind(Probe.Set, output)
+write.table(newout, outfile, sep="\t", row.names=F)
+return(output)
+}
+
+### MAIN ###
+### REPLACE conds ###
+conditions <- c(conds)
+### REPLACE condsComp ###
+comp.labels <- c(condsComp)
+
+### REPLACE infile ###
+myrun <- filter("infile",conditions, comp.labels, 
+### REPLACE FC ###
+FC,
+### REPLACE FCvalue ###
+FCvalue,
+### REPLACE FCmaximum ###
+FCmaximum,
+### REPLACE TPV ###
+TPV,
+### REPLACE TPVvalue ###
+TPVvalue,
+### REPLACE TPVmaximum ###
+TPVmaximum,
+### REPLACE LPE ###
+LPE,
+### REPLACE LPEvalue ###
+LPEvalue,
+### REPLACE LPEmaximum ###
+LPEmaximum,
+### REPLACE LPEBY ###
+LPEBY,
+### REPLACE LPEBYvalue ###
+LPEBYvalue,
+### REPLACE LPEBYmaximum ###
+LPEBYmaximum,
+### REPLACE outfile ###
+"outfile")

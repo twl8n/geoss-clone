@@ -1,0 +1,59 @@
+<html>
+<head><title>Add Links Documentation</title></head>
+<body bgcolor="#FFFFFF">
+<p><b>Description</b><br>
+The addLinks module allows users to add html links to their output.  The
+links take the user to the appropriate information for each gene at the NCBI
+site.  This linking is similar to the links created by the treedraw analysis,
+but addLinks can be applied to the output of many modules.  Options all the links to be placed at the front or back of the output
+file.  The output file can be in either html or txt format.
+<br>
+</p>
+<p><br>
+  <b>Input files</b><br>
+Add links expects input in this form:<br>
+</p>
+<ul>
+  <li> a file containing a column labeled "Probe.Set" that contains the gene
+accession number.<br>
+    <br>
+</ul>
+    Analyses that create input in this format include:<br>
+<ul>
+  <li>qualityControl<br>
+  <li>diffDiscover<br>
+  <li>filter<br>
+</ul>
+<p>&nbsp;</p>
+<p><b>Output files</b><br>
+  AddLinks creates the following output:<br>
+</p>
+<ul>
+  <li> A html or txt file that contains the columns of the input file, plus a
+column of linking gene accession numbers to the associate NCBI information.
+    <br>
+</ul>
+    Analyses that accept AddLinks output as input include:<br>
+<ul>
+  <li>none<br>
+</ul>
+<p>&nbsp;</p>
+<p><b>Parameters:</b><br>
+</p>
+<ul>
+  <li> Log filename - name of the file containing log and error messages<br>
+  <li> Output filename - name of the file containing new links<br>
+  <li> Output type - specifies whether the output file should be html or txt
+format<br>
+  <li> Add NCBI link - currently this is the only type of link to add.  If
+this option is not checked, your output file would look exactly like your
+input file.  Eventually, we hope to add links to other sites.<br>
+  <li> Placement of links - whether to place the new information as the first
+column of the file or as the last<br>
+</ul>
+<p><br>
+  <br>
+</p>
+</body></html>
+
+

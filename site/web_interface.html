@@ -1,0 +1,215 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+<head>
+<title>Va GEOSS Web Interface Description</title>
+<meta name="keywords" content="gene, chip, expression, affymetrix, genechip, oligo, two, color, spotted, array, dna, rna, oligonucleotide, cdna, analysis, analytical, copy, copy dna, spotted array, hybridization, mrna, messenger, messenger rna, cy3, cy5, probe, reverse transcriptase, reverse transcription, glass, slide, sage, serial, serial analysis of gene expression, photo dimerization, genotype, genotypes, genotyping, fold change, over expression, under expression, up regulation, down regulation, photo lithography, linux, open source, apache, postgres, postgresql, database, secure, curate, curation, curator, perfect match, westfa, young, stat analysis, clustering, perm cluster, r-cluster, r cluster, tree view, go, gene ontology, flurochroms, patrick brown, t-test, anova, function prediction">
+<meta name="description" content="GEOSS is an Open Source Gene Expression Database supporting storage and analysis of Affymetrix&reg; GeneChip&reg; technology, with planned support for two color spotted arrays and other gene expression measurement technologies. GEOSS is designed to serve as an secure repository and archive for many researchers' data. ">
+</head>
+<BODY bgcolor="#FFFFFF" link="#006633" vlink="#666633" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0" >
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr valign="top"> 
+    <td width="10">&nbsp;</td>
+    <td width="100"><font face="Verdana, Arial, Helvetica, sans-serif" size="+1"><a href="./index.cgi"><img src="graphics/geoss_logo.jpg" width="216" height="96" border="0"></a></font></td>
+    <td width="8">&nbsp;&nbsp;</td>
+    <td width="490"><font face="Verdana, Arial, Helvetica, sans-serif" size="+1">GEOSS 
+      Virgina: The Web Interface API</font> </td>
+  </tr>
+</table>
+<br>
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr> 
+    <td width="8">&nbsp;</td>
+    <td width="20" valign="top" bgcolor="990066">&nbsp;</td>
+    <td width="8" valign="top">&nbsp; </td>
+    <td width="564" valign="top"> 
+      <p><b>GEOSS Web Interface Application Programmers Interface</b> 
+      <p>A Web interface has been created for GEOSS to allow users to update 
+        contact information, create experiment sets (along with the requisite 
+        sample and hybridization information), set group membership, and analyze 
+        data with the Analysis Tree package. The web interface also has special 
+        curator-only features for the microarray center personnel manage orders 
+        and to enter the chip data. 
+      <p>&nbsp;
+      <p><b>Salient Technical Features.<br>
+        </b>
+      <ul>
+        <li>Data driven simple HTML templates capable of field substitution, and 
+          two loops (one nested) with tweens.</li>
+        <li>Web pages are almost 100% standard HTML, and can be edited in you 
+          favorite web editor.</li>
+        <li>There are a small number of places where the simple template is supplemented 
+          by Perl generated HTML (mostly drop down menus).</li>
+        <li>State information is carried via hidden fields and/or CGI GET style 
+          requests.</li>
+        <li>The current sessioning code depends on Apache htaccess authentication. 
+          Future versions of GEOSS will get a full bore sessioning package 
+          we've written for a more recent product.</li>
+        <li>We currently use no JavaScript.</li>
+        <li>In order to guarantee confidentiality, all HTTP access to the secured 
+          portion of the site is encrypted via SSL.</li>
+        <li>The web interface uses only standard Perl modules (the DBD::Pg Postgres 
+          driver for Perl DBI may not be a standard part of all distributions).</li>
+        <li>Apache mod_perl is not used. Current response from the web site is 
+          rapid, and any slow pages are limited by inefficient SQL queries.</li>
+        <li>The current simple htaccess Apache authentication requires no cookies. 
+          However, the current system is vulnerable to massive password guessing 
+          attacks, and the current system cannot timeout a session.</li>
+        <li>Security of GEOSS depends on sys admin only access to the GEOSS 
+          server. Normal users do not have Linux command line logins on that machine 
+          (a GEOSS account is not a Linux account). Due to the inherent nature 
+          of database scripting, database passwords are in clear text in a config 
+          file. This is only one of several vulnerabilities if users were allowed 
+          command line access.</li>
+      </ul>
+      <p>&nbsp;
+      <p><b>Overview.</b> 
+      <p>This document assumes that the reader has working familiarity with Linux, 
+        Apache, Perl and HTML. 
+      <p>Please note that we distinguish between two major types of data: meta 
+        data (usually just called 'data') and chip/array derived values referred 
+        to as 'chip data'. The investigator is the person (or lab) that runs some 
+        experiment and creates sets of control samples and treated samples. The 
+        investigator uses the Web interface to enter information about the origin 
+        and treatment (or lack of treatment) for each sample, as well as requesting 
+        what chips are used for each sample, and how many chips are run. Investigators 
+        may make corrections and additions to their meta data until they deliver 
+        samples to the chip lab. 
+      <p>The chip lab is where the sample preparation and hybridization (annealing 
+        DNA to the chip) occurs. When a sample is delivered to the chip lab, the 
+        meta data is checked for completeness by the chip lab personnel. If there 
+        is a problem, the investigator is contacted to correct the meta data. 
+        If everything is fine, the chip lab locks the meta data to assure integrity 
+        of the data. Our GEOSS philosophy (enforced by the software) is that 
+        data should never be changed. Data can be marked "superseded" but it cannot 
+        be changed or deleted. 
+      <p>The interface work flow is described by <a href="workflow.html">workflow.html</a>. 
+        The software instantiating this work flow is written in Perl. The Perl 
+        scripts call a library of functions commonly used by the web cgi scripts, 
+        as well as using Perl DBI to access the Postgres database. 
+      <p>HTML pages are separate from the Perl scripts. The HTML pages serve as 
+        simple templates, which has the advantage of separating the algorithms 
+        and data processing from the formatting and layout of the web pages. Additionally, 
+        since Perl and HTML have different indenting and coding styles, the separate 
+        files are more legible. 
+      <p>&nbsp;
+      <p><b>Instructions for Filling in Fields</b> 
+      <p>This is a technical document. Please see the help for each of the web 
+        forms. 
+      <p>&nbsp;
+      <p><b>Apache Configuration.</b> 
+      <p>We have Apache set up to allow CGI scripts in most directories. This 
+        means that unlike the historical cgi-bin model, the scripts and their 
+        associated HTML can cohabit. It also means that all of the GEOSS 
+        web site resides in the same directory tree. We enable .htaccess files 
+        to override all settings. 
+      <p>Our installation at UVa puts GEOSS in the document root of a devoted 
+        server. However, this system should work just as well with virtual hosting, 
+        or with public_html user accounts. The security system depends on only 
+        sys admins logging in to the server, so this should be on a machine with 
+        very few accounts. 
+      <p>The security model also depends on SSL, so you'll have to enable that 
+        as well. 
+      <p>&nbsp;
+      <p><b>Perl Configuration.</b> 
+      <p>This code has been developed and tested on RedHat Linux systems. We have 
+        attempted to use normal conventions for file names and locations. If you 
+        run into a problem that should be accounted for by installation configuration, 
+        please contact the GEOSS developers via Sourceforge (see the contact 
+        page for the most up-to-date contact information). 
+      <p>&nbsp;
+      <p><b>Script Filenames and Paths.</b> 
+      <p>The Perl scripts and HTML files are located in the webtools directory. 
+        These scripts use a variation of the configuration tools to adjust the 
+        Perl #! line, and the location of the additional Perl libraries. Instead 
+        of the .pl file containing &#37;&#37; variables, it contains the values 
+        that work on our system here at UVa. The script config.pl (run via the 
+        makefile) removes these defaults, and substitutes in the values specified 
+        in options.reminders. #!/usr/bin/perl gets the value of &#37;&#37;START_PERL&#37;&#37;, 
+        and use lib q[/usr/local/geoss/perl5]; gets the value of &#37;&#37;GENEX_EXTRALIBS&#37;&#37;. 
+        You can make the Perl scripts and copy the HTML files to the appropriate 
+        directory at any time by changing directory to webtools, and typing 'make' or 'make 
+        all'. 
+      <p>Most of the scripts assume that execution occurs in the webtools directory. 
+        There is a library of common subroutines sessionlib.pl which also resides 
+        in this directory, and is required by nearly all the scripts. 
+      <p>&nbsp;
+      <p><b>Interaction with the Security System</b> 
+      <p>The Perl scripts use several subs to interact with the security system. 
+        All the Perl scripts must check for a value user by making sure that $ENV{REMOTE_USER} 
+        exists. We assume that if Apache (or someone) set this environment variable, 
+        that we have a valid user. A database connection is opened, and write_where_clause() 
+        or read_where_clause() is called as appropriate. 
+      <p>Other than that, the scripts use typical DBI and SQL. The burden of the 
+        security system is on the programmer to verify that only data for which 
+        a user has permission is ever shown to the user. 
+      <p>&nbsp;
+      <p><b>CGI conventions and HTML Templating</b> 
+      <p>It is generally easiest to read the CGI environment into a hash. Most 
+        SQL results are put into hashes as well. In fact, since the hashes are 
+        used to substitute field specifiers in the HTML, you'll find that the 
+        scripts often do an SQL query and put the single value directly into a 
+        hash with a key of the same name as the field. 
+      <p>The HTML templates are read into memory, and processed by regex'es. This 
+        simple templating system uses field specifiers of the form "{fieldname}", 
+        where 'fieldname' matches a hash key. This allows the code to simply foreach 
+        though a hash substituting values from the hash for the string in the 
+        HTML. The foreach is probably unnecessary, and in most cases a regex will 
+        do all the work more efficiently: 
+      <pre>
+
+# a simple brute force approach
+foreach $key (%hash)
+{
+  $all_html =~ s/{$key}/$hash{$key}/g;
+}
+
+# faster alternative and only 1 line of code
+
+$all_html =~ s/{(.*?)}/$hash{$1}/g;
+
+</pre>
+      where $all_html has the text of the template as one long string, %hash ( 
+      i.e. $hash{$1}) has values from the CGI environment or from the database. 
+      <p>The only downside is that the regex method removes {fieldname} even when 
+        $hash{fieldname} doesn't exist. If not removed you'd see {fieldname} in 
+        the web page, and that's a clear indicator that something is amiss. 
+      <p>Several of the templates are of the more complicated type with a repeating 
+        section. This is necessary when there are several hybridizations for a 
+        single sample, and we want all the N hybridizations on a single web page. 
+        In the HTML, this repeated section is tagged (somewhat awkwardly) by <start> 
+        ... <end>. A simple regex reads out the repeating part, and a loop builds 
+        a string that gets put back in. Some repeating sections need a tween, 
+        and that is tagged <tween>...</tween>. 
+      <p>For HTML form field names when there are repeating sections, I chose 
+        to add a numeric suffix. The template as written might say "{am_pk}". 
+        If there were 3 hybridizations, the repeating section would have been 
+        repeated 3 times, and we'd have &lt;input&gt; tags with the names am_pk_0, 
+        am_pk_1, and am_pk_2. 
+      <p>Once again, a loop in the Perl knows to expect repeats. From a larger 
+        hash containing all the fields returned via CGI, it copies the info for 
+        each instances (loop?) of the repeat into a smaller hash, and does the 
+        necessary processing. 
+      <p>Historically, some Perl programmers initiate a CGI sequence with a script, 
+        and that script uses itself as the action of the form submitted. It submits 
+        back to itself, and uses some kind of state info. This can be very confusing. 
+      <p>I didn't do that. Instead, I chose to have the Perl scripts submit to 
+        the next script down the line, essentially creating a CGI pipeline. In 
+        some cases I had script perform dual multiple duties such as read CGI 
+        input, write to the db, read a template, resolve the template, and print 
+        a new web page. This was only done where there was a single user interaction 
+        at the beginning, and a single web page as output at the end. 
+      <p>&nbsp;
+      <p><b>The makefile</b> 
+      <p>I think I managed to create a makefile that uses wild-cards to detect 
+        when the CGI scripts and/or HTML templates are not installed. It does substitutions 
+        on the CGI scripts, and will soon need to do them on the HTML. The substitution 
+        code write its output directly to the destination installation directory. 
+        At the moment, the HTML files are simply copied into the destination install 
+        directory. 
+      <p>&nbsp; 
+    </td>
+  </tr>
+</table>
+</body>
+</html>
+

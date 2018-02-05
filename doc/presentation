@@ -1,0 +1,86 @@
+1.  Why Docbook?
+- can check in files and do diffs on files
+- anyone can edit
+- conversion to different types 
+- many different tools for editting and interpreting
+
+2.  How to use Docbook on GEOSS
+- which files to modify
+geoss/site/webdoc/EN
+
+- where to do a make install
+geoss/site/webdoc/EN
+
+- where to access changes
+biostat.virginia.edu/~tdj4m/geoss/site/webdoc/EN/html
+or GEOSS Documentation Link from home page
+ 
+3. Docbook commands
+
+- how to add text
+    <para>Here is my text</para>
+
+- how to add a link (internal and external)
+    - example of link to a glossary item
+    - if glossary item is :
+        <glossentry id="analysis">
+        <glossterm>
+         Analysis 
+        </glossterm>
+
+    - then link is 
+<para>Adds a GEOSS <link linkend="analysis">analysis</link></para>
+
+    - example of a link to an external site
+    - <ulink url="http://sourceforge.org">SourceForge</ulink>
+
+
+- how to add an email address 
+<para>
+Email <email>teela-virgina@peff.net</email> me.
+</para>
+
+
+- how to add a glossary item
+    - modify site/glossary.xml
+    <glossentry id="analysis_condition">
+    <glossterm>
+    Analysis Condition
+    </glossterm>
+    <glossdef>
+    <para>fooSome reasonable definition here of a condition.</para>
+    </glossdef>
+    </glossentry>
+
+- how to add a graphic
+<mediaobject>
+  <imageobject>
+      <imagedata fileref="../graphics/addnode.jpg" format="JPG"/>
+  </imageobject>
+  <textobject>
+    <phrase>Add Analysis Noder</phrase>
+  </textobject>
+  <caption>
+    <para>
+      Adding a Node to an Analysis Tree
+    </para>
+  </caption>
+</mediaobject>
+
+
+- how to add a callout
+http://docbook.org/tdg/en/html/screenco.html
+
+- how to add a command
+<para>
+To add a new analysis to your GEOSS installation:
+<command>
+geoss_add_analysis --configfile <replaceable>filename</replaceable>
+</command>
+</para>
+
+- exercise:  use documentation to add a list
+
+4. Tools for writing xml
+http://www.philo.de/xmledit/
+

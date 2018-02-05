@@ -1,0 +1,1245 @@
+Version 2.6.0
+-------------
+This version contains major functionality changes in addition to a number of
+bug fixes.  Details below.  Follow the following steps to upgrade an existing
+installation (we recommend backing-up your current installation prior to
+upgrading if you have criticial data):
+
+
+Upgrade Instructions:
+---------------------
+
+1. upgrade the rpm
+2. add new analysis versions 
+
+geoss_add_analysis --configfile=/var/www/html/geoss/site/webtools/analysis/classification/classification_2.cfg
+geoss_add_analysis --configfile=/var/www/html/geoss/site/webtools/analysis/cluster/cluster_3.cfg
+geoss_add_analysis --configfile=/var/www/html/geoss/site/webtools/analysis/diffDiscover/diffDiscover_4.cfg
+geoss_add_analysis --configfile=/var/www/html/geoss/site/webtools/analysis/diffDiscMult/diffDiscMult_2.cfg
+geoss_add_analysis --configfile=/var/www/html/geoss/site/webtools/analysis/filter/filter_4.cfg
+geoss_add_analysis --configfile=/var/www/html/geoss/site/webtools/analysis/filterMult/filterMult_2.cfg
+geoss_add_analysis --configfile=/var/www/html/geoss/site/webtools/analysis/qualityControl/qualityControl_3.cfg
+
+
+3. update the database structure via psql:
+drop INDEX arraymeasurement_hybridization_name_ind ;
+
+create INDEX arraymeasurement_hybridization_name_ind on arraymeasurement
+(hybridization_name);
+
+
+alter table configuration add column "array_center" boolean;
+alter table configuration alter "array_center" set default true;
+alter table configuration add column "analysis" boolean;
+alter table configuration alter "analysis" set default true;
+alter table configuration add column "data_publishing" boolean;
+alter table configuration alter "data_publishing" set default true;
+alter table configuration add column "user_data_load" boolean;
+alter table configuration alter "user_data_load" set default false;
+alter table configuration add column "ord_num_format" varchar(128);
+alter table configuration alter "ord_num_format" set default 'year
+sequential';
+alter table study add column "default_exp_cond_name" character varying(128);
+alter table study add column "default_spc_fk" integer;
+alter table study add column "default_sample_type" character varying(128);
+alter table study add column "default_type_details" character varying(128);
+alter table study add column "default_bio_reps" integer DEFAULT 1 NOT NULL;
+alter table study add column "default_chip_reps" integer DEFAULT 1 NOT NULL;
+alter table study add column "default_smp_name" character varying(128);
+alter table study add column "default_lab_book" character varying(128);
+alter table study add column "default_lab_book_owner" integer;
+alter table study add column "default_smp_origin" text;
+alter table study add column "default_smp_manipulation" text;
+alter table study add column "default_al_fk" integer;
+
+alter table order_info alter column order_number drop not null;
+
+update analysis set current = 'f' where an_name = 'Cluster' and version
+= '2';
+update analysis set current = 'f' where an_name = 'Differential Discovery'
+ and version = '3';
+update analysis set current = 'f' where an_name = 'Filter' and version
+ = '3';
+update analysis set current = 'f' where an_name = 'Classification' and
+ version = '2';
+update analysis set current = 'f' where an_name = 'Quality Control' and
+ version = '2';
+update analysis set current = 'f' where an_name =
+ 'Multi-Condition Filter' and version ='1';
+update analysis set current = 'f' where an_name =
+ 'Multi-Condition Differential Discovery' and version ='1';
+
+
+4. Upgrade applicable software versions.  
+GEOSS 2.6 was tested with the following versions:
+686 i686 i386 GNU/Linux
+postmaster (PostgreSQL) 8.1.4
+This is perl, v5.8.8 built for i386-linux-thread-multi
+R version 2.4.0 (2006-10-03)
+Package: KernSmooth  Version: 2.22-19
+Package: MASS  Version: 7.2-29
+Package: base  Version: 2.4.0
+Package: boot  Version: 1.2-26
+Package: class  Version: 7.2-29
+Package: cluster  Version: 1.11.2
+Package: datasets  Version: 2.4.0
+Package: foreign  Version: 0.8-17
+Package: grDevices  Version: 2.4.0
+Package: graphics  Version: 2.4.0
+Package: grid  Version: 2.4.0
+Package: lattice  Version: 0.14-9
+Package: methods  Version: 2.4.0
+Package: mgcv  Version: 1.3-19
+Package: nlme  Version: 3.1-77
+Package: nnet  Version: 7.2-29
+Package: rpart  Version: 3.1-32
+Package: spatial  Version: 7.2-29
+Package: splines  Version: 2.4.0
+Package: stats  Version: 2.4.0
+Package: stats4  Version: 2.4.0
+Package: survival  Version: 2.29
+Package: tcltk  Version: 2.4.0
+Package: tools  Version: 2.4.0
+Package: utils  Version: 2.4.0
+Package: e1071  Version: 1.5-16
+Package: YEAST  Version: 1.14.2
+Package: hgu133a  Version: 1.14.0
+Package: hgu133b  Version: 1.14.0
+Package: hgu133plus2  Version: 1.14.0
+Package: hgu95b  Version: 1.14.0
+Package: hgu95c  Version: 1.14.0
+Package: hgu95d  Version: 1.14.0
+Package: hgu95e  Version: 1.14.0
+Package: hu6800  Version: 1.14.0
+Package: humanCHRLOC  Version: 1.14.1
+Package: humanLLMappings  Version: 1.14.2
+Package: mgu74a  Version: 1.14.0
+Package: mgu74av2  Version: 1.14.0
+Package: mgu74b  Version: 1.14.0
+Package: mgu74bv2  Version: 1.14.0
+Package: mgu74c  Version: 1.14.0
+Package: mgu74cv2  Version: 1.14.0
+Package: moe430a  Version: 1.14.0
+Package: moe430b  Version: 1.14.0
+Package: mouseCHRLOC  Version: 1.14.1
+Package: mouseLLMappings  Version: 1.14.2
+Package: rae230a  Version: 1.14.0
+Package: rae230b  Version: 1.14.0
+Package: ratCHRLOC  Version: 1.14.1
+Package: ratLLMappings  Version: 1.14.2
+Package: rgu34a  Version: 1.14.0
+Package: rgu34b  Version: 1.14.0
+Package: rgu34c  Version: 1.14.0
+Package: ygs98  Version: 1.14.1
+Package: Biobase  Version: 1.12.2
+Package: HEM  Version: 1.6.0
+Package: LPE  Version: 1.8.0
+Package: MiPP  Version: 1.4.0
+Package: GO  Version: 1.14.1
+Package: multtest  Version: 1.12.0
+Package: annotate  Version: 1.12.1
+Package: mouse4302  Version: 1.14.0
+Package: rat2302  Version: 1.14.0
+Package: hgu95av2  Version: 1.14.0
+
+Run the geoss_versions script to determine versions currently installed on
+your system. 
+
+
+Description of Changes
+----------------------
+A number of major changes have been included in version 2.6:
+  - enhanced bulk loading capability and usability improvements
+  - ability to configure and load data that is not associated with orders
+  - streamlined one-step order creation process
+  - upgraded R version
+  - modified analysis trees - no longer support old R versions, but support
+    upgrading trees
+  - minor changes to publish data functionality
+  - additional installation options provided to customize install (can support
+    array center processing, publish data functionlity, analysis
+    functionality)
+
+See system documentation for more information.
+   
+The following bugs were resolved in this release:
+
+174 errors in analyses need to be reported effectively.
+345 Running out of default file names causes an internal serv...
+71 Add Experimental Condition" button on create stud...
+263 verbose carp errors cause an error
+381 admin_addorg needs drop boxes for logos and icons
+438 apostrophe in organization field of add user causes ISE
+439 password check needed on request account
+440 ISE on add user when org_address field greater than 128 c...
+441 Bad error message when you can't connect to the db
+13 Poor date handling in new order
+45  Can overflow curator billing_code field and cause error
+116 view all orders requires navigational controls
+206 add administrator contact link to web page template
+224 exp. conds. in use can be modified
+278 Empty directories in file view just dissappear?
+354 may need to improve load data process
+10  Invalid study start dates are not trapped
+21  No of experimental conditions should be restricted
+40  experimental conditions OR misleading
+
+
+Version 2.5.3
+-------------
+This version adds the Mouse430_2 chip type to filter and filterMult analysis
+modules.
+
+
+Version 2.5.2
+-------------
+This version includes a bug fix in the data load procedures.  
+
+Version 2.5.1
+--------------
+New to this version:
+- improved error handling in the code for developers
+- fix to allow more than 26 biological replicates
+- ability to upload non-affymetrix data files for analysis
+- minor bug fixes (see bugzilla)
+- a new analysis module, classification
+
+To upgrade existing implementations:
+
+1. Install new R libraries.
+
+The e1071 and MiPP libraries must be installed to support the new
+classification module.  We installed e1071_1.5-10.tar.gz
+(http://cran.r-project.org/src/contrib/Descriptions/e1071.html) and
+MiPP_1.1.8.tar.gz
+(http://www.bioconductor.org/packages/bioc/stable/src/contrib/html/MiPP.html)
+
+# R CMD INSTALL MiPP_1.1.8.tar.gz
+# R CMD INSTALL e1071_1.5-10.tar.gz
+
+2. Upgrade GEOSS
+
+# rpm -U geoss-2.5.1-1.i386.rpm
+
+3.  Add the "Unknown" arraylayout.
+
+From psql:
+
+insert into arraylayout (al_pk, con_fk, name, technology_type, chip_cost)
+  values (0,2,'Not Listed','Unknown',0);
+
+
+
+
+Version 2.5.0
+--------------
+New to this version:
+- Study viewer link in Member Home to allow users to view, search, and sort
+  all studies they can view
+- Improved analysis error handing and better naming of analysis result files
+- Upgrade to R2.1
+- New analysis modules: Filter Mult and Differential Discovery Mult
+- Several bug fixes to analysis routines
+- Ability to filter based on specific genes added to the existing Filter
+  modules
+- Addition of a script, geoss_multi_chip_load, to load signal values for 
+  multiple chips from one file
+
+
+To Upgrade Existing Implementations:
+1. Install R 2.1
+Follow the instructions in the "Install" section of online documentation.
+Note that you will need to decide whether to continue to support old 
+analyses running on R 1.9.0.  If you upgrade your existing R installation,
+older analyses that were created using R 1.9.0 modules will no longer work.
+If you wish to continue to support existing analysis trees, you will need 
+to maintain two separate R installations.  To do this, create symbolic links
+so that the command "R1.9" runs R version 1.9.0 and "R2.1" runs version 2.1.0.  
+Note that the new installation of R2.1 must install Bioconductor and a variety
+of modules.  These are outlined in the install document. 
+
+2. Add new user "public"
+New installations of GEOSS will automatically have a user with the login
+"public".  This user is a special kind of member user in that all users are 
+automatically added to the public group by default.  This essentially
+creates a global read permission--everyone can see data owned by the
+public user.
+
+Use the following command from the command line to add the public user:
+
+geoss_adduser --login=public --password=public \
+              --type=experiment_set_provider --pi_login=public \
+              --contact_fname=public --contact_lname=public/geoss_adduser \
+              --login=public --password=public \
+              --type=experiment_set_provider --pi_login=public \
+              --contact_fname=public --contact_lname=public
+
+Login as public and change the password for user public.  Add all current
+users to public's group.
+
+3. Numerous changes were made to the database structure and we have grouped
+them into a script.  Download the 2.5.sql file from the SourceForge site.
+Changes can be implemented by running the script in psql. 
+
+4. New versions of the analyses were created for R2.1 and a couple new
+analyses were created.  They can be loaded using the "geoss_add_all_ana"
+command.  Note that this will attempt to load existing analyses and you will
+get "Unable to load" messages for those analyses.  However, the new analyses
+should be loaded.  They are:
+
+qualityControl_2
+diffDiscover_3
+filter_3
+cluster_2
+diffDiscMult_1
+filterMult_1
+
+
+
+
+Version 2.4.3
+-------------
+Bug fix to Differential Discovery 2.  The fix addresses a failure in the LPE
+component of the module when data containes many ties at some intensity
+levels.
+
+Version 2.4.2
+-------------
+Bug fix to Quality Control version 2.  This fixes the failure of the quality
+control module when working with input files that have no values that require
+thresholding.
+
+Version 2.4.1
+-------------
+Bug fix to data load.  This fixes a syntax error that prevented more than one
+hybridization from being loaded when 'Load All' was used.
+
+Bug fix to order edit form.  This fixes a problem that resulted in no error
+message being displayed in the order edit page.
+Version 2.4.0
+-------------
+
+The major changes in this version are the re-write of the order edit interface
+and the additional of bulk data load capabilities.  Additionally there have
+been a number of minor bug fixes, including small fixes to several analysis
+routines.  In addition to the rpm upgrade, you will need to make a few small
+database changes for this release.  The changes can be made via the psql tool:
+
+
+Insert 0 pk into the study and exp_condition tables using the following commands:
+
+INSERT INTO study (sty_pk, study_name, sty_comments) values
+(0,'default','Default value for unset studies');
+
+INSERT INTO exp_condition (ec_pk, sty_fk, name) values (0,0,'default');
+
+Database fields that need to be added to the "order_info" table are listed
+below along with the sql syntax that should be used to alter your current
+database:
+
+ALTER TABLE order_info ADD column default_smp_name character varying(128);
+ALTER TABLE order_info ADD column default_lab_book character varying(128);
+ALTER TABLE order_info ADD column default_lab_book_owner integer;
+ALTER TABLE order_info ADD column default_ams integer;
+ALTER TABLE order_info ADD column default_smp_origin text;
+ALTER TABLE order_info ADD column default_smp_manipulation text;
+ALTER TABLE order_info ADD column default_al_fk integer;
+ALTER TABLE order_info ADD column default_sty_fk integer; 
+
+
+Version 2.3.0
+--------------
+This version provides bug fixes, implementation of criteria file 
+functionality, and updated documentation.  If you are building from source, 
+you will need to have Docbook installed, or you should remove the webdoc 
+directory entry from the SUBDIRS listing in the site Makefile.  (Note:
+doing this will mean that there is no documentation available with your
+system).  If you install via the rpm, you do not need to have Docbook
+installed.
+
+
+Version 2.2.3
+---------------
+For this upgrade to work, you must make one change to the database 
+stucture.  Additionally, you will need to run several scripts to alter 
+the file repository.  These steps are outlined below the general 
+release description.
+
+This release primarily contains a major revision of the file viewer.
+Additionally, it allows for correct loading of CAB files and better unlocking
+of locked orders (allows group write to be restored).  Some minor bug
+fixes and cosmetic changes have also been included.
+
+
+Database changes:
+
+1) added the old_permissions field to the groupref table:
+
+alter table groupref add column "old_permissions" integer
+
+File system changes:
+
+run geoss_move_trees_to_subdires
+run geoss_order_info
+
+-- 
+Version 2.2.1
+
+Substantially the same as Version 2.2.0.  We fixed a bug that wouldn't allow
+curators to create orders for users that were not part of an organization.
+We also fixed a problem with data extraction that tried to extract data 
+for exp_conds with no loaded hybridizations.  
+
+The only additional feature is an email all users feature in admintools.
+
+
+-- 
+Version 2.2.0
+
+New to this release:
+There have been a great number of changes to this release.  To get a
+comprehensive list of changes, please search Bugzilla for resolved bugs.  
+Briefly, however, additions to this release include:
+  - new and revised analyses
+  - new mechanism for grouping data for analysis
+  - new public user functionality
+  - new organization functionality
+In addition to new functionality, there are also a large number of bug 
+fixes in the release.
+
+Database changes:
+This release includes a number of database changes. You will need to rerun
+the schema script from scratch in order to update your database appropriately. 
+Simply drop your current database and rerun the geoss_schema.sql script. You 
+must also run the geoss_initialize script to populate a few of the type tables. 
+If you have data in your database that you would like to preserve then you
+will need to complete a dump of the data first. After performing the data dump
+run the schema script and restore your data. In this case you do not need to run
+the geoss_initialization script because that data is included in your dump. 
+Detailed instructions on how to accomplish this dump and restore can be found in
+the section below labeled "Installation Instructions." 
+
+To see a listing of the new items in the schema run a "diff" command against
+the old and new geoss_schema.sql files. 
+
+System Changes:
+There are a few new changes in system setup for this release.  The 
+restructuring of some analyses requires additional R code to be loaded and
+changes to some existing database structures.  The following changes
+need to be made:
+
+Load new R code:
+
+[root@biostat root]# R CMD INSTALL annotate_1.4.27.tar.gz
+[root@biostat root]# tar -xvf annotation.tar
+[root@biostat root]# cd annotation
+[root@biostat root]# R CMD INSTALL *
+ 
+Load the new analyses:
+Differential Discovery - Version 2
+Filter - Version 2
+Cluster - Version 1
+
+[root@biostat root]# geoss_add_analysis --configfile
+/var/www/html/geoss/site/webtools/analysis/diffDiscover/diffDiscover_2.cfg
+[root@biostat root]# geoss_add_analysis --configfile
+/var/www/html/geoss/site/webtools/analysis/filter/filter_2.cfg 
+[root@biostat root]# geoss_add_analysis --configfile
+/var/www/html/geoss/site/webtools/analysis/cluster/cluster_1.cfg
+
+Some updates are required to old versions of the analyses:
+psql geoss -d geoss
+update analysis set current = 't' where an_name in
+('addLinks_1','qualityControl_1');
+update analysis set current = 'f' where an_name in
+('filter_1','diffDiscover_1','permCluster_1','treedraw_1','westfallYoung_1');
+update analysis set an_type = 'diffDiscover' where an_name =
+'diffDiscover_1';
+update analysis set an_type = 'addLinks' where an_name ='addLinks_1';
+update analysis set an_type = 'qualityControl' where
+an_name='qualityControl_1';
+update analysis set an_type = 'filter' where an_name ='filter_1';
+update analysis set an_type='permCluster' where
+an_name='permCluster_1';
+update analysis set an_type='treedraw' where an_name='treedraw_1';
+update analysis set an_type='westfallYoung' where an_name =
+'westfallYoung_1';
+update user_parameter_names set up_type='radio *average*complete*single' where
+up_type like '%averager%';
+update analysis set an_name = 'Quality Control' where
+an_name='qualityControl_1';
+update analysis set an_name = 'Add Links' where
+an_name='addLinks_1';
+update user_parameter_names set up_default='txt' where up_default='html';
+
+insert into filetypes (ft_name, arg_name, ft_comments) values
+('diffout_2','--infile','Input file for add links');
+select * from analysis_filetypes_link, filetypes where ft_fk = ft_pk  and
+an_fk in (select an_pk from analysis where an_name = 'Add Links');
+ insert into analysis_filetypes_link (an_fk, ft_fk, input) values
+(<an_pk>,<ft_pk>,'t')
+
+Additionally, there is a new last login field in the usersec table.  It is
+used to remind users to change their passwords.  To avoid everyone being asked
+to change their password after the upgrade, so the following:
+
+update usersec set last_login=now();
+
+-- 
+Version 2.0.0
+
+This version has been renamed GEOSS due to confusion about "GeneX Va"
+and "GeneX 2". GEOSS is a separate and more mature project. See the
+web pages for Introduction and Background under the Design Documents
+section of the site for more historical detail.
+
+GEOSS 2.0.0 has is much easier to install and configure than GeneX Va
+1.6.12. The new install is rpm based. The documentation has been
+updated and streamlined. We now include an installation transcript so
+you can see what an installl looks like. Please see the Installation
+Guide in the Install section of the web site.
+
+There is a new table called "configuration" in the database to support a new administrative
+web tool. 
+Note: If you merely need to update your database and are not running the
+schema script from scratch simply add the new sequence and table. Details can
+be found in the geoss_schema.in file in the /../../geoss/database/ directory.
+
+Then run the insert command to create a record in this new configuration
+table:
+INSERT into configuration (inact_logout_administrator) values (15);
+
+The steps to an upgrade are more complex than that of a fresh install. If you
+have a functioning system and need to keep your data we'd be happy to assist
+you directly. Please contact the UVa database administrator at
+jkanter@virginia.edu.
+
+If you are doing a new install and not an upgrade you will get this
+sequence and table from running the schema script. The insert command is found
+and generated when running the initialize_db.sql file.
+
+There is a special GEOSS user "admin" which you now use to
+set the dozen or so site specific parameters.
+
+The installed files for GEOSS are in new locations in an attempt to
+follow the Linux File System Heirarchy (FHS). GEOSS and other CGI
+applications are not specifically addressed by the FHS, but we've
+followed the general guidelines. You can install GEOSS in alternate
+locations, but you'll have to do a manual build from the .tar.gz
+(which should be simpler than previous versions.)
+
+The file 'INSTALL' has been renamed to 'install.txt' because file
+extensions are good. 
+
+
+--
+Version 1.6.11
+
+
+This version has updated data loading to accomodate Affymetrix GCOS
+software.  GCOS doesn't create an .exp file, so that file is now
+optional. The lot number is in the header of the .txt file. Getting
+the lot number into the header of the .txt file may be an option of
+the GCOS sofware (as opposed to a default setting).
+
+This version also has updated and additional end user documentation.
+There is a new analysis tutorial which explains how to interpret
+results. The Step-by-step guide have been updated with correct 
+screen shots.
+
+To upgrade to this version:
+1) Download and untar/ungzip as usual. 
+
+2) Copy your existing options.reminders file into the new version's
+main directory. Typically, this would be:
+
+cd va-genex_1_6_10
+cp va-genex_1_6_9/options.reminders .
+
+There is no need to run options.update unless your current GeneX VA
+version is older that 1.6.9. If you have an older version, you'll
+need to apply all updates (usually database changes since the 
+source files will update via 'make').
+
+6) Run 'make' as usual.
+
+
+--
+Version 1.6.9
+
+To upgrade to this version:
+1) Download and untar/ungzip as usual. 
+
+2) Copy your existing options.reminders file into the new version's
+   main directory.
+
+3) ./upgrade_options.pl
+
+4) mv options.reminders options.reminders.safe
+
+5) mv options.update options.reminders
+
+6) Change HTMLDIR to be the full path to your production GeneX VA
+directory (usually /var/www/html/genex). Part of this path used to be
+in GENEX_DIR, but option GENEX_DIR has been removed since it was
+superfluous. Refer to options.reminders.safe if necessary.
+
+7) Run 'make' as usual. There should be no errors. A typical error is
+"Could not find ..." The most common reason for this is an incorrect
+directory in options.reminders, or a directory with a terminal /
+character. It is important that directories in options.reminders do
+NOT have a / on the end.
+
+8) Verify that the changes took place. The files
+/var/www/html/genex/options.reminders and
+/var/www/html/genex/webtools/options.reminders should both contain
+"/var/genres/options.reminders" and not actual configuration data. The
+real options.reminders file should now be in /var/genres. File
+locations may vary depending on your local configuration. The point of
+this upgrade is that values in options.reminders are not visible from
+a Web browser accessing your site.
+
+
+Changes in this version:
+
+1) options.reminders was exposed in a web accessible directory. This
+was a problem since it contains the database password. In any case, we
+suggest that you NOT allow database connections from outside your
+server.
+
+2) The speed of makefiles has been improved. There are no longer
+symbolic links to options.reminders. There are comments in each
+makefile warning about options.reminders issues.
+
+3) We modified site/webtools/htaccess file since it is only necessary for closing
+the site.
+
+4) Administrators should remove the .htpasswd file from
+/var/www/html/genex/webtools (or your equivalent production webtools
+directory).
+
+5) The analysis subdirectories all have identical makefiles. There is
+   a readme.txt in site/webtools/analysis explaining this.
+
+
+--
+Version 1.6.8 This version contains a one character change to fix a syntax
+error in the schema file.
+
+
+-- Version 1.6.7
+
+Development for this release focused on the following areas: -
+creation of curator reports - implementation of sessioning - minor bug
+fixes (including clean up of messages written to the apache error log)
+
+There are several tasks needed to fully incorporate new changes.
+Administrators will need to: 1) Change login setup 2) Make database
+modifications Steps are described below.
+
+1) Change login setup Now that sessioning is in place, we no longer
+use Apache authentication. Performing a make in va-genes/site/webtools
+should install the new .htaccess file. Administrators should delete
+the .htpasswd file in the /var/www/html/genex/webtools directory.
+
+Administrators need to defined how many hours a login is good for.
+This can be done by setting the LOGOUT variable in options.reminders.
+
+2) Make database modifications
+
+* Two new tables have been created: session key_value There was a
+	session table previously called "sessions." You can choose to
+	modify table name and necessary fields but it would be easier
+	to simply drop table and add the new one. It was not being
+	used previously so there should be no data issues.  There are
+	also two sequences associated with these two tables:
+	session_session_pk_seq and key_value_kv_pk_seq that need to be
+	created.  See the genex_schema.sql files for the necessary
+	create statements.
+
+* Modifications to the "order_info" table: Remove order_date,
+  date_experiment_completed and date_analysis_completed from
+  order_info with the following commands:
+  
+ALTER TABLE order_info drop column order_date; ALTER TABLE order_info
+drop column date_experiment_completed; ALTER TABLE order_info drop
+column date_analysis_completed;
+  
+  Add the following fields using these statements:
+
+ALTER TABLE order_info add column isolations integer; ALTER TABLE
+order_info add column date_report_completed date; ALTER TABLE
+order_info add column have_chips boolean; ALTER TABLE order_info add
+column date_last_revised timestamp with time zone;
+
+  Modify the character type field on "date_samples_received: using the
+following commands:
+
+ALTER TABLE order_info rename column date_samples_received to dsr_old;
+ALTER TABLE order_info ADD COLUMN date_samples_received date; UPDATE
+order_info SET date_samples_received = CAST(dsr_old AS date); ALTER
+TABLE order_info DROP COLUMN dsr_old;
+
+* Modifications to the "billing" table: Add the following fields using
+   these statements:
+
+ALTER TABLE billing add column isolation_bill_date date; ALTER TABLE
+billing add column preps_bill_date date; ALTER TABLE billing add
+column chips_bill_date date;
+
+* Modifications to the "sample" table: Modify the character type field
+on "smp_origin" to text using the following commands:
+
+ALTER TABLE sample rename column smp_origin to so_old; ALTER TABLE
+sample ADD COLUMN smp_origin text; UPDATE sample SET smp_origin =
+CAST(so_old AS text); ALTER TABLE sample DROP COLUMN so_old;
+
+*  Modifications to the "arraymeasurement" table:
+
+ALTER TABLE arraymeasurement add column date_loaded date;
+
+DATABASE NOTES: - The arraylay out table now has values in the
+chip_cost field. There were added in support of a new report being
+used by our BioMolecular Research facility.  If you plan to use this
+report you may need to update the costs.
+
+- If you need to dump and restore your database you will find detailed
+  instructions below in the INSTALLATION section. By advised that it
+  is best
+to have your columns in order so that you dump will not complain when restored
+to your new schema. The drops and adds above will change your column order
+depending on the order in which they are completed. I find the best way to
+handle this is to have the schema script reflect the field order of the
+database in which you are dumping.
+
+--
+Version 1.6.6
+
+The focus of development for this release was fixing bugs.  For a complete list of fixes, please view bugs fixed since Aug. 28, 2003 in bugzilla.  Fixes included a number of big changes:
+- Second phase of MIAME development - users should now be able to use MIAME functionality
+- Referential integrity incorporated 
+- Header/Footer navigation throughout
+- Reformatted file extract - improved usability
+
+In order to successfully update, you will need to do the following to your system:
+
+1) modify options.reminders
+2) update MIAME publishing
+3) modify your database
+
+1) Modify options.reminders
+- Need to add SITE_LINK1 to options.reminders.  This field should be set to the url of a site you would like to link to in the header.  For the University of Virginia, the value should be www.healthsystem.virginia.edu/internet/biomolec/microarray.cfm.
+- Need to add LINK1_TEXT to options.reminders.  This field should be set to the text value you would like to appear in the header for the link set in SITE_LINK1.
+- Need to add PUBLIC_DATA_ADMIN to options.reminders.  This should be set to the email address of the person in charge of loading data for MIAME data publishing.
+
+2) Update MIAME publishing
+- Currently published data should continue to be available.  
+- You will not have the ability to modify this data using the old mechanism.  If you wish to modify the data, it will need to be published using the new database mechanism.
+- If you require assistance with the MIAME upgrading process, please contact tdj4m@virginia.edu.
+
+3) Modify your database
+- Several items have been added to the schema. There are now primary key and
+  foreign key constraints on each table. These constratins will ensure the
+integrity of your data. It is recommended that you rerun your schema so that
+these constraints will be in effect. However, this step is not necessary and
+the code should function properly without these constraints in place. If
+you should decide to rerun your schema it will be necessary to complete a dump
+of your data. Instructions to do so can be found below in the section marked
+"Installation Instructions." If you have further questions please contact me
+at jlk3x@virginia.edu.
+
+*Note: when doing a dump of your data with plans to restore to a database with
+additional fields it is wise to create those fields before the dump is
+created. This should minimize the amount of errors received when restoring.
+
+The additional fields are:
+sample.smp_origin character varying(128)
+sample.smp_manipulation text
+arraylayout.chip_cost character varying(128)
+
+There are also three additional tables (miame, miame_type, display_type) but these do not need to be added
+prior to the dump.
+
+To alter your database complete the following:
+
+ALTER TABLE sample ADD COLUMN smp_origin character varying(128);
+
+ALTER TABLE sample ADD COLUMN smp_manipulation text;
+
+ALTER TABLE arraylayout ADD COLUMN chip_cost character varying(128);
+
+Go to the genex_schema.sql file and run the create table statement for the
+three new tables: miame, miame_type, and display_type. You can choose to
+eliminate the constraints in these table create statements if you have opted
+not to include the rest.
+
+-We have removed the readonly account from our postgresql database since we
+are not using this account for any reason. The GRANTS for this account are no
+longer in the genex_schema.sql script.
+
+
+--
+Version 1.6.5
+This is yet another bug fix version. Some assumptions were made about
+SQL insert and update statements. These assumptions were true in
+PostgreSQL 7.2.x and not true in 7.3.x. 
+
+
+--
+Version 1.6.4
+ (* Note: after release this version was found to be very buggy. Use
+ 1.6.5 instead.)
+This is basically a bug fix version. 
+
+- A change in handling of the SQL trim() function from between
+  PostgreSQL 7.2 and 7.3 caused order creation to fail due to the
+  wrong data type on a date field.
+
+- We added a feature (in version 1.6.2) where new accounts get added
+  to their PI's main group. We just noticed that this caused PI's to
+  be inserted into the grouplink table twice, and this lead to fatal
+  warnings from the row level permissions system. A sanity check
+  caught the problem, however the sanity check intentionally causes a
+  fatal error.
+
+- Very long study names were creating problems in the web user
+  interface, and were being truncated when inserted into the database.
+
+All of the bugs listed above have been fixed.
+
+
+
+--
+Version 1.6.3
+ (* Note: after release this version was found to be very buggy. Use
+ 1.6.5 instead.)
+In this version: Schema changes, New features.
+
+Schema changes
+
+There have been some additions to the version 1.17 schema file sent out with
+the last release.
+If you plan to rerun your schema please see detailed instructions listed below
+in the INSTALLATION section.
+If you are comfortable with the state of your schema and feel that it is
+complete as of the last release then all you have to do is the following:
+
+1)   ALTER TABLE sample ADD COLUMN smp_name character varying(128); 
+
+2)   CREATE INDEX "sample_smp_name_ind" on "sample" using btree ( "smp_name" );
+
+*This field was added to the sample table to assist the investigators in
+easily identifying their samples. 
+
+3)   ALTER TABLE contact ADD COLUMN credentials text; 
+
+*This field was added to track the credentials of each individual with an
+account on the system. We are currently pulling this information to present on
+the public data page along with the name and email of the investigator.
+
+There have also been some table modifications and table additions in
+preparation of GeneX Va's support of spotted array experiments. None of these
+schema additions are currently being used by the interface and are not yet
+necessary to add. However, they are listed below for your edification. Please
+see the genex_schema.sql file for details pertaining to each item listed.
+
+created the following sequences:
+	al_spots_sa_als_sa_pk_seq
+	am_spots_sa_ams_sa_pk_seq 
+
+created the following tables:
+	arraylayout_sa --this table will hold data pertaining to the spotted
+			array layouts
+	al_spots_sa    --this table will hold data pertaining to the spots on
+			the spottd array chip
+	am_spots_sa    --this table will hold the actual spot data
+	smp_am_link    --this table serves as a link between the sample and
+			the arraymeasurement table. It was created because a many to many
+			relationship exists between sample and hybridization when working with spotted array data.
+
+created al_sa_fk and added to arraymeasurement for link to spotted array layout table
+
+created the following INDEXES for the priary key values in the newly created
+tables:
+	am_spots_sa_ams_sa_pkey
+	arraylayout_sa_al_sa_pkey
+	al_spots_sa_als_sa_pkey 
+
+New features
+
+- smp_name sample name added to the sample table, and displayed in
+  most places where users need to identify samples. Sample name is not
+  required and it is not checked for uniqueness. This fix address Bug #209.
+
+- SQL Queries that used last_value() have been changed to use
+  currval(). currval() is atomic to the current transaction. In fact,
+  currval() doesn't even exist until the sequence in question has been
+  changed. This effects most inserts since we use currval() to find
+  out the primary key of the record that was just inserted.
+
+- A new user is automatically added to their PI's main group when the
+  new user's account is created. An email goes to the PI informing
+  them that there is a new person in their main group.
+
+- The list of user in the group management is alphabetized by last
+  name and first name.
+
+- We added a feature to assign the same chip layout to all
+  hybridizations in an order. There is a button next to each chip
+  select. Clicking that button assigns that chip to all samples, and
+  it does NOT ask for confirmation.
+
+- Addition of the "addLinks" analysis.  See bug #216.  The addLinks module is
+only a partial solution to this bug.
+
+- Addition of "Publish Data" Functionality
+A new component has been added to the system: the ability for a researcher to
+publish their results.  Researchers can publish their results from the Genex
+Members Home, and they will become available to the publich in the Genex Home
+page.  This functionality requires the adminstrator to zip data files
+manually and put the information in a specific file.  The current version is
+not fully functional, and should only be used for experimentation purposes.
+Please wait until the next release to try and use this feature.
+
+Minor Bug Fixes Include:
+(I'm not sure whether this list is complete or not.  View bugzilla for
+complete details).
+- Bug #19 - email address are checked for valid format
+- Bug #72 - navigation of cancel buttons
+- Bug #159 #210 - CEL, DAT files not displayed in analysis input select
+- Bug #181 - formatting of W&Y output
+- Bug #201 - addNode with no parent
+- Bug #200 - ATree file browser has no directory info
+- Bug #219 - headers in Fout
+- Bug #202 - qc headers when lowess on
+
+
+--
+Version 1.6.2
+
+We added a section below about clearing out Analysis
+Tree tables when regenerating the database.
+
+This is only difference between 1.6.1 and 1.6.2.
+
+
+--
+Version 1.6.1
+
+This file includes changes and installation instructions that are
+particular to this version (see below).
+
+For specific installation instructions or for information on how to upgrade
+your current installation see the "INSTALL" file in the main va-genex
+directory. 
+
+Data Export
+-----------
+
+The user interface has been improved. The List of available
+Studies/Experimental Conditions is correctly sorted. The name of the
+chip and the hybridization name are displayed for each data
+set. (Hybridization name is the unique internal GeneX name assigned to
+each sample/chip run by the microarray center.) Export file formats
+have changed slightly in that there is always at least one header line
+with the column labels.
+
+The first column now consists of two accession numbers. The two accession ids
+are separated by the | (pipe) character. The format is probe set id | Genbank
+accession number. i.e. 32447_at | U76388
+
+In order to capture the Genbank accession numbers, we had to bring
+another table into the data extraction query
+(usersequencefeature). This added another 15 seconds or so to the time
+it takes to export a data set.
+
+Exporting data from two different chips (layouts) should fail, but
+will probably not fail gracefully. 
+
+Loading Data
+------------
+
+loadam_spots.cgi has fixes to deal with the new is_loaded field (in the
+arraymeasurement table), and we have removed support for Excel files. Common 
+errors are trapped by the user interface. Uncommon errors may be logged in 
+any of 3 locations:
+
+/var/genres/<curator id>/error.txt
+/var/genres/<pi id>/<hybridization name>/loadam_spots.log
+/var/log/httpd/error_log
+
+
+
+Analysis Trees
+--------------
+
+There have been sweeping changes to the analysis tree component. As
+such, special steps need to be taken in the installation of the
+analysis tree components. They are described below under
+Installation Instructions. These are a one time set of changes
+required for existing installations only. New installations won't
+need to do anything to get analysis trees running (theoretically).
+
+Analysis Trees have a few remaining bugs. Please report any new bugs
+you discover. 
+
+There is no enforcement of appropriate input file
+types. If you connect two nodes that don't share output/input, the run
+will probably silently fail when the second node runs. 
+
+You can create a tree that doesn't have Quality Control as the first
+node. However, running this type of tree seems to create an infinite
+loop, and consumes vast amount of system resources.
+
+Choosing files for input can be weird since all available files are in
+the list, but the files are missing directory information.
+
+
+Changes to trees include:
+
+- versioning
+- addition of nodes: permCluster, filter, treedraw
+- revisions of qualityControl and statAnalysis
+- analyses become "nice"
+- generic "Rwrapper"
+- creation of analyses developer docs
+
+1. Versioning
+We needed a mechanism to add new versions of analyses. In theory, no
+analysis should ever be deleted. We should merely add another version
+of it.  Each analysis is now located in it's own subdirectory from the
+analysis directory. All files associated with an analysis are suffixed
+with an underscore, followed by the version number
+(i.e. qualityControl_1.cfg qualityControl_2.cfg).
+
+To facilitate versioning, we will need to delete existing (un-versioned)
+analyses. That is why special setup is required for this installation.
+
+2. Addition of nodes: permCluster, filter, treedraw
+Three new nodes have been added. Filter takes input from diffDiscover, and
+passes output to permCluster. Filter allows researchers to select important
+rows (based on p-value, LPE, t-test values) from a result file. permCluster
+more statistically rigourous (changes made by Mir and Jae).
+
+4. analyses become "nice"
+runtree.cgi was modified so that analyses have a high nice value so
+that they don't suck up system resources.
+
+5. generic "Rwrapper"
+Significant effort has been put in to making it easier to add analyses to the
+system. Formerly, developers need to modify the Rwrapper script if they
+wanted to call their R analysis through it. I've modified Rwrapper to get
+the necessary information from the config file.
+
+6. creation of analyses developer docs
+Check out the doc directory off the va-genex directory. I have high hopes
+for it. I've added instructions for developers writing their own analyses. 
+
+
+Installation Instructions
+-------------------------
+If you have an existing system, you need to clean out all existing analyses,
+before loading the versioned ones.
+
+Database Changes:
+There are two options:
+
+- Preserve your existing data and update your schema. This is necessary
+if you have real data and DO NOT need to regenerate your schema from scratch
+(see the "Update while preserving all data" section below). 
+
+
+- Regenerate your database from scratch. In this scenario, you can choose to throw
+away all data or do a dump of the data and then restore it once the schema has
+been regenerated. Choosing to throw away all your data would be appropriate if you have a test
+installation and do not have real data. If you are not convinced that your
+schema includes all the most recent table changes and additions of indexes then
+you should consider doing a dump of your data and a regeneration of the
+schema. In the past few months we have made several index additions and it is important to the
+performance of the database that these indexes be in place. (see the "Complete
+database regeneration" section below).
+
+
+
+Update while preserving all data
+--------------------------------
+
+1) Clean out all Analysis Trees tables: 
+
+At the Linux command line:
+
+psql genex -U genex
+
+At the psql command line:
+
+delete from extension;
+delete from filetypes;
+delete from analysis_filetypes_link;
+delete from analysis;
+delete from user_parameter_names;
+delete from sys_parameter_names;
+delete from tree;
+delete from node;
+delete from user_parameter_values;
+delete from sys_parameter_values;
+delete from file_info where node_fk is not null and node_fk<>0;
+
+2) The following commands should be run to update your GeneX Va
+schema. These changes encompass all new items since the last 1.6.0 
+release which contained revision 1.13 of the genex_schema.sql file. 
+
+Run these SQL commands at the psql command line.
+
+ALTER TABLE sys_parameter_names ADD COLUMN sp_optional integer; 
+ALTER TABLE arraymeasurement ADD COLUMN is_loaded boolean;
+
+If you have data in your spots table you will need to populate this
+new "is_loaded" field. The old code was checking the am_spots_mas5 table when it
+needed to know if hybridization data had been loaded. This was a huge
+performance problem. In order to properly solve this, we added a field
+(is_loaded) to arraymeasurement, and fixed all relevant code. If you have data
+loaded, you'll need to run a few SQL queries in the following order:
+
+UPDATE arraymeasurement set is_loaded = 't' where am_pk in (select distinct am_fk from am_spots_mas5);
+UPDATE arraymeasurement set is_loaded = 'f' where is_loaded is null; 
+
+Run these commands to create new indexes:
+
+CREATE INDEX "user_parameter_names_an_fk_ind" on "user_parameter_names" using btree ("an_fk");
+CREATE INDEX "sys_parameter_names_an_fk_ind" on "sys_parameter_names" using btree ("an_fk");
+CREATE INDEX "node_parent_key_ind" on "node" using btree ("parent_key");
+CREATE INDEX "node_an_fk_ind" on "node" using btree ("an_fk");
+CREATE INDEX "spv_node_fk_ind" on "sys_parameter_values" using btree ("node_fk");
+CREATE INDEX "upv_node_fk_ind" on "user_parameter_values" using btree ("node_fk");
+CREATE INDEX "tree_fi_input_fk_ind" on "tree" using btree ("fi_input_fk");
+
+Quit from psql:
+
+\q
+
+3) Add new analyses (at the Linux command line):
+
+cd /PATH/../webtools
+make load_analysis
+
+NOTE: you still need to do a make in the main va-genex directory (see the
+"INSTALL" file in the main va-genex directory).
+
+Complete database regeneration
+------------------------------
+
+If you do not need to save the data currently in your database
+then you only have to rerun the genex_schema.sql file and the
+initialize_db.sql file (see section #4 in the "PosgreSQL installation"
+section of the INSTALL file in the main va-genex directory). In this
+case there would be no need for a pg_dump of your data.
+
+If you would like to maintain your data and regenerate the schema then you
+will need to complete the following:
+
+1) Login as postgres. Run some SQL commands to
+clean out the Analysis Trees tables.
+
+At the Linux command line:
+
+psql genex -U genex
+
+At the psql command line (you can simply paste the following commands
+into psql):
+
+delete from extension;
+delete from filetypes;
+delete from analysis_filetypes_link;
+delete from analysis;
+delete from user_parameter_names;
+delete from sys_parameter_names;
+delete from tree;
+delete from node;
+delete from user_parameter_values;
+delete from sys_parameter_values;
+delete from file_info where node_fk is not null and node_fk<>0;
+
+\q
+
+(The \q quits from psql.)
+
+2) create a pg_dump command at the Linux command line:
+
+pg_dump genex -Rau > /PATH/file_name.sql 
+
+The uppercase R will remove any database connection syntax that might
+otherwise be generated within the final pg_dump file. The "a" will dump data 
+only and the "u" forces a login. Keep in mind this is the way that we have 
+chosen to run the pg_dump here at UVa. There are a number of ways to do this 
+and you may find another that works better for you. Refer to the documentation
+available at www.postgresql.org for more information.
+
+We have chosen to dump the data only since we prefer to generate the
+schema first by using the genex_schema.sql file. This form of a
+pg_dump will use copy commands to restore the data and should be done
+using the \i switch from within PSQL. 
+
+It would be wise to run the two following ALTER TABLE commands to create the two
+fields that have been added to the schema (arraymeasurement.is_loaded and 
+sys_parameter_names.sp_optional).
+
+ALTER TABLE sys_parameter_names ADD COLUMN sp_optional integer;
+ALTER TABLE arraymeasurement ADD COLUMN is_loaded boolean;
+
+Do this BEFORE doing the pg_dump. This way the two fields will exist when the
+pg_dump is created. If you do not add these fields before the dump is done
+then the pg_dump file will have to be modified since you would then be attempting to
+restore data to two tables that now have more fields than they did
+when the pg_dump was completed. This can be done, but it is much
+easier to just create the fields before the dump is run.
+
+BEFORE dropping the genex database I always like to test my pg_dump
+file by creating another database (called anything you like) and
+trying to restore the data. This way you can work out any errors that
+may occur before removing your production database. Hopefully there 
+won't be any!
+
+3) Drop the database (at the Linux command line):
+
+dropdb genex -U postgres
+
+4) Recreate database (at the Linux command line):
+
+createdb genex -U postgres
+
+5) Run psql as genex so the schema tables are owned by genex and not
+   by postgres. (at the Linux command line):
+ 
+psql genex -U genex
+
+6) Run the schema file from within PSQL:
+
+\i /home/install/genex/va-genex-1_6_1/genex_schema.sql 
+
+7) Restore data using the pg_dump file:
+
+\i /PATH/pg_dump_file_name.sql
+
+Once your data is reloaded you will need to populate the new "is_loaded" 
+field in arraymeasurement. The old code was checking the am_spots_mas5 table when it
+needed to know if hybridization data had been loaded. This was a huge
+performance problem. In order to properly solve this, we added a field
+(is_loaded) to arraymeasurement, and fixed all relevant code. If you have data
+loaded, you'll need to run a few SQL queries in the following order:
+
+UPDATE arraymeasurement set is_loaded = 't' where am_pk in (select distinct am_fk from am_spots_mas5);
+UPDATE arraymeasurement set is_loaded = 'f' where is_loaded is null;
+
+8) Quit from psql:
+
+\q
+
+9) Add new analyses (at the Linux command line). The make load_anysis
+command populates all the Analysis Tree tables that you cleared out
+above in step 1. This clearing will not happen in future releases.
+
+cd /PATH/../webtools
+make load_analysis
+
+NOTE: you still need to do a make in the main va-genex directory (see the
+"INSTALL" file in the main va-genex directory).

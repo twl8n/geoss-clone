@@ -1,0 +1,79 @@
+Implementation Document - Public User Functionality
+
+This document is intended to describe an implementation plan for building
+public user functionality.  The implementation meets the requirements
+outlined in the public user design document.
+
+Public User Creation
+--------------------
+
+- add "public" as a user type
+- modify geoss_adduser.pl so that users of type public can be created
+- modify site/index.html to include links to request an account
+- modify configuration table and admintool config editor to include
+ an "allow public users" field.  If this option is checked, public
+ users can be created.
+- modify configuration table and admintool config editor to include
+ an "allow member users" field.  If this option is checked, 
+  member users can be created.
+- modify configuration table and admintool config editor to include a
+ "companion installation" field.  This field specifies the url of 
+ another GEOSS install.  In the event that this is defined, the following
+ logic is applied when accounts are requested:
+   - if a public user account is requested, and allow public users is not
+     set, send the request to the companion GEOSS
+   - if a public user account is requested, and allow public users is 
+     set, create the account on the current install
+   - if a member account is requested and allow member users is set
+     create the account on the current install
+   - if a member account is requested and allow public users is set, 
+     send the request to the companion GEOSS
+- account requests for a member account generate an email to the administrator
+- account requests for a public account will create an error if public
+   users are not allowed and there is no companion defined.  Otherwise,
+   the user will be prompted for a username and an email address.  They 
+   will then be emailed a valid password for their account.
+- modify the configuration table and admintool config editor to include an 
+  "days to confirm activation field" 
+- a public user must logon with the amount of time specified in the "days to 
+  confirm activation field".  Otherwise their account will be deleted.
+- Upon initial login, public users will be required to change their password 
+  immediately.
+- add last_login field to usersec.  Modify login code to update that field.
+- ?? add a cron entry that checks daily for public users to be deleted ??
+- public users will be their own PI
+
+Public User Interface
+---------------------
+- public users see "Member Home"
+- links in Member Home are displayed based on user type.  The following 
+links will not be available to public users:
+     - study and publishing links
+     - order links
+     - view quality control records
+     - curator links
+
+Public Data Sets
+----------------
+- if a user wants to analyze public data, they need to group data into
+  conditions
+- a new link (Prepare public data for analysis) will allow the user 
+  to select a public data file and group conditions (as if they had 
+  downloaded and uploaded the file)
+- the public data administrator will need to publish data files to
+  companion GEOSS systems
+
+This implementation is the first phase of providing public data for analysis.
+Several steps can be automated or made more user friendly.  This will be 
+revisited later.  Potentially, we can develop a protocol for GEOSS 
+implementations to talk to each other and swap data sets.  However, this 
+a large task and beyond the scope of our current work.
+
+
+User Administration
+--------------
+- a new link will be added to admintools to allow administrators to view
+all users.  The link will contain the user's full name, login, type,
+and last login time.
+- the header file will be modified to include information on who you are 
+logged in as and your user type

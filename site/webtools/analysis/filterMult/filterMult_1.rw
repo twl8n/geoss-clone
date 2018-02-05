@@ -1,0 +1,575 @@
+
+########################################################################
+#
+#  Gene filtering for ANOVA and HEM results
+#  Last updated on 2005-06-16, H. Cho (hcho@virginia.edu)
+#  Modified for R 2.1.0
+#
+########################################################################
+#
+########################################################################
+#
+#  infile: input file from stat analysis
+#  conditions: vector of numbers of replicates on all conditions
+#  comp.labels: vector of lables on two conditions for comparison
+#  intfile: intermediate file to clustering
+#  outfile: outfile
+#
+########################################################################
+
+filterMult <- function(infile, conditions, labels, column.order, 
+          genefile, list.type, include.list, include.sig,
+          filter1, filtervalue1, filter2, filtervalue2, filterfunc, maxrows, 
+          chip.type, genesymbol, genename, unigene, locusid, chrloc, go,
+          intfile, outfile) {
+
+
+     #Reading data  
+     diffout <- read.csv(infile, sep="\t", row.names=1)     
+
+     
+     #assign probe ID to data
+     probe.id <- row.names(diffout)
+     p.id <- unlist(strsplit(probe.id, split=" | "))
+     p.id <- p.id[3*(1:nrow(diffout))-2]
+     row.names(diffout) <- p.id          
+     diffout <- diffout[,-c(1:sum(conditions))]
+     
+     # replace characters that R doesn't like in identifier
+     # names with '.'
+     labels <- gsub("[^A-Za-z0-9.]", ".", labels)
+
+     ############################################
+     #Statistical filtering
+     filter.default <- "HEM FDR"
+    
+    
+     #First statistical filtering
+     if(filter1 !="None") {
+        ipoint1 <- find.col.Mult(diffout, method=filter1) 
+    	diffout <- diffout[(diffout[,ipoint1] <= filtervalue1),] 
+     }
+
+     if(nrow(diffout) <=0) {
+        whyerr <- "No genes are not kept after the first statistical filtering"         
+        write(whyerr, file=2) #ERROR MESSAGE
+        quit(status = 1)
+     }
+
+     #Second statistical filtering
+     if(filter2 !="None") {
+        ipoint2 <- find.col.Mult(diffout, method=filter2) 
+	    diffout <- diffout[(diffout[,ipoint2] <= filtervalue2),] 
+     }
+ 
+     if(nrow(diffout) <=0) {
+        whyerr <- "No genes are not kept after the second statistical filtering"         
+        write(whyerr, file=2) #ERROR MESSAGE
+        quit(status = 1)
+     }
+	 
+
+     ############################################     	 
+     #Functional filtering
+
+
+     #Obtain env.vec for annotating or func filtering
+     env.vec <- NA
+     env.tmp <- FALSE
+     if(sum(genesymbol, genename, unigene, locusid, chrloc, go) >0 ) env.tmp <- TRUE 
+     if(nchar(filter.func) >1) env.tmp <- TRUE 
+     if(list.type=="Gene symbol") env.tmp <- TRUE  
+     if(env.tmp) { 
+         
+         library(annotate)   
+         if(go==1) library(GO)
+    	 env.vec <- get.chip.env(chip.type)
+     }
+	 
+     #Functional filtering
+     if(nchar(filter.func) >1 & !is.na(env.vec[1])) {
+	  keep.genes <- find.genes(row.names(diffout), filter.func, env.vec)
+	  diffout <- diffout[(keep.genes==1),]
+     }
+
+     if(nrow(diffout) <=0) {
+        whyerr <- "No genes are not kept after the functional filtering"         
+        write(whyerr, file=2) #ERROR MESSAGE
+        quit(status = 1)
+     }
+	 
+	 
+     ############################################
+     #Maximum number of genes
+
+     #When still number of genes >max rows
+     if(nrow(diffout) > maxrows) {
+	    ipoint <- find.col.Mult(diffout, method=filter.default) 
+	    irank <- nrow(diffout)+1-rank(abs(diffout[,ipoint]))
+        diffout <- diffout[irank <=maxrows,]    	
+     }
+
+     
+     
+     ############################################
+     #Pre-selected gene filtering
+     if(nchar(genefile) > 1) { 
+        gene.list <- read.table(genefile)     
+        tmp <- find.preselected.genes(p.id, row.names(diffout), gene.list, 
+                      list.type, include.list, include.sig, env.vec)   
+                      
+        diffout <- read.csv(infile, sep="\t", row.names=1)                   
+        row.names(diffout) <- p.id          
+        diffout <- diffout[tmp$keep.pid,-c(1:sum(conditions))]
+     }  
+     
+     if(nrow(diffout) <=0) {
+        whyerr <- "No genes are not kept after the pre-selected gene filtering"         
+        write(whyerr, file=2) #ERROR MESSAGE
+        quit(status = 1)
+     }
+
+     ############################################
+     #Add annotations to filtered genes 
+     if(sum(genesymbol, genename, unigene, locusid, chrloc, go) >0 & !is.na(env.vec[1])) {
+	    diffout <- add.annotate(diffout, env.vec, genesymbol, genename, unigene, locusid, chrloc, go)
+     }
+
+     #Add probe ID and data
+     i <- match(rownames(diffout), p.id)
+     diffout <- cbind(read.csv(infile, sep="\t", row.names=1)[i,], diffout)                   
+ 
+          
+     Probe.Set <- probe.id[i]
+     diffout <- cbind(Probe.Set, diffout)
+
+     #Add indicators (+) for preselected genes 
+     if(nchar(genefile) > 1) {
+        Preselected.gene <- tmp$keep.ind
+        diffout <- cbind(diffout, Preselected.gene)
+     }
+        
+        
+     ###########################################    
+     #Reorder conditions 
+     i <- reorder.column(column.order, conditions, labels)
+     diffout[,2:(sum(conditions)+1)] <- diffout[,(i+1)]
+
+  
+        
+     ###########################################    
+     #Export data
+     
+     # data to pass to cluster
+     write.table(diffout[,1:(sum(conditions)+1)], intfile, sep="\t", row.names=F)
+      
+     # all data and outputs 
+     write.table(diffout, outfile, sep="\t", row.names=F)
+
+     return(diffout)
+
+}
+
+
+
+########################################################################
+#
+#   Pre-selected gene filtering
+#
+########################################################################
+find.preselected.genes <- function(pid.all, pid.mid, genelist, list.type, include.list, include.sig, env.vec) {
+
+
+     if(list.type=="Gene symbol") {
+     
+        if(is.na(env.vec)==TRUE) {
+           whyerr <- "No information for gene symbols is available."         
+           write(whyerr, file=2) #ERROR MESSAGE
+           quit(status = 1)
+        }
+
+        a <- mget(pid.all, env=env.vec[[1]])
+        d <- c()
+        for(i in 1:length(a)){
+            b <- unlist(a[i])
+            d <- c(d, paste(b, collapse="/ "))
+        }
+   
+        k <-c()
+        for(i in 1:nrow(genelist)){
+            k <- c(k, grep(as.character(genelist[i,1]), d, ignore.case=TRUE))
+        }
+        list.genes <- pid.all[k]
+        sig.genes  <- pid.mid
+        
+        list.sig.pid <- intersect(sig.genes, list.genes) #sig and list (+)
+        sig.pid <- setdiff(sig.genes, list.genes)        #sig - list
+        list.pid <- setdiff(list.genes, sig.genes)       #list - sig (+)
+             
+     }     
+    
+
+     if(list.type=="Probe set ID") {
+        list.sig.pid <- intersect(pid.mid, genelist[,1]) #sig and list (+)
+        sig.pid <- setdiff(pid.mid, genelist[,1])        #sig - list
+        list.pid <- setdiff(genelist[,1], pid.mid)       #list - sig (+)
+     }
+
+     list.sig.pid <- match(list.sig.pid, pid.all)
+     sig.pid <- match(sig.pid, pid.all)
+     list.pid <- match(list.pid, pid.all)
+     
+     
+     if(include.sig==0 & include.list==0) {
+        keep.pid <- list.sig.pid
+        keep.ind <- rep("+", length(list.sig.pid))
+     }
+     
+     if(include.sig==1 & include.list==1) {
+        keep.pid <- c(list.sig.pid, sig.pid, list.pid)
+        keep.ind <- c(rep("+", length(list.sig.pid)), rep(".", length(sig.pid)), rep("+", length(list.pid)))
+     }
+
+     if(include.sig==1 & include.list==0) {
+        keep.pid <- c(list.sig.pid, sig.pid)
+        keep.ind <- c(rep("+", length(list.sig.pid)),  rep(".", length(sig.pid)))
+     }
+          
+     if(include.sig==0 & include.list==1) {
+        keep.pid <- c(list.sig.pid, list.pid)
+        keep.ind <- c(rep("+", length(list.sig.pid)), rep("+", length(list.pid)))
+     }
+     
+     #Sort in the orginal order
+     i <- sort.list(keep.pid)
+     keep.pid <- keep.pid[i]
+     keep.ind <- keep.ind[i]
+
+
+     tmp <- data.frame(keep.pid, keep.ind)
+     tmp <- na.exclude(tmp)
+
+     return(list(keep.pid=tmp$keep.pid, keep.ind=tmp$keep.ind))
+}     
+
+
+
+########################################################################
+#
+#   Functions for filtering
+#
+########################################################################
+
+
+###Find the column
+find.col.Mult <- function(input, method) {
+
+    i.point <- NA
+
+    if(method=="ANOVA F-statistic") i.point <- grep("ANOVA.F.statistic", attributes(input)$names)
+    if(method=="ANOVA p-value") i.point <- grep("ANOVA.p.value", attributes(input)$names)
+    if(method=="BH p-value") i.point <- grep("BH.p.value", attributes(input)$names)
+    if(method=="WY p-value") i.point <- grep("WY.p.value", attributes(input)$names)
+
+    if(method=="HEM H-statistic") i.point <- grep("HEM.H.statistic", attributes(input)$names)
+    if(method=="HEM FDR") i.point <- grep("HEM.FDR", attributes(input)$names)
+
+    if(length(i.point) <=0) i.point <- NA 
+
+    return(i.point)
+
+}
+
+
+#Get chip env
+get.chip.env <- function(chip.type){
+
+env.vec <- NA
+
+if(chip.type=="HG-U133A") 
+{library(hgu133a); env.vec <- c(hgu133aSYMBOL, hgu133aGENENAME, hgu133aUNIGENE, hgu133aLOCUSID, hgu133aCHRLOC, hgu133aGO)}
+if(chip.type=="HG-U133B") 
+{library(hgu133b); env.vec <- c(hgu133bSYMBOL, hgu133bGENENAME, hgu133bUNIGENE, hgu133bLOCUSID, hgu133bCHRLOC, hgu133bGO)}
+if(chip.type=="HG-U133_Plus_2") 
+{library(hgu133plus2); env.vec <- c(hgu133plus2SYMBOL, hgu133plus2GENENAME, hgu133plus2UNIGENE, hgu133plus2LOCUSID, hgu133plus2CHRLOC, hgu133plus2GO)}
+if(chip.type=="HG_U95Av2") 
+{library(hgu95av2); env.vec <- c(hgu95av2SYMBOL, hgu95av2GENENAME, hgu95av2UNIGENE, hgu95av2LOCUSID, hgu95av2CHRLOC, hgu95av2GO)}
+if(chip.type=="HG-U133B") 
+{library(hgu95b); env.vec <- c(hgu95bSYMBOL, hgu95bGENENAME, hgu95bUNIGENE, hgu95bLOCUSID, hgu95bCHRLOC, hgu95bGO)}
+if(chip.type=="HG-U133C") 
+{library(hgu95c); env.vec <- c(hgu95cSYMBOL, hgu95cGENENAME, hgu95cUNIGENE, hgu95cLOCUSID, hgu95cCHRLOC, hgu95cGO)}
+if(chip.type=="HG-U133S") 
+{library(hgu95d); env.vec <- c(hgu95dSYMBOL, hgu95dGENENAME, hgu95dUNIGENE, hgu95dLOCUSID, hgu95dCHRLOC, hgu95dGO)}
+if(chip.type=="HG-U133E") 
+{library(hgu95e); env.vec <- c(hgu95eSYMBOL, hgu95eGENENAME, hgu95eUNIGENE, hgu95eLOCUSID, hgu95eCHRLOC, hgu95eGO)}
+if(chip.type=="Hu6800") 
+{library(hu6800); env.vec <- c(hu6800SYMBOL, hu6800GENENAME, hu6800UNIGENE, hu6800LOCUSID, hu6800CHRLOC, hu6800GO)}
+
+
+if(chip.type=="MG_U74A") 
+{library(mgu74a); env.vec <- c(mgu74aSYMBOL, mgu74aGENENAME, mgu74aUNIGENE, mgu74aLOCUSID, mgu74aCHRLOC, mgu74aGO)}
+if(chip.type=="MG_U74Av2") 
+ {library(mgu74av2); env.vec <- c(mgu74av2SYMBOL, mgu74av2GENENAME, mgu74av2UNIGENE, mgu74av2LOCUSID, mgu74av2CHRLOC, mgu74av2GO)}
+if(chip.type=="MG_U74B") 
+{library(mgu74b); env.vec <- c(mgu74bSYMBOL, mgu74bGENENAME, mgu74bUNIGENE, mgu74bLOCUSID, mgu74bCHRLOC, mgu74bGO)}
+if(chip.type=="MG_U74Bv2") 
+{library(mgu74bv2); env.vec <- c(mgu74bv2SYMBOL, mgu74bv2GENENAME, mgu74bv2UNIGENE, mgu74bv2LOCUSID, mgu74bv2CHRLOC, mgu74bv2GO)}
+if(chip.type=="MG_U74C") 
+{library(mgu74c); env.vec <- c(mgu74cSYMBOL, mgu74cGENENAME, mgu74cUNIGENE, mgu74cLOCUSID, mgu74cCHRLOC, mgu74cGO)}
+if(chip.type=="MG_U74Cv2") 
+{library(mgu74cv2); env.vec <- c(mgu74cv2SYMBOL, mgu74cv2GENENAME, mgu74cv2UNIGENE, mgu74cv2LOCUSID, mgu74cv2CHRLOC, mgu74cv2GO)}
+
+if(chip.type=="MOE430A")  
+{library(moe430a); env.vec <- c(moe430aSYMBOL, moe430aGENENAME, moe430aUNIGENE, moe430aLOCUSID, moe430aCHRLOC, moe430aGO)}
+if(chip.type=="MOE430B")  
+{library(moe430b); env.vec <- c(moe430bSYMBOL, moe430bGENENAME, moe430bUNIGENE, moe430bLOCUSID, moe430bCHRLOC, moe430bGO)}
+if(chip.type=="Mouse430_2")
+{library(mouse4302); env.vec <- c(mouse4302SYMBOL, mouse4302GENENAME,
+mouse4302UNIGENE, mouse4302LOCUSID, mouse4302CHRLOC, mouse4302GO)}
+
+
+if(chip.type=="RAE230A")  
+{library(rae230a); env.vec <- c(rae230aSYMBOL, rae230aGENENAME, rae230aUNIGENE, rae230aLOCUSID, rae230aCHRLOC, rae230aGO)}
+if(chip.type=="RAE230B")  
+{library(rae230b); env.vec <- c(rae230bSYMBOL, rae230bGENENAME, rae230bUNIGENE, rae230bLOCUSID, rae230bCHRLOC, rae230bGO)}
+
+if(chip.type=="RG_U34A")  
+{library(rgu34a); env.vec <- c(rgu34aSYMBOL, rgu34aGENENAME, rgu34aUNIGENE, rgu34aLOCUSID, rgu34aCHRLOC, rgu34aGO)}
+if(chip.type=="RG_U34B")  
+{library(rgu34b); env.vec <- c(rgu34bSYMBOL, rgu34bGENENAME, rgu34bUNIGENE, rgu34bLOCUSID, rgu34bCHRLOC, rgu34bGO)}
+if(chip.type=="RG_U34C")  
+{library(rgu34c); env.vec <- c(rgu34cSYMBOL, rgu34cGENENAME, rgu34cUNIGENE, rgu34cLOCUSID, rgu34cCHRLOC, rgu34cGO)}
+
+if(chip.type=="YG_S98")  
+{library(ygs98); env.vec <- c(ygs98SYMBOL, ygs98GENENAME, ygs98UNIGENE, ygs98LOCUSID, ygs98CHRLOC, ygs98GO)}
+            
+return(env.vec)
+
+}
+
+###Add annotations
+add.annotate <- function(dat, env.vec,  genesymbol=0, genename=0, unigene=0, locusid=0, chrloc=0, go=0) {                    
+  
+               probe.id <- rownames(dat)
+
+               if(genesymbol==1) {
+                  a <- mget(probe.id, env=env.vec[[1]], ifnotfound=NA)
+                  d <- c()
+                  for(i in 1:length(a)){
+                      b <- unlist(a[i])
+                      d <- c(d, paste(b, collapse="/ "))
+                  }
+                  dat <- cbind(dat,d)
+                  colnames(dat)[ncol(dat)] <- "Gene Symbol"
+               } 
+
+               if(genename==1) {
+                  a <- mget(probe.id, env=env.vec[[2]], ifnotfound=NA)
+                  d <- c()
+                  for(i in 1:length(a)){
+                      b <- unlist(a[i])
+                      d <- c(d, paste(b, collapse="/ "))
+                  }
+                  dat <- cbind(dat,d)
+                  colnames(dat)[ncol(dat)] <- "Gene Title"
+               }
+
+               if(unigene==1) {
+                  a <- mget(probe.id, env=env.vec[[3]], ifnotfound=NA)
+                  d <- c()
+                  for(i in 1:length(a)){
+                      b <- unlist(a[i])
+                      d <- c(d, paste(b, collapse="/ "))
+                  }
+                  dat <- cbind(dat,d)
+                  colnames(dat)[ncol(dat)] <- "Unigene ID" 
+               }
+
+               if(locusid==1) {
+                  a <- mget(probe.id, env=env.vec[[4]], ifnotfound=NA)
+                  d <- c()
+                  for(i in 1:length(a)){
+                      b <- unlist(a[i])
+                      d <- c(d, paste(b, collapse="/ "))
+                  }
+                  dat <- cbind(dat,d)
+                  colnames(dat)[ncol(dat)] <- "Locus ID"
+               }
+
+               if(chrloc==1) {
+                  a <- mget(probe.id, env=env.vec[[5]], ifnotfound=NA)
+                  chr <- function(a) {paste("Chr.",unlist(strsplit(names(unlist(a)), split="at."))[2])}
+
+                  d <- c()
+                  for(i in 1:length(a)){
+                      b <- unlist(a[i])
+                      c <- paste(chr(b), b)
+                      d <- c(d, paste(c, collapse=" / "))
+                  }
+                                         
+                  dat <- cbind(dat,d)
+                  colnames(dat)[ncol(dat)] <- "Chromosome Location"
+                }
+
+               if(go==1) {
+                  a <- t(apply(matrix(probe.id), 1, find.GOinfo, env=env.vec[[6]]))
+                  dat <- cbind(dat,a)
+                  colnames(dat)[(ncol(dat)-2):ncol(dat)] <- c("GO Biological Process","GO Molecular Function","GO Cellular Component")
+               }  
+ 
+               return(dat)
+}
+
+
+###Find Go information from probe set ID
+find.GOinfo <- function(pid, env){
+
+               BP <- c()
+               MF <- c()
+               CC <- c()
+         
+               aaa <- NA 
+               if(!is.na(pid)) aaa <- get(pid, env=env) 
+
+               if(!is.na(aaa)[1]) {
+                  GO.list <- mget(names(aaa), GOTERM, ifnotfound = NA)
+                  n <- length(GO.list) 
+                  for(i in 1:n){ 
+                     if(!is.na(GO.list[i])) {
+                     if(!is.na(Ontology(GO.list[[i]]))) {
+                         if(Ontology(GO.list[[i]])=="BP") BP <- c(BP, Definition(GO.list[[i]])) 
+                         if(Ontology(GO.list[[i]])=="MF") MF <- c(MF, Definition(GO.list[[i]])) 
+                         if(Ontology(GO.list[[i]])=="CC") CC <- c(CC, Definition(GO.list[[i]])) 
+                  }}}
+
+                  BP <- paste(BP, sep="",  collapse = "/ ")
+                  MF <- paste(MF, sep="",  collapse = "/ ")
+                  CC <- paste(CC, sep="",  collapse = "/ ")
+               }
+
+               if(length(BP)==0) BP <- NA
+               if(length(MF)==0) MF <- NA
+               if(length(CC)==0) CC <- NA
+               Goinfo <- c(BP,MF,CC)
+               return(Goinfo)
+
+}
+
+
+###Find genes from key words
+find.genes <- function(pid, key.word, env.vec) {
+
+
+               a <- unlist(mget(pid, env=env.vec[[1]], ifnotfound = NA))
+               b <- unlist(mget(pid, env=env.vec[[2]], ifnotfound = NA))
+               c <- t(apply(matrix(pid), 1, find.GOinfo, env=env.vec[[6]]))               
+               dbase <- cbind(a,b,c)
+               dbase <- apply(dbase, 1, paste, sep="",  collapse = "/ ")
+               dbase <- gsub(" ","",dbase)              
+               
+               key.word <- gsub(" ","",key.word)                             
+               key.words <- unlist(strsplit(key.word, ","))
+
+               keep.pid <- rep(0, length(pid)) #1=matched, 0=not
+               for(j in 1:length(key.words)) {
+                   i <- grep(key.words[j], dbase, ignore.case=TRUE)
+                   if(length(i)>0) keep.pid[i] <- 1
+               }
+
+               return(keep.pid)
+
+}
+
+
+
+########################################################################
+#
+#   Re-order conditions
+#
+########################################################################
+
+reorder.column <- function(column.order, conditions, labels){
+
+   n.chips <- sum(conditions)
+   n.conds <- length(conditions)
+   new.order <- 1:n.chips
+   
+   a <- unlist(strsplit(column.order, split=","))
+   a <- a[which(a != "")]  
+   labels2 <- a[(1:n.conds)*2-1]
+   order2 <- as.integer(a[(1:n.conds)*2])
+ 
+   i <- match(labels, labels2)
+   order2 <- order2[i]  
+   new.conds <- c()
+   for(j in 1:n.conds){
+       new.conds <- c(new.conds, rep(order2[j], conditions[j]))   
+   }
+   
+   i <- sort.list(new.conds)
+   new.order <- new.order[i] 
+   
+   return(new.order)
+}
+
+
+
+########################################################################
+#
+#   MAIN
+#
+########################################################################
+
+
+### MAIN ###
+
+### REPLACE conds ###
+conditions <- c(conds)
+### REPLACE condLabels ###
+labels <- c(condLabels)
+### REPLACE columnorder ###
+column.order <- "columnorder"
+### REPLACE filter1 ###
+filter.1 <- "filter1"
+### REPLACE filter2 ###
+filter.2 <- "filter2"
+### REPLACE filterfunc ###
+filter.func <- "filterfunc"
+### REPLACE chipType ###
+chip.type <- "chipType"
+### REPLACE specific_genes ###
+genefile <- "specific_genes"
+
+
+### REPLACE infile ###
+myrun <- filterMult("infile", conditions, labels, column.order,genefile,
+### REPLACE listtype ###
+"listtype",
+### REPLACE includelist ###
+includelist,
+### REPLACE includesig ###
+includesig,
+### REPLACE filtervalue1 ###
+filter.1, filtervalue1, 
+### REPLACE filtervalue2 ###
+filter.2, filtervalue2, filter.func,                
+### REPLACE maxrows ###
+maxrows, chip.type,                  
+### REPLACE genesymbol ###
+genesymbol, 
+### REPLACE genename ###
+genename, 
+### REPLACE unigene ###
+unigene, 
+### REPLACE locusid ###
+locusid, 
+### REPLACE chrloc ###
+chrloc, 
+### REPLACE go ###
+go,
+### REPLACE outfile ###
+"outfile",
+### REPLACE outtxt ###
+"outtxt")
+
+

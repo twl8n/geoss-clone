@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+  <head>
+<title>GEOSS Home Page</title>
+<meta name="keywords" content="gene, chip, expression, affymetrix, genechip, oligo, two, color, spotted, array, dna, rna, oligonucleotide, cdna, analysis, analytical, copy, copy dna, spotted array, hybridization, mrna, messenger, messenger rna, cy3, cy5, probe, reverse transcriptase, reverse transcription, glass, slide, sage, serial, serial analysis of gene expression, photo dimerization, genotype, genotypes, genotyping, fold change, over expression, under expression, up regulation, down regulation, photo lithography, linux, open source, apache, postgres, postgresql, database, secure, curate, curation, curator, perfect match, westfa, young, stat analysis, clustering, perm cluster, r-cluster, r cluster, tree view, go, gene ontology, flurochroms, patrick brown, t-test, anova, function prediction">
+<meta name="description" content="GEOSS is an Open Source Gene Expression Database supporting storage and analysis of Affymetrix&reg; GeneChip&reg; technology, with planned support for two color spotted arrays and other gene expression measurement technologies. GEOSS is designed to serve as a secure repository and archive for many researcher's data. ">
+</head>
+
+  
+<body bgcolor="#FFFFFF" marginheight="0" marginwidth="0" topmargin="0"
+  leftmargin="0" link="#006633" vlink="#666633">
+<table width="600" border="0" cellspacing="0" cellpadding="6">
+  <tr valign="top"> 
+    <td bgcolor="990066"> 
+      <table width="110" border="0" cellspacing="0" cellpadding="0">
+        <tr>
+          <td>{custom_news2}</td>
+        </tr>
+      </table>
+      <p align="center">&nbsp;</p>
+    </td>
+    <td valign="top" width="216">
+      <img src="graphics/geoss_logo.jpg" width="216" height="96" alt="GEOSS Gene Expression Open Source System">
+    </td>
+  </tr>
+
+  <tr valign="top"> 
+    <td width="110" bgcolor="990066">
+      <form action="webtools/login.cgi" method=POST>
+      <input type="hidden" name="page" value="index.cgi">
+        <table align="center" cellpadding="3" cellspacing="0" border="0">
+          <tr>
+            <td bgcolor="#C9DFAE"> 
+              <p><b>Member Login</b></p>
+              <p><b>Login:</b></p>
+            </td>
+         </tr>
+         <tr>
+            <td bgcolor="#C9DFAE"> 
+              <input TYPE=text NAME=login SIZE=8 MAXLENGTH=128></td>
+         </tr>
+         <tr>
+            <td bgcolor="#C9DFAE"><b>Password:</b></td>
+          </tr>
+         <tr>
+            <td bgcolor="#C9DFAE"> 
+              <input TYPE=password NAME=password SIZE=12 MAXLENGTH=12></td></tr>
+         <tr>&nbsp;</tr>
+         <tr>
+            <td bgcolor="#C9DFAE"> 
+              <input type="Submit" value="Login"></td></tr>
+	 <tr>
+            <td bgcolor="#C9DFAE"><a href="webtools/index.cgi"><font size="-1" color="#000080">Already 
+              logged in</font></a><br>
+            </td>
+          </tr>
+      </table>
+      </form>
+
+    </td>
+    <td width="490"> <hr noshade color="990066">
+      <font face="Verdana, Arial, Helvetica, sans-serif" size="+1">{orgname} GEOSS Server</font>
+      <p>GEOSS (Gene Expression Open Source System), formerly known as
+      GeneX Va, is a web-interfaced system for the storage and analysis
+      of Affymetrix GeneChip® and other microarray data. It has been
+      developed by engineers at the GeneChip/Microarray Bioinformatics Core
+      of the University of Virginia, with contributions from the Virginia Bioinformatics Consortium.
+<a href="webdoc/EN/html/introduction_to_GEOSS.html">More...</a></p>
+      <p>{custom_desc1}</p>
+<hr noshade color="990066">
+    </td>
+  </tr>
+  <tr valign="top"> 
+    <td width="110" bgcolor="990066">
+        <table align="center" cellpadding="3" cellspacing="0" border="0">
+          <tr>
+            <td width="110" bgcolor="990066">
+            {supported_logos}
+            </td>
+          </tr>
+      </table>
+    </td>
+    <td width="490"> 
+      {custom_news1}
+      {data_publishing}
+      <p>
+        &nbsp;<a href="req_account.cgi">Request An Account</a><br>
+        &nbsp;Request an account on a GEOSS system</p>
+      <p> &nbsp;<a href="webdoc/EN/html/index.html">GEOSS Documentation</a><br>
+       <a href="webdoc/EN/html/install_guide.html">Install</a>&nbsp;
+       <a href="webdoc/EN/html/user_guide.html">User</a>&nbsp;
+       <a href="webdoc/EN/html/special_center_administrator_guide.html">Special Center
+       Administrator</a>&nbsp;
+       <a href="webdoc/EN/html/admin_guide.html">Admin</a>&nbsp;
+       <a href="webdoc/EN/html/array_center_staff_guide.html">Array
+       Center_Staff</a>
+       <a href="webdoc/EN/html/developer_guide.html">Developer</a>&nbsp;
+      <p> &nbsp;<a href="http://geoss.sourceforge.net">
+        GEOSS Downloads</a><br>
+        &nbsp;GEOSS development details and downloads.</p>
+      <p>
+   </td>
+  </tr>
+
+  <tr valign="top">
+    <td width="110" bgcolor="990066">&nbsp; </td>
+    <td width="490"> <hr noshade color="990066"> 
+      <div align="center">{version}</div>
+      <div align="center"><a href="mailto:{admin_email}"><font="-5">Contact Administrator</font></a></div><br>
+    </td>
+  </tr>
+
+</table>
+
+<br>
+</body>
+</html>
+
+

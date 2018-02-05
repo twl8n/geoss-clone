@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+  <head>
+<title>Va GEOSS Home Page</title>
+<meta name="keywords" content="gene, chip, expression, affymetrix, genechip, oligo, two, color, spotted, array, dna, rna, oligonucleotide, cdna, analysis, analytical, copy, copy dna, spotted array, hybridization, mrna, messenger, messenger rna, cy3, cy5, probe, reverse transcriptase, reverse transcription, glass, slide, sage, serial, serial analysis of gene expression, photo dimerization, genotype, genotypes, genotyping, fold change, over expression, under expression, up regulation, down regulation, photo lithography, linux, open source, apache, postgres, postgresql, database, secure, curate, curation, curator, perfect match, westfa, young, stat analysis, clustering, perm cluster, r-cluster, r cluster, tree view, go, gene ontology, flurochroms, patrick brown, t-test, anova, function prediction">
+<meta name="description" content="GEOSS is an Open Source Gene Expression Database supporting storage and analysis of Affymetrix&reg; GeneChip&reg; technology, with planned support for two color spotted arrays and other gene expression measurement technologies. GEOSS is designed to serve as an secure repository and archive for many researchers' data. ">
+</head>
+
+  
+<body bgcolor="#FFFFFF" marginheight="0" marginwidth="0" topmargin="0"
+  leftmargin="0" link="#006633" vlink="#666633">
+<table width="600" border="0" cellspacing="0" cellpadding="0">
+  <tr valign="top"> 
+    <td width="10">&nbsp;</td>
+    <td width="100"><font face="Verdana, Arial, Helvetica, sans-serif" size="+1"><a href="./index.cgi"><img src="graphics/geoss_logo.jpg" width="216" height="96" border="0"></a></font></td>
+    <td width="8">&nbsp;&nbsp;</td>
+    <td width="490"><font face="Verdana, Arial, Helvetica, sans-serif" size="+1">Downloading 
+      GEOSS</font> </td>
+  </tr>
+</table>
+<br>
+<table width="620" border="0" cellspacing="0" cellpadding="0">
+  <tr> 
+    <td width="10" valign="top">&nbsp;</td>
+    <td width="22" valign="top" bgcolor="990066">&nbsp;</td>
+    <td width="10" valign="top">&nbsp;</td>
+    <td width="578" valign="top"> 
+      <p><b>Why download?<br>
+        </b>If you wish to install GEOSS on your own server, you'll want to 
+        download the latest version. The download files are gzipped tar archives 
+        (we have plans for a RPM binary installation) Extensive installation instructions 
+        are inside the archive. The most recent version is the most stable. The 
+        installation typically takes a day, although we have performed it from 
+        scratch in a couple of hours. The developers are always happy to field 
+        background questions or technical questions about the product. Email: 
+        <a href="mailto:geoss-help@virginia.edu">geoss-help@virginia.edu</a> </p>
+      <p>GEOSS is known to run on RedHat Linux, Fedora, and Apple OSX systems. 
+        PostgreSQL (aka Postgres), Apache, R, and several Perl modules are required. 
+        GEOSS is written in Perl. End users interact with the system only via 
+        an easy to use Web interface. Administration mostly happens at the Linux 
+        command line (also documented, and easy). The Microarray Center workflow 
+        is managed via a web interface.</p>
+      <p><b> Download GEOSS Virginia in gzipped tar format<br>
+        </b>The latest GEOSS Virginia package can be found in the Files section 
+        of our SourceForge site.</p>
+      <p><a
+      href="http://sourceforge.net/project/showfiles.php?group_id=109336">http://sourceforge.net/project/showfiles.php?group_id=109336</a></p>
+      <p><b>Other Packages<br>
+        </b>To complete the installation, you'll need some ancillary software. 
+        Here we have a synopsis. Complete instructions are in the installation 
+        guide in the archive. </p>
+      <p><b>Perl Modules<br>
+        <br>
+        </b><a href="http://search.cpan.org/CPAN/authors/id/A/AB/ABW/AppConfig-1.52.tar.gz">AppConfig-1.52</a><br>
+      </p>
+      <p><a href="http://search.cpan.org/CPAN/authors/id/E/ER/ERYQ/IO-stringy-2.108.tar.gz">IO-stringy-2.108</a><br>
+      </p>
+      <p><a href="http://search.cpan.org/CPAN/authors/id/K/KW/KWITKNR/Spreadsheet-ParseExcel-0.2602.tar.gz">Spreadsheet-ParseExcel-0.2602</a><br>
+      </p>
+      <p><a href="http://search.cpan.org/CPAN/authors/id/K/KW/KWITKNR/OLE-Storage_Lite-0.11.tar.gz">OLE-Storage_Lite-0.10</a><br>
+        We are using version 0.10, but the current version at CPAN is 0.11. I 
+        suggest that you download the current version.<br>
+      </p>
+      <p><a href="http://search.cpan.org/CPAN/authors/id/D/DW/DWHEELER/DBD-Pg-1.21.tar.gz">DBD-Pg-1.13</a><br>
+        We are using version 1.13, and again I suggest that you download the current 
+        version. Older versions might not be compatible with the current version 
+        of Postgres.</p>
+      <p><a href="http://search.cpan.org/CPAN/authors/id/T/TI/TIMB/DBI-1.32.tar.gz">DBI-1.29</a><br>
+        We are using 1.29 which I think is included as part of Perl 5.8. If you 
+        need DBI, I suggest that you download the latest version.</p>
+      <p><a href="http://search.cpan.org/CPAN/authors/id/P/PM/PMQS/Compress-Zlib-1.21.tar.gz">Compress-Zlib-1.21</a><br>
+        I think the minimum required by PDF::API2 is 1.03. We are using 1.21<br>
+      </p>
+      <p><a href="http://search.cpan.org/CPAN/authors/id/A/AR/AREIBENS/PDF-API2-0.3b49.tar.gz">PDF-API2-0.3b49</a><b><br>
+        </b>This is a PDF creation API used by the tree draw Analysis Tree module. 
+        It requires Compress-Zlib (above).<br>
+      </p>
+      <p><b>The R statistical package</b> <b>R-1.6.1-2</b><br>
+        <a href="http://cran.r-project.org/bin/linux/redhat/8.x/i386/">http://cran.r-project.org/bin/linux/redhat/8.x/i386/<br>
+        </a><a href="http://cran.r-project.org/">http://cran.r-project.org/</a><a href="http://cran.r-project.org/bin/linux/redhat/8.x/i386/R-1.6.1-2.i386.rpm"> 
+        </a><br>
+        We started out running RedHat 7.x and 8.x with R 1.6.1-2. We have upgraded 
+        to Fedora. The CRAN developers have a newer version out, which we suggest 
+        you use. The link above is to the directory containing the binary rpm 
+        for RH 8. Versions of R are available for Linux, Unix and Windows systems.</p>
+      <p><b>Apache</b><br>
+        The Apache web server is included with Red Hat. If you are running Red 
+        Hat, I suggest that you use the Red Hat Apache distribution. If you need 
+        to download a copy of Apache, I suggest that you use Apache 2. There are 
+        very few (or no differences) between configuring Apache 1.3.x and Apache 
+        2.x for GEOSS.<br>
+        The download page: <a href="http://httpd.apache.org/download.cgi">http://httpd.apache.org/download.cgi</a><br>
+        It may be easiest to download the source package. Use the link below. 
+        For Linux, download the highest numbered .tar.gz file: <a href="http://www.apache.org/dist/httpd/"><br>
+        http://www.apache.org/dist/httpd/</a></p>
+      <p><b>PostgreSQL</b><br>
+        Postgres also comes with Red Hat 8. If you need it, you can try the PostgreSQL 
+        site:<br>
+        <a href="http://www.postgresql.org/">http://www.postgresql.org/</a> <br>
+        If you must download, you'll need most of the files from the ftp site 
+        below. I've given an example URL here to the binary installation for PostgreSQL 
+        7.3.1 for Red Hat 8.<br>
+        <a href="ftp://ftp10.us.postgresql.org/pub/postgresql/binary/v7.3.1/RPMS/redhat-8.0/">ftp://ftp10.us.postgresql.org/pub/postgresql/binary/v7.3.1/RPMS/redhat-8.0/</a> 
+        <br>
+        <br>
+        <b>multtest 1.0 (optional, only used by Westfall &amp; Young)</b><br>
+        This extra R package contains some additional testing procedures, currently 
+        only used by the Westfall and Young analysis.<br>
+        <a href="http://bioconductor.org/repository/release1.1/package/html/multtest.html"> 
+        http://bioconductor.org/repository/release1.1/package/html/multtest.html</a> 
+        <br>
+        Installation is easy. su to root, then use the following command (all 
+        caps required!)<br>
+        R -CMD INSTALL multtest_1.0.tar.gz<br>
+        If you want to remove it try this:<br>
+        R -CMD REMOVE multtest<br>
+        If you can't remember a package name, just ls /usr/lib/R/library.<br>
+        After installation, documentation (text, html, and latex, respectively) 
+        is in:<br>
+        /usr/lib/R/library/multtest/help/<br>
+        /usr/lib/R/library/multtest/html/ <br>
+        /usr/lib/R/library/multtest/latex/<br>
+      </p>
+      <p><b>Download GEOSS via CVS<br>
+        </b>We recommend that you download the tar.gz archive. It contains the 
+        complete sources and documentation. </p>
+      <p>You may use the following CVS commands to download the most recent stable 
+        version of GEOSS, or the most recent version. Each of the following 
+        command is a long line.<br>
+      </p>
+      <ol>
+        <li>Change directory to your desired location for the GEOSS installation 
+          files. This will not be the final installation directory. 
+        <li>Enter only one of these commands at the shell prompt. GEOSS is 
+          most compatible with Red Hat 7 or newer systems. 
+        <li>We recommend that you use the stable release. The feature set is nearly 
+          complete, with the exception of the Analysis Trees. 
+      </ol>
+      <p>&nbsp;</p>
+    </td>
+  </tr>
+</table>
+<table border="0" cellspacing="0" cellpadding="0" width="850">
+  <tr> 
+    <td width="10" valign="top">&nbsp;</td>
+    <td width="22" valign="top" bgcolor="990066">&nbsp;</td>
+    <td width="10" valign="top">&nbsp;</td>
+    <td width="808" valign="top"> 
+      <p><br>
+        The current stable release (recommended since it has all the interesting 
+        features, and is stable): </p>
+      <code>cvs -d:pserver:anonymous@cvs.va-geoss.sourceforge.net:/cvsroot/va-geoss 
+      co -r Rel-1_6_11 va-geoss</code> <br>
+      <br>
+      <br>
+      The latest development release: <br>
+      <br>
+      <samp>cvs -d:pserver:anonymous@cvs.va-geoss.sourceforge.net:/cvsroot/va-geoss 
+      CO va-geoss</samp><br>
+    </td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<p>&nbsp;</p>
+</body>
+</html>
+
+

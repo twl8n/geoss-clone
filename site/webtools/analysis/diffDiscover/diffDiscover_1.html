@@ -1,0 +1,78 @@
+<html>
+<head><title>Differential Expression Discovery Documentation</title></head>
+<body bgcolor="#FFFFFF">
+<p><b>Description</b><br>
+The GEOSS module 'diffDiscover' performs calculations that are intended for
+discovery of differentially expressed genes. It computes the following:<br>
+<li>Hypothesis testing by LPE method.<br>
+<li>Fold change in the log scale.<br>
+<li>Hypothesis testing by t-test.<br>
+The output from this module is formatted in a table structure for easier
+access and readability.<br>
+Also includes procedures for controlling the false discovery rate (FDR):
+Benjamini & Hochberg (1995), Benjamini & Yekutieli (2001) step-up
+procedures.<br>
+</p>
+<p><br>
+<b>Statistical Methods</b><br>
+The following computations are done on the input data:
+<li> Traditional fold changes are computed by a log-base-2 transformation on
+the ratio of average expression values between two conditions.<br>
+<li> Log fold changes are computed as the difference between average
+expression values of the two conditions, where the expression values have
+been log-base-2 transformed before averaging.<br>
+<li> The student's t-test is performed on the log-base-2 transformed
+expression values, for all pairs of conditions.<br>
+<li> Local pooled error (LPE) test is performed on the log-base-2 transformed
+expression values, for all pairs of conditions.  For explanation of the LPE
+test, look at:<br><br>
+1. Nitin Jain, Jayant Thatte, Thomas Braciale, Klaus Ley, Michael O'Connell,
+and Jae K. Lee (2003).  Local pooled error test for identifying
+differentially expressed genes with a small number of replicated microarrays,
+<i>to appear in Bioinformatics</i>.<br><br>
+2. Lee, J.K. and O'Connell, M. (2003). Chapter 7: An Splus library for the
+analysis of microarray data.  <i>The Analysis of Gene Expression Data:
+Methods and Software</i>, edited by Parmigiani, Garrett, Irizarry, and Zeger.
+Springer: New York.<br>
+
+<p><br>
+  <b>Input files</b><br>
+Differential Discovery expects input in this form:<br>
+</p>
+<ul>
+  <li> a file containing chip data. The file should have row and column labels.<br>
+    <br>
+</ul>
+Analyses that create input in this format include:<br>
+<ul>
+  <li> qualityControl<br>
+</ul>
+<p>&nbsp;</p>
+<p><b>Output files</b><br>
+Differential Discovery creates the following output:<br>
+</p>
+<ul>
+  <li> An intermediate data file containing fold change, LPE, and T-test
+values.
+</ul>
+    <br>
+</ul>
+Analyses that accept differential discovery output as input include:<br>
+<ul>
+  <li>filter<br>
+  <li>permCluster (This runs but is not recommended. Data should be filtered first.)<br>
+</ul>
+<p>&nbsp;</p>
+<p><b>Parameters:</b><br>
+</p>
+<ul>
+  <li> Intermediate data filename - name of the data file to pass to other
+analysis nodes (contains LPE, T-test, and fold change values)<br>
+  <li> Log filename - name of the file containing log and error messages<br>
+</ul>
+<p><br>
+  <br>
+</p>
+</body></html>
+
+
